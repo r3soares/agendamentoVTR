@@ -1,11 +1,13 @@
+import 'package:agendamento_vtr/app/modules/tanque/widgets/formulario_widget.dart';
 import 'package:flutter/material.dart';
 
 class TanquePage extends StatefulWidget {
   final String title;
-  const TanquePage({Key? key, this.title = 'TanquePage'}) : super(key: key);
+  const TanquePage({Key? key, this.title = 'Inserir Tanque'}) : super(key: key);
   @override
   TanquePageState createState() => TanquePageState();
 }
+
 class TanquePageState extends State<TanquePage> {
   @override
   Widget build(BuildContext context) {
@@ -14,7 +16,15 @@ class TanquePageState extends State<TanquePage> {
         title: Text(widget.title),
       ),
       body: Column(
-        children: <Widget>[],
+        children: [
+          Container(
+            margin: EdgeInsets.all(12),
+            alignment: Alignment.topLeft,
+            child: FormularioWidget(
+              title: "Dados do Solicitante",
+            ),
+          )
+        ],
       ),
     );
   }

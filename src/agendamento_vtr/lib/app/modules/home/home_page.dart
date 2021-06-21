@@ -15,30 +15,19 @@ class _HomePageState extends ModularState<HomePage, HomeStore> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Counter'),
-      ),
-      body: ScopedBuilder<HomeStore, Exception, int>(
-        store: store,
-        onState: (_, counter) {
-          return Padding(
-            padding: EdgeInsets.all(10),
-            child: Text('$counter'),
-          );
-        },
-        onError: (context, error) => Center(
-          child: Text(
-            'Too many clicks',
-            style: TextStyle(color: Colors.red),
-          ),
+        appBar: AppBar(
+          title: Text('Veículo Tanque'),
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Modular.to.navigate('/tanque');
-        },
-        child: Icon(Icons.add),
-      ),
-    );
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ElevatedButton(
+                onPressed: () => {Modular.to.pushNamed('/tanque')},
+                child: Text('Inserir Veículo'),
+              ),
+            ],
+          ),
+        ));
   }
 }
