@@ -1,8 +1,11 @@
 import 'dart:io';
 
+import 'package:agendamento_vtr/app/modules/tanque/tanque.dart';
 import 'package:agendamento_vtr/app/modules/tanque/widgets/compartimento_widget.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+
+import '../arquivo.dart';
 
 class TanqueDialogWidget extends StatefulWidget {
   final String title;
@@ -17,10 +20,8 @@ class TanqueDialogWidget extends StatefulWidget {
 
 class _TanqueDialogWidgetState extends State<TanqueDialogWidget> {
   final _formKey = GlobalKey<FormState>();
-  File? arquivo;
-  String? extensao;
+  Arquivo? arquivo;
   bool? isChecked = false;
-  String nome = '';
   String dropdownValue = '1';
   List<CompartimentoWidget> compartimentos = List.empty();
 
@@ -31,7 +32,7 @@ class _TanqueDialogWidgetState extends State<TanqueDialogWidget> {
     final size = MediaQuery.of(context).size;
     return Dialog(
       insetPadding: EdgeInsets.symmetric(
-          vertical: size.height / 5, horizontal: size.width / 6),
+          vertical: size.height / 8, horizontal: size.width / 6),
       elevation: 2,
       child: Stack(
         children: [
@@ -94,7 +95,7 @@ class _TanqueDialogWidgetState extends State<TanqueDialogWidget> {
                               alignment: Alignment.center,
                               padding: EdgeInsets.only(left: 12),
                               child: Text(
-                                nome,
+                                arquivo?.nome ?? '',
                                 style: TextStyle(fontSize: 10),
                                 softWrap: true,
                                 overflow: TextOverflow.ellipsis,
@@ -138,7 +139,7 @@ class _TanqueDialogWidgetState extends State<TanqueDialogWidget> {
                                 ),
                               ])),
                       Container(
-                          height: size.height * .4,
+                          height: size.height * .3,
                           padding: const EdgeInsets.all(8),
                           child: ListView.builder(
                             scrollDirection: Axis.horizontal,
@@ -152,7 +153,13 @@ class _TanqueDialogWidgetState extends State<TanqueDialogWidget> {
                         padding: const EdgeInsets.all(8),
                         child: ElevatedButton(
                           child: Text('Inserir'),
-                          onPressed: () => {},
+                          onPressed: () => {
+                            if (_formKey.currentState!.validate())
+                              {
+                                _criaTanque(),
+                                Navigator.of(context).pop(),
+                              }
+                          },
                         ),
                       )
                     ],
@@ -193,10 +200,12 @@ class _TanqueDialogWidgetState extends State<TanqueDialogWidget> {
         allowedExtensions: ['pdf', 'jpg', 'jpeg', 'png']);
 
     if (result != null) {
-      arquivo = File.fromRawPath(result.files.single.bytes!);
-      extensao = result.files.single.extension;
       setState(() {
-        nome = result.files.single.name;
+        arquivo = Arquivo(
+          result.files.single.bytes!,
+          result.files.single.name,
+          result.files.single.extension!,
+        );
       });
     } else {
       // User canceled the picker
@@ -207,5 +216,10 @@ class _TanqueDialogWidgetState extends State<TanqueDialogWidget> {
     if (value == compartimentos.length) return;
     compartimentos = List.generate(
         value, (index) => CompartimentoWidget(title: 'C${index + 1}'));
+  }
+
+  void _criaTanque() {
+    final t = Tanque(
+        _cPlaca.text, isChecked!, arquivo!, Map.fromIterable(compartimentos));
   }
 }
