@@ -126,6 +126,7 @@ class FormularioWidget extends StatelessWidget {
                     padding: const EdgeInsets.all(8.0),
                     child: ElevatedButton.icon(
                         onPressed: () => showDialog(
+                            barrierDismissible: false,
                             barrierColor: Color.fromRGBO(0, 0, 0, .5),
                             useSafeArea: true,
                             context: context,
