@@ -1,5 +1,5 @@
 import 'package:agendamento_vtr/app/modules/tanque/models/proprietario.dart';
-import 'package:agendamento_vtr/app/modules/tanque/tanque_page.dart';
+import 'package:agendamento_vtr/app/modules/tanque/pages/tanque_page.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
 class TanqueModule extends Module {

@@ -1,5 +1,5 @@
 import 'package:agendamento_vtr/app/modules/tanque/models/proprietario.dart';
-import 'package:agendamento_vtr/app/modules/tanque/widgets/tanque_dialog_widget.dart';
+import 'package:agendamento_vtr/app/modules/tanque/pages/tanque_dialog.dart';
 import 'package:agendamento_vtr/app/modules/tanque/widgets/tanque_widget.dart';
 import 'package:agendamento_vtr/app/modules/util/cnpj.dart';
 import 'package:agendamento_vtr/app/modules/util/cpf.dart';
@@ -141,7 +141,7 @@ class _FormularioWidgetState extends State<FormularioWidget> {
                               barrierColor: Color.fromRGBO(0, 0, 0, .5),
                               useSafeArea: true,
                               context: context,
-                              builder: (_) => const TanqueDialogWidget()),
+                              builder: (_) => const TanqueDialog()),
                           icon: Icon(Icons.add),
                           label: Text('Tanque')),
                     ),

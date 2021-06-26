@@ -6,16 +6,16 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
-import '../arquivo.dart';
+import '../models/arquivo.dart';
 
-class TanqueDialogWidget extends StatefulWidget {
-  const TanqueDialogWidget({Key? key}) : super(key: key);
+class TanqueDialog extends StatefulWidget {
+  const TanqueDialog({Key? key}) : super(key: key);
 
   @override
-  _TanqueDialogWidgetState createState() => _TanqueDialogWidgetState();
+  _TanqueDialogState createState() => _TanqueDialogState();
 }
 
-class _TanqueDialogWidgetState extends State<TanqueDialogWidget> {
+class _TanqueDialogState extends State<TanqueDialog> {
   final qtdCompartimentos = List.generate(10, (index) => 1 + index);
   final _formKey = GlobalKey<FormState>();
   Tanque tanque = Tanque();
