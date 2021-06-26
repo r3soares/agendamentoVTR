@@ -187,6 +187,7 @@ class _TanqueDialogWidgetState extends State<TanqueDialogWidget> {
 
   String? validaPlaca(String? value) {
     if (value == null || value.isEmpty) return 'Informe a placa';
+    if (value.length != 7) return 'Placa inválida';
     RegExp regex = RegExp('[A-Z]{3}[0-9][0-9A-Z][0-9]{2}');
     if (!regex.hasMatch(value)) return 'Placa inválida';
     return null;

@@ -1,6 +1,8 @@
 import 'package:agendamento_vtr/app/modules/tanque/models/proprietario.dart';
 import 'package:agendamento_vtr/app/modules/tanque/widgets/tanque_dialog_widget.dart';
 import 'package:agendamento_vtr/app/modules/tanque/widgets/tanque_widget.dart';
+import 'package:agendamento_vtr/app/modules/util/cnpj.dart';
+import 'package:agendamento_vtr/app/modules/util/cpf.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_modular/flutter_modular.dart';
@@ -86,12 +88,7 @@ class _FormularioWidgetState extends State<FormularioWidget> {
                       // code when the user saves the form.
                     },
                     controller: _cCnpjCpf,
-                    validator: (String? value) {
-                      return (value != null &&
-                              (value.length == 14 || value.length == 11))
-                          ? null
-                          : 'CNPJ ou CPF inválido';
-                    },
+                    validator: validaCNPJCPF,
                   )),
               Padding(
                   padding: const EdgeInsets.all(8.0),
@@ -181,6 +178,14 @@ class _FormularioWidgetState extends State<FormularioWidget> {
         r"{0,253}[a-zA-Z0-9])?)*$";
     RegExp regex = new RegExp(pattern);
     if (!regex.hasMatch(value)) return 'E-mail inválido';
+    return null;
+  }
+
+  String? validaCNPJCPF(String? value) {
+    if (value == null || value.isEmpty) return 'Informe o CNPJ ou CPF';
+    if (value.length != 14 && value.length != 11) return 'CNPJ ou CPF inválido';
+    if (!CPF.isValid(value) && !CNPJ.isValid(value))
+      return 'CNPJ ou CPF inválido';
     return null;
   }
 
