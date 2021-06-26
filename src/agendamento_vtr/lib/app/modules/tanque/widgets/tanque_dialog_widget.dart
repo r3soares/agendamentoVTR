@@ -1,31 +1,26 @@
-import 'dart:io';
-
-import 'package:agendamento_vtr/app/modules/tanque/tanque.dart';
+import 'package:agendamento_vtr/app/modules/tanque/models/compartimento.dart';
+import 'package:agendamento_vtr/app/modules/tanque/models/proprietario.dart';
+import 'package:agendamento_vtr/app/modules/tanque/models/tanque.dart';
 import 'package:agendamento_vtr/app/modules/tanque/widgets/compartimento_widget.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 
 import '../arquivo.dart';
 
 class TanqueDialogWidget extends StatefulWidget {
-  final String title;
-  final compartimentos = List.generate(10, (index) => 1 + index);
-
-  TanqueDialogWidget({Key? key, this.title = "TanqueDialogWidget"})
-      : super(key: key);
+  const TanqueDialogWidget({Key? key}) : super(key: key);
 
   @override
   _TanqueDialogWidgetState createState() => _TanqueDialogWidgetState();
 }
 
 class _TanqueDialogWidgetState extends State<TanqueDialogWidget> {
+  final qtdCompartimentos = List.generate(10, (index) => 1 + index);
   final _formKey = GlobalKey<FormState>();
-  Arquivo? arquivo;
-  bool? isChecked = false;
-  String dropdownValue = '1';
-  List<CompartimentoWidget> compartimentos = List.empty();
-
-  final TextEditingController _cPlaca = TextEditingController();
+  Tanque tanque = Tanque();
+  List<Compartimento> compartimentos = [Compartimento('C1')];
+  TextEditingController _cPlaca = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -55,9 +50,9 @@ class _TanqueDialogWidgetState extends State<TanqueDialogWidget> {
                                 style: TextStyle(fontSize: 18),
                               ),
                               Checkbox(
-                                value: isChecked,
+                                value: tanque.isZero,
                                 onChanged: (value) =>
-                                    setState(() => isChecked = value),
+                                    setState(() => tanque.isZero = value),
                               )
                             ],
                           )),
@@ -95,7 +90,7 @@ class _TanqueDialogWidgetState extends State<TanqueDialogWidget> {
                               alignment: Alignment.center,
                               padding: EdgeInsets.only(left: 12),
                               child: Text(
-                                arquivo?.nome ?? '',
+                                tanque.doc?.nome ?? '',
                                 style: TextStyle(fontSize: 10),
                                 softWrap: true,
                                 overflow: TextOverflow.ellipsis,
@@ -117,17 +112,18 @@ class _TanqueDialogWidgetState extends State<TanqueDialogWidget> {
                                 Expanded(
                                   child: DropdownButton<String>(
                                     isExpanded: true,
-                                    value: dropdownValue,
+                                    value: compartimentos.length.toString(),
                                     icon:
                                         const Icon(Icons.arrow_drop_down_sharp),
                                     iconSize: 24,
                                     elevation: 16,
                                     onChanged: (String? newValue) {
                                       setState(() {
-                                        dropdownValue = newValue!;
+                                        geraCompartimentos(
+                                            int.parse(newValue!));
                                       });
                                     },
-                                    items: widget.compartimentos
+                                    items: qtdCompartimentos
                                         .map<DropdownMenuItem<String>>(
                                             (int value) {
                                       return DropdownMenuItem<String>(
@@ -143,10 +139,11 @@ class _TanqueDialogWidgetState extends State<TanqueDialogWidget> {
                           padding: const EdgeInsets.all(8),
                           child: ListView.builder(
                             scrollDirection: Axis.horizontal,
-                            itemCount: int.parse(dropdownValue),
+                            itemCount: compartimentos.length,
                             itemBuilder: (BuildContext context, int index) {
+                              print(index);
                               return CompartimentoWidget(
-                                  title: 'C${index + 1}');
+                                  compartimento: compartimentos[index]);
                             },
                           )),
                       Padding(
@@ -154,7 +151,8 @@ class _TanqueDialogWidgetState extends State<TanqueDialogWidget> {
                         child: ElevatedButton(
                           child: Text('Inserir'),
                           onPressed: () => {
-                            if (_formKey.currentState!.validate())
+                            if (_formKey.currentState != null &&
+                                _formKey.currentState!.validate())
                               {
                                 _criaTanque(),
                                 Navigator.of(context).pop(),
@@ -201,7 +199,7 @@ class _TanqueDialogWidgetState extends State<TanqueDialogWidget> {
 
     if (result != null) {
       setState(() {
-        arquivo = Arquivo(
+        tanque.doc = Arquivo(
           result.files.single.bytes!,
           result.files.single.name,
           result.files.single.extension!,
@@ -214,12 +212,14 @@ class _TanqueDialogWidgetState extends State<TanqueDialogWidget> {
 
   void geraCompartimentos(int value) {
     if (value == compartimentos.length) return;
-    compartimentos = List.generate(
-        value, (index) => CompartimentoWidget(title: 'C${index + 1}'));
+    compartimentos =
+        List.generate(value, (index) => Compartimento('C${index + 1}'));
   }
 
   void _criaTanque() {
-    final t = Tanque(
-        _cPlaca.text, isChecked!, arquivo!, Map.fromIterable(compartimentos));
+    tanque.placa = _cPlaca.text;
+    tanque.compartimentos = compartimentos;
+    final formulario = Modular.get<Proprietario>();
+    formulario.addTanque(tanque);
   }
 }

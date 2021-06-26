@@ -5,7 +5,7 @@ import 'package:flutter_modular_test/flutter_modular_test.dart';
 main() {
   group('TanqueDialogWidget', () {
     testWidgets('has a title and message', (WidgetTester tester) async {
-      await tester.pumpWidget(buildTestableWidget(TanqueDialogWidget(title: 'T')));
+      await tester.pumpWidget(buildTestableWidget(TanqueDialogWidget()));
       final titleFinder = find.text('T');
       expect(titleFinder, findsOneWidget);
     });

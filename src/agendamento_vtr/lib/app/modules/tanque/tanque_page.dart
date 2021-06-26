@@ -20,9 +20,7 @@ class TanquePageState extends State<TanquePage> {
           Container(
             margin: EdgeInsets.all(12),
             alignment: Alignment.topLeft,
-            child: FormularioWidget(
-              title: "Dados do Solicitante",
-            ),
+            child: const FormularioWidget(),
           )
         ],
       ),
