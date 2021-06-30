@@ -1,26 +1,8 @@
-// Copyright 2019 Aleksander Woźniak
-// SPDX-License-Identifier: Apache-2.0
-
+import 'package:agendamento_vtr/app/modules/agendamento/widgets/calendario_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:table_calendar/table_calendar.dart';
 
-class AgendamentoPage extends StatefulWidget {
-  @override
-  _AgendamentoPageState createState() => _AgendamentoPageState();
-}
-
-class _AgendamentoPageState extends State<AgendamentoPage> {
-  CalendarFormat _calendarFormat = CalendarFormat.month;
-  DateTime _focusedDay = DateTime.now();
-  DateTime? _selectedDay;
-  final kToday = DateTime.now();
-  late DateTime kFirstDay;
-  late DateTime kLastDay;
-
-  _AgendamentoPageState() {
-    kFirstDay = DateTime(kToday.year, kToday.month - 3, kToday.day);
-    kLastDay = DateTime(kToday.year, kToday.month + 3, kToday.day);
-  }
+class AgendamentoPage extends StatelessWidget {
+  const AgendamentoPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -28,49 +10,9 @@ class _AgendamentoPageState extends State<AgendamentoPage> {
       appBar: AppBar(
         title: Text('Agendamentos'),
       ),
-      body: TableCalendar(
-        rangeSelectionMode: RangeSelectionMode.disabled,
-        headerStyle: HeaderStyle(formatButtonVisible: false),
-        availableCalendarFormats: const {
-          CalendarFormat.month: 'Mês',
-          CalendarFormat.twoWeeks: '2 Semanas',
-          CalendarFormat.week: 'Semana'
-        },
-        locale: 'pt_BR',
-        firstDay: kFirstDay,
-        lastDay: kLastDay,
-        focusedDay: _focusedDay,
-        calendarFormat: _calendarFormat,
-        selectedDayPredicate: (day) {
-          // Use `selectedDayPredicate` to determine which day is currently selected.
-          // If this returns true, then `day` will be marked as selected.
-
-          // Using `isSameDay` is recommended to disregard
-          // the time-part of compared DateTime objects.
-          return isSameDay(_selectedDay, day);
-        },
-        onDaySelected: (selectedDay, focusedDay) {
-          if (!isSameDay(_selectedDay, selectedDay)) {
-            // Call `setState()` when updating the selected day
-            setState(() {
-              _selectedDay = selectedDay;
-              _focusedDay = focusedDay;
-            });
-          }
-        },
-        onFormatChanged: (format) {
-          if (_calendarFormat != format) {
-            // Call `setState()` when updating calendar format
-            setState(() {
-              _calendarFormat = format;
-            });
-          }
-        },
-        onPageChanged: (focusedDay) {
-          // No need to call `setState()` here
-          _focusedDay = focusedDay;
-        },
-      ),
+      body: Column(children: [
+        CalendarioWidget(),
+      ]),
     );
   }
 }
