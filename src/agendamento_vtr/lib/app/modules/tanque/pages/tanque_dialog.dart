@@ -222,6 +222,6 @@ class _TanqueDialogState extends State<TanqueDialog> {
     tanque.compartimentos = compartimentos;
     final formulario = Modular.get<Proprietario>();
     formulario.addTanque(tanque);
-    tanque.proprietario = formulario;
+    tanque.proprietario = formulario.cnpj;
   }
 }
