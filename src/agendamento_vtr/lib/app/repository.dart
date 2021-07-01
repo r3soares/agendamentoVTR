@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:agendamento_vtr/app/modules/tanque/models/proprietario.dart';
 import 'package:agendamento_vtr/app/modules/tanque/models/tanque.dart';
 
@@ -7,6 +9,53 @@ class Repository {
 
   List<Tanque?> get tanques => _tanques;
   List<Proprietario?> get proprietarios => _proprietarios;
+
+  Repository() {
+    assert(() {
+      final alfabeto = [
+        'A',
+        'B',
+        'C',
+        'D',
+        'E',
+        'F',
+        'G',
+        'H',
+        'I',
+        'J',
+        'K',
+        'L',
+        'M',
+        'N',
+        'O',
+        'P',
+        'Q',
+        'R',
+        'S',
+        'T',
+        'U',
+        'V',
+        'X',
+        'Y',
+        'Z'
+      ];
+      for (int i = 0; i < 100; i++) {
+        Tanque t = Tanque();
+        t.placa = alfabeto[Random().nextInt(alfabeto.length)] +
+            alfabeto[Random().nextInt(alfabeto.length)] +
+            alfabeto[Random().nextInt(alfabeto.length)] +
+            Random().nextInt(10).toString() +
+            Random().nextInt(10).toString() +
+            Random().nextInt(10).toString() +
+            Random().nextInt(10).toString();
+        t.compartimentos[0].capacidade = Random().nextInt(500) * 100;
+        t.dataRegistro = DateTime.now()
+            .subtract(Duration(minutes: Random().nextInt(200000)));
+        _tanques.add(t);
+      }
+      return true;
+    }());
+  }
 
   addTanque(value) => _tanques.add(value);
   addProprietario(value) => proprietarios.add(value);

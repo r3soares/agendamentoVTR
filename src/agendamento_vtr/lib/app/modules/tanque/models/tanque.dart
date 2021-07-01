@@ -11,12 +11,16 @@ class Tanque {
   DateTime? _agenda;
   //String? _bitrem;
 
+  List<Compartimento> compartimentos = [Compartimento('C1')];
+
   String get placa => _placa;
   bool get isZero => this._isZero;
   Arquivo? get doc => this._doc;
   DateTime get dataRegistro => this._dataRegistro;
   String? get proprietario => this._proprietario;
   DateTime? get agenda => this._agenda;
+  int get capacidadeTotal => compartimentos.fold(
+      0, (previousValue, element) => previousValue + element.capacidade);
   //String? get bitrem => _bitrem;
 
   set placa(value) => this._placa = value;
@@ -27,5 +31,4 @@ class Tanque {
   set agenda(DateTime? value) => this._agenda = value;
   //set bitrem(value) => this._bitrem = value;
 
-  List<Compartimento> compartimentos = [Compartimento('C1')];
 }
