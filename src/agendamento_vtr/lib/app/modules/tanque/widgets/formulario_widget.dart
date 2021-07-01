@@ -56,24 +56,6 @@ class _FormularioWidgetState extends State<FormularioWidget> {
                   padding: const EdgeInsets.all(8.0),
                   child: TextFormField(
                     decoration: const InputDecoration(
-                      icon: Icon(Icons.person),
-                      labelText: 'Razão Social ou Nome do Proprietário',
-                    ),
-                    onSaved: (String? value) {
-                      // This optional block of code can be used to run
-                      // code when the user saves the form.
-                    },
-                    controller: _cRazaSocialProp,
-                    validator: (String? value) {
-                      return (value != null && value.length > 0)
-                          ? null
-                          : 'Informe um nome';
-                    },
-                  )),
-              Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: TextFormField(
-                    decoration: const InputDecoration(
                       icon: Icon(Icons.badge),
                       hintText: 'Somente números',
                       hintStyle: TextStyle(fontSize: 10),
@@ -89,6 +71,24 @@ class _FormularioWidgetState extends State<FormularioWidget> {
                     },
                     controller: _cCnpjCpf,
                     validator: validaCNPJCPF,
+                  )),
+              Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: TextFormField(
+                    decoration: const InputDecoration(
+                      icon: Icon(Icons.person),
+                      labelText: 'Razão Social ou Nome do Proprietário',
+                    ),
+                    onSaved: (String? value) {
+                      // This optional block of code can be used to run
+                      // code when the user saves the form.
+                    },
+                    controller: _cRazaSocialProp,
+                    validator: (String? value) {
+                      return (value != null && value.length > 0)
+                          ? null
+                          : 'Informe um nome';
+                    },
                   )),
               Padding(
                   padding: const EdgeInsets.all(8.0),
