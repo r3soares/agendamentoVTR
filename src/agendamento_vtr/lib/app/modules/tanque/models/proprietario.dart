@@ -8,10 +8,10 @@ class Proprietario extends ChangeNotifier {
   String _email = '';
   String? _oficina;
 
-  final List<Tanque> _tanques = List.empty(growable: true);
+  final List<String> _tanques = List.empty(growable: true);
 
-  void addTanque(Tanque t) {
-    _tanques.add(t);
+  void addTanque(String placa) {
+    _tanques.add(placa);
     notifyListeners();
   }
 

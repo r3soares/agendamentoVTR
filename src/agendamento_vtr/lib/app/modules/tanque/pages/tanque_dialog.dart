@@ -1,6 +1,7 @@
 import 'package:agendamento_vtr/app/modules/tanque/models/compartimento.dart';
 import 'package:agendamento_vtr/app/modules/tanque/models/proprietario.dart';
 import 'package:agendamento_vtr/app/modules/tanque/models/tanque.dart';
+import 'package:agendamento_vtr/app/repository.dart';
 import 'package:agendamento_vtr/app/modules/tanque/widgets/compartimento_widget.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -19,6 +20,7 @@ class _TanqueDialogState extends State<TanqueDialog> {
   final qtdCompartimentos = List.generate(10, (index) => 1 + index);
   final _formKey = GlobalKey<FormState>();
   Tanque tanque = Tanque();
+  final repo = Modular.get<Repository>();
   List<Compartimento> compartimentos = [Compartimento('C1')];
   TextEditingController _cPlaca = TextEditingController();
 
@@ -220,8 +222,11 @@ class _TanqueDialogState extends State<TanqueDialog> {
   void _criaTanque() {
     tanque.placa = _cPlaca.text;
     tanque.compartimentos = compartimentos;
+    tanque.dataRegistro = DateTime.now();
     final formulario = Modular.get<Proprietario>();
-    formulario.addTanque(tanque);
+    formulario.addTanque(tanque.placa);
     tanque.proprietario = formulario.cnpj;
+
+    repo.addTanque(tanque);
   }
 }

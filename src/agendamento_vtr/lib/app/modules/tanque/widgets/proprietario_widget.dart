@@ -1,5 +1,6 @@
 import 'package:agendamento_vtr/app/modules/tanque/models/proprietario.dart';
 import 'package:agendamento_vtr/app/modules/tanque/pages/tanque_dialog.dart';
+import 'package:agendamento_vtr/app/repository.dart';
 import 'package:agendamento_vtr/app/modules/tanque/widgets/tanque_widget.dart';
 import 'package:agendamento_vtr/app/modules/util/cnpj.dart';
 import 'package:agendamento_vtr/app/modules/util/cpf.dart';
@@ -7,17 +8,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
-class FormularioWidget extends StatefulWidget {
-  const FormularioWidget({Key? key}) : super(key: key);
+class ProprietarioWidget extends StatefulWidget {
+  const ProprietarioWidget({Key? key}) : super(key: key);
 
   @override
-  _FormularioWidgetState createState() => _FormularioWidgetState();
+  _ProprietarioWidgetState createState() => _ProprietarioWidgetState();
 }
 
-class _FormularioWidgetState extends State<FormularioWidget> {
+class _ProprietarioWidgetState extends State<ProprietarioWidget> {
   final _formKey = GlobalKey<FormState>();
 
-  final formulario = Modular.get<Proprietario>();
+  final proprietario = Modular.get<Proprietario>();
+
+  final repo = Modular.get<Repository>();
 
   final TextEditingController _cRazaSocialProp = TextEditingController();
 
@@ -27,8 +30,8 @@ class _FormularioWidgetState extends State<FormularioWidget> {
 
   final TextEditingController _cEmail = TextEditingController();
 
-  _FormularioWidgetState() {
-    formulario.addListener(() {
+  _ProprietarioWidgetState() {
+    proprietario.addListener(() {
       setState(() {
         print("Tanque adicionado");
       });
@@ -130,7 +133,11 @@ class _FormularioWidgetState extends State<FormularioWidget> {
                       padding: const EdgeInsets.all(8.0),
                       child: ElevatedButton(
                         child: Text('Enviar'),
-                        onPressed: verificaDadosPreenchidos() ? () => {} : null,
+                        onPressed: verificaDadosPreenchidos()
+                            ? () => {
+                                  repo.addProprietario(proprietario),
+                                }
+                            : null,
                       ),
                     ),
                     Padding(
@@ -148,7 +155,7 @@ class _FormularioWidgetState extends State<FormularioWidget> {
                   ],
                 ),
               ),
-              formulario.tanques.isEmpty
+              proprietario.tanques.isEmpty
                   ? SizedBox.shrink()
                   : Container(
                       alignment: Alignment.center,
@@ -156,11 +163,11 @@ class _FormularioWidgetState extends State<FormularioWidget> {
                       height: 200,
                       child: ListView.builder(
                         scrollDirection: Axis.horizontal,
-                        itemCount: formulario.tanques.length,
+                        itemCount: proprietario.tanques.length,
                         itemBuilder: (BuildContext context, int index) {
-                          print(index);
                           return TanqueWidget(
-                              tanque: formulario.tanques[index]);
+                              tanque: repo
+                                  .findTanque(proprietario.tanques[index])!);
                         },
                       ))
             ],
@@ -191,6 +198,6 @@ class _FormularioWidgetState extends State<FormularioWidget> {
 
   bool verificaDadosPreenchidos() {
     if (_formKey.currentState == null) return false;
-    return _formKey.currentState!.validate() && formulario.tanques.isNotEmpty;
+    return _formKey.currentState!.validate() && proprietario.tanques.isNotEmpty;
   }
 }

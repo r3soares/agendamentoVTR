@@ -1,4 +1,4 @@
-import 'package:agendamento_vtr/app/modules/tanque/widgets/formulario_widget.dart';
+import 'package:agendamento_vtr/app/modules/tanque/widgets/proprietario_widget.dart';
 import 'package:flutter/material.dart';
 
 class TanquePage extends StatefulWidget {
@@ -20,7 +20,7 @@ class TanquePageState extends State<TanquePage> {
           Container(
             margin: EdgeInsets.all(12),
             alignment: Alignment.topLeft,
-            child: const FormularioWidget(),
+            child: const ProprietarioWidget(),
           )
         ],
       ),

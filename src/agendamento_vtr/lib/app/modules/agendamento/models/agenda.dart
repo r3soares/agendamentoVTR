@@ -2,7 +2,7 @@ import 'package:agendamento_vtr/app/modules/tanque/models/tanque.dart';
 
 class Agenda {
   final DateTime _data;
-  List<Tanque> _tanques = List.empty(growable: true);
+  List<String> _tanques = List.empty(growable: true);
 
   Agenda(this._data);
 
@@ -10,7 +10,7 @@ class Agenda {
 
   get tanques => this._tanques;
 
-  addTanque(Tanque value) {
+  addTanque(String value) {
     _tanques.add(value);
   }
 
