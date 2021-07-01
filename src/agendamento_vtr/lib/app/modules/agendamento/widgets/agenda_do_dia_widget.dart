@@ -10,12 +10,11 @@ class AgendaDoDiaWidget extends StatefulWidget {
 }
 
 class _AgendaDoDiaWidgetState extends State<AgendaDoDiaWidget> {
-  final agendaStore = Modular.get<AgendaStore>();
+  final agendaDoDia = Modular.get<AgendaStore>().agendaDoDia;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Text('${agendaStore.state.day}'),
-    );
+    final size = MediaQuery.of(context).size;
+    return Container(child: Text('Dados...'));
   }
 }

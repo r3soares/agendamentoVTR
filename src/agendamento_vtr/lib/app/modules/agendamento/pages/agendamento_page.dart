@@ -25,33 +25,53 @@ class _AgendamentoPageState extends State<AgendamentoPage> {
       ),
       body: Column(children: [
         CalendarioWidget(),
-        Row(
-          children: [
-            Card(
-              elevation: 12,
-              child: Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(12.0),
-                    child: Text(
-                      'Tanques não agendados',
-                      style: TextStyle(fontSize: 18),
+        Expanded(
+          child: Row(
+            children: [
+              Card(
+                elevation: 12,
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(12.0),
+                      child: Text(
+                        'Tanques não agendados',
+                        style: TextStyle(fontSize: 18),
+                      ),
                     ),
-                  ),
-                  Container(
-                      alignment: Alignment.center,
-                      padding: EdgeInsets.all(12),
-                      width: size.width * .3,
-                      height: size.height * .4,
-                      child: TanquesPendentesWidget())
-                ],
+                    Container(
+                        alignment: Alignment.center,
+                        padding: EdgeInsets.all(12),
+                        width: size.width * .3,
+                        height: size.height * .4,
+                        child: TanquesPendentesWidget())
+                  ],
+                ),
               ),
-            ),
-            ScopedBuilder(
-              store: agendaStore,
-              onState: (_, state) => AgendaDoDiaWidget(),
-            )
-          ],
+              Card(
+                elevation: 12,
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(12.0),
+                      child: Text(
+                        'Agenda do dia ${agendaStore.agendaDoDia.data}',
+                        style: TextStyle(fontSize: 18),
+                      ),
+                    ),
+                    ScopedBuilder(
+                      store: agendaStore,
+                      onState: (_, state) => Container(
+                          alignment: Alignment.center,
+                          width: size.width * .6,
+                          height: size.height * .4,
+                          child: AgendaDoDiaWidget()),
+                    ),
+                  ],
+                ),
+              )
+            ],
+          ),
         )
       ]),
     );
