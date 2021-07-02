@@ -23,6 +23,8 @@ class _CalendarioWidgetState extends State<CalendarioWidget> {
   _CalendarioWidgetState() {
     kFirstDay = DateTime(kToday.year, kToday.month - 3, kToday.day);
     kLastDay = DateTime(kToday.year, kToday.month + 3, kToday.day);
+    _selectedDay = kToday;
+    agendaStore.update(kToday);
   }
 
   @override

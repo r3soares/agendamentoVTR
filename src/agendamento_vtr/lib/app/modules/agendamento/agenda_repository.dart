@@ -12,6 +12,15 @@ class AgendaRepository {
   }
 
   Agenda? findAgenda(DateTime data) {
-    return _agendas.firstWhere((a) => a?.data == data, orElse: () => null);
+    return _agendas.firstWhere((a) => a != null && _comparaData(a.data, data),
+        orElse: () => null);
+  }
+
+  bool _comparaData(DateTime a, DateTime b) {
+    if (a.day != b.day) return false;
+    if (a.month != b.month) return false;
+    if (a.year != b.year) return false;
+
+    return true;
   }
 }
