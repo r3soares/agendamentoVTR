@@ -30,7 +30,7 @@ class _TanquesPendentesWidgetState extends State<TanquesPendentesWidget> {
         Padding(
           padding: const EdgeInsets.all(12.0),
           child: Text(
-            'Tanques não agendados',
+            '${tanques.length} Tanques não agendados',
             style: TextStyle(fontSize: 18),
           ),
         ),
@@ -61,7 +61,7 @@ class _TanquesPendentesWidgetState extends State<TanquesPendentesWidget> {
                                 padding:
                                     const EdgeInsets.symmetric(horizontal: 20),
                                 child: Text(
-                                  '${t.capacidadeTotal.toString()}L (${t.compartimentos.length}C)',
+                                  '${t.capacidadeTotal.toString()}L (${t.compartimentos.length}C ${_somaSetas(t)}S)',
                                   style: TextStyle(fontSize: 12),
                                 ),
                               ),
@@ -94,5 +94,10 @@ class _TanquesPendentesWidgetState extends State<TanquesPendentesWidget> {
       agendaStore.agenda.addTanque(t.placa);
       _getTanques();
     });
+  }
+
+  _somaSetas(Tanque t) {
+    return t.compartimentos
+        .fold(0, (int previousValue, element) => previousValue + element.setas);
   }
 }
