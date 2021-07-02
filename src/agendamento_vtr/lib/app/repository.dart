@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:agendamento_vtr/app/modules/tanque/models/compartimento.dart';
 import 'package:agendamento_vtr/app/modules/tanque/models/proprietario.dart';
 import 'package:agendamento_vtr/app/modules/tanque/models/tanque.dart';
 
@@ -48,7 +49,11 @@ class Repository {
             Random().nextInt(10).toString() +
             Random().nextInt(10).toString() +
             Random().nextInt(10).toString();
-        t.compartimentos[0].capacidade = Random().nextInt(500) * 100;
+        for (int j = 0; j < Random().nextInt(10); j++) {
+          t.compartimentos.add(Compartimento('C$j'));
+          t.compartimentos[j].capacidade = Random().nextInt(50) * 100;
+          t.compartimentos[j].setas = Random().nextInt(5);
+        }
         t.dataRegistro = DateTime.now()
             .subtract(Duration(minutes: Random().nextInt(200000)));
         _tanques.add(t);
