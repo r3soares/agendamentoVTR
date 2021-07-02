@@ -15,8 +15,8 @@ class Proprietario extends ChangeNotifier {
     notifyListeners();
   }
 
-  void removeTanque(Tanque t) {
-    _tanques.remove(t);
+  void removeTanque(String placa) {
+    _tanques.remove(placa);
     notifyListeners();
   }
 

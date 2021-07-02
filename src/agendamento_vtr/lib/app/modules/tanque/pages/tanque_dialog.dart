@@ -21,7 +21,7 @@ class _TanqueDialogState extends State<TanqueDialog> {
   final _formKey = GlobalKey<FormState>();
   Tanque tanque = Tanque();
   final repo = Modular.get<Repository>();
-  List<Compartimento> compartimentos = [Compartimento('C1')];
+  List<Compartimento> compartimentos = [Compartimento('Compartimento 1')];
   TextEditingController _cPlaca = TextEditingController();
 
   @override
@@ -43,8 +43,15 @@ class _TanqueDialogState extends State<TanqueDialog> {
                   child: Column(
                     children: [
                       Padding(
-                          padding: const EdgeInsets.all(12),
-                          child: Column(
+                        padding: EdgeInsets.all(16),
+                        child: Text(
+                          'Dados do Tanque',
+                          style: TextStyle(fontSize: 20),
+                        ),
+                      ),
+                      Padding(
+                          padding: const EdgeInsets.all(8),
+                          child: Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               Text(
@@ -111,21 +118,33 @@ class _TanqueDialogState extends State<TanqueDialog> {
                               padding: EdgeInsets.symmetric(horizontal: 20),
                               child: Text('${compartimentos.length}'),
                             ),
-                            Column(
+                            Row(
                               children: [
-                                Rounded(
-                                    onPressed: () => {},
-                                    child: Icon(Icons.add)),
-                                ElevatedButton(
-                                    onPressed: () => {},
-                                    child: Icon(Icons.remove)),
+                                SizedBox(
+                                  width: 30,
+                                  child: TextButton(
+                                      onPressed: () => {
+                                            geraCompartimentos(
+                                                compartimentos.length + 1)
+                                          },
+                                      child: Icon(Icons.add)),
+                                ),
+                                SizedBox(
+                                  width: 30,
+                                  child: TextButton(
+                                      onPressed: () => {
+                                            geraCompartimentos(
+                                                compartimentos.length - 1)
+                                          },
+                                      child: Icon(Icons.remove)),
+                                ),
                               ],
                             )
                           ],
                         ),
                       ),
                       Container(
-                          height: size.height * .3,
+                          height: size.height * .25,
                           padding: const EdgeInsets.all(8),
                           child: ListView.builder(
                             scrollDirection: Axis.horizontal,
@@ -202,9 +221,13 @@ class _TanqueDialogState extends State<TanqueDialog> {
   }
 
   void geraCompartimentos(int value) {
+    if (value > 10) return;
+    if (value == 0) return;
     if (value == compartimentos.length) return;
-    compartimentos =
-        List.generate(value, (index) => Compartimento('C${index + 1}'));
+    setState(() {
+      compartimentos = List.generate(
+          value, (index) => Compartimento('Compartimento ${index + 1}'));
+    });
   }
 
   void _criaTanque() {

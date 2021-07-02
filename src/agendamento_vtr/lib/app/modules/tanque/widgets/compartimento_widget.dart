@@ -39,11 +39,11 @@ class _CompartimentoWidgetState extends State<CompartimentoWidget> {
               key: _formKey,
               child: Column(
                 children: [
+                  Text(compartimento.id),
                   TextFormField(
                     autovalidateMode: AutovalidateMode.onUserInteraction,
                     decoration: InputDecoration(
-                      labelText: compartimento.id,
-                      hintText: 'Em litros',
+                      hintText: 'Capacidade em litros',
                       hintStyle: TextStyle(fontSize: 10),
                     ),
                     controller: _cCapacidade,
@@ -55,16 +55,33 @@ class _CompartimentoWidgetState extends State<CompartimentoWidget> {
                     ],
                     validator: validaCapacidade,
                   ),
-                  TextFormField(
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    decoration: InputDecoration(
-                      labelText: 'Quantidade de setas, se houver',
-                    ),
-                    controller: _cSeta,
-                    keyboardType: TextInputType.number,
-                    inputFormatters: <TextInputFormatter>[
-                      FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-                    ],
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8),
+                    child: Row(children: [
+                      Text('Setas:'),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 4),
+                        child: Text('${compartimento.setas}'),
+                      ),
+                      Row(
+                        children: [
+                          SizedBox(
+                            width: 25,
+                            child: TextButton(
+                                onPressed: () =>
+                                    {gerSetas(compartimento.setas + 1)},
+                                child: Icon(Icons.add)),
+                          ),
+                          SizedBox(
+                            width: 25,
+                            child: TextButton(
+                                onPressed: () =>
+                                    {gerSetas(compartimento.setas - 1)},
+                                child: Icon(Icons.remove)),
+                          ),
+                        ],
+                      ),
+                    ]),
                   ),
                 ],
               ),
@@ -89,5 +106,13 @@ class _CompartimentoWidgetState extends State<CompartimentoWidget> {
       return 'Deve ser menor que ${compartimento.capacidade}L';
     if (capacidade % 10 != 0) return 'Somente múltiplos de 10';
     return null;
+  }
+
+  gerSetas(int value) {
+    if (value < 0) return;
+    if (value > 10) return;
+    setState(() {
+      compartimento.setas = value;
+    });
   }
 }

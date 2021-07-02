@@ -3,10 +3,15 @@ import 'package:agendamento_vtr/app/modules/tanque/models/tanque.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
-class TanqueWidget extends StatelessWidget {
+class TanqueWidget extends StatefulWidget {
   final Tanque tanque;
   const TanqueWidget({Key? key, required this.tanque}) : super(key: key);
 
+  @override
+  _TanqueWidgetState createState() => _TanqueWidgetState();
+}
+
+class _TanqueWidgetState extends State<TanqueWidget> {
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -20,7 +25,7 @@ class TanqueWidget extends StatelessWidget {
               children: [
                 Padding(
                   padding: EdgeInsets.all(12),
-                  child: Text('${tanque.placa}'),
+                  child: Text('${widget.tanque.placa}'),
                 ),
                 Padding(
                   padding: EdgeInsets.all(8),
@@ -28,10 +33,10 @@ class TanqueWidget extends StatelessWidget {
                 ),
                 Padding(
                   padding: EdgeInsets.all(8),
-                  child:
-                      Text('${tanque.compartimentos.length} compartimento(s)'),
+                  child: Text(
+                      '${widget.tanque.compartimentos.length} compartimento(s)'),
                 ),
-                tanque.compartimentos.any((element) => element.setas > 0)
+                widget.tanque.compartimentos.any((element) => element.setas > 0)
                     ? Padding(
                         padding: EdgeInsets.all(8),
                         child: Text('Possui setas'),
@@ -46,7 +51,9 @@ class TanqueWidget extends StatelessWidget {
           child: GestureDetector(
             onTap: () {
               final prop = Modular.get<Proprietario>();
-              prop.removeTanque(tanque);
+              setState(() {
+                prop.removeTanque(widget.tanque.placa);
+              });
             },
             child: Container(
                 padding: EdgeInsets.all(8),
@@ -62,7 +69,7 @@ class TanqueWidget extends StatelessWidget {
   }
 
   int calculaCapacidade() {
-    int total = tanque.compartimentos.fold(
+    int total = widget.tanque.compartimentos.fold(
         0, (previousValue, element) => previousValue + element.capacidade);
     return total;
   }
