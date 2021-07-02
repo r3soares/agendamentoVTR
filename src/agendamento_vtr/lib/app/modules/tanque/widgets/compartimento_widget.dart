@@ -55,74 +55,17 @@ class _CompartimentoWidgetState extends State<CompartimentoWidget> {
                     ],
                     validator: validaCapacidade,
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: ElevatedButton.icon(
-                        onPressed: compartimento.capacidade % 10 == 0
-                            ? () => showDialog(
-                                barrierDismissible: true,
-                                barrierColor: Color.fromRGBO(0, 0, 0, .5),
-                                useSafeArea: true,
-                                context: context,
-                                builder: (_) => SimpleDialog(
-                                      elevation: 12,
-                                      title: Text('Dispositivo de referência'),
-                                      children: [
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 24, vertical: 8),
-                                          child: TextFormField(
-                                            autovalidateMode: AutovalidateMode
-                                                .onUserInteraction,
-                                            decoration: InputDecoration(
-                                                labelText:
-                                                    'L${widget.compartimento.setas.length + 1}',
-                                                hintStyle:
-                                                    TextStyle(fontSize: 10),
-                                                hintText: 'Em litros'),
-                                            controller: _cSeta,
-                                            keyboardType: TextInputType.number,
-                                            inputFormatters: <
-                                                TextInputFormatter>[
-                                              FilteringTextInputFormatter.allow(
-                                                  RegExp(r'[0-9]')),
-                                            ],
-                                            validator: validaSeta,
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 30),
-                                          child: ElevatedButton(
-                                            child: Text('Inserir'),
-                                            onPressed: () => {
-                                              if (_formKey.currentState!
-                                                  .validate())
-                                                {
-                                                  setState(() {
-                                                    compartimento.setas.add(
-                                                        int.parse(_cSeta.text));
-                                                  }),
-                                                  Navigator.of(context).pop()
-                                                }
-                                            },
-                                          ),
-                                        )
-                                      ],
-                                    ))
-                            : null,
-                        icon: Icon(Icons.add),
-                        label: Text('Seta')),
+                  TextFormField(
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    decoration: InputDecoration(
+                      labelText: 'Quantidade de setas, se houver',
+                    ),
+                    controller: _cSeta,
+                    keyboardType: TextInputType.number,
+                    inputFormatters: <TextInputFormatter>[
+                      FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                    ],
                   ),
-                  Expanded(
-                      child: ListView.builder(
-                    scrollDirection: Axis.vertical,
-                    itemCount: compartimento.setas.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return Text(
-                          'L${index + 1}: ${compartimento.setas[index]}');
-                    },
-                  )),
                 ],
               ),
             ),

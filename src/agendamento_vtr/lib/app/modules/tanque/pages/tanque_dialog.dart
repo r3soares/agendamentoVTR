@@ -103,39 +103,27 @@ class _TanqueDialogState extends State<TanqueDialog> {
                         ]),
                       ),
                       Padding(
-                          padding: const EdgeInsets.all(8),
-                          child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
+                        padding: EdgeInsets.all(8),
+                        child: Row(
+                          children: [
+                            Text('Compartimentos:'),
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 20),
+                              child: Text('${compartimentos.length}'),
+                            ),
+                            Column(
                               children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(right: 20),
-                                  child: Text('Compartimentos:'),
-                                ),
-                                Expanded(
-                                  child: DropdownButton<String>(
-                                    isExpanded: true,
-                                    value: compartimentos.length.toString(),
-                                    icon:
-                                        const Icon(Icons.arrow_drop_down_sharp),
-                                    iconSize: 24,
-                                    elevation: 16,
-                                    onChanged: (String? newValue) {
-                                      setState(() {
-                                        geraCompartimentos(
-                                            int.parse(newValue!));
-                                      });
-                                    },
-                                    items: qtdCompartimentos
-                                        .map<DropdownMenuItem<String>>(
-                                            (int value) {
-                                      return DropdownMenuItem<String>(
-                                        value: value.toString(),
-                                        child: Text(value.toString()),
-                                      );
-                                    }).toList(),
-                                  ),
-                                ),
-                              ])),
+                                Rounded(
+                                    onPressed: () => {},
+                                    child: Icon(Icons.add)),
+                                ElevatedButton(
+                                    onPressed: () => {},
+                                    child: Icon(Icons.remove)),
+                              ],
+                            )
+                          ],
+                        ),
+                      ),
                       Container(
                           height: size.height * .3,
                           padding: const EdgeInsets.all(8),

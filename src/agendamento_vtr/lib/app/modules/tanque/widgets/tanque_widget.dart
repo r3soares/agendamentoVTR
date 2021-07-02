@@ -31,7 +31,7 @@ class TanqueWidget extends StatelessWidget {
                   child:
                       Text('${tanque.compartimentos.length} compartimento(s)'),
                 ),
-                tanque.compartimentos.any((element) => element.setas.isNotEmpty)
+                tanque.compartimentos.any((element) => element.setas > 0)
                     ? Padding(
                         padding: EdgeInsets.all(8),
                         child: Text('Possui setas'),
