@@ -1,5 +1,4 @@
 import 'package:agendamento_vtr/app/modules/agendamento/agenda_store.dart';
-import 'package:agendamento_vtr/app/modules/agendamento/models/agenda.dart';
 import 'package:agendamento_vtr/app/modules/tanque/models/tanque.dart';
 import 'package:agendamento_vtr/app/repository.dart';
 import 'package:flutter/material.dart';
@@ -13,17 +12,18 @@ class AgendaDoDiaWidget extends StatefulWidget {
   _AgendaDoDiaWidgetState createState() => _AgendaDoDiaWidgetState();
 }
 
-class _AgendaDoDiaWidgetState extends State<AgendaDoDiaWidget> {
-  final agendaStore = Modular.get<AgendaStore>();
+class _AgendaDoDiaWidgetState
+    extends ModularState<AgendaDoDiaWidget, AgendaStore> {
+  //final agendaStore = Modular.get<AgendaStore>();
   final tanquesRepo = Modular.get<Repository>();
   final formatoData = 'dd/MM/yy';
-  List<Tanque?> tanquesDoDia = List.empty(growable: true);
+  final List<Tanque?> tanquesDoDia = List.empty(growable: true);
   String data = '';
 
   @override
   initState() {
     super.initState();
-    agendaStore.addListener(() {
+    store.addListener(() {
       _getTanques();
     });
     _getTanques();
@@ -31,10 +31,11 @@ class _AgendaDoDiaWidgetState extends State<AgendaDoDiaWidget> {
   }
 
   _getTanques() {
+    tanquesDoDia.clear();
     setState(() {
-      tanquesDoDia = tanquesRepo.tanques
-          .where((t) => agendaStore.agenda.tanques.contains(t?.placa))
-          .toList();
+      tanquesDoDia.addAll(tanquesRepo.tanques
+          .where((t) => store.agenda.tanques.contains(t?.placa))
+          .toList());
     });
   }
 
@@ -47,7 +48,7 @@ class _AgendaDoDiaWidgetState extends State<AgendaDoDiaWidget> {
         Padding(
           padding: const EdgeInsets.all(12.0),
           child: Text(
-            'Agenda do dia ${DateFormat(formatoData).format(agendaStore.agenda.data)}',
+            'Agenda do dia ${DateFormat(formatoData).format(store.agenda.data)}',
             style: TextStyle(fontSize: 18),
           ),
         ),

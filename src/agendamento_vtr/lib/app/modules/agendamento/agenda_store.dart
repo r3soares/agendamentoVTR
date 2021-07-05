@@ -11,13 +11,11 @@ class AgendaStore extends ChangeNotifier {
   Agenda get agenda => _agenda;
 
   update(DateTime data) {
-    _agenda.removeListener(() {
-      notifyListeners();
-    });
+    //_agenda.removeListener(() {});
     _agenda = _repository.findAgenda(data) ?? _novaAgenda(data);
-    _agenda.addListener(() {
-      notifyListeners();
-    });
+    // _agenda.addListener(() {
+    //   notifyListeners();
+    // });
     notifyListeners();
   }
 
@@ -26,5 +24,21 @@ class AgendaStore extends ChangeNotifier {
     final agenda = Agenda(data);
     _repository.addAgenda(agenda);
     return agenda;
+  }
+
+  addTanque(value) {
+    _agenda.tanques.add(value);
+    notifyListeners();
+  }
+
+  removeTanque(value) {
+    _agenda.tanques.remove(value);
+    notifyListeners();
+  }
+
+  @override
+  void dispose() {
+    //_agenda.removeListener(() {});
+    super.dispose();
   }
 }

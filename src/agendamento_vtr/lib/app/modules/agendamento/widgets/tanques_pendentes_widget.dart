@@ -12,14 +12,17 @@ class TanquesPendentesWidget extends StatefulWidget {
   _TanquesPendentesWidgetState createState() => _TanquesPendentesWidgetState();
 }
 
-class _TanquesPendentesWidgetState extends State<TanquesPendentesWidget> {
-  final agendaStore = Modular.get<AgendaStore>();
-  List<Tanque?> tanques = Modular.get<Repository>()
-      .tanques
-      .where((t) => t?.agenda == null)
-      .toList();
+class _TanquesPendentesWidgetState
+    extends ModularState<TanquesPendentesWidget, AgendaStore> {
+  final List<Tanque?> tanques = List.empty(growable: true);
 
   final formatoData = 'dd/MM/yy HH:mm';
+
+  @override
+  void initState() {
+    super.initState();
+    _getTanques();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -82,16 +85,17 @@ class _TanquesPendentesWidgetState extends State<TanquesPendentesWidget> {
   }
 
   _getTanques() {
-    tanques = Modular.get<Repository>()
+    tanques.clear();
+    tanques.addAll(Modular.get<Repository>()
         .tanques
         .where((t) => t?.agenda == null)
-        .toList();
+        .toList());
   }
 
   agendaTanque(Tanque t) {
     setState(() {
-      t.agenda = agendaStore.agenda.data;
-      agendaStore.agenda.addTanque(t.placa);
+      t.agenda = store.agenda.data;
+      store.addTanque(t.placa);
       _getTanques();
     });
   }
