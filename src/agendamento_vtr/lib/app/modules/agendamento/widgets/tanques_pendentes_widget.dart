@@ -40,7 +40,7 @@ class _TanquesPendentesWidgetState
         Container(
             alignment: Alignment.center,
             padding: EdgeInsets.all(12),
-            width: size.width * .3,
+            width: size.width * .35,
             height: size.height * .4,
             child: tanques.isNotEmpty
                 ? ListView.builder(

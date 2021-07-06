@@ -54,7 +54,7 @@ class _AgendaDoDiaWidgetState
         ),
         Container(
             alignment: Alignment.center,
-            width: size.width * .6,
+            width: size.width * .55,
             height: size.height * .4,
             child: tanquesDoDia.isEmpty
                 ? Center(

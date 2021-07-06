@@ -12,17 +12,17 @@ class AgendamentoPage extends StatelessWidget {
       appBar: AppBar(
         title: Text('Agendamentos'),
       ),
-      body: Column(children: [
-        CalendarioWidget(),
-        Expanded(
-          child: Row(
+      body: SingleChildScrollView(
+        child: Column(children: [
+          CalendarioWidget(),
+          Row(
             children: [
               Card(elevation: 12, child: TanquesPendentesWidget()),
               Card(elevation: 12, child: AgendaDoDiaWidget()),
             ],
-          ),
-        )
-      ]),
+          )
+        ]),
+      ),
     );
   }
 }
