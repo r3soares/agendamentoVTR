@@ -40,7 +40,7 @@ class Repository {
         'Y',
         'Z'
       ];
-      for (int i = 0; i < 100; i++) {
+      for (int i = 0; i < Random().nextInt(100) + 15; i++) {
         Tanque t = Tanque();
         t.placa = alfabeto[Random().nextInt(alfabeto.length)] +
             alfabeto[Random().nextInt(alfabeto.length)] +
