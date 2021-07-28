@@ -103,7 +103,8 @@ class _AgendaDoDiaWidgetState
                                                     useSafeArea: true,
                                                     context: context,
                                                     builder: (_) =>
-                                                        const VisualizaTanqueDialog()),
+                                                        VisualizaTanqueDialog(
+                                                            t)),
                                               },
                                           child: Icon(Icons.remove_red_eye)),
                                       TextButton(

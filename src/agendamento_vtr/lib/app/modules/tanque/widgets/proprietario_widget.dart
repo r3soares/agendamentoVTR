@@ -30,6 +30,8 @@ class _ProprietarioWidgetState extends State<ProprietarioWidget> {
 
   final TextEditingController _cEmail = TextEditingController();
 
+  bool isSalvo = false;
+
   _ProprietarioWidgetState() {
     proprietario.addListener(() {
       setState(() {
@@ -58,6 +60,7 @@ class _ProprietarioWidgetState extends State<ProprietarioWidget> {
               Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: TextFormField(
+                    enabled: !isSalvo,
                     decoration: const InputDecoration(
                       icon: Icon(Icons.badge),
                       hintText: 'Somente números',
@@ -68,24 +71,17 @@ class _ProprietarioWidgetState extends State<ProprietarioWidget> {
                     inputFormatters: <TextInputFormatter>[
                       FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
                     ],
-                    onSaved: (String? value) {
-                      // This optional block of code can be used to run
-                      // code when the user saves the form.
-                    },
                     controller: _cCnpjCpf,
                     validator: validaCNPJCPF,
                   )),
               Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: TextFormField(
+                    enabled: !isSalvo,
                     decoration: const InputDecoration(
                       icon: Icon(Icons.person),
                       labelText: 'Razão Social ou Nome do Proprietário',
                     ),
-                    onSaved: (String? value) {
-                      // This optional block of code can be used to run
-                      // code when the user saves the form.
-                    },
                     controller: _cRazaSocialProp,
                     validator: (String? value) {
                       return (value != null && value.length > 0)
@@ -96,21 +92,19 @@ class _ProprietarioWidgetState extends State<ProprietarioWidget> {
               Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: TextFormField(
+                    enabled: !isSalvo,
                     decoration: const InputDecoration(
                       icon: Icon(Icons.other_houses),
                       hintText: 'Oficina que realizou o agendamento',
                       hintStyle: TextStyle(fontSize: 10),
                       labelText: 'Nome da oficina credenciada, se houver',
                     ),
-                    onSaved: (String? value) {
-                      // This optional block of code can be used to run
-                      // code when the user saves the form.
-                    },
                     controller: _cOficina,
                   )),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: TextFormField(
+                  enabled: !isSalvo,
                   decoration: const InputDecoration(
                     icon: Icon(Icons.email),
                     hintStyle: TextStyle(fontSize: 10),
@@ -125,6 +119,15 @@ class _ProprietarioWidgetState extends State<ProprietarioWidget> {
                   },
                 ),
               ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: isSalvo
+                    ? ElevatedButton.icon(
+                        onPressed: () => setState(() => isSalvo = false),
+                        icon: Icon(Icons.edit),
+                        label: Text('Alterar'))
+                    : SizedBox.shrink(),
+              ),
               Center(
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -132,10 +135,15 @@ class _ProprietarioWidgetState extends State<ProprietarioWidget> {
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: ElevatedButton(
-                        child: Text('Enviar'),
-                        onPressed: verificaDadosPreenchidos()
+                        child: Text('Salvar'),
+                        onPressed: !isSalvo
                             ? () => {
-                                  repo.addProprietario(proprietario),
+                                  _salvaProprietario()
+                                      ? ScaffoldMessenger.of(context)
+                                          .showSnackBar(const SnackBar(
+                                              content:
+                                                  Text('Proprietário Salvo')))
+                                      : null
                                 }
                             : null,
                       ),
@@ -143,12 +151,14 @@ class _ProprietarioWidgetState extends State<ProprietarioWidget> {
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: ElevatedButton.icon(
-                          onPressed: () => showDialog(
-                              barrierDismissible: false,
-                              barrierColor: Color.fromRGBO(0, 0, 0, .5),
-                              useSafeArea: true,
-                              context: context,
-                              builder: (_) => const TanqueDialog()),
+                          onPressed: isSalvo
+                              ? () => showDialog(
+                                  barrierDismissible: false,
+                                  barrierColor: Color.fromRGBO(0, 0, 0, .5),
+                                  useSafeArea: true,
+                                  context: context,
+                                  builder: (_) => const TanqueDialog())
+                              : null,
                           icon: Icon(Icons.add),
                           label: Text('Tanque')),
                     ),
@@ -198,6 +208,29 @@ class _ProprietarioWidgetState extends State<ProprietarioWidget> {
 
   bool verificaDadosPreenchidos() {
     if (_formKey.currentState == null) return false;
-    return _formKey.currentState!.validate() && proprietario.tanques.isNotEmpty;
+    return _formKey.currentState!.validate();
+  }
+
+  void _insereDadosNoProprietario() {
+    proprietario.cnpj = _cCnpjCpf.text;
+    proprietario.email = _cEmail.text;
+    proprietario.oficina = _cOficina.text;
+    proprietario.razaoSocial = _cRazaSocialProp.text;
+  }
+
+  bool _salvaProprietario() {
+    if (!verificaDadosPreenchidos()) return false;
+    _insereDadosNoProprietario();
+    repo.addProprietario(proprietario);
+    setState(() => isSalvo = true);
+    return true;
+  }
+
+  verificaDadosAlterados() {
+    if (isSalvo) {
+      setState(() {
+        isSalvo = false;
+      });
+    }
   }
 }

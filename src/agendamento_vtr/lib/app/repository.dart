@@ -40,8 +40,15 @@ class Repository {
         'Y',
         'Z'
       ];
+      Proprietario p = Proprietario();
+      p.cnpj = '00970455941';
+      p.email = 'contato@empresa.com';
+      p.oficina = 'Tapa Buracos Ltda';
+      p.razaoSocial = 'Rolando Milhas';
+      proprietarios.add(p);
       for (int i = 0; i < Random().nextInt(100) + 15; i++) {
         Tanque t = Tanque();
+        t.proprietario = p.cnpj;
         t.placa = alfabeto[Random().nextInt(alfabeto.length)] +
             alfabeto[Random().nextInt(alfabeto.length)] +
             alfabeto[Random().nextInt(alfabeto.length)] +
@@ -63,7 +70,16 @@ class Repository {
   }
 
   addTanque(value) => _tanques.add(value);
-  addProprietario(value) => proprietarios.add(value);
+  void addProprietario(Proprietario value) {
+    var pExistente = proprietarios.firstWhere((p) => p!.cnpj == value.cnpj,
+        orElse: () => null);
+    if (pExistente != null) {
+      proprietarios.remove(pExistente);
+      proprietarios.add(value);
+      return;
+    }
+    proprietarios.add(value);
+  }
 
   removeTanque(value) => _tanques.remove(value);
   removeProprietario(value) => _proprietarios.remove(value);
