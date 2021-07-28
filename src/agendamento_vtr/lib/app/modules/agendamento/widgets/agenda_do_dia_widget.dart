@@ -112,7 +112,8 @@ class _AgendaDoDiaWidgetState
                                           child: Icon(
                                               Icons.calendar_today_outlined)),
                                       TextButton(
-                                          onPressed: () => {},
+                                          onPressed: () =>
+                                              excluiTanqueDialog(context, t),
                                           child: Icon(Icons.close)),
                                     ],
                                   ),
@@ -121,5 +122,43 @@ class _AgendaDoDiaWidgetState
                         }))),
       ],
     );
+  }
+
+  void excluiTanqueDialog(BuildContext ctx, Tanque t) {
+    showDialog(
+        context: ctx,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text(t.placa.replaceRange(3, 3, '-')),
+            content: SingleChildScrollView(
+              child: ListBody(
+                children: const <Widget>[
+                  Text(
+                      'O tanque será excluído da agenda do dia e retornará para o final da fila.'),
+                  Text('\nConfirma ação?'),
+                ],
+              ),
+            ),
+            actions: <Widget>[
+              TextButton(
+                child: const Text('Sim'),
+                onPressed: () {
+                  setState(() {
+                    t.agenda = null;
+                    t.dataRegistro = DateTime.now();
+                    store.removeTanque(t.placa);
+                  });
+                  Navigator.of(context).pop();
+                },
+              ),
+              TextButton(
+                child: const Text('Não'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        });
   }
 }

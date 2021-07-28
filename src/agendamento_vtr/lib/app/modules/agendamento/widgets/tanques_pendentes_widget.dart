@@ -22,6 +22,12 @@ class _TanquesPendentesWidgetState
   void initState() {
     super.initState();
     _getTanques();
+    store.addListener(() {
+      if (store.statusTanque == 2)
+        setState(() {
+          _getTanques();
+        });
+    });
   }
 
   @override

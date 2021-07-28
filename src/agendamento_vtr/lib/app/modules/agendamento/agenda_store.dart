@@ -7,8 +7,13 @@ import 'agenda_repository.dart';
 class AgendaStore extends ChangeNotifier {
   final _repository = Modular.get<AgendaRepository>();
   Agenda _agenda = Agenda(DateTime.now());
+  int _statusTanque = 0;
+  //0 -> inicial
+  //1 -> adicionou
+  //2 -> removeu
 
   Agenda get agenda => _agenda;
+  int get statusTanque => _statusTanque;
 
   update(DateTime data) {
     //_agenda.removeListener(() {});
@@ -26,13 +31,15 @@ class AgendaStore extends ChangeNotifier {
     return agenda;
   }
 
-  addTanque(value) {
+  addTanque(String value) {
     _agenda.tanques.add(value);
+    _statusTanque = 1;
     notifyListeners();
   }
 
-  removeTanque(value) {
+  removeTanque(String value) {
     _agenda.tanques.remove(value);
+    _statusTanque = 2;
     notifyListeners();
   }
 
