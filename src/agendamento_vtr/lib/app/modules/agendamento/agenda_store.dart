@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:agendamento_vtr/app/modules/agendamento/models/agenda.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_modular/flutter_modular.dart';
@@ -29,6 +31,14 @@ class AgendaStore extends ChangeNotifier {
     final agenda = Agenda(data);
     _repository.addAgenda(agenda);
     return agenda;
+  }
+
+  void mudaAgenda(DateTime dataAtual, DateTime novaData, String tanque) {
+    final agendaA = _repository.findAgenda(dataAtual) ?? _novaAgenda(dataAtual);
+    final agendaB = _repository.findAgenda(novaData) ?? _novaAgenda(novaData);
+    agendaA.tanques.remove(tanque);
+    agendaB.tanques.add(tanque);
+    notifyListeners();
   }
 
   addTanque(String value) {

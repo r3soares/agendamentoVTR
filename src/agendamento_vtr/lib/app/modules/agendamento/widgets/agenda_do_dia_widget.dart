@@ -1,4 +1,5 @@
 import 'package:agendamento_vtr/app/modules/agendamento/agenda_store.dart';
+import 'package:agendamento_vtr/app/modules/agendamento/pages/reagenda_dialog.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/pages/visualiza_tanque_dialog.dart';
 import 'package:agendamento_vtr/app/modules/tanque/models/tanque.dart';
 import 'package:agendamento_vtr/app/repository.dart';
@@ -108,7 +109,8 @@ class _AgendaDoDiaWidgetState
                                               },
                                           child: Icon(Icons.remove_red_eye)),
                                       TextButton(
-                                          onPressed: () => {},
+                                          onPressed: () =>
+                                              reagendaTanqueDialog(context, t),
                                           child: Icon(
                                               Icons.calendar_today_outlined)),
                                       TextButton(
@@ -159,6 +161,14 @@ class _AgendaDoDiaWidgetState
               ),
             ],
           );
+        });
+  }
+
+  void reagendaTanqueDialog(BuildContext ctx, Tanque t) {
+    showDialog(
+        context: ctx,
+        builder: (BuildContext context) {
+          return ReagendaDialog(t);
         });
   }
 }
