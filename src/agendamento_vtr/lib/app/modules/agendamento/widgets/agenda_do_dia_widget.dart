@@ -56,14 +56,14 @@ class _AgendaDoDiaWidgetState
         ),
         Container(
             alignment: Alignment.center,
-            width: size.width * .55,
+            width: size.width * .36,
             height: size.height * .4,
             child: tanquesDoDia.isEmpty
                 ? Center(
                     child: Text('Sem veículos para este dia'),
                   )
                 : Container(
-                    width: size.width * .4,
+                    width: size.width * .35,
                     child: ListView.builder(
                         scrollDirection: Axis.vertical,
                         itemCount: tanquesDoDia.length,

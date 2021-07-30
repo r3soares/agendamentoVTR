@@ -5,15 +5,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:intl/intl.dart';
 
-class TanquesPendentesWidget extends StatefulWidget {
-  const TanquesPendentesWidget({Key? key}) : super(key: key);
+class TanquesAgendadosWidget extends StatefulWidget {
+  const TanquesAgendadosWidget({Key? key}) : super(key: key);
 
   @override
-  _TanquesPendentesWidgetState createState() => _TanquesPendentesWidgetState();
+  _TanquesAgendadosWidgetState createState() => _TanquesAgendadosWidgetState();
 }
 
-class _TanquesPendentesWidgetState
-    extends ModularState<TanquesPendentesWidget, AgendaStore> {
+class _TanquesAgendadosWidgetState
+    extends ModularState<TanquesAgendadosWidget, AgendaStore> {
   final List<Tanque?> tanques = List.empty(growable: true);
 
   final formatoData = 'dd/MM/yy HH:mm';
@@ -23,7 +23,7 @@ class _TanquesPendentesWidgetState
     super.initState();
     _getTanques();
     store.addListener(() {
-      if (store.statusTanque == 2)
+      if (store.statusTanque == 1)
         setState(() {
           _getTanques();
         });
@@ -33,13 +33,13 @@ class _TanquesPendentesWidgetState
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    tanques.sort((a, b) => a!.dataRegistro.compareTo(b!.dataRegistro));
+    tanques.sort((a, b) => a!.agenda!.compareTo(b!.agenda!));
     return Column(
       children: [
         Padding(
           padding: const EdgeInsets.all(12.0),
           child: Text(
-            '${tanques.length} Tanques não agendados',
+            '${tanques.length} Tanques agendados',
             style: TextStyle(fontSize: 18),
           ),
         ),
@@ -54,38 +54,39 @@ class _TanquesPendentesWidgetState
                     itemCount: tanques.length,
                     itemBuilder: (BuildContext context, int index) {
                       Tanque t = tanques.elementAt(index)!;
-                      final data =
-                          DateFormat(formatoData).format(t.dataRegistro);
+                      final data = DateFormat(formatoData).format(t.agenda!);
                       return Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Card(
                           elevation: 12,
                           child: ListTile(
-                            leading: Icon(Icons.drive_eta_outlined),
-                            title: Row(children: [
-                              Text(
-                                t.placa.replaceRange(3, 3, '-'),
-                              ),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 20),
-                                child: Text(
-                                  '${t.capacidadeTotal.toString()}L (${t.compartimentos.length}C ${_somaSetas(t)}S)',
-                                  style: TextStyle(fontSize: 12),
-                                ),
-                              ),
-                            ]),
-                            subtitle: Text('$data'),
+                            leading: Text(
+                              '$data',
+                              textAlign: TextAlign.center,
+                            ),
+                            title: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    t.placa.replaceRange(3, 3, '-'),
+                                  ),
+                                  Text(
+                                    '${t.capacidadeTotal.toString()}L (${t.compartimentos.length}C ${_somaSetas(t)}S)',
+                                    style: TextStyle(
+                                        fontSize: 12, color: Colors.grey),
+                                  )
+                                ]),
                             trailing: TextButton(
-                              child: Text('Agendar'),
-                              onPressed: () => {agendaTanque(t)},
+                              child: Text('Remover'),
+                              onPressed: () => {},
                             ),
                           ),
                         ),
                       );
                     },
                   )
-                : Text('Não há tanques pendentes de agendamento'))
+                : Text('Sem veículos agendados'))
       ],
     );
   }
@@ -94,16 +95,8 @@ class _TanquesPendentesWidgetState
     tanques.clear();
     tanques.addAll(Modular.get<Repository>()
         .tanques
-        .where((t) => t?.agenda == null)
+        .where((t) => t?.agenda != null)
         .toList());
-  }
-
-  agendaTanque(Tanque t) {
-    setState(() {
-      t.agenda = store.agenda.data;
-      store.addTanque(t.placa);
-      _getTanques();
-    });
   }
 
   _somaSetas(Tanque t) {
