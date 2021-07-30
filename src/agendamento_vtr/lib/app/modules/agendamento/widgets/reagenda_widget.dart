@@ -60,6 +60,7 @@ class _ReagendaWidgetState extends State<ReagendaWidget> {
       lastDay: kLastDay,
       focusedDay: _focusedDay,
       calendarFormat: _calendarFormat,
+      startingDayOfWeek: StartingDayOfWeek.monday,
       selectedDayPredicate: (day) {
         // Use `selectedDayPredicate` to determine which day is currently selected.
         // If this returns true, then `day` will be marked as selected.
