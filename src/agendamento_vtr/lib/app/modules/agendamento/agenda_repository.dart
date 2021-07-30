@@ -11,6 +11,13 @@ class AgendaRepository {
     _agendas.remove(value);
   }
 
+  Map<DateTime, Agenda> agendasOcupadas() {
+    final agendasOcupadas =
+        _agendas.where((a) => a!.tanques.isNotEmpty).toList();
+    return Map<DateTime, Agenda>.fromIterable(agendasOcupadas,
+        key: (k) => k.data, value: (v) => v);
+  }
+
   Agenda? findAgenda(DateTime data) {
     return _agendas.firstWhere((a) => a != null && _comparaData(a.data, data),
         orElse: () => null);

@@ -33,6 +33,10 @@ class AgendaStore extends ChangeNotifier {
     return agenda;
   }
 
+  Map<DateTime, Agenda> getAgendasOcupadas() {
+    return _repository.agendasOcupadas();
+  }
+
   void mudaAgenda(DateTime dataAtual, DateTime novaData, String tanque) {
     final agendaA = _repository.findAgenda(dataAtual) ?? _novaAgenda(dataAtual);
     final agendaB = _repository.findAgenda(novaData) ?? _novaAgenda(novaData);
