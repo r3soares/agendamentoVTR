@@ -19,11 +19,11 @@ class AgendamentoPage extends StatelessWidget {
           CalendarioWidget(),
           PesquisaWidget(),
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Card(elevation: 12, child: TanquesPendentesWidget()),
               Card(elevation: 12, child: AgendaDoDiaWidget()),
-              Card(elevation: 12, child: TanquesAgendadosWidget()),
+              //Card(elevation: 12, child: TanquesAgendadosWidget()),
             ],
           )
         ]),
