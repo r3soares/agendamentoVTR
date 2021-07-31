@@ -1,5 +1,6 @@
 import 'package:agendamento_vtr/app/modules/agendamento/widgets/agenda_do_dia_widget.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/widgets/calendario_widget.dart';
+import 'package:agendamento_vtr/app/modules/agendamento/widgets/pesquisa_widget.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/widgets/tanques_agendados_widget.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/widgets/tanques_pendentes_widget.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +17,7 @@ class AgendamentoPage extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(children: [
           CalendarioWidget(),
+          PesquisaWidget(),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
