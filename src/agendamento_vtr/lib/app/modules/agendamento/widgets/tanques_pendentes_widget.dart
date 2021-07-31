@@ -1,4 +1,5 @@
 import 'package:agendamento_vtr/app/modules/agendamento/agenda_store.dart';
+import 'package:agendamento_vtr/app/modules/agendamento/pages/visualiza_tanque_dialog.dart';
 import 'package:agendamento_vtr/app/modules/tanque/models/tanque.dart';
 import 'package:agendamento_vtr/app/repository.dart';
 import 'package:flutter/material.dart';
@@ -61,7 +62,18 @@ class _TanquesPendentesWidgetState
                         child: Card(
                           elevation: 12,
                           child: ListTile(
-                            leading: Icon(Icons.drive_eta_outlined),
+                            leading: TextButton(
+                                onPressed: () => {
+                                      showDialog(
+                                          barrierDismissible: true,
+                                          barrierColor:
+                                              Color.fromRGBO(0, 0, 0, .5),
+                                          useSafeArea: true,
+                                          context: context,
+                                          builder: (_) =>
+                                              VisualizaTanqueDialog(t)),
+                                    },
+                                child: Icon(Icons.remove_red_eye)),
                             title: Row(children: [
                               Text(
                                 t.placa.replaceRange(3, 3, '-'),

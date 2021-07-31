@@ -1,4 +1,5 @@
 import 'package:agendamento_vtr/app/modules/agendamento/agenda_store.dart';
+import 'package:agendamento_vtr/app/modules/agendamento/pages/visualiza_tanque_dialog.dart';
 import 'package:agendamento_vtr/app/modules/tanque/models/tanque.dart';
 import 'package:agendamento_vtr/app/repository.dart';
 import 'package:flutter/material.dart';
@@ -39,7 +40,7 @@ class _TanquesAgendadosWidgetState
         Padding(
           padding: const EdgeInsets.all(12.0),
           child: Text(
-            '${tanques.length} Tanques agendados',
+            'Confirmados',
             style: TextStyle(fontSize: 18),
           ),
         ),
@@ -60,9 +61,28 @@ class _TanquesAgendadosWidgetState
                         child: Card(
                           elevation: 12,
                           child: ListTile(
-                            leading: Text(
-                              '$data',
-                              textAlign: TextAlign.center,
+                            leading: Container(
+                              width: size.width * .1,
+                              child: Row(
+                                children: [
+                                  TextButton(
+                                      onPressed: () => {
+                                            showDialog(
+                                                barrierDismissible: true,
+                                                barrierColor:
+                                                    Color.fromRGBO(0, 0, 0, .5),
+                                                useSafeArea: true,
+                                                context: context,
+                                                builder: (_) =>
+                                                    VisualizaTanqueDialog(t)),
+                                          },
+                                      child: Icon(Icons.remove_red_eye)),
+                                  Text(
+                                    '$data',
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ],
+                              ),
                             ),
                             title: Row(
                                 mainAxisAlignment:

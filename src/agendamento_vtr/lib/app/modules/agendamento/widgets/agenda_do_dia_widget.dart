@@ -74,7 +74,18 @@ class _AgendaDoDiaWidgetState
                           return Card(
                             elevation: 12,
                             child: ListTile(
-                                leading: Icon(Icons.drive_eta_outlined),
+                                leading: TextButton(
+                                    onPressed: () => {
+                                          showDialog(
+                                              barrierDismissible: true,
+                                              barrierColor:
+                                                  Color.fromRGBO(0, 0, 0, .5),
+                                              useSafeArea: true,
+                                              context: context,
+                                              builder: (_) =>
+                                                  VisualizaTanqueDialog(t)),
+                                        },
+                                    child: Icon(Icons.remove_red_eye)),
                                 title: Row(children: [
                                   Text(
                                     t.placa.replaceRange(3, 3, '-'),
@@ -94,20 +105,6 @@ class _AgendaDoDiaWidgetState
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.end,
                                     children: [
-                                      TextButton(
-                                          onPressed: () => {
-                                                showDialog(
-                                                    barrierDismissible: true,
-                                                    barrierColor:
-                                                        Color.fromRGBO(
-                                                            0, 0, 0, .5),
-                                                    useSafeArea: true,
-                                                    context: context,
-                                                    builder: (_) =>
-                                                        VisualizaTanqueDialog(
-                                                            t)),
-                                              },
-                                          child: Icon(Icons.remove_red_eye)),
                                       TextButton(
                                           onPressed: () =>
                                               reagendaTanqueDialog(context, t),
