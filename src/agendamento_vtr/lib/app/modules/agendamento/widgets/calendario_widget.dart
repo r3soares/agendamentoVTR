@@ -21,13 +21,22 @@ class _CalendarioWidgetState extends State<CalendarioWidget> {
   final kToday = DateTime.now();
   late DateTime kFirstDay;
   late DateTime kLastDay;
-  Map agendasOcupadas = {};
-  final bolinhas = Container(
+  Map<DateTime, Agenda> agendasOcupadas = {};
+  final bolinhaNaoConfirmado = Container(
       margin: EdgeInsets.all(1),
       width: 5.0,
       height: 5.0,
       decoration: new BoxDecoration(
         color: Colors.orange,
+        shape: BoxShape.circle,
+      ));
+
+  final bolinhaConfirmado = Container(
+      margin: EdgeInsets.all(1),
+      width: 5.0,
+      height: 5.0,
+      decoration: new BoxDecoration(
+        color: Colors.green,
         shape: BoxShape.circle,
       ));
 
@@ -128,8 +137,12 @@ class _CalendarioWidgetState extends State<CalendarioWidget> {
               Text('${dia.day}'),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children:
-                    List.generate(agenda.tanques.length, (index) => bolinhas),
+                children: List.generate(
+                    agenda.tanques.length,
+                    (index) => agenda.tanquesConfirmados
+                            .contains(agenda.tanques[index])
+                        ? bolinhaConfirmado
+                        : bolinhaNaoConfirmado),
               )
             ],
           ),

@@ -57,6 +57,18 @@ class AgendaStore extends ChangeNotifier {
     notifyListeners();
   }
 
+  confirmaTanque(String value) {
+    _agenda.tanquesConfirmados.add(value);
+    _statusTanque = 1;
+    notifyListeners();
+  }
+
+  cancelaTanque(String value) {
+    _agenda.tanquesConfirmados.remove(value);
+    _statusTanque = 2;
+    notifyListeners();
+  }
+
   @override
   void dispose() {
     //_agenda.removeListener(() {});

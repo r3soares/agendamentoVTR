@@ -40,7 +40,7 @@ class _TanquesAgendadosWidgetState
         Padding(
           padding: const EdgeInsets.all(12.0),
           child: Text(
-            'Confirmados',
+            'Tanques agendados',
             style: TextStyle(fontSize: 18),
           ),
         ),

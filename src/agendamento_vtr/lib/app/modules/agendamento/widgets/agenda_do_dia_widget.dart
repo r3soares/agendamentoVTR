@@ -38,6 +38,7 @@ class _AgendaDoDiaWidgetState
       tanquesDoDia.addAll(tanquesRepo.tanques
           .where((t) => store.agenda.tanques.contains(t?.placa))
           .toList());
+      //tanquesDoDia.sort((b, a) => a!.agenda!.compareTo(b!.agenda!));
     });
   }
 
@@ -107,6 +108,17 @@ class _AgendaDoDiaWidgetState
                                     children: [
                                       TextButton(
                                           onPressed: () =>
+                                              confirmaTanqueDialog(context, t),
+                                          child: Icon(
+                                            Icons.check_circle_outline,
+                                            color: store
+                                                    .agenda.tanquesConfirmados
+                                                    .contains(t.placa)
+                                                ? Colors.green
+                                                : Colors.orange,
+                                          )),
+                                      TextButton(
+                                          onPressed: () =>
                                               reagendaTanqueDialog(context, t),
                                           child: Icon(
                                               Icons.calendar_today_outlined)),
@@ -166,6 +178,42 @@ class _AgendaDoDiaWidgetState
         context: ctx,
         builder: (BuildContext context) {
           return ReagendaDialog(t);
+        });
+  }
+
+  void confirmaTanqueDialog(BuildContext ctx, Tanque t) {
+    showDialog(
+        context: ctx,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text(t.placa.replaceRange(3, 3, '-')),
+            content: SingleChildScrollView(
+              child: ListBody(
+                children: const <Widget>[
+                  Text('Confirma comparecimento do veículo para esta data?'),
+                ],
+              ),
+            ),
+            actions: <Widget>[
+              TextButton(
+                child: const Text('Sim'),
+                onPressed: () {
+                  setState(() {
+                    store.confirmaTanque(t.placa);
+                  });
+                  Navigator.of(context).pop();
+                  ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Veículo confirmado')));
+                },
+              ),
+              TextButton(
+                child: const Text('Não'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
         });
   }
 }
