@@ -64,21 +64,21 @@ class VisualizaTanqueDialog extends StatelessWidget {
             ),
             Container(
               padding: EdgeInsets.all(8),
-              child: proprietario.oficina != null
+              child: proprietario.telefone != null
                   ? Row(
                       children: [
                         Text(
-                          'Oficina ',
+                          'Telefone ',
                           style: TextStyle(fontSize: 18),
                         ),
                         Text(
-                          proprietario.oficina!,
+                          proprietario.telefone!,
                           style: TextStyle(fontSize: 18),
                         ),
                       ],
                     )
                   : Text(
-                      'Sem Oficina associada',
+                      'Sem Telefone associado',
                       style: TextStyle(fontSize: 18),
                     ),
             ),

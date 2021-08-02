@@ -26,7 +26,7 @@ class _ProprietarioWidgetState extends State<ProprietarioWidget> {
 
   final TextEditingController _cCnpjCpf = TextEditingController();
 
-  final TextEditingController _cOficina = TextEditingController();
+  final TextEditingController _cTelefone = TextEditingController();
 
   final TextEditingController _cEmail = TextEditingController();
 
@@ -93,13 +93,16 @@ class _ProprietarioWidgetState extends State<ProprietarioWidget> {
                   padding: const EdgeInsets.all(8.0),
                   child: TextFormField(
                     enabled: !isSalvo,
+                    keyboardType: TextInputType.number,
                     decoration: const InputDecoration(
-                      icon: Icon(Icons.other_houses),
-                      hintText: 'Oficina que realizou o agendamento',
+                      icon: Icon(Icons.phone),
                       hintStyle: TextStyle(fontSize: 10),
-                      labelText: 'Nome da oficina credenciada, se houver',
+                      labelText: 'Telefone para contato, se houver',
                     ),
-                    controller: _cOficina,
+                    controller: _cTelefone,
+                    inputFormatters: <TextInputFormatter>[
+                      FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                    ],
                   )),
               Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -214,7 +217,7 @@ class _ProprietarioWidgetState extends State<ProprietarioWidget> {
   void _insereDadosNoProprietario() {
     proprietario.cnpj = _cCnpjCpf.text;
     proprietario.email = _cEmail.text;
-    proprietario.oficina = _cOficina.text;
+    proprietario.telefone = _cTelefone.text;
     proprietario.razaoSocial = _cRazaSocialProp.text;
   }
 

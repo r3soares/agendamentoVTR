@@ -43,7 +43,7 @@ class Repository {
       Proprietario p = Proprietario();
       p.cnpj = '00970455941';
       p.email = 'contato@empresa.com';
-      p.oficina = 'Tapa Buracos Ltda';
+      p.telefone = '(47) 9622-5871';
       p.razaoSocial = 'Rolando Milhas';
       proprietarios.add(p);
       for (int i = 0; i < Random().nextInt(100) + 15; i++) {

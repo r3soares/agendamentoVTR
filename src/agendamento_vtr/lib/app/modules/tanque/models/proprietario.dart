@@ -6,7 +6,7 @@ class Proprietario extends ChangeNotifier {
   String _cnpjCpf = '';
   String _razaoSocial = '';
   String _email = '';
-  String? _oficina;
+  String? _telefone = '';
 
   final List<String> _tanques = List.empty(growable: true);
 
@@ -23,12 +23,14 @@ class Proprietario extends ChangeNotifier {
   set cnpj(value) => _cnpjCpf = value;
   set razaoSocial(value) => _razaoSocial = value;
   set email(value) => _email = value;
-  set oficina(value) => _oficina = value;
+  set telefone(value) => _telefone = value;
+  //set oficina(value) => _responsavel = value;
 
   String get cnpj => _cnpjCpf;
   String get razaoSocial => _razaoSocial;
   String get email => _email;
-  String? get oficina => _oficina;
+  String? get telefone => _telefone;
+  //String? get oficina => _responsavel;
 
   List get tanques => _tanques;
 }
