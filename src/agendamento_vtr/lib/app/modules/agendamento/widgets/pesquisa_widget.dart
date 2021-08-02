@@ -37,7 +37,7 @@ class _PesquisaWidgetState extends State<PesquisaWidget> {
       alignment: Alignment.centerLeft,
       child: Container(
         padding: EdgeInsets.all(12),
-        width: size.width * .15,
+        width: size.width * .20,
         child: ListTile(
           title: TextFormField(
             autovalidateMode: AutovalidateMode.onUserInteraction,
