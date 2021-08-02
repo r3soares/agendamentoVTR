@@ -14,7 +14,6 @@ class CompartimentoWidget extends StatefulWidget {
 
 class _CompartimentoWidgetState extends State<CompartimentoWidget> {
   final TextEditingController _cCapacidade = TextEditingController();
-  final TextEditingController _cSeta = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   final Compartimento compartimento;
   _CompartimentoWidgetState(this.compartimento) {
@@ -27,7 +26,6 @@ class _CompartimentoWidgetState extends State<CompartimentoWidget> {
 
   @override
   Widget build(BuildContext context) {
-    print('Desenhou Compartimento Widget');
     return SizedBox(
         width: 150,
         child: Card(
@@ -43,7 +41,8 @@ class _CompartimentoWidgetState extends State<CompartimentoWidget> {
                   TextFormField(
                     autovalidateMode: AutovalidateMode.onUserInteraction,
                     decoration: InputDecoration(
-                      hintText: 'Capacidade em litros',
+                      errorStyle: TextStyle(fontSize: 10),
+                      hintText: 'Cap. em litros',
                       hintStyle: TextStyle(fontSize: 10),
                     ),
                     controller: _cCapacidade,
@@ -98,15 +97,15 @@ class _CompartimentoWidgetState extends State<CompartimentoWidget> {
     return null;
   }
 
-  String? validaSeta(String? value) {
-    if (value == null || value.isEmpty) return 'Informe a capacidade';
-    final capacidade = int.tryParse(value);
-    if (capacidade == null) return 'Capacidade inválida';
-    if (capacidade >= compartimento.capacidade)
-      return 'Deve ser menor que ${compartimento.capacidade}L';
-    if (capacidade % 10 != 0) return 'Somente múltiplos de 10';
-    return null;
-  }
+  // String? validaSeta(String? value) {
+  //   if (value == null || value.isEmpty) return 'Informe a capacidade';
+  //   final capacidade = int.tryParse(value);
+  //   if (capacidade == null) return 'Capacidade inválida';
+  //   if (capacidade >= compartimento.capacidade)
+  //     return 'Deve ser menor que ${compartimento.capacidade}L';
+  //   if (capacidade % 10 != 0) return 'Somente múltiplos de 10';
+  //   return null;
+  // }
 
   gerSetas(int value) {
     if (value < 0) return;

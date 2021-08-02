@@ -5,7 +5,7 @@ import 'package:flutter_modular/flutter_modular.dart';
 
 class TanqueModule extends Module {
   @override
-  final List<Bind> binds = [Bind((i) => Proprietario())];
+  final List<Bind> binds = [Bind((i) => Empresa())];
 
   @override
   final List<ModularRoute> routes = [

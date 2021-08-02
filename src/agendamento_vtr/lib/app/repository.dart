@@ -6,10 +6,10 @@ import 'package:agendamento_vtr/app/modules/tanque/models/tanque.dart';
 
 class Repository {
   List<Tanque?> _tanques = List.empty(growable: true);
-  List<Proprietario?> _proprietarios = List.empty(growable: true);
+  List<Empresa?> _proprietarios = List.empty(growable: true);
 
   List<Tanque?> get tanques => _tanques;
-  List<Proprietario?> get proprietarios => _proprietarios;
+  List<Empresa?> get proprietarios => _proprietarios;
 
   Repository() {
     assert(() {
@@ -40,7 +40,7 @@ class Repository {
         'Y',
         'Z'
       ];
-      Proprietario p = Proprietario();
+      Empresa p = Empresa();
       p.cnpj = '00970455941';
       p.email = 'contato@empresa.com';
       p.telefone = '(47) 9622-5871';
@@ -70,7 +70,7 @@ class Repository {
   }
 
   addTanque(value) => _tanques.add(value);
-  void addProprietario(Proprietario value) {
+  void addProprietario(Empresa value) {
     var pExistente = proprietarios.firstWhere((p) => p!.cnpj == value.cnpj,
         orElse: () => null);
     if (pExistente != null) {
@@ -86,6 +86,6 @@ class Repository {
 
   Tanque? findTanque(String placa) =>
       _tanques.firstWhere((t) => t?.placa == placa, orElse: () => null);
-  Proprietario? findProprietario(String cnpjCpf) =>
+  Empresa? findProprietario(String cnpjCpf) =>
       _proprietarios.firstWhere((t) => t?.cnpj == cnpjCpf, orElse: () => null);
 }

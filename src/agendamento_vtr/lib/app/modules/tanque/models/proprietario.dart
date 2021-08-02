@@ -1,8 +1,6 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
-import 'tanque.dart';
-
-class Proprietario extends ChangeNotifier {
+class Empresa extends ChangeNotifier {
   String _cnpjCpf = '';
   String _razaoSocial = '';
   String _email = '';

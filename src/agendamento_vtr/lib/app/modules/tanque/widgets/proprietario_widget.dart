@@ -18,7 +18,7 @@ class ProprietarioWidget extends StatefulWidget {
 class _ProprietarioWidgetState extends State<ProprietarioWidget> {
   final _formKey = GlobalKey<FormState>();
 
-  final proprietario = Modular.get<Proprietario>();
+  final proprietario = Modular.get<Empresa>();
 
   final repo = Modular.get<Repository>();
 

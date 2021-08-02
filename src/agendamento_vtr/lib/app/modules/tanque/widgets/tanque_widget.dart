@@ -50,7 +50,7 @@ class _TanqueWidgetState extends State<TanqueWidget> {
           right: 0.0,
           child: GestureDetector(
             onTap: () {
-              final prop = Modular.get<Proprietario>();
+              final prop = Modular.get<Empresa>();
               setState(() {
                 prop.removeTanque(widget.tanque.placa);
               });
