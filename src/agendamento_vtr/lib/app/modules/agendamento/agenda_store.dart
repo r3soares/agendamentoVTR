@@ -41,7 +41,9 @@ class AgendaStore extends ChangeNotifier {
     final agendaA = _repository.findAgenda(dataAtual) ?? _novaAgenda(dataAtual);
     final agendaB = _repository.findAgenda(novaData) ?? _novaAgenda(novaData);
     agendaA.tanques.remove(tanque);
+    agendaA.tanquesConfirmados.remove(tanque);
     agendaB.tanques.add(tanque);
+    _statusTanque = 1;
     notifyListeners();
   }
 
@@ -53,6 +55,7 @@ class AgendaStore extends ChangeNotifier {
 
   removeTanque(String value) {
     _agenda.tanques.remove(value);
+    _agenda.tanquesConfirmados.remove(value);
     _statusTanque = 2;
     notifyListeners();
   }

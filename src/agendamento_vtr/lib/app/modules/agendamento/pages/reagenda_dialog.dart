@@ -15,7 +15,7 @@ class ReagendaDialog extends StatelessWidget {
     return Dialog(
       child: Container(
         width: size.width * .5,
-        height: size.height * .5,
+        height: size.height * .6,
         child: Column(
           children: [
             ReagendaWidget(_tanque),
