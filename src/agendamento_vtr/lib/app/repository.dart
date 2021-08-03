@@ -1,15 +1,15 @@
 import 'dart:math';
 
 import 'package:agendamento_vtr/app/modules/tanque/models/compartimento.dart';
-import 'package:agendamento_vtr/app/modules/tanque/models/proprietario.dart';
+import 'package:agendamento_vtr/app/modules/tanque/models/empresa.dart';
 import 'package:agendamento_vtr/app/modules/tanque/models/tanque.dart';
 
 class Repository {
   List<Tanque?> _tanques = List.empty(growable: true);
-  List<Proprietario?> _proprietarios = List.empty(growable: true);
+  List<Empresa?> _empresas = List.empty(growable: true);
 
   List<Tanque?> get tanques => _tanques;
-  List<Proprietario?> get proprietarios => _proprietarios;
+  List<Empresa?> get empresas => _empresas;
 
   Repository() {
     assert(() {
@@ -40,12 +40,12 @@ class Repository {
         'Y',
         'Z'
       ];
-      Proprietario p = Proprietario();
+      Empresa p = Empresa();
       p.cnpj = '00970455941';
       p.email = 'contato@empresa.com';
       p.telefone = '(47) 9622-5871';
       p.razaoSocial = 'Rolando Milhas';
-      proprietarios.add(p);
+      empresas.add(p);
       for (int i = 0; i < Random().nextInt(100) + 15; i++) {
         Tanque t = Tanque();
         t.proprietario = p.cnpj;
@@ -70,22 +70,22 @@ class Repository {
   }
 
   addTanque(value) => _tanques.add(value);
-  void addProprietario(Proprietario value) {
-    var pExistente = proprietarios.firstWhere((p) => p!.cnpj == value.cnpj,
-        orElse: () => null);
+  void addEmpresa(Empresa value) {
+    var pExistente =
+        empresas.firstWhere((p) => p!.cnpj == value.cnpj, orElse: () => null);
     if (pExistente != null) {
-      proprietarios.remove(pExistente);
-      proprietarios.add(value);
+      empresas.remove(pExistente);
+      empresas.add(value);
       return;
     }
-    proprietarios.add(value);
+    empresas.add(value);
   }
 
   removeTanque(value) => _tanques.remove(value);
-  removeProprietario(value) => _proprietarios.remove(value);
+  removeEmpresa(value) => _empresas.remove(value);
 
   Tanque? findTanque(String placa) =>
       _tanques.firstWhere((t) => t?.placa == placa, orElse: () => null);
-  Proprietario? findProprietario(String cnpjCpf) =>
-      _proprietarios.firstWhere((t) => t?.cnpj == cnpjCpf, orElse: () => null);
+  Empresa? findEmpresa(String cnpjCpf) =>
+      _empresas.firstWhere((t) => t?.cnpj == cnpjCpf, orElse: () => null);
 }

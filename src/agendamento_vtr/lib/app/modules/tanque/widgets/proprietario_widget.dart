@@ -1,4 +1,4 @@
-import 'package:agendamento_vtr/app/modules/tanque/models/proprietario.dart';
+import 'package:agendamento_vtr/app/modules/tanque/models/empresa.dart';
 import 'package:agendamento_vtr/app/modules/tanque/pages/tanque_dialog.dart';
 import 'package:agendamento_vtr/app/repository.dart';
 import 'package:agendamento_vtr/app/modules/tanque/widgets/tanque_widget.dart';
@@ -18,7 +18,7 @@ class ProprietarioWidget extends StatefulWidget {
 class _ProprietarioWidgetState extends State<ProprietarioWidget> {
   final _formKey = GlobalKey<FormState>();
 
-  final proprietario = Modular.get<Proprietario>();
+  final proprietario = Modular.get<Empresa>();
 
   final repo = Modular.get<Repository>();
 
@@ -224,7 +224,7 @@ class _ProprietarioWidgetState extends State<ProprietarioWidget> {
   bool _salvaProprietario() {
     if (!verificaDadosPreenchidos()) return false;
     _insereDadosNoProprietario();
-    repo.addProprietario(proprietario);
+    repo.addEmpresa(proprietario);
     setState(() => isSalvo = true);
     return true;
   }

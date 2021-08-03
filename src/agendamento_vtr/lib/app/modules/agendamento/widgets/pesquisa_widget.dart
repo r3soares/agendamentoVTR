@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:agendamento_vtr/app/modules/agendamento/pages/visualiza_tanque_dialog.dart';
-import 'package:agendamento_vtr/app/modules/agendamento/pesquisa_controller.dart';
+import 'package:agendamento_vtr/app/pesquisa_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_modular/flutter_modular.dart';
@@ -87,7 +87,7 @@ class _PesquisaWidgetState extends State<PesquisaWidget> {
 
   String? buscaTermo(String? termo) {
     if (termo == null || termo.isEmpty || termo.length < 7) return null;
-    if (!controller.pesquisa(termo)) {
+    if (!controller.pesquisaTanque(termo)) {
       return 'Não localizado';
     }
     _cPesquisa.clear();

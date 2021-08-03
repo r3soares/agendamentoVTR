@@ -1,6 +1,7 @@
 import 'package:agendamento_vtr/app/modules/tanque/models/compartimento.dart';
-import 'package:agendamento_vtr/app/modules/tanque/models/proprietario.dart';
+import 'package:agendamento_vtr/app/modules/tanque/models/empresa.dart';
 import 'package:agendamento_vtr/app/modules/tanque/models/tanque.dart';
+import 'package:agendamento_vtr/app/modules/tanque/widgets/pesquisa_empresas_widget.dart';
 import 'package:agendamento_vtr/app/repository.dart';
 import 'package:agendamento_vtr/app/modules/tanque/widgets/compartimento_widget.dart';
 import 'package:file_picker/file_picker.dart';
@@ -25,6 +26,12 @@ class _TanqueDialogState extends State<TanqueDialog> {
   TextEditingController _cPlaca = TextEditingController();
 
   @override
+  void initState() {
+    super.initState();
+    tanque.responsavelAgendamento = Modular.get<Empresa>().cnpj;
+  }
+
+  @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Dialog(
@@ -47,6 +54,21 @@ class _TanqueDialogState extends State<TanqueDialog> {
                         child: Text(
                           'Dados do Tanque',
                           style: TextStyle(fontSize: 20),
+                        ),
+                      ),
+                      Container(
+                        padding: EdgeInsets.all(12),
+                        width: size.width * .50,
+                        child: ListTile(
+                          leading: Text('Agendado por:'),
+                          title: Text('Proprietário'),
+                          trailing: SizedBox(
+                            width: size.width * .1,
+                            child: IconButton(
+                              icon: Icon(Icons.search),
+                              onPressed: () => {},
+                            ),
+                          ),
                         ),
                       ),
                       Padding(
@@ -234,7 +256,7 @@ class _TanqueDialogState extends State<TanqueDialog> {
     tanque.placa = _cPlaca.text;
     tanque.compartimentos = compartimentos;
     tanque.dataRegistro = DateTime.now();
-    final formulario = Modular.get<Proprietario>();
+    final formulario = Modular.get<Empresa>();
     formulario.addTanque(tanque.placa);
     tanque.proprietario = formulario.cnpj;
 

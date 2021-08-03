@@ -15,7 +15,7 @@ class VisualizaTanqueDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     final proprietario = _tanque.proprietario != null
-        ? tanquesRepo.findProprietario(_tanque.proprietario!)
+        ? tanquesRepo.findEmpresa(_tanque.proprietario!)
         : null;
     final data = DateFormat(formatoData).format(_tanque.dataRegistro);
     return Dialog(

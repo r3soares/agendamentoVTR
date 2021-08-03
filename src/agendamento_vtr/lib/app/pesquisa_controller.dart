@@ -12,12 +12,25 @@ class PesquisaController extends ChangeNotifier {
   get resultado => _resultado;
   int get status => _status;
 
-  bool pesquisa(String termo) {
+  bool pesquisaTanque(String termo) {
     print('Pesquisando $termo');
     var tanque = _repository.findTanque(termo);
     if (tanque != null) {
       print('$termo encontrado');
       _resultado = tanque;
+      _status = 1;
+      notifyListeners();
+      return true;
+    }
+    return false;
+  }
+
+  bool pesquisaEmpresa(String termo) {
+    print('Pesquisando $termo');
+    var empresa = _repository.findEmpresa(termo);
+    if (empresa != null) {
+      print('$termo encontrado');
+      _resultado = empresa;
       _status = 1;
       notifyListeners();
       return true;
