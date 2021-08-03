@@ -1,6 +1,6 @@
 import 'package:agendamento_vtr/app/modules/agendamento/agenda_store.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/pages/agendamento_page.dart';
-import 'package:agendamento_vtr/app/modules/agendamento/pesquisa_controller.dart';
+import 'package:agendamento_vtr/app/pesquisa_controller.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
 class AgendamentoModule extends Module {
