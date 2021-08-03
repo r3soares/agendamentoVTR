@@ -23,12 +23,21 @@ class _ReagendaWidgetState extends State<ReagendaWidget> {
   late DateTime kFirstDay;
   late DateTime kLastDay;
   Map agendasOcupadas = {};
-  final bolinhas = Container(
+  final bolinhaNaoConfirmado = Container(
       margin: EdgeInsets.all(1),
       width: 5.0,
       height: 5.0,
       decoration: new BoxDecoration(
         color: Colors.orange,
+        shape: BoxShape.circle,
+      ));
+
+  final bolinhaConfirmado = Container(
+      margin: EdgeInsets.all(1),
+      width: 5.0,
+      height: 5.0,
+      decoration: new BoxDecoration(
+        color: Colors.green,
         shape: BoxShape.circle,
       ));
 
@@ -123,8 +132,12 @@ class _ReagendaWidgetState extends State<ReagendaWidget> {
               Text('${dia.day}'),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children:
-                    List.generate(agenda.tanques.length, (index) => bolinhas),
+                children: List.generate(
+                    agenda.tanques.length,
+                    (index) => agenda.tanquesConfirmados
+                            .contains(agenda.tanques[index])
+                        ? bolinhaConfirmado
+                        : bolinhaNaoConfirmado),
               )
             ],
           ),
