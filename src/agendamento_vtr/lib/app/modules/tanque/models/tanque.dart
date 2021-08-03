@@ -6,7 +6,7 @@ class Tanque {
   bool _isZero = false;
   Arquivo? _doc;
   DateTime _dataRegistro = DateTime.now();
-  //CNPJ_CPF
+  //CNPJ_CPF da Empresa
   String? _proprietario;
   //CPF ou CNPJ
   String? _responsavelAgendamento;

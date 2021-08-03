@@ -22,7 +22,7 @@ class _TanqueDialogState extends State<TanqueDialog> {
   final _formKey = GlobalKey<FormState>();
   Tanque tanque = Tanque();
   final repo = Modular.get<Repository>();
-  List<Compartimento> compartimentos = [Compartimento('Compartimento 1')];
+  List<Compartimento> compartimentos = [Compartimento('C1')];
   TextEditingController _cPlaca = TextEditingController();
 
   @override
@@ -247,8 +247,8 @@ class _TanqueDialogState extends State<TanqueDialog> {
     if (value == 0) return;
     if (value == compartimentos.length) return;
     setState(() {
-      compartimentos = List.generate(
-          value, (index) => Compartimento('Compartimento ${index + 1}'));
+      compartimentos =
+          List.generate(value, (index) => Compartimento('C${index + 1}'));
     });
   }
 
