@@ -1,6 +1,7 @@
 import 'package:agendamento_vtr/app/modules/tanque/models/compartimento.dart';
 import 'package:agendamento_vtr/app/modules/tanque/models/empresa.dart';
 import 'package:agendamento_vtr/app/modules/tanque/models/tanque.dart';
+import 'package:agendamento_vtr/app/modules/tanque/pages/pesquisa_dialog.dart';
 import 'package:agendamento_vtr/app/modules/tanque/widgets/pesquisa_empresas_widget.dart';
 import 'package:agendamento_vtr/app/repository.dart';
 import 'package:agendamento_vtr/app/modules/tanque/widgets/compartimento_widget.dart';
@@ -57,18 +58,34 @@ class _TanqueDialogState extends State<TanqueDialog> {
                         ),
                       ),
                       Container(
-                        padding: EdgeInsets.all(12),
-                        width: size.width * .50,
-                        child: ListTile(
-                          leading: Text('Agendado por:'),
-                          title: Text('Proprietário'),
-                          trailing: SizedBox(
-                            width: size.width * .1,
-                            child: IconButton(
-                              icon: Icon(Icons.search),
-                              onPressed: () => {},
+                        alignment: Alignment.centerLeft,
+                        padding: const EdgeInsets.all(8),
+                        child: Row(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(right: 8),
+                              child: Text(
+                                'Agendado por',
+                                style: TextStyle(fontSize: 18),
+                              ),
                             ),
-                          ),
+                            Padding(
+                              padding: const EdgeInsets.only(right: 20),
+                              child: Text('Ricardo M B Soares'),
+                            ),
+                            Container(
+                              child: TextButton(
+                                child: Text('Alterar'),
+                                onPressed: () => {
+                                  showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return PesquisaDialog();
+                                      })
+                                },
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                       Padding(

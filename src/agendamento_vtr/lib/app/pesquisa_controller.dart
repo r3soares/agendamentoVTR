@@ -5,6 +5,7 @@ import 'package:flutter_modular/flutter_modular.dart';
 class PesquisaController extends ChangeNotifier {
   //0 -> sem pesquisa ativa
   //1 -> pesquisa ativa
+  //2 -> nao localizado
   int _status = 0;
   var _resultado;
   final _repository = Modular.get<Repository>();
@@ -22,6 +23,8 @@ class PesquisaController extends ChangeNotifier {
       notifyListeners();
       return true;
     }
+    _status = 2;
+    notifyListeners();
     return false;
   }
 
@@ -35,6 +38,8 @@ class PesquisaController extends ChangeNotifier {
       notifyListeners();
       return true;
     }
+    _status = 2;
+    notifyListeners();
     return false;
   }
 
