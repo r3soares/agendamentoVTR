@@ -1,4 +1,3 @@
-import 'package:agendamento_vtr/app/modules/tanque/models/empresa.dart';
 import 'package:agendamento_vtr/app/modules/util/cnpj.dart';
 import 'package:agendamento_vtr/app/modules/util/cpf.dart';
 import 'package:agendamento_vtr/app/pesquisa_controller.dart';
@@ -12,11 +11,11 @@ class PesquisaEmpresaWidget extends StatefulWidget {
   _PesquisaEmpresaWidgetState createState() => _PesquisaEmpresaWidgetState();
 }
 
-class _PesquisaEmpresaWidgetState extends State<PesquisaEmpresaWidget> {
+class _PesquisaEmpresaWidgetState
+    extends ModularState<PesquisaEmpresaWidget, PesquisaController> {
   final TextEditingController _cPesquisa = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   String? erroNaoLocalizado;
-  final controller = Modular.get<PesquisaController>();
 
   @override
   Widget build(BuildContext context) {
