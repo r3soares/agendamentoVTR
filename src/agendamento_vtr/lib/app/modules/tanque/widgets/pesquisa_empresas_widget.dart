@@ -11,8 +11,8 @@ class PesquisaEmpresaWidget extends StatefulWidget {
   _PesquisaEmpresaWidgetState createState() => _PesquisaEmpresaWidgetState();
 }
 
-class _PesquisaEmpresaWidgetState
-    extends ModularState<PesquisaEmpresaWidget, PesquisaController> {
+class _PesquisaEmpresaWidgetState extends State<PesquisaEmpresaWidget> {
+  final controller = Modular.get<PesquisaController>();
   final TextEditingController _cPesquisa = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   String? erroNaoLocalizado;

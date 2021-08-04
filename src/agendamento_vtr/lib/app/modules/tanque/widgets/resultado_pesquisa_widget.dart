@@ -10,14 +10,22 @@ class ResultadoPesquisaWidget extends StatefulWidget {
       _ResultadoPesquisaWidgetState();
 }
 
-class _ResultadoPesquisaWidgetState
-    extends ModularState<ResultadoPesquisaWidget, PesquisaController> {
+class _ResultadoPesquisaWidgetState extends State<ResultadoPesquisaWidget> {
+  final controller = Modular.get<PesquisaController>();
+
+  _ResultadoPesquisaWidgetState() {
+    controller.addListener(() {
+      atualizaEmpresa();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return controller.resultado == null
         ? SizedBox.shrink()
         : Container(
+            width: size.width * .25,
             child: Card(
               elevation: 12,
               child: ListTile(
@@ -25,21 +33,15 @@ class _ResultadoPesquisaWidgetState
                     controller.resultado.razaoSocial,
                   ),
                   subtitle: Text('${controller.resultado.cnpj}'),
-                  trailing: SizedBox(
-                    width: size.width * .15,
-                    child: TextButton(
-                        onPressed: () => selecionaEmpresa(),
-                        child: Text('Selecionar')),
-                  )),
+                  trailing: TextButton(
+                      onPressed: () => selecionaEmpresa(),
+                      child: Text('Selecionar'))),
             ),
           );
   }
 
   void atualizaEmpresa() {
-    print('AtualizaEmpresa');
-    if (controller.status == 1) {
-      print('Desenha Resultado Pesquisa');
-    }
+    setState(() {});
   }
 
   void selecionaEmpresa() {}

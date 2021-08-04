@@ -47,6 +47,7 @@ class PesquisaController extends ChangeNotifier {
 
   resetPesquisa() {
     _status = 0;
+    _resultado = null;
     notifyListeners();
   }
 }
