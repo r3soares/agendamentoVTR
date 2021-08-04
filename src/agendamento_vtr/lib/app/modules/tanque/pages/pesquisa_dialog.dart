@@ -1,4 +1,5 @@
 import 'package:agendamento_vtr/app/modules/tanque/widgets/pesquisa_empresas_widget.dart';
+import 'package:agendamento_vtr/app/modules/tanque/widgets/resultado_pesquisa_widget.dart';
 import 'package:flutter/material.dart';
 
 class PesquisaDialog extends StatelessWidget {
@@ -16,6 +17,7 @@ class PesquisaDialog extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             PesquisaEmpresaWidget(),
+            ResultadoPesquisaWidget(),
           ],
         ),
       ),
