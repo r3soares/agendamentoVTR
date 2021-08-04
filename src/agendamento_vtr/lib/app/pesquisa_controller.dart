@@ -4,7 +4,7 @@ import 'package:flutter_modular/flutter_modular.dart';
 
 class PesquisaController extends ChangeNotifier {
   //0 -> sem pesquisa ativa
-  //1 -> pesquisa ativa
+  //1 -> localizado
   //2 -> nao localizado
   int _status = 0;
   var _resultado;
@@ -14,6 +14,8 @@ class PesquisaController extends ChangeNotifier {
   int get status => _status;
 
   bool pesquisaTanque(String termo) {
+    _status = 0;
+    _resultado = null;
     print('Pesquisando $termo');
     var tanque = _repository.findTanque(termo);
     if (tanque != null) {
