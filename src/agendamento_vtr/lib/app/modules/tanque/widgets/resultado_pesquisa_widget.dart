@@ -1,3 +1,4 @@
+import 'package:agendamento_vtr/app/modules/tanque/models/empresa.dart';
 import 'package:agendamento_vtr/app/pesquisa_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
@@ -44,5 +45,7 @@ class _ResultadoPesquisaWidgetState extends State<ResultadoPesquisaWidget> {
     setState(() {});
   }
 
-  void selecionaEmpresa() {}
+  void selecionaEmpresa() {
+    Navigator.of(context).pop();
+  }
 }

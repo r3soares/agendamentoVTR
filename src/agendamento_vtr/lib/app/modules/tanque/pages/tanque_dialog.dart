@@ -55,7 +55,7 @@ class _TanqueDialogState extends State<TanqueDialog> {
                           style: TextStyle(fontSize: 20),
                         ),
                       ),
-                      ResponsavelWidget(),
+                      ResponsavelWidget(Modular.get<Empresa>()),
                       TanqueZeroWidget(tanque),
                       PlacaWidget(tanque),
                       CrlvNfWidget(tanque),

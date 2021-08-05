@@ -1,8 +1,12 @@
+import 'package:agendamento_vtr/app/modules/tanque/models/empresa.dart';
 import 'package:agendamento_vtr/app/modules/tanque/pages/pesquisa_dialog.dart';
 import 'package:flutter/material.dart';
 
 class ResponsavelWidget extends StatelessWidget {
-  const ResponsavelWidget();
+  final Empresa responsavel;
+  ResponsavelWidget(this.responsavel) {
+    print(responsavel.razaoSocial);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +24,7 @@ class ResponsavelWidget extends StatelessWidget {
           ),
           Padding(
             padding: const EdgeInsets.only(right: 20),
-            child: Text('Ricardo M B Soares'),
+            child: Text(responsavel.razaoSocial),
           ),
           Container(
             child: TextButton(
