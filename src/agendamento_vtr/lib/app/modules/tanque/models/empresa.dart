@@ -32,5 +32,5 @@ class Empresa extends ChangeNotifier {
   String? get telefone => _telefone;
   //String? get oficina => _responsavel;
 
-  List get tanques => _tanques;
+  List<String> get tanques => _tanques;
 }

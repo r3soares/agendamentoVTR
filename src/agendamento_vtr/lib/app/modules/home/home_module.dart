@@ -1,4 +1,5 @@
 import 'package:agendamento_vtr/app/modules/agendamento/agendamento_module.dart';
+import 'package:agendamento_vtr/app/modules/empresa/empresa_module.dart';
 import 'package:agendamento_vtr/app/modules/tanque/tanque_module.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import '../home/home_store.dart';
@@ -16,5 +17,6 @@ class HomeModule extends Module {
     ChildRoute(Modular.initialRoute, child: (_, args) => HomePage()),
     ModuleRoute('/tanque', module: TanqueModule()),
     ModuleRoute('/agendamento', module: AgendamentoModule()),
+    ModuleRoute('/empresa', module: EmpresaModule()),
   ];
 }

@@ -30,7 +30,7 @@ class _HomePageState extends ModularState<HomePage, HomeStore> {
           padding: EdgeInsets.only(bottom: size.height * .3),
           alignment: Alignment.center,
           child: SizedBox(
-            height: size.height * .4,
+            height: size.height * .5,
             width: size.width * .5,
             child: Card(
               shadowColor: Colors.black,
@@ -54,8 +54,8 @@ class _HomePageState extends ModularState<HomePage, HomeStore> {
                       height: size.height * .08,
                       width: size.width * .2,
                       child: ElevatedButton(
-                        onPressed: () => {Modular.to.pushNamed('/tanque')},
-                        child: Text('Inserir Veículo'),
+                        onPressed: () => {Modular.to.pushNamed('/agendamento')},
+                        child: Text('Agendamentos'),
                       ),
                     ),
                   ),
@@ -65,8 +65,19 @@ class _HomePageState extends ModularState<HomePage, HomeStore> {
                       height: size.height * .08,
                       width: size.width * .2,
                       child: ElevatedButton(
-                        onPressed: () => {Modular.to.pushNamed('/agendamento')},
-                        child: Text('Agendamentos'),
+                        onPressed: () => {Modular.to.pushNamed('/tanque')},
+                        child: Text('Veículos'),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: SizedBox(
+                      height: size.height * .08,
+                      width: size.width * .2,
+                      child: ElevatedButton(
+                        onPressed: () => {Modular.to.pushNamed('/empresa')},
+                        child: Text('Proprietários'),
                       ),
                     ),
                   ),

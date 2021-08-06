@@ -31,7 +31,7 @@ class RepositoryStore extends ChangeNotifier {
   }
 
   addEmpresa(value) {
-    _repository.addEmpresa(value);
+    _repository.salvaEmpresa(value);
     _status = 3;
     _argStatus = value;
     notifyListeners();

@@ -1,17 +1,27 @@
 import 'package:agendamento_vtr/app/modules/tanque/models/empresa.dart';
 import 'package:agendamento_vtr/app/modules/tanque/models/tanque.dart';
+import 'package:agendamento_vtr/app/repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
 class TanqueWidget extends StatefulWidget {
-  final Tanque tanque;
-  const TanqueWidget({Key? key, required this.tanque}) : super(key: key);
+  final String placa;
+  const TanqueWidget({Key? key, required this.placa}) : super(key: key);
 
   @override
   _TanqueWidgetState createState() => _TanqueWidgetState();
 }
 
 class _TanqueWidgetState extends State<TanqueWidget> {
+  Tanque tanque = Tanque();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    tanque = Modular.get<Repository>().findTanque(widget.placa) ?? Tanque();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -25,7 +35,7 @@ class _TanqueWidgetState extends State<TanqueWidget> {
               children: [
                 Padding(
                   padding: EdgeInsets.all(12),
-                  child: Text('${widget.tanque.placa}'),
+                  child: Text('${tanque.placa}'),
                 ),
                 Padding(
                   padding: EdgeInsets.all(8),
@@ -33,10 +43,10 @@ class _TanqueWidgetState extends State<TanqueWidget> {
                 ),
                 Padding(
                   padding: EdgeInsets.all(8),
-                  child: Text(
-                      '${widget.tanque.compartimentos.length} compartimento(s)'),
+                  child:
+                      Text('${tanque.compartimentos.length} compartimento(s)'),
                 ),
-                widget.tanque.compartimentos.any((element) => element.setas > 0)
+                tanque.compartimentos.any((element) => element.setas > 0)
                     ? Padding(
                         padding: EdgeInsets.all(8),
                         child: Text('Possui setas'),
@@ -52,7 +62,7 @@ class _TanqueWidgetState extends State<TanqueWidget> {
             onTap: () {
               final prop = Modular.get<Empresa>();
               setState(() {
-                prop.removeTanque(widget.tanque.placa);
+                prop.removeTanque(tanque.placa);
               });
             },
             child: Container(
@@ -69,7 +79,7 @@ class _TanqueWidgetState extends State<TanqueWidget> {
   }
 
   int calculaCapacidade() {
-    int total = widget.tanque.compartimentos.fold(
+    int total = tanque.compartimentos.fold(
         0, (previousValue, element) => previousValue + element.capacidade);
     return total;
   }
