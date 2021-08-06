@@ -39,7 +39,7 @@ class MainPage extends StatelessWidget {
                       height: size.height * .08,
                       width: size.width * .2,
                       child: ElevatedButton(
-                        onPressed: () => {Modular.to.navigate('cadastro')},
+                        onPressed: () => {Modular.to.pushNamed('cadastro')},
                         child: Text('Novo Tanque'),
                       ),
                     ),
