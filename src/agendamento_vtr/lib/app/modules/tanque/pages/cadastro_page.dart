@@ -15,6 +15,7 @@ class _CadastroPageState extends State<CadastroPage> {
   final _formKey = GlobalKey<FormState>();
   final controller = Modular.get<EmpresaController>();
   bool precisaCadProprietario = false;
+  bool podeSalvar = false;
 
   @override
   void initState() {
@@ -83,7 +84,8 @@ class _CadastroPageState extends State<CadastroPage> {
             padding: const EdgeInsets.all(8.0),
             child: ElevatedButton(
               child: Text('Salvar'),
-              onPressed: precisaCadProprietario ? null : () => {},
+              onPressed:
+                  !precisaCadProprietario && podeSalvar ? () => {} : null,
             ),
           ),
         ],
