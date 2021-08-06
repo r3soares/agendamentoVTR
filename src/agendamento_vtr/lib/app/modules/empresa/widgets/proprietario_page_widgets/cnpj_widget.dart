@@ -1,5 +1,6 @@
 import 'package:agendamento_vtr/app/message_controller.dart';
 import 'package:agendamento_vtr/app/modules/empresa/controllers/empresa_controller.dart';
+import 'package:agendamento_vtr/app/modules/tanque/models/empresa.dart';
 import 'package:agendamento_vtr/app/modules/util/cnpj.dart';
 import 'package:agendamento_vtr/app/modules/util/cpf.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +18,8 @@ class _CnpjWidgetState extends State<CnpjWidget> {
   final messageControler = Modular.get<MessageController>();
   final controller = Modular.get<EmpresaController>();
   final TextEditingController _cCnpjCpf = TextEditingController();
+  final focusNode = FocusNode();
+  String cnpj = '';
 
   @override
   void initState() {
@@ -24,6 +27,9 @@ class _CnpjWidgetState extends State<CnpjWidget> {
     controller.addListener(() {
       if (!mounted) return;
       setState(() {});
+    });
+    focusNode.addListener(() {
+      buscaEmpresa();
     });
   }
 
@@ -36,6 +42,7 @@ class _CnpjWidgetState extends State<CnpjWidget> {
             padding: EdgeInsets.all(8),
             width: larguraTotal * .5,
             child: TextFormField(
+              focusNode: focusNode,
               decoration: const InputDecoration(
                 icon: Icon(Icons.badge),
                 hintText: 'Somente números',
@@ -58,12 +65,16 @@ class _CnpjWidgetState extends State<CnpjWidget> {
     if (value.length != 14 && value.length != 11) return 'CNPJ ou CPF inválido';
     if (!CPF.isValid(value) && !CNPJ.isValid(value))
       return 'CNPJ ou CPF inválido';
-    final empresa = controller.findEmpresa(cnpj: value);
-    if (empresa != null && empresa != controller.empresa) {
-      controller.empresa = empresa;
-      return null;
-    }
-
+    cnpj = value;
     return null;
+  }
+
+  void buscaEmpresa() {
+    if (!focusNode.hasFocus && cnpj != '') {
+      final empresa = controller.findEmpresa(cnpj: cnpj);
+      controller.empresa = empresa ?? Empresa();
+      controller.empresa.cnpj = cnpj;
+      print(controller.empresa.cnpj);
+    }
   }
 }

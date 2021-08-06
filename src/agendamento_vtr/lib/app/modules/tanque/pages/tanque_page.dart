@@ -53,7 +53,6 @@ class _TanquePageState extends State<TanquePage> {
               Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: TextFormField(
-                    enabled: !controller.isSalvo,
                     decoration: const InputDecoration(
                       icon: Icon(Icons.person),
                       labelText: 'Razão Social ou Nome do Proprietário',
@@ -82,7 +81,6 @@ class _TanquePageState extends State<TanquePage> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: TextFormField(
-                  enabled: !controller.isSalvo,
                   decoration: const InputDecoration(
                     icon: Icon(Icons.email),
                     hintStyle: TextStyle(fontSize: 10),
@@ -99,12 +97,10 @@ class _TanquePageState extends State<TanquePage> {
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: controller.isSalvo
-                    ? ElevatedButton.icon(
-                        onPressed: () => setState(() => isPropEditavel = true),
-                        icon: Icon(Icons.edit),
-                        label: Text('Alterar'))
-                    : SizedBox.shrink(),
+                child: ElevatedButton.icon(
+                    onPressed: () => setState(() => isPropEditavel = true),
+                    icon: Icon(Icons.edit),
+                    label: Text('Alterar')),
               ),
               Center(
                 child: Row(
@@ -114,7 +110,7 @@ class _TanquePageState extends State<TanquePage> {
                       padding: const EdgeInsets.all(8.0),
                       child: ElevatedButton(
                         child: Text('Salvar'),
-                        onPressed: isPropEditavel || !controller.isSalvo
+                        onPressed: isPropEditavel
                             ? () => {
                                   _salvaProprietario()
                                       ? ScaffoldMessenger.of(context)
@@ -129,7 +125,7 @@ class _TanquePageState extends State<TanquePage> {
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: ElevatedButton.icon(
-                          onPressed: !isPropEditavel && controller.isSalvo
+                          onPressed: !isPropEditavel
                               ? () => showDialog(
                                   barrierDismissible: false,
                                   barrierColor: Color.fromRGBO(0, 0, 0, .5),

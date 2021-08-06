@@ -120,7 +120,6 @@ class _CadastroPageState extends State<CadastroPage> {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: TextFormField(
-        enabled: !controller.isSalvo,
         decoration: const InputDecoration(
           icon: Icon(Icons.email),
           hintStyle: TextStyle(fontSize: 10),
