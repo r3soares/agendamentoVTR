@@ -33,14 +33,7 @@ class _CadastroPageState extends State<CadastroPage> {
     // TODO: implement initState
     super.initState();
     controller.addListener(() {
-      setState(() {
-        atualizaDadosProprietario();
-      });
-    });
-    controller.empresa.addListener(() {
-      setState(() {
-        print("Tanque adicionado");
-      });
+      atualizaDadosProprietario();
     });
   }
 
@@ -162,9 +155,12 @@ class _CadastroPageState extends State<CadastroPage> {
   }
 
   void atualizaDadosProprietario() {
-    _cRazaSocialProp.text = controller.empresa.razaoSocial;
-    _cTelefone.text = controller.empresa.telefone ?? '';
-    _cEmail.text = controller.empresa.email;
+    if (!mounted) return;
+    setState(() {
+      _cRazaSocialProp.text = controller.empresa.razaoSocial;
+      _cTelefone.text = controller.empresa.telefone ?? '';
+      _cEmail.text = controller.empresa.email;
+    });
   }
 
   String? validateEmail(String? value) {

@@ -20,9 +20,9 @@ class _CnpjWidgetState extends State<CnpjWidget> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     controller.addListener(() {
+      if (!mounted) return;
       setState(() {});
     });
   }
