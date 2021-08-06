@@ -1,3 +1,4 @@
+import 'package:agendamento_vtr/app/message_controller.dart';
 import 'package:agendamento_vtr/app/modules/tanque/models/compartimento.dart';
 import 'package:agendamento_vtr/app/modules/tanque/models/empresa.dart';
 import 'package:agendamento_vtr/app/modules/tanque/models/tanque.dart';
@@ -18,6 +19,8 @@ class TanqueDialog extends StatefulWidget {
 }
 
 class _TanqueDialogState extends State<TanqueDialog> {
+  final Empresa proprietario =
+      Modular.get<MessageController>().mensagem('proprietario');
   final qtdCompartimentos = List.generate(10, (index) => 1 + index);
   final _formKey = GlobalKey<FormState>();
   Tanque tanque = Tanque();
@@ -27,7 +30,7 @@ class _TanqueDialogState extends State<TanqueDialog> {
   @override
   void initState() {
     super.initState();
-    tanque.responsavelAgendamento = Modular.get<Empresa>().cnpj;
+    tanque.responsavelAgendamento = proprietario.cnpj;
   }
 
   @override
@@ -55,7 +58,7 @@ class _TanqueDialogState extends State<TanqueDialog> {
                           style: TextStyle(fontSize: 20),
                         ),
                       ),
-                      ResponsavelWidget(Modular.get<Empresa>()),
+                      ResponsavelWidget(),
                       TanqueZeroWidget(tanque),
                       PlacaWidget(tanque),
                       CrlvNfWidget(tanque),
@@ -157,9 +160,11 @@ class _TanqueDialogState extends State<TanqueDialog> {
   void _criaTanque() {
     tanque.compartimentos = compartimentos;
     tanque.dataRegistro = DateTime.now();
-    final proprietario = Modular.get<Empresa>();
     proprietario.addTanque(tanque.placa);
     tanque.proprietario = proprietario.cnpj;
+    final responsavel = Modular.get<MessageController>().mensagem('empresa');
+    tanque.responsavelAgendamento =
+        responsavel != null ? responsavel.cnpj : tanque.responsavelAgendamento;
 
     repo.addTanque(tanque);
   }

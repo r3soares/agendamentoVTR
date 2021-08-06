@@ -1,13 +1,17 @@
 import 'dart:collection';
 
 class MessageController {
-  final HashMap<String, dynamic> mensagens = HashMap();
+  final HashMap<String, dynamic> _mensagens = HashMap();
 
-  mensagem(String value, {bool apagaAposObter = true}) {
-    return apagaAposObter ? mensagens.remove(value) : mensagens[value];
+  mensagem(String value) {
+    return _mensagens[value];
   }
 
-  addMensagem(String nome, value) {
-    mensagens[nome] = value;
+  setMensagem(String nome, value) {
+    _mensagens[nome] = value;
+  }
+
+  limpaMensagens() {
+    _mensagens.clear();
   }
 }

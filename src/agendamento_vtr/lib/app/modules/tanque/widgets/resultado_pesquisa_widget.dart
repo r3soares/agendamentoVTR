@@ -1,3 +1,4 @@
+import 'package:agendamento_vtr/app/message_controller.dart';
 import 'package:agendamento_vtr/app/modules/tanque/models/empresa.dart';
 import 'package:agendamento_vtr/app/pesquisa_controller.dart';
 import 'package:flutter/material.dart';
@@ -46,6 +47,8 @@ class _ResultadoPesquisaWidgetState extends State<ResultadoPesquisaWidget> {
   }
 
   void selecionaEmpresa() {
+    Modular.get<MessageController>()
+        .setMensagem('empresa', controller.resultado);
     Navigator.of(context).pop();
   }
 }

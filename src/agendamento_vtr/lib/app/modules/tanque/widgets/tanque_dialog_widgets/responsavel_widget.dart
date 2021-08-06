@@ -1,13 +1,20 @@
+import 'package:agendamento_vtr/app/message_controller.dart';
 import 'package:agendamento_vtr/app/modules/tanque/models/empresa.dart';
 import 'package:agendamento_vtr/app/modules/tanque/pages/pesquisa_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 
-class ResponsavelWidget extends StatelessWidget {
-  final Empresa responsavel;
-  ResponsavelWidget(this.responsavel) {
-    print(responsavel.razaoSocial);
-  }
+class ResponsavelWidget extends StatefulWidget {
+  final messageControler = Modular.get<MessageController>();
+  ResponsavelWidget();
 
+  @override
+  _ResponsavelWidgetState createState() => _ResponsavelWidgetState();
+}
+
+class _ResponsavelWidgetState extends State<ResponsavelWidget> {
+  Empresa responsavel =
+      Modular.get<MessageController>().mensagem('proprietario');
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -34,12 +41,21 @@ class ResponsavelWidget extends StatelessWidget {
                     context: context,
                     builder: (BuildContext context) {
                       return PesquisaDialog();
-                    })
+                    }).whenComplete(() => _atualizaResponsavel())
               },
             ),
           ),
         ],
       ),
     );
+  }
+
+  _atualizaResponsavel() {
+    final resultadoPesquisa = widget.messageControler.mensagem('empresa');
+    if (resultadoPesquisa != null) {
+      setState(() {
+        responsavel = resultadoPesquisa;
+      });
+    }
   }
 }
