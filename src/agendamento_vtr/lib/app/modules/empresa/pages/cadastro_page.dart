@@ -6,8 +6,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
 class CadastroPage extends StatefulWidget {
+  final String preCadastro;
   final largura = .5;
-  const CadastroPage({Key? key}) : super(key: key);
+  const CadastroPage({this.preCadastro = ''});
 
   @override
   _CadastroPageState createState() => _CadastroPageState();
@@ -56,7 +57,9 @@ class _CadastroPageState extends State<CadastroPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   titulo(),
-                  CnpjWidget(),
+                  CnpjWidget(
+                    cnpjPrevio: widget.preCadastro,
+                  ),
                   razaoSocial(),
                   telefone(),
                   email(),
@@ -189,6 +192,7 @@ class _CadastroPageState extends State<CadastroPage> {
     if (!verificaDadosPreenchidos()) return false;
     _insereDadosNoProprietario();
     controller.salvaEmpresa();
+    Modular.to.pop();
     ScaffoldMessenger.of(context)
         .showSnackBar(const SnackBar(content: Text('Proprietário Salvo')));
     return true;

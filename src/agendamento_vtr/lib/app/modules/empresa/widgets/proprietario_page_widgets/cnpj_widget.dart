@@ -8,7 +8,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
 class CnpjWidget extends StatefulWidget {
-  const CnpjWidget();
+  final String cnpjPrevio;
+  const CnpjWidget({this.cnpjPrevio = ''});
 
   @override
   _CnpjWidgetState createState() => _CnpjWidgetState();
@@ -24,13 +25,8 @@ class _CnpjWidgetState extends State<CnpjWidget> {
   @override
   void initState() {
     super.initState();
-    controller.addListener(() {
-      if (!mounted) return;
-      setState(() {});
-    });
-    focusNode.addListener(() {
-      buscaEmpresa();
-    });
+    _cCnpjCpf.text = widget.cnpjPrevio;
+    focusNode.addListener(buscaEmpresa);
   }
 
   @override
