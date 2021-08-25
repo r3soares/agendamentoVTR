@@ -26,11 +26,11 @@ class _TanquePageState extends State<TanquePage> {
   bool isPropEditavel = false;
 
   _TanquePageState() {
-    controller.empresa.addListener(() {
-      setState(() {
-        print("Tanque adicionado");
-      });
-    });
+    // controller.empresa.addListener(() {
+    //   setState(() {
+    //     print("Tanque adicionado");
+    //   });
+    // });
   }
 
   @override
@@ -139,20 +139,20 @@ class _TanquePageState extends State<TanquePage> {
                   ],
                 ),
               ),
-              controller.empresa.tanques.isEmpty
-                  ? SizedBox.shrink()
-                  : Container(
-                      alignment: Alignment.center,
-                      width: larguraTotal * .5,
-                      height: 200,
-                      child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: controller.empresa.tanques.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return TanqueWidget(
-                              placa: controller.empresa.tanques[index]);
-                        },
-                      ))
+              // controller.empresa.tanques.isEmpty
+              //     ? SizedBox.shrink()
+              //     : Container(
+              //         alignment: Alignment.center,
+              //         width: larguraTotal * .5,
+              //         height: 200,
+              //         child: ListView.builder(
+              //           scrollDirection: Axis.horizontal,
+              //           itemCount: controller.empresa.tanques.length,
+              //           itemBuilder: (BuildContext context, int index) {
+              //             return TanqueWidget(
+              //                 placa: controller.empresa.tanques[index]);
+              //           },
+              //         ))
             ],
           ),
         ),
@@ -178,15 +178,15 @@ class _TanquePageState extends State<TanquePage> {
 
   void _insereDadosNoProprietario() {
     //controller.proprietario.cnpj = _cCnpjCpf.text;
-    controller.empresa.email = _cEmail.text;
-    controller.empresa.telefone = _cTelefone.text;
-    controller.empresa.razaoSocial = _cRazaSocialProp.text;
+    // controller.empresa.email = _cEmail.text;
+    // controller.empresa.telefone = _cTelefone.text;
+    // controller.empresa.razaoSocial = _cRazaSocialProp.text;
   }
 
   bool _salvaProprietario() {
     if (!verificaDadosPreenchidos()) return false;
     _insereDadosNoProprietario();
-    controller.salvaEmpresa();
+    // controller.salvaEmpresa();
     setState(() => isPropEditavel = true);
     return true;
   }

@@ -1,5 +1,6 @@
 import 'package:agendamento_vtr/app/modules/empresa/controllers/empresa_controller.dart';
 import 'package:agendamento_vtr/app/modules/empresa/widgets/proprietario_page_widgets/cnpj_widget.dart';
+import 'package:agendamento_vtr/app/modules/tanque/models/empresa.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
@@ -11,17 +12,22 @@ class CadastroPage extends StatefulWidget {
   _CadastroPageState createState() => _CadastroPageState();
 }
 
-class _CadastroPageState extends State<CadastroPage> {
+class _CadastroPageState extends ModularState<CadastroPage, EmpresaController> {
   final _formKey = GlobalKey<FormState>();
-  final controller = Modular.get<EmpresaController>();
+  late Widget proprietarioWidget = CnpjWidget(
+    titulo: 'CNPJ ou CPF do Proprietário',
+    callback: _verificaSeProprietarioExiste,
+  );
+  late Widget responsavelWidget = CnpjWidget(
+    titulo: 'CNPJ ou CPF do Responsável pelo Agendamento',
+    callback: _verificaSeResponsavelExiste,
+  );
   bool precisaCadProprietario = false;
+  bool precisaCadResponsavel = false;
   bool podeSalvar = false;
 
-  @override
-  void initState() {
-    super.initState();
-    controller.addListener(verificaSeProprietarioExiste);
-  }
+  String cnpjProprietario = '';
+  String cnpjResponsavel = '';
 
   @override
   Widget build(BuildContext context) {
@@ -42,14 +48,15 @@ class _CadastroPageState extends State<CadastroPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   titulo(),
-                  CnpjWidget(),
+                  proprietarioWidget,
+                  responsavelWidget,
                   Row(
                     children: [
                       Container(
                         padding: EdgeInsets.all(8),
                         child: btnSalvar(),
                       ),
-                      precisaCadProprietario
+                      precisaCadProprietario || precisaCadResponsavel
                           ? Container(
                               padding: EdgeInsets.all(8),
                               child: btnCadProprietario(),
@@ -101,7 +108,9 @@ class _CadastroPageState extends State<CadastroPage> {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: ElevatedButton(
-              child: Text('Cadastrar Proprietário'),
+              child: Text(precisaCadProprietario
+                  ? 'Novo Proprietário'
+                  : 'Novo Responsável'),
               onPressed: () => goCadastroEmpresa(),
             ),
           ),
@@ -110,9 +119,10 @@ class _CadastroPageState extends State<CadastroPage> {
     );
   }
 
-  void verificaSeProprietarioExiste() {
+  void _verificaSeProprietarioExiste(String cnpj, Empresa? proprietario) {
+    cnpjProprietario = cnpj;
     if (!mounted) return;
-    controller.findEmpresa() == null
+    proprietario == null
         ? setState(() {
             precisaCadProprietario = true;
           })
@@ -121,12 +131,38 @@ class _CadastroPageState extends State<CadastroPage> {
           });
   }
 
+  void _verificaSeResponsavelExiste(String cnpj, Empresa? responsavel) {
+    cnpjResponsavel = cnpj;
+    if (!mounted) return;
+    responsavel == null
+        ? setState(() {
+            precisaCadResponsavel = true;
+          })
+        : setState(() {
+            precisaCadResponsavel = false;
+          });
+  }
+
+  void exibeAvisoCadProprietario(BuildContext context) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content:
+            Text('Proprietário não localizado. Cadastre-o para continuar')));
+  }
+
   void goCadastroEmpresa() {
-    controller.removeListener(verificaSeProprietarioExiste);
     Modular.to
-        .pushNamed('/empresa/cadastro', arguments: controller.empresa.cnpj)
-        .whenComplete(
-            () => controller.addListener(verificaSeProprietarioExiste));
+        .pushNamed('/empresa/cadastro',
+            arguments:
+                precisaCadProprietario ? cnpjProprietario : cnpjResponsavel)
+        .whenComplete(() => _validaCadastro());
+  }
+
+  _validaCadastro() {
+    precisaCadProprietario
+        ? _verificaSeProprietarioExiste(
+            cnpjProprietario, controller.findEmpresa(cnpj: cnpjProprietario))
+        : _verificaSeResponsavelExiste(
+            cnpjResponsavel, controller.findEmpresa(cnpj: cnpjResponsavel));
   }
 
   String? validateEmail(String? value) {

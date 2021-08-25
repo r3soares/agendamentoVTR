@@ -14,10 +14,8 @@ class CadastroPage extends StatefulWidget {
   _CadastroPageState createState() => _CadastroPageState();
 }
 
-class _CadastroPageState extends State<CadastroPage> {
+class _CadastroPageState extends ModularState<CadastroPage, EmpresaController> {
   final _formKey = GlobalKey<FormState>();
-
-  final controller = Modular.get<EmpresaController>();
 
   final TextEditingController _cRazaSocialProp = TextEditingController();
 
@@ -25,17 +23,18 @@ class _CadastroPageState extends State<CadastroPage> {
 
   final TextEditingController _cEmail = TextEditingController();
 
-  _CadastroPageState() {
-    controller.empresa = Empresa();
-  }
+  Empresa _empresa = Empresa();
+
+  late Widget cnpjProprietarioWidget = CnpjWidget(
+    cnpjPrevio: widget.preCadastro,
+    callback: _atualizaDadosProprietario,
+  );
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    controller.addListener(() {
-      atualizaDadosProprietario();
-    });
+    _empresa.cnpj = widget.preCadastro;
   }
 
   @override
@@ -43,7 +42,7 @@ class _CadastroPageState extends State<CadastroPage> {
     final larguraTotal = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
-        title: Text('Novo Proprietário'),
+        title: Text('Novo Contato'),
       ),
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: larguraTotal / 4),
@@ -57,9 +56,7 @@ class _CadastroPageState extends State<CadastroPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   titulo(),
-                  CnpjWidget(
-                    cnpjPrevio: widget.preCadastro,
-                  ),
+                  cnpjProprietarioWidget,
                   razaoSocial(),
                   telefone(),
                   email(),
@@ -76,13 +73,9 @@ class _CadastroPageState extends State<CadastroPage> {
   Widget titulo() {
     return Container(
         child: Text(
-      "Dados do Proprietário",
+      "Dados do Contato",
       style: TextStyle(fontSize: 20),
     ));
-  }
-
-  Widget cpfCnpj() {
-    return CnpjWidget();
   }
 
   Widget razaoSocial() {
@@ -91,7 +84,7 @@ class _CadastroPageState extends State<CadastroPage> {
         child: TextFormField(
           decoration: const InputDecoration(
             icon: Icon(Icons.person),
-            labelText: 'Razão Social ou Nome do Proprietário',
+            labelText: 'Nome ou Razão Social da Empresa',
           ),
           controller: _cRazaSocialProp,
           validator: (String? value) {
@@ -156,12 +149,14 @@ class _CadastroPageState extends State<CadastroPage> {
     );
   }
 
-  void atualizaDadosProprietario() {
+  void _atualizaDadosProprietario(String cnpj, Empresa? proprietario) {
+    _empresa = proprietario ?? Empresa();
+    _empresa.cnpj = cnpj;
     if (!mounted) return;
     setState(() {
-      _cRazaSocialProp.text = controller.empresa.razaoSocial;
-      _cTelefone.text = controller.empresa.telefone ?? '';
-      _cEmail.text = controller.empresa.email;
+      _cRazaSocialProp.text = _empresa.razaoSocial;
+      _cTelefone.text = _empresa.telefone ?? '';
+      _cEmail.text = _empresa.email;
     });
   }
 
@@ -182,16 +177,17 @@ class _CadastroPageState extends State<CadastroPage> {
   }
 
   void _insereDadosNoProprietario() {
-    //controller.proprietario.cnpj = _cCnpjCpf.text;
-    controller.empresa.email = _cEmail.text;
-    controller.empresa.telefone = _cTelefone.text;
-    controller.empresa.razaoSocial = _cRazaSocialProp.text;
+    //controller.empresa.cnpj = _cCnpjCpf.text;
+    _empresa.email = _cEmail.text;
+    _empresa.telefone = _cTelefone.text;
+    _empresa.razaoSocial = _cRazaSocialProp.text;
   }
 
   bool _salvaProprietario(context) {
     if (!verificaDadosPreenchidos()) return false;
     _insereDadosNoProprietario();
-    controller.salvaEmpresa();
+    controller.salvaEmpresa(_empresa);
+    print('Empresa salva: ' + _empresa.cnpj);
     Modular.to.pop();
     ScaffoldMessenger.of(context)
         .showSnackBar(const SnackBar(content: Text('Proprietário Salvo')));
