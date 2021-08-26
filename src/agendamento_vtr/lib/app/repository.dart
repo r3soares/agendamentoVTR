@@ -70,6 +70,7 @@ class Repository {
   }
 
   addTanque(value) => _tanques.add(value);
+
   void salvaEmpresa(Empresa value) {
     var pExistente =
         empresas.firstWhere((p) => p!.cnpj == value.cnpj, orElse: () => null);

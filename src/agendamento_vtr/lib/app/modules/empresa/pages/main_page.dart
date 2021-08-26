@@ -15,7 +15,7 @@ class MainPage extends StatelessWidget {
         ),
         body: Container(
           padding: EdgeInsets.only(bottom: size.height * .3),
-          alignment: Alignment.center,
+          alignment: Alignment.topCenter,
           child: SizedBox(
             height: size.height * .5,
             width: size.width * .5,
@@ -24,7 +24,7 @@ class MainPage extends StatelessWidget {
               elevation: 12,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Container(
                     alignment: Alignment.topCenter,
@@ -41,7 +41,7 @@ class MainPage extends StatelessWidget {
                       height: size.height * .08,
                       width: size.width * .2,
                       child: ElevatedButton(
-                        onPressed: () => {Modular.to.navigate('cadastro')},
+                        onPressed: () => {Modular.to.pushNamed('cadastro')},
                         child: Text('Novo Proprietário'),
                       ),
                     ),
