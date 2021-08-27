@@ -1,4 +1,4 @@
-import 'package:agendamento_vtr/app/modules/tanque/models/compartimento.dart';
+import 'package:agendamento_vtr/app/models/compartimento.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 

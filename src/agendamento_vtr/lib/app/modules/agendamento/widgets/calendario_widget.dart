@@ -49,7 +49,6 @@ class _CalendarioWidgetState extends State<CalendarioWidget> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     agendasOcupadas = agendaStore.getAgendasOcupadas();
     agendaStore.addListener(() {

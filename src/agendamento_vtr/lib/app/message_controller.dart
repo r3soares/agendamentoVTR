@@ -1,7 +1,5 @@
 import 'dart:collection';
 
-import 'package:flutter_modular/flutter_modular.dart';
-
 class MessageController {
   final HashMap<String, dynamic> _mensagens = HashMap();
 

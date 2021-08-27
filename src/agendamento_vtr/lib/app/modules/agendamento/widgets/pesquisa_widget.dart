@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:agendamento_vtr/app/modules/agendamento/pages/visualiza_tanque_dialog.dart';
 import 'package:agendamento_vtr/app/pesquisa_controller.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +17,6 @@ class _PesquisaWidgetState extends State<PesquisaWidget> {
   final controller = Modular.get<PesquisaController>();
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     controller.addListener(() {
       WidgetsBinding.instance!.addPostFrameCallback((_) {

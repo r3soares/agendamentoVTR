@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:agendamento_vtr/app/modules/agendamento/models/agenda.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_modular/flutter_modular.dart';

@@ -1,5 +1,5 @@
+import 'package:agendamento_vtr/app/models/empresa.dart';
 import 'package:agendamento_vtr/app/modules/empresa/controllers/empresa_controller.dart';
-import 'package:agendamento_vtr/app/modules/tanque/models/empresa.dart';
 import 'package:agendamento_vtr/app/modules/util/cnpj.dart';
 import 'package:agendamento_vtr/app/modules/util/cpf.dart';
 import 'package:flutter/material.dart';

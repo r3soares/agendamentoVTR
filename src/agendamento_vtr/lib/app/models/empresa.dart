@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'tanque.dart';
-
 class Empresa extends ChangeNotifier {
   String _cnpjCpf = '';
   String _razaoSocial = '';

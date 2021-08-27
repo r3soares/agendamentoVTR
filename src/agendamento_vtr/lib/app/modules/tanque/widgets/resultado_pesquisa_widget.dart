@@ -1,5 +1,4 @@
 import 'package:agendamento_vtr/app/message_controller.dart';
-import 'package:agendamento_vtr/app/modules/tanque/models/empresa.dart';
 import 'package:agendamento_vtr/app/pesquisa_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';

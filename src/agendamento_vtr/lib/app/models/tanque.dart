@@ -1,5 +1,5 @@
 import 'package:agendamento_vtr/app/modules/tanque/models/arquivo.dart';
-import 'package:agendamento_vtr/app/modules/tanque/models/compartimento.dart';
+import 'package:agendamento_vtr/app/models/compartimento.dart';
 
 class Tanque {
   String _placa = '';

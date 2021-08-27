@@ -1,4 +1,4 @@
-import 'package:agendamento_vtr/app/repository.dart';
+import 'package:agendamento_vtr/app/repositories/repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 

@@ -1,6 +1,6 @@
-import 'package:agendamento_vtr/app/modules/tanque/models/empresa.dart';
-import 'package:agendamento_vtr/app/modules/tanque/models/tanque.dart';
-import 'package:agendamento_vtr/app/repository.dart';
+import 'package:agendamento_vtr/app/models/empresa.dart';
+import 'package:agendamento_vtr/app/models/tanque.dart';
+import 'package:agendamento_vtr/app/repositories/repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
@@ -17,7 +17,6 @@ class _TanqueWidgetState extends State<TanqueWidget> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     tanque = Modular.get<Repository>().findTanque(widget.placa) ?? Tanque();
   }

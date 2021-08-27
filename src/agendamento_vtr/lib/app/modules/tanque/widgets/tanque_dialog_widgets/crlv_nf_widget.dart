@@ -1,5 +1,5 @@
+import 'package:agendamento_vtr/app/models/tanque.dart';
 import 'package:agendamento_vtr/app/modules/tanque/models/arquivo.dart';
-import 'package:agendamento_vtr/app/modules/tanque/models/tanque.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 

@@ -1,4 +1,4 @@
-import 'package:agendamento_vtr/app/modules/tanque/models/tanque.dart';
+import 'package:agendamento_vtr/app/models/tanque.dart';
 import 'package:flutter/material.dart';
 
 class PlacaWidget extends StatefulWidget {

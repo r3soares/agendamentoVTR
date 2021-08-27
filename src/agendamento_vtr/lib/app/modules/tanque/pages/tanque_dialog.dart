@@ -1,13 +1,13 @@
 import 'package:agendamento_vtr/app/message_controller.dart';
-import 'package:agendamento_vtr/app/modules/tanque/models/compartimento.dart';
-import 'package:agendamento_vtr/app/modules/tanque/models/empresa.dart';
-import 'package:agendamento_vtr/app/modules/tanque/models/tanque.dart';
+import 'package:agendamento_vtr/app/models/compartimento.dart';
+import 'package:agendamento_vtr/app/models/empresa.dart';
+import 'package:agendamento_vtr/app/models/tanque.dart';
 import 'package:agendamento_vtr/app/modules/tanque/widgets/tanque_dialog_widgets/crlv_nf_widget.dart';
 import 'package:agendamento_vtr/app/modules/tanque/widgets/tanque_dialog_widgets/placa_widget.dart';
 import 'package:agendamento_vtr/app/modules/tanque/widgets/tanque_dialog_widgets/responsavel_widget.dart';
 import 'package:agendamento_vtr/app/modules/tanque/widgets/tanque_dialog_widgets/tanque_zero_widget.dart';
-import 'package:agendamento_vtr/app/repository.dart';
 import 'package:agendamento_vtr/app/modules/tanque/widgets/tanque_dialog_widgets/compartimento_widget.dart';
+import 'package:agendamento_vtr/app/repositories/repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 

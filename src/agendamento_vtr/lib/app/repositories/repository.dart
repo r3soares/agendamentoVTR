@@ -1,8 +1,8 @@
 import 'dart:math';
 
-import 'package:agendamento_vtr/app/modules/tanque/models/compartimento.dart';
-import 'package:agendamento_vtr/app/modules/tanque/models/empresa.dart';
-import 'package:agendamento_vtr/app/modules/tanque/models/tanque.dart';
+import 'package:agendamento_vtr/app/models/compartimento.dart';
+import 'package:agendamento_vtr/app/models/empresa.dart';
+import 'package:agendamento_vtr/app/models/tanque.dart';
 
 class Repository {
   List<Tanque?> _tanques = List.empty(growable: true);
