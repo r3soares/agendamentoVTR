@@ -148,8 +148,10 @@ class _CadastroPageState extends ModularState<CadastroPage, EmpresaController> {
     );
   }
 
-  void _atualizaDadosProprietario(String cnpj, Empresa? proprietario) {
-    _empresa = proprietario ?? Empresa();
+  void _atualizaDadosProprietario(String cnpj, bool valido) {
+    if (!valido) return;
+    final e = controller.findEmpresa(cnpj: cnpj);
+    _empresa = e ?? Empresa();
     _empresa.cnpj = cnpj;
     if (!mounted) return;
     setState(() {

@@ -10,7 +10,7 @@ class CnpjWidget extends StatefulWidget {
   final String cnpjPrevio;
   final String titulo;
   //Termo buscado e Resultado
-  final void Function(String, Empresa?) callback;
+  final Function(String, bool) callback;
   CnpjWidget(
       {this.cnpjPrevio = '',
       this.titulo = 'CPF ou CNPJ',
@@ -20,16 +20,15 @@ class CnpjWidget extends StatefulWidget {
   _CnpjWidgetState createState() => _CnpjWidgetState();
 }
 
-class _CnpjWidgetState extends ModularState<CnpjWidget, EmpresaController> {
+class _CnpjWidgetState extends State<CnpjWidget> {
   final TextEditingController _cCnpjCpf = TextEditingController();
   final focusNode = FocusNode();
-  String cnpj = '';
 
   @override
   void initState() {
     super.initState();
     _cCnpjCpf.text = widget.cnpjPrevio;
-    focusNode.addListener(buscaEmpresa);
+    focusNode.addListener(notificaListeners);
   }
 
   @override
@@ -64,17 +63,20 @@ class _CnpjWidgetState extends ModularState<CnpjWidget, EmpresaController> {
     if (value.length != 14 && value.length != 11) return 'CNPJ ou CPF inválido';
     if (!CPF.isValid(value) && !CNPJ.isValid(value))
       return 'CNPJ ou CPF inválido';
-    cnpj = value;
     return null;
   }
 
-  void buscaEmpresa() {
-    if (!focusNode.hasFocus && cnpj != '') {
-      final empresa = controller.findEmpresa(cnpj: cnpj);
-      widget.callback(cnpj, empresa);
-      // controller.empresa = empresa ?? Empresa();
-      // controller.empresa.cnpj = cnpj;
-      //print(controller.empresa.cnpj);
-    }
+  void notificaListeners() {
+    widget.callback(_cCnpjCpf.text, validaCNPJCPF(_cCnpjCpf.text) == null);
   }
+
+  // void buscaEmpresa() {
+  //   if (!focusNode.hasFocus && cnpj != '') {
+  //     final empresa = controller.findEmpresa(cnpj: cnpj);
+  //     widget.callback(cnpj, empresa);
+  //     // controller.empresa = empresa ?? Empresa();
+  //     // controller.empresa.cnpj = cnpj;
+  //     //print(controller.empresa.cnpj);
+  //   }
+  // }
 }

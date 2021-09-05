@@ -1,4 +1,3 @@
-import 'package:agendamento_vtr/app/models/empresa.dart';
 import 'package:agendamento_vtr/app/modules/empresa/controllers/empresa_controller.dart';
 import 'package:agendamento_vtr/app/modules/empresa/widgets/proprietario_page_widgets/cnpj_widget.dart';
 import 'package:flutter/material.dart';
@@ -16,18 +15,14 @@ class _CadastroPageState extends ModularState<CadastroPage, EmpresaController> {
   final _formKey = GlobalKey<FormState>();
   late Widget proprietarioWidget = CnpjWidget(
     titulo: 'CNPJ ou CPF do Proprietário',
-    callback: _verificaSeProprietarioExiste,
+    callback: (_, valido) => null,
   );
   late Widget responsavelWidget = CnpjWidget(
     titulo: 'CNPJ ou CPF do Responsável pelo Agendamento',
-    callback: _verificaSeResponsavelExiste,
+    callback: (_, valido) => null,
   );
-  bool precisaCadProprietario = false;
-  bool precisaCadResponsavel = false;
-  bool podeSalvar = false;
-
-  String cnpjProprietario = '';
-  String cnpjResponsavel = '';
+  bool proprietarioValido = false;
+  bool responsavelValido = false;
 
   @override
   Widget build(BuildContext context) {
@@ -54,14 +49,9 @@ class _CadastroPageState extends ModularState<CadastroPage, EmpresaController> {
                     children: [
                       Container(
                         padding: EdgeInsets.all(8),
-                        child: btnSalvar(),
+                        child: btnSalvar(context),
                       ),
-                      precisaCadProprietario || precisaCadResponsavel
-                          ? Container(
-                              padding: EdgeInsets.all(8),
-                              child: btnCadProprietario(),
-                            )
-                          : SizedBox.shrink()
+                      //exibeBotoes()
                     ],
                   )
                 ],
@@ -82,87 +72,36 @@ class _CadastroPageState extends ModularState<CadastroPage, EmpresaController> {
         ));
   }
 
-  Widget btnSalvar() {
-    return Center(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: ElevatedButton(
-              child: Text('Salvar'),
-              onPressed:
-                  !precisaCadProprietario && podeSalvar ? () => {} : null,
+  Widget btnSalvar(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(8),
+      child: Center(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: ElevatedButton(
+                child: Text('Salvar'),
+                onPressed: () => _salvaDados(context),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 
-  Widget btnCadProprietario() {
-    return Center(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: ElevatedButton(
-              child: Text(precisaCadProprietario
-                  ? 'Novo Proprietário'
-                  : 'Novo Responsável'),
-              onPressed: () => goCadastroEmpresa(),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _verificaSeProprietarioExiste(String cnpj, Empresa? proprietario) {
-    cnpjProprietario = cnpj;
-    if (!mounted) return;
-    proprietario == null
-        ? setState(() {
-            precisaCadProprietario = true;
-          })
-        : setState(() {
-            precisaCadProprietario = false;
-          });
-  }
-
-  void _verificaSeResponsavelExiste(String cnpj, Empresa? responsavel) {
-    cnpjResponsavel = cnpj;
-    if (!mounted) return;
-    responsavel == null
-        ? setState(() {
-            precisaCadResponsavel = true;
-          })
-        : setState(() {
-            precisaCadResponsavel = false;
-          });
+  void _salvaDados(BuildContext ctx) {
+    if (!_validaForm()) {
+      exibeAvisoCadProprietario(ctx);
+      return;
+    }
   }
 
   void exibeAvisoCadProprietario(BuildContext context) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content:
-            Text('Proprietário não localizado. Cadastre-o para continuar')));
-  }
-
-  void goCadastroEmpresa() {
-    Modular.to
-        .pushNamed('/empresa/cadastro',
-            arguments:
-                precisaCadProprietario ? cnpjProprietario : cnpjResponsavel)
-        .whenComplete(() => _validaCadastro());
-  }
-
-  _validaCadastro() {
-    precisaCadProprietario
-        ? _verificaSeProprietarioExiste(
-            cnpjProprietario, controller.findEmpresa(cnpj: cnpjProprietario))
-        : _verificaSeResponsavelExiste(
-            cnpjResponsavel, controller.findEmpresa(cnpj: cnpjResponsavel));
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text('Há campos inválidos')));
   }
 
   String? validateEmail(String? value) {
@@ -176,7 +115,7 @@ class _CadastroPageState extends ModularState<CadastroPage, EmpresaController> {
     return null;
   }
 
-  bool verificaDadosPreenchidos() {
+  bool _validaForm() {
     if (_formKey.currentState == null) return false;
     return _formKey.currentState!.validate();
   }
