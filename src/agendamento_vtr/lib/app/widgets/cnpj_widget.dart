@@ -1,10 +1,7 @@
-import 'package:agendamento_vtr/app/models/empresa.dart';
-import 'package:agendamento_vtr/app/modules/empresa/controllers/empresa_controller.dart';
 import 'package:agendamento_vtr/app/modules/util/cnpj.dart';
 import 'package:agendamento_vtr/app/modules/util/cpf.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_modular/flutter_modular.dart';
 
 class CnpjWidget extends StatefulWidget {
   final String cnpjPrevio;
