@@ -31,7 +31,7 @@ class _PlacaWidgetState extends State<PlacaWidget> {
       children: [
         Container(
             padding: EdgeInsets.all(8),
-            width: larguraTotal * .5,
+            width: larguraTotal * .4,
             child: TextFormField(
               textCapitalization: TextCapitalization.characters,
               focusNode: focusNode,

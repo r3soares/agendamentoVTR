@@ -2,7 +2,6 @@ import 'package:agendamento_vtr/app/message_controller.dart';
 import 'package:agendamento_vtr/app/models/compartimento.dart';
 import 'package:agendamento_vtr/app/models/empresa.dart';
 import 'package:agendamento_vtr/app/models/tanque.dart';
-import 'package:agendamento_vtr/app/modules/tanque/widgets/tanque_dialog_widgets/crlv_nf_widget.dart';
 import 'package:agendamento_vtr/app/modules/tanque/widgets/tanque_dialog_widgets/placa_widget.dart';
 import 'package:agendamento_vtr/app/modules/tanque/widgets/tanque_dialog_widgets/responsavel_widget.dart';
 import 'package:agendamento_vtr/app/modules/tanque/widgets/tanque_dialog_widgets/tanque_zero_widget.dart';
@@ -59,9 +58,9 @@ class _TanqueDialogState extends State<TanqueDialog> {
                         ),
                       ),
                       ResponsavelWidget(),
-                      TanqueZeroWidget(tanque),
+                      //TanqueZeroWidget(),
                       PlacaWidget(tanque),
-                      CrlvNfWidget(tanque),
+                      //DocWidget(tanque),
                       Padding(
                         padding: EdgeInsets.all(8),
                         child: Row(

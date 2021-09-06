@@ -1,17 +1,18 @@
-import 'package:agendamento_vtr/app/models/tanque.dart';
 import 'package:agendamento_vtr/app/modules/tanque/models/arquivo.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 
-class CrlvNfWidget extends StatefulWidget {
-  final Tanque tanque;
-  const CrlvNfWidget(this.tanque);
+class DocWidget extends StatefulWidget {
+  final Function(Arquivo?, bool) callback;
+  final String titulo;
+  const DocWidget({this.titulo = 'CRLV ou NF', required this.callback});
 
   @override
-  _CrlvNfWidgetState createState() => _CrlvNfWidgetState();
+  _DocWidgetState createState() => _DocWidgetState();
 }
 
-class _CrlvNfWidgetState extends State<CrlvNfWidget> {
+class _DocWidgetState extends State<DocWidget> {
+  Arquivo? _arquivo;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -21,14 +22,14 @@ class _CrlvNfWidgetState extends State<CrlvNfWidget> {
         ElevatedButton.icon(
           onPressed: () => getFile(),
           icon: Icon(Icons.file_upload),
-          label: Text('CRLV ou NF'),
+          label: Text(widget.titulo),
         ),
         Flexible(
           child: Container(
             alignment: Alignment.center,
             padding: EdgeInsets.only(left: 12),
             child: Text(
-              widget.tanque.doc?.nome ?? '',
+              _arquivo?.nome ?? '',
               style: TextStyle(fontSize: 10),
               softWrap: true,
               overflow: TextOverflow.ellipsis,
@@ -47,14 +48,15 @@ class _CrlvNfWidgetState extends State<CrlvNfWidget> {
 
     if (result != null) {
       setState(() {
-        widget.tanque.doc = Arquivo(
+        _arquivo = Arquivo(
           result.files.single.bytes!,
           result.files.single.name,
           result.files.single.extension!,
         );
       });
+      widget.callback(_arquivo!, true);
     } else {
-      // User canceled the picker
+      widget.callback(null, false);
     }
   }
 }

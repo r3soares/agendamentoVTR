@@ -1,8 +1,9 @@
-import 'package:agendamento_vtr/app/modules/empresa/controllers/empresa_controller.dart';
-import 'package:agendamento_vtr/app/modules/tanque/pages/tanque_dialog.dart';
+import 'package:agendamento_vtr/app/modules/tanque/widgets/compartimento_form.dart';
+import 'package:agendamento_vtr/app/modules/tanque/widgets/tanque_dialog_widgets/doc_widget.dart';
+import 'package:agendamento_vtr/app/modules/tanque/widgets/tanque_dialog_widgets/tanque_zero_widget.dart';
+import 'package:agendamento_vtr/app/widgets/input_numero_widget.dart';
+import 'package:agendamento_vtr/app/widgets/placa_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_modular/flutter_modular.dart';
 
 class TanquePage extends StatefulWidget {
   const TanquePage({Key? key}) : super(key: key);
@@ -13,180 +14,96 @@ class TanquePage extends StatefulWidget {
 
 class _TanquePageState extends State<TanquePage> {
   final _formKey = GlobalKey<FormState>();
-
-  final controller = Modular.get<EmpresaController>();
-
-  final TextEditingController _cRazaSocialProp = TextEditingController();
-
-  final TextEditingController _cTelefone = TextEditingController();
-
-  final TextEditingController _cEmail = TextEditingController();
-
-  bool isPropEditavel = false;
-
-  _TanquePageState() {
-    // controller.empresa.addListener(() {
-    //   setState(() {
-    //     print("Tanque adicionado");
-    //   });
-    // });
-  }
+  final Widget placaWidget = PlacaWidget(callback: (_, valido) => null);
+  final Widget inmetroWidget = InputNumeroWidget(callback: (_, valido) => null);
+  final Widget docWidget = DocWidget(callback: (_, valido) => null);
+  final Widget tanqueZeroWidget = TanqueZeroWidget(callback: (value) => null);
+  final Widget compartimentoForm = CompartimentoForm(callback: (value) => null);
 
   @override
   Widget build(BuildContext context) {
     final larguraTotal = MediaQuery.of(context).size.width;
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: larguraTotal / 4),
-      child: Form(
-        autovalidateMode: AutovalidateMode.onUserInteraction,
-        key: _formKey,
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                  child: Text(
-                "Dados do Proprietário",
-                style: TextStyle(fontSize: 20),
-              )),
-              Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: TextFormField(
-                    decoration: const InputDecoration(
-                      icon: Icon(Icons.person),
-                      labelText: 'Razão Social ou Nome do Proprietário',
-                    ),
-                    controller: _cRazaSocialProp,
-                    validator: (String? value) {
-                      return (value != null && value.length > 0)
-                          ? null
-                          : 'Informe um nome';
-                    },
-                  )),
-              Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: TextFormField(
-                    keyboardType: TextInputType.number,
-                    decoration: const InputDecoration(
-                      icon: Icon(Icons.phone),
-                      hintStyle: TextStyle(fontSize: 10),
-                      labelText: 'Telefone para contato, se houver',
-                    ),
-                    controller: _cTelefone,
-                    inputFormatters: <TextInputFormatter>[
-                      FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Novo Tanque'),
+      ),
+      body: Padding(
+        padding: EdgeInsets.symmetric(horizontal: larguraTotal / 4),
+        child: Form(
+          autovalidateMode: AutovalidateMode.onUserInteraction,
+          key: _formKey,
+          child: SingleChildScrollView(
+            child: Container(
+              width: larguraTotal * .5,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  _titulo(),
+                  _placaWidget(),
+                  _numInmetroWidget(),
+                  _docWidget(),
+                  _tanqueZeroWidget(),
+                  _compartimentoForm(),
+                  Row(
+                    children: [
+                      //exibeBotoes()
                     ],
-                  )),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: TextFormField(
-                  decoration: const InputDecoration(
-                    icon: Icon(Icons.email),
-                    hintStyle: TextStyle(fontSize: 10),
-                    labelText: 'E-mail para contato',
-                  ),
-                  keyboardType: TextInputType.emailAddress,
-                  controller: _cEmail,
-                  validator: validateEmail,
-                  onSaved: (String? value) {
-                    // This optional block of code can be used to run
-                    // code when the user saves the form.
-                  },
-                ),
+                  )
+                ],
               ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: ElevatedButton.icon(
-                    onPressed: () => setState(() => isPropEditavel = true),
-                    icon: Icon(Icons.edit),
-                    label: Text('Alterar')),
-              ),
-              Center(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: ElevatedButton(
-                        child: Text('Salvar'),
-                        onPressed: isPropEditavel
-                            ? () => {
-                                  _salvaProprietario()
-                                      ? ScaffoldMessenger.of(context)
-                                          .showSnackBar(const SnackBar(
-                                              content:
-                                                  Text('Proprietário Salvo')))
-                                      : null
-                                }
-                            : null,
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: ElevatedButton.icon(
-                          onPressed: !isPropEditavel
-                              ? () => showDialog(
-                                  barrierDismissible: false,
-                                  barrierColor: Color.fromRGBO(0, 0, 0, .5),
-                                  useSafeArea: true,
-                                  context: context,
-                                  builder: (_) => const TanqueDialog())
-                              : null,
-                          icon: Icon(Icons.add),
-                          label: Text('Tanque')),
-                    ),
-                  ],
-                ),
-              ),
-              // controller.empresa.tanques.isEmpty
-              //     ? SizedBox.shrink()
-              //     : Container(
-              //         alignment: Alignment.center,
-              //         width: larguraTotal * .5,
-              //         height: 200,
-              //         child: ListView.builder(
-              //           scrollDirection: Axis.horizontal,
-              //           itemCount: controller.empresa.tanques.length,
-              //           itemBuilder: (BuildContext context, int index) {
-              //             return TanqueWidget(
-              //                 placa: controller.empresa.tanques[index]);
-              //           },
-              //         ))
-            ],
+            ),
           ),
         ),
       ),
     );
   }
 
-  String? validateEmail(String? value) {
-    if (value == null || value.isEmpty) return 'Informe um e-mail';
-    String pattern =
-        r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]"
-        r"{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]"
-        r"{0,253}[a-zA-Z0-9])?)*$";
-    RegExp regex = new RegExp(pattern);
-    if (!regex.hasMatch(value)) return 'E-mail inválido';
-    return null;
+  Widget _titulo() {
+    return Container(
+        padding: EdgeInsets.all(8),
+        child: Text(
+          "Tanque",
+          style: TextStyle(fontSize: 20),
+        ));
+  }
+
+  Widget _placaWidget() {
+    return Container(
+      padding: const EdgeInsets.all(8),
+      child: placaWidget,
+    );
+  }
+
+  Widget _numInmetroWidget() {
+    return Container(
+      padding: const EdgeInsets.all(8),
+      child: inmetroWidget,
+    );
+  }
+
+  Widget _docWidget() {
+    return Container(
+      padding: const EdgeInsets.all(8),
+      child: docWidget,
+    );
+  }
+
+  Widget _tanqueZeroWidget() {
+    return Container(
+      padding: const EdgeInsets.all(8),
+      child: tanqueZeroWidget,
+    );
+  }
+
+  Widget _compartimentoForm() {
+    return Container(
+      padding: const EdgeInsets.all(8),
+      child: compartimentoForm,
+    );
   }
 
   bool verificaDadosPreenchidos() {
     if (_formKey.currentState == null) return false;
     return _formKey.currentState!.validate();
-  }
-
-  void _insereDadosNoProprietario() {
-    //controller.proprietario.cnpj = _cCnpjCpf.text;
-    // controller.empresa.email = _cEmail.text;
-    // controller.empresa.telefone = _cTelefone.text;
-    // controller.empresa.razaoSocial = _cRazaSocialProp.text;
-  }
-
-  bool _salvaProprietario() {
-    if (!verificaDadosPreenchidos()) return false;
-    _insereDadosNoProprietario();
-    // controller.salvaEmpresa();
-    setState(() => isPropEditavel = true);
-    return true;
   }
 }

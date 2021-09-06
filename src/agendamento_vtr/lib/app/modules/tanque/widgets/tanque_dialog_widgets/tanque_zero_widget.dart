@@ -1,15 +1,17 @@
-import 'package:agendamento_vtr/app/models/tanque.dart';
 import 'package:flutter/material.dart';
 
 class TanqueZeroWidget extends StatefulWidget {
-  final Tanque tanque;
-  const TanqueZeroWidget(this.tanque);
+  final Function(bool) callback;
+  final String titulo;
+  const TanqueZeroWidget(
+      {this.titulo = 'Tanque zero?', required this.callback});
 
   @override
   _TanqueZeroWidgetState createState() => _TanqueZeroWidgetState();
 }
 
 class _TanqueZeroWidgetState extends State<TanqueZeroWidget> {
+  bool isZero = false;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -18,15 +20,21 @@ class _TanqueZeroWidgetState extends State<TanqueZeroWidget> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Text(
-              'Tanque zero?',
+              widget.titulo,
               style: TextStyle(fontSize: 18),
             ),
             Checkbox(
-              value: widget.tanque.isZero,
-              onChanged: (value) =>
-                  setState(() => widget.tanque.isZero = value),
+              value: isZero,
+              onChanged: _alteraValor,
             )
           ],
         ));
+  }
+
+  _alteraValor(bool? valor) {
+    setState(() {
+      isZero = valor == true;
+    });
+    widget.callback(isZero);
   }
 }
