@@ -27,33 +27,29 @@ class _PlacaWidgetState extends State<PlacaWidget> {
   @override
   Widget build(BuildContext context) {
     final larguraTotal = MediaQuery.of(context).size.width;
-    return Row(
-      children: [
-        Container(
-            padding: EdgeInsets.all(8),
-            width: larguraTotal * .4,
-            child: TextFormField(
-              textCapitalization: TextCapitalization.characters,
-              focusNode: focusNode,
-              decoration: InputDecoration(
-                icon: Icon(Icons.drive_eta),
-                hintText: 'Somente letras e números',
-                hintStyle: TextStyle(fontSize: 10),
-                labelText: widget.titulo,
-              ),
-              keyboardType: TextInputType.number,
-              inputFormatters: <TextInputFormatter>[
-                FilteringTextInputFormatter.allow(RegExp(r'[0-9A-Z]')),
-              ],
-              onChanged: (value) {
-                _cPlaca.value = TextEditingValue(
-                    text: value.toUpperCase(), selection: _cPlaca.selection);
-              },
-              controller: _cPlaca,
-              validator: validaPlaca,
-            )),
-      ],
-    );
+    return Container(
+        padding: EdgeInsets.all(8),
+        width: larguraTotal * .2,
+        child: TextFormField(
+          textCapitalization: TextCapitalization.characters,
+          focusNode: focusNode,
+          decoration: InputDecoration(
+            icon: Icon(Icons.drive_eta),
+            hintText: 'Somente letras e números',
+            hintStyle: TextStyle(fontSize: 10),
+            labelText: widget.titulo,
+          ),
+          keyboardType: TextInputType.text,
+          inputFormatters: <TextInputFormatter>[
+            FilteringTextInputFormatter.allow(RegExp('[0-9A-Za-z]')),
+          ],
+          onChanged: (value) {
+            _cPlaca.value = TextEditingValue(
+                text: value.toUpperCase(), selection: _cPlaca.selection);
+          },
+          controller: _cPlaca,
+          validator: validaPlaca,
+        ));
   }
 
   String? validaPlaca(String? value) {

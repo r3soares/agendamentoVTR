@@ -30,27 +30,24 @@ class _InputNumeroWidgetWidgetState extends State<InputNumeroWidget> {
   @override
   Widget build(BuildContext context) {
     final larguraTotal = MediaQuery.of(context).size.width;
-    return Row(
-      children: [
-        Container(
-            padding: EdgeInsets.all(8),
-            width: larguraTotal * .4,
-            child: TextFormField(
-              focusNode: focusNode,
-              decoration: InputDecoration(
-                //icon: Icon(Icons.),
-                hintText: 'Somente números',
-                hintStyle: TextStyle(fontSize: 10),
-                labelText: widget.titulo,
-              ),
-              keyboardType: TextInputType.number,
-              inputFormatters: <TextInputFormatter>[
-                FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-              ],
-              controller: _cNumero,
-            )),
-      ],
-    );
+    return Container(
+        padding: EdgeInsets.all(8),
+        width: larguraTotal * .2,
+        child: TextFormField(
+          focusNode: focusNode,
+          decoration: InputDecoration(
+            //icon: Image.asset('assets/images/inmetro.png'),
+            icon: Icon(Icons.arrow_right),
+            hintText: 'Somente números',
+            hintStyle: TextStyle(fontSize: 10),
+            labelText: widget.titulo,
+          ),
+          keyboardType: TextInputType.number,
+          inputFormatters: <TextInputFormatter>[
+            FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+          ],
+          controller: _cNumero,
+        ));
   }
 
   void notificaListeners() {

@@ -30,7 +30,7 @@ class _CadastroPageState extends ModularState<CadastroPage, EmpresaController> {
     final larguraTotal = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
-        title: Text('Novo Tanque'),
+        title: Text('Cadastro de Veículo Tanque'),
       ),
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: larguraTotal / 4),

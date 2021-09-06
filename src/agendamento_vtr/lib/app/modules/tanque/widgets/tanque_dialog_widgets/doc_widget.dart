@@ -3,7 +3,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 
 class DocWidget extends StatefulWidget {
-  final Function(Arquivo?, bool) callback;
+  final Function(List<Arquivo>?, bool) callback;
   final String titulo;
   const DocWidget({this.titulo = 'CRLV ou NF', required this.callback});
 
@@ -12,51 +12,103 @@ class DocWidget extends StatefulWidget {
 }
 
 class _DocWidgetState extends State<DocWidget> {
-  Arquivo? _arquivo;
+  List<Arquivo> _arquivos = List.empty(growable: true);
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return Container(
       alignment: Alignment.center,
-      padding: EdgeInsets.all(12),
+      padding: EdgeInsets.all(8),
       child: Row(children: [
         ElevatedButton.icon(
           onPressed: () => getFile(),
           icon: Icon(Icons.file_upload),
           label: Text(widget.titulo),
         ),
-        Flexible(
+        SingleChildScrollView(
           child: Container(
-            alignment: Alignment.center,
-            padding: EdgeInsets.only(left: 12),
-            child: Text(
-              _arquivo?.nome ?? '',
-              style: TextStyle(fontSize: 10),
-              softWrap: true,
-              overflow: TextOverflow.ellipsis,
-              textAlign: TextAlign.center,
-            ),
-          ),
+              padding: EdgeInsets.all(8),
+              child: _arquivos.isEmpty
+                  ? SizedBox.shrink()
+                  : Card(
+                      elevation: 4,
+                      shadowColor: Colors.black,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(8),
+                            child: Text(
+                              'Arquivos Anexados',
+                              style: TextStyle(fontSize: 18),
+                            ),
+                          ),
+                          Container(
+                            alignment: Alignment.center,
+                            width: size.width * .2,
+                            height: size.height * .15,
+                            child: ListView.builder(
+                              scrollDirection: Axis.vertical,
+                              itemCount: _arquivos.length,
+                              itemBuilder: (BuildContext ctx, int index) {
+                                return Container(
+                                  alignment: Alignment.center,
+                                  width: size.width * 1,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Container(
+                                        alignment: Alignment.centerLeft,
+                                        width: size.width * .1,
+                                        child: Text(
+                                          _arquivos[index].nome,
+                                          style: TextStyle(fontSize: 10),
+                                          softWrap: false,
+                                          overflow: TextOverflow.clip,
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      ),
+                                      TextButton(
+                                          onPressed: () => {_removeFile(index)},
+                                          child: Text(
+                                            'X',
+                                            style: TextStyle(fontSize: 12),
+                                          )),
+                                    ],
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                    )),
         ),
       ]),
     );
   }
 
+  void _removeFile(int index) {
+    setState(() {
+      _arquivos.removeAt(index);
+    });
+  }
+
   void getFile() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
         type: FileType.custom,
+        allowMultiple: false,
         allowedExtensions: ['pdf', 'jpg', 'jpeg', 'png']);
 
     if (result != null) {
       setState(() {
-        _arquivo = Arquivo(
-          result.files.single.bytes!,
-          result.files.single.name,
-          result.files.single.extension!,
-        );
+        result.files.forEach((element) {
+          _arquivos.add(Arquivo(result.files.single.bytes!,
+              result.files.single.name, result.files.single.extension!));
+        });
       });
-      widget.callback(_arquivo!, true);
-    } else {
-      widget.callback(null, false);
+      widget.callback(_arquivos, true);
     }
   }
 }

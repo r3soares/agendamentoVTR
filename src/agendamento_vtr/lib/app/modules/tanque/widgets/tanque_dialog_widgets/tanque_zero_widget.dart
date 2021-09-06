@@ -14,26 +14,25 @@ class _TanqueZeroWidgetState extends State<TanqueZeroWidget> {
   bool isZero = false;
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    return Container(
+        alignment: Alignment.topCenter,
         padding: const EdgeInsets.all(8),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Text(
-              widget.titulo,
-              style: TextStyle(fontSize: 18),
+        child: ToggleButtons(
+          selectedBorderColor: Theme.of(context).primaryColor,
+          children: <Widget>[
+            Container(
+              padding: const EdgeInsets.all(8),
+              child: Text('Tanque Novo'),
             ),
-            Checkbox(
-              value: isZero,
-              onChanged: _alteraValor,
-            )
           ],
+          onPressed: _alteraValor,
+          isSelected: [isZero],
         ));
   }
 
-  _alteraValor(bool? valor) {
+  _alteraValor(int? valor) {
     setState(() {
-      isZero = valor == true;
+      isZero = !isZero;
     });
     widget.callback(isZero);
   }

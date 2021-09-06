@@ -24,16 +24,26 @@ class _CompartimentoFormState extends State<CompartimentoForm> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return SingleChildScrollView(
-      child: Container(
+      child: Card(
+        elevation: 4,
+        shadowColor: Colors.black,
         child: Column(
           children: [
+            Container(
+              alignment: Alignment.centerLeft,
+              padding: const EdgeInsets.all(8),
+              child: Text(
+                'Compartimento',
+                style: TextStyle(fontSize: 20),
+              ),
+            ),
             Padding(
-              padding: EdgeInsets.all(8),
+              padding: const EdgeInsets.all(8),
               child: Row(
                 children: [
-                  Text('Compartimentos:'),
+                  Text('Quantidade:'),
                   Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 20),
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: Text('${compartimentos.length}'),
                   ),
                   Row(

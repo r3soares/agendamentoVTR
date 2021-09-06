@@ -25,7 +25,7 @@ class _TanquePageState extends State<TanquePage> {
     final larguraTotal = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
-        title: Text('Novo Tanque'),
+        title: Text('Cadastro de Veículo Tanque'),
       ),
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: larguraTotal / 4),
@@ -34,26 +34,122 @@ class _TanquePageState extends State<TanquePage> {
           key: _formKey,
           child: SingleChildScrollView(
             child: Container(
-              width: larguraTotal * .5,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  _titulo(),
-                  _placaWidget(),
-                  _numInmetroWidget(),
-                  _docWidget(),
-                  _tanqueZeroWidget(),
-                  _compartimentoForm(),
-                  Row(
-                    children: [
-                      //exibeBotoes()
-                    ],
-                  )
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(10),
+                    topRight: Radius.circular(10),
+                    bottomLeft: Radius.circular(10),
+                    bottomRight: Radius.circular(10)),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.5),
+                    spreadRadius: 5,
+                    blurRadius: 7,
+                    offset: Offset(0, 3), // changes position of shadow
+                  ),
                 ],
+              ),
+              margin: EdgeInsets.all(12),
+              width: larguraTotal * .6,
+              child: Container(
+                padding: EdgeInsets.all(12),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    _titulo(),
+                    _camposIdentificacao(),
+                    _camposDocumentacao(),
+                    _compartimentoForm(),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        btnSalvar(),
+                        btnCancelar(),
+                        //exibeBotoes()
+                      ],
+                    )
+                  ],
+                ),
               ),
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _camposIdentificacao() {
+    return Container(
+      //width: larguraTotal * .4,
+      child: Card(
+        elevation: 4,
+        shadowColor: Colors.black,
+        child: Column(
+          children: [
+            Container(
+              alignment: Alignment.centerLeft,
+              padding: EdgeInsets.all(12),
+              child: Text(
+                'Identificação',
+                style: TextStyle(fontSize: 20),
+              ),
+            ),
+            Row(
+              children: [
+                _placaWidget(),
+                _numInmetroWidget(),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _camposDocumentacao() {
+    return Container(
+        child: Card(
+      elevation: 4,
+      shadowColor: Colors.black,
+      child: Column(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(8),
+            alignment: Alignment.centerLeft,
+            child: Text(
+              'Documentação',
+              style: TextStyle(fontSize: 20),
+            ),
+          ),
+          Row(
+            children: [
+              _tanqueZeroWidget(),
+              _docWidget(),
+            ],
+          ),
+        ],
+      ),
+    ));
+  }
+
+  Widget btnSalvar() {
+    return Container(
+      padding: EdgeInsets.all(8),
+      child: ElevatedButton(
+        child: Text('Salvar'),
+        onPressed: () => {},
+      ),
+    );
+  }
+
+  Widget btnCancelar() {
+    return Container(
+      padding: EdgeInsets.all(8),
+      child: TextButton(
+        child: Text('Cancelar'),
+        onPressed: () => {},
       ),
     );
   }
@@ -97,7 +193,6 @@ class _TanquePageState extends State<TanquePage> {
 
   Widget _compartimentoForm() {
     return Container(
-      padding: const EdgeInsets.all(8),
       child: compartimentoForm,
     );
   }
