@@ -33,6 +33,7 @@ class _PlacaWidgetState extends State<PlacaWidget> {
         child: TextFormField(
           textCapitalization: TextCapitalization.characters,
           focusNode: focusNode,
+          autofocus: true,
           decoration: InputDecoration(
             icon: Icon(Icons.drive_eta),
             hintText: 'Somente letras e números',

@@ -34,6 +34,7 @@ class _InputNumeroWidgetWidgetState extends State<InputNumeroWidget> {
         padding: EdgeInsets.all(8),
         width: larguraTotal * .2,
         child: TextFormField(
+          autofocus: true,
           focusNode: focusNode,
           decoration: InputDecoration(
             //icon: Image.asset('assets/images/inmetro.png'),

@@ -4,24 +4,32 @@ import 'package:flutter/services.dart';
 
 class CompartimentoWidget extends StatefulWidget {
   final Compartimento compartimento;
-  const CompartimentoWidget({Key? key, required this.compartimento})
+  final Function(Compartimento) callback;
+  const CompartimentoWidget(
+      {Key? key, required this.compartimento, required this.callback})
       : super(key: key);
 
   @override
-  _CompartimentoWidgetState createState() =>
-      _CompartimentoWidgetState(compartimento);
+  _CompartimentoWidgetState createState() => _CompartimentoWidgetState();
 }
 
 class _CompartimentoWidgetState extends State<CompartimentoWidget> {
   final TextEditingController _cCapacidade = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  final Compartimento compartimento;
-  _CompartimentoWidgetState(this.compartimento) {
-    compartimento.addListener(() {
-      setState(() {
-        print('Compartiemnto alterado');
-      });
+  final focusNode = FocusNode();
+
+  @override
+  initState() {
+    widget.compartimento.addListener(() {
+      widget.callback(widget.compartimento);
     });
+    focusNode.addListener(() {
+      if (focusNode.hasFocus) {
+        _cCapacidade.selection = TextSelection(
+            baseOffset: 0, extentOffset: _cCapacidade.text.length);
+      }
+    });
+    _cCapacidade.text = widget.compartimento.capacidade.toString();
   }
 
   @override
@@ -37,8 +45,10 @@ class _CompartimentoWidgetState extends State<CompartimentoWidget> {
               key: _formKey,
               child: Column(
                 children: [
-                  Text(compartimento.id),
+                  Text(widget.compartimento.id),
                   TextFormField(
+                    focusNode: focusNode,
+                    autofocus: true,
                     autovalidateMode: AutovalidateMode.onUserInteraction,
                     decoration: InputDecoration(
                       errorStyle: TextStyle(fontSize: 10),
@@ -46,7 +56,7 @@ class _CompartimentoWidgetState extends State<CompartimentoWidget> {
                       hintStyle: TextStyle(fontSize: 10),
                     ),
                     controller: _cCapacidade,
-                    onChanged: (_) => compartimento.capacidade =
+                    onChanged: (_) => widget.compartimento.capacidade =
                         int.tryParse(_cCapacidade.text) ?? 0,
                     keyboardType: TextInputType.number,
                     inputFormatters: <TextInputFormatter>[
@@ -60,7 +70,7 @@ class _CompartimentoWidgetState extends State<CompartimentoWidget> {
                       Text('Setas:'),
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 4),
-                        child: Text('${compartimento.setas}'),
+                        child: Text('${widget.compartimento.setas}'),
                       ),
                       Row(
                         children: [
@@ -68,14 +78,14 @@ class _CompartimentoWidgetState extends State<CompartimentoWidget> {
                             width: 25,
                             child: TextButton(
                                 onPressed: () =>
-                                    {gerSetas(compartimento.setas + 1)},
+                                    {gerSetas(widget.compartimento.setas + 1)},
                                 child: Icon(Icons.add)),
                           ),
                           SizedBox(
                             width: 25,
                             child: TextButton(
                                 onPressed: () =>
-                                    {gerSetas(compartimento.setas - 1)},
+                                    {gerSetas(widget.compartimento.setas - 1)},
                                 child: Icon(Icons.remove)),
                           ),
                         ],
@@ -111,7 +121,7 @@ class _CompartimentoWidgetState extends State<CompartimentoWidget> {
     if (value < 0) return;
     if (value > 10) return;
     setState(() {
-      compartimento.setas = value;
+      widget.compartimento.setas = value;
     });
   }
 }

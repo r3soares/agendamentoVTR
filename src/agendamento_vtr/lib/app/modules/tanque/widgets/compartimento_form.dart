@@ -11,13 +11,15 @@ class CompartimentoForm extends StatefulWidget {
 }
 
 class _CompartimentoFormState extends State<CompartimentoForm> {
-  List<Compartimento> compartimentos = [Compartimento('C1')];
+  List<Compartimento> compartimentos =
+      List.generate(10, (index) => Compartimento('C${index + 1}'));
+  int capacidadeTotal = 0;
+  int qtdCompartimentos = 1;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    widget.callback(compartimentos);
   }
 
   @override
@@ -40,29 +42,51 @@ class _CompartimentoFormState extends State<CompartimentoForm> {
             Padding(
               padding: const EdgeInsets.all(8),
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Quantidade:'),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: Text('${compartimentos.length}'),
+                  Container(
+                    child: Row(
+                      children: [
+                        Text('Quantidade:'),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: Text('$qtdCompartimentos'),
+                        ),
+                        Row(
+                          children: [
+                            SizedBox(
+                              width: 30,
+                              child: TextButton(
+                                  onPressed: () => {
+                                        geraCompartimentos(
+                                            qtdCompartimentos + 1)
+                                      },
+                                  child: Icon(Icons.add)),
+                            ),
+                            SizedBox(
+                              width: 30,
+                              child: TextButton(
+                                  onPressed: () => {
+                                        geraCompartimentos(
+                                            qtdCompartimentos - 1)
+                                      },
+                                  child: Icon(Icons.remove)),
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
                   ),
-                  Row(
-                    children: [
-                      SizedBox(
-                        width: 30,
-                        child: TextButton(
-                            onPressed: () =>
-                                {geraCompartimentos(compartimentos.length + 1)},
-                            child: Icon(Icons.add)),
-                      ),
-                      SizedBox(
-                        width: 30,
-                        child: TextButton(
-                            onPressed: () =>
-                                {geraCompartimentos(compartimentos.length - 1)},
-                            child: Icon(Icons.remove)),
-                      ),
-                    ],
+                  Container(
+                    child: Row(
+                      children: [
+                        Text('Capacidade Total:'),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: Text('$capacidadeTotal litros'),
+                        ),
+                      ],
+                    ),
                   )
                 ],
               ),
@@ -72,11 +96,13 @@ class _CompartimentoFormState extends State<CompartimentoForm> {
                 padding: const EdgeInsets.all(8),
                 child: ListView.builder(
                   scrollDirection: Axis.horizontal,
-                  itemCount: compartimentos.length,
+                  itemCount: qtdCompartimentos,
                   itemBuilder: (BuildContext context, int index) {
                     print(index);
                     return CompartimentoWidget(
-                        compartimento: compartimentos[index]);
+                      compartimento: compartimentos[index],
+                      callback: (_) => _calculaCapacidadeTotal(),
+                    );
                   },
                 )),
           ],
@@ -85,13 +111,24 @@ class _CompartimentoFormState extends State<CompartimentoForm> {
     );
   }
 
+  void _calculaCapacidadeTotal() {
+    int temp = 0;
+    for (int i = 0; i < qtdCompartimentos; i++) {
+      temp += compartimentos[i].capacidade;
+    }
+    setState(() {
+      capacidadeTotal = temp;
+    });
+  }
+
   void geraCompartimentos(int value) {
     if (value > 10) return;
     if (value == 0) return;
-    if (value == compartimentos.length) return;
+    if (value == qtdCompartimentos) return;
     setState(() {
-      compartimentos =
-          List.generate(value, (index) => Compartimento('C${index + 1}'));
+      qtdCompartimentos = value;
     });
+    _calculaCapacidadeTotal();
+    widget.callback(compartimentos.sublist(0, qtdCompartimentos - 1));
   }
 }
