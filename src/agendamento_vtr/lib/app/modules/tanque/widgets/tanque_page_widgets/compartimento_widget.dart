@@ -1,6 +1,9 @@
 import 'package:agendamento_vtr/app/models/compartimento.dart';
+import 'package:agendamento_vtr/app/modules/tanque/tanque_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_modular/flutter_modular.dart';
+import 'package:intl/intl.dart';
 
 class CompartimentoWidget extends StatefulWidget {
   final Compartimento compartimento;
@@ -13,13 +16,15 @@ class CompartimentoWidget extends StatefulWidget {
   _CompartimentoWidgetState createState() => _CompartimentoWidgetState();
 }
 
-class _CompartimentoWidgetState extends State<CompartimentoWidget> {
+class _CompartimentoWidgetState
+    extends ModularState<CompartimentoWidget, TanqueController> {
   final TextEditingController _cCapacidade = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   final focusNode = FocusNode();
 
   @override
   initState() {
+    super.initState();
     widget.compartimento.addListener(() {
       widget.callback(widget.compartimento);
     });
@@ -92,11 +97,24 @@ class _CompartimentoWidgetState extends State<CompartimentoWidget> {
                       ),
                     ]),
                   ),
+                  Container(
+                    child: Container(
+                      alignment: Alignment.centerLeft,
+                      child: Text(_custo(),
+                          style: TextStyle(color: Colors.red[900])),
+                    ),
+                  )
                 ],
               ),
             ),
           ),
         ));
+  }
+
+  String _custo() {
+    double valor = controller.getCusto(widget.compartimento);
+    if (valor == 0) return '';
+    return controller.formato.format(valor);
   }
 
   String? validaCapacidade(String? value) {

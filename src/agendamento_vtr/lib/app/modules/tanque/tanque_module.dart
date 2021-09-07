@@ -1,6 +1,7 @@
 import 'package:agendamento_vtr/app/modules/empresa/controllers/empresa_controller.dart';
 import 'package:agendamento_vtr/app/modules/tanque/pages/main_page.dart';
 import 'package:agendamento_vtr/app/modules/tanque/pages/tanque_page.dart';
+import 'package:agendamento_vtr/app/modules/tanque/tanque_controller.dart';
 import 'package:agendamento_vtr/app/pesquisa_controller.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
@@ -11,6 +12,7 @@ class TanqueModule extends Module {
   final List<Bind> binds = [
     Bind.singleton((i) => EmpresaController()),
     Bind.singleton((i) => PesquisaController()),
+    Bind.singleton((i) => TanqueController()),
   ];
 
   @override

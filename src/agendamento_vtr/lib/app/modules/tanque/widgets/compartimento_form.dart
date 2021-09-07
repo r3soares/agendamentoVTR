@@ -1,6 +1,8 @@
 import 'package:agendamento_vtr/app/models/compartimento.dart';
-import 'package:agendamento_vtr/app/modules/tanque/widgets/tanque_dialog_widgets/compartimento_widget.dart';
+import 'package:agendamento_vtr/app/modules/tanque/tanque_controller.dart';
+import 'package:agendamento_vtr/app/modules/tanque/widgets/tanque_page_widgets/compartimento_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 
 class CompartimentoForm extends StatefulWidget {
   final Function(List<Compartimento>) callback;
@@ -10,10 +12,12 @@ class CompartimentoForm extends StatefulWidget {
   _CompartimentoFormState createState() => _CompartimentoFormState();
 }
 
-class _CompartimentoFormState extends State<CompartimentoForm> {
+class _CompartimentoFormState
+    extends ModularState<CompartimentoForm, TanqueController> {
   List<Compartimento> compartimentos =
       List.generate(10, (index) => Compartimento('C${index + 1}'));
-  int capacidadeTotal = 0;
+  int _capacidadeTotal = 0;
+  double _custoTotal = 0;
   int qtdCompartimentos = 1;
 
   @override
@@ -78,16 +82,28 @@ class _CompartimentoFormState extends State<CompartimentoForm> {
                     ),
                   ),
                   Container(
-                    child: Row(
-                      children: [
-                        Text('Capacidade Total:'),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20),
-                          child: Text('$capacidadeTotal litros'),
+                      child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Text('Capacidade Total:'),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                            child: Text('$_capacidadeTotal litros'),
+                          ),
+                        ],
+                      ),
+                      Container(
+                        padding: const EdgeInsets.only(top: 8),
+                        alignment: Alignment.centerRight,
+                        child: Text(
+                          formataCusto(),
+                          style: TextStyle(color: Colors.red[900]),
                         ),
-                      ],
-                    ),
-                  )
+                      )
+                    ],
+                  ))
                 ],
               ),
             ),
@@ -98,10 +114,12 @@ class _CompartimentoFormState extends State<CompartimentoForm> {
                   scrollDirection: Axis.horizontal,
                   itemCount: qtdCompartimentos,
                   itemBuilder: (BuildContext context, int index) {
-                    print(index);
                     return CompartimentoWidget(
                       compartimento: compartimentos[index],
-                      callback: (_) => _calculaCapacidadeTotal(),
+                      callback: (_) => {
+                        _calculaCapacidadeTotal(),
+                        _calculaCustoTotal(),
+                      },
                     );
                   },
                 )),
@@ -117,8 +135,22 @@ class _CompartimentoFormState extends State<CompartimentoForm> {
       temp += compartimentos[i].capacidade;
     }
     setState(() {
-      capacidadeTotal = temp;
+      _capacidadeTotal = temp;
     });
+  }
+
+  void _calculaCustoTotal() {
+    double custoCompartimentos = 0;
+    for (int i = 0; i < qtdCompartimentos; i++) {
+      custoCompartimentos += controller.getCusto(compartimentos[i]);
+    }
+    setState(() {
+      _custoTotal = custoCompartimentos;
+    });
+  }
+
+  String formataCusto() {
+    return controller.formato.format(_custoTotal);
   }
 
   void geraCompartimentos(int value) {

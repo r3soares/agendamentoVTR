@@ -12,5 +12,5 @@ class Compartimento extends ChangeNotifier {
   int get setas => this._setas;
 
   set capacidade(value) => {this._capacidade = value, notifyListeners()};
-  set setas(value) => this._setas = value;
+  set setas(value) => {this._setas = value, notifyListeners()};
 }

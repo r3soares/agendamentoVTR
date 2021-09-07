@@ -1,6 +1,6 @@
 import 'package:agendamento_vtr/app/modules/tanque/widgets/compartimento_form.dart';
-import 'package:agendamento_vtr/app/modules/tanque/widgets/tanque_dialog_widgets/doc_widget.dart';
-import 'package:agendamento_vtr/app/modules/tanque/widgets/tanque_dialog_widgets/tanque_zero_widget.dart';
+import 'package:agendamento_vtr/app/modules/tanque/widgets/tanque_page_widgets/doc_widget.dart';
+import 'package:agendamento_vtr/app/modules/tanque/widgets/tanque_page_widgets/tanque_zero_widget.dart';
 import 'package:agendamento_vtr/app/widgets/input_numero_widget.dart';
 import 'package:agendamento_vtr/app/widgets/placa_widget.dart';
 import 'package:flutter/material.dart';

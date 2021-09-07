@@ -73,7 +73,9 @@ class _DocWidgetState extends State<DocWidget> {
                                           onPressed: () => {_removeFile(index)},
                                           child: Text(
                                             'X',
-                                            style: TextStyle(fontSize: 12),
+                                            style: TextStyle(
+                                                fontSize: 12,
+                                                color: Colors.red[900]),
                                           )),
                                     ],
                                   ),
