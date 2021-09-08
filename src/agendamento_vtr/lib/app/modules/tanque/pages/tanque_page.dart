@@ -1,3 +1,6 @@
+import 'package:agendamento_vtr/app/models/compartimento.dart';
+import 'package:agendamento_vtr/app/models/tanque.dart';
+import 'package:agendamento_vtr/app/modules/tanque/models/arquivo.dart';
 import 'package:agendamento_vtr/app/modules/tanque/widgets/compartimento_form.dart';
 import 'package:agendamento_vtr/app/modules/tanque/widgets/tanque_page_widgets/doc_widget.dart';
 import 'package:agendamento_vtr/app/modules/tanque/widgets/tanque_page_widgets/tanque_zero_widget.dart';
@@ -14,11 +17,22 @@ class TanquePage extends StatefulWidget {
 
 class _TanquePageState extends State<TanquePage> {
   final _formKey = GlobalKey<FormState>();
-  final Widget placaWidget = PlacaWidget(callback: (_, valido) => null);
-  final Widget inmetroWidget = InputNumeroWidget(callback: (_, valido) => null);
-  final Widget docWidget = DocWidget(callback: (_, valido) => null);
-  final Widget tanqueZeroWidget = TanqueZeroWidget(callback: (value) => null);
-  final Widget compartimentoForm = CompartimentoForm(callback: (value) => null);
+  Tanque _tanque = Tanque();
+  late Widget placaWidget;
+  late Widget inmetroWidget;
+  late Widget docWidget;
+  late Widget tanqueZeroWidget;
+  late Widget compartimentoForm;
+
+  @override
+  void initState() {
+    super.initState();
+    placaWidget = PlacaWidget(callback: _setPlaca);
+    inmetroWidget = InputNumeroWidget(callback: _setInmetro);
+    docWidget = DocWidget(callback: _setDocs);
+    tanqueZeroWidget = TanqueZeroWidget(callback: _setTanqueZero);
+    compartimentoForm = CompartimentoForm(callback: _setCompartimentos);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -201,4 +215,16 @@ class _TanquePageState extends State<TanquePage> {
     if (_formKey.currentState == null) return false;
     return _formKey.currentState!.validate();
   }
+
+  void _setPlaca(String placa, bool isValida) {
+    if (!isValida) return;
+  }
+
+  void _setInmetro(String num, bool valido) {}
+
+  void _setDocs(List<Arquivo> arquivos) {}
+
+  void _setTanqueZero(bool isZero) {}
+
+  void _setCompartimentos(List<Compartimento> compartimentos) {}
 }

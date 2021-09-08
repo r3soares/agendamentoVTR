@@ -3,7 +3,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 
 class DocWidget extends StatefulWidget {
-  final Function(List<Arquivo>?, bool) callback;
+  final Function(List<Arquivo>) callback;
   final String titulo;
   const DocWidget({this.titulo = 'CRLV ou NF', required this.callback});
 
@@ -95,6 +95,7 @@ class _DocWidgetState extends State<DocWidget> {
     setState(() {
       _arquivos.removeAt(index);
     });
+    widget.callback(_arquivos);
   }
 
   void getFile() async {
@@ -110,7 +111,7 @@ class _DocWidgetState extends State<DocWidget> {
               result.files.single.name, result.files.single.extension!));
         });
       });
-      widget.callback(_arquivos, true);
+      widget.callback(_arquivos);
     }
   }
 }
