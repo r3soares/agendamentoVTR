@@ -2,16 +2,26 @@ import 'package:flutter/material.dart';
 
 class TanqueZeroWidget extends StatefulWidget {
   final Function(bool) callback;
+  final bool isZeroPrevio;
   final String titulo;
   const TanqueZeroWidget(
-      {this.titulo = 'Tanque zero?', required this.callback});
+      {this.titulo = 'Tanque zero?',
+      this.isZeroPrevio = false,
+      required this.callback});
 
   @override
   _TanqueZeroWidgetState createState() => _TanqueZeroWidgetState();
 }
 
 class _TanqueZeroWidgetState extends State<TanqueZeroWidget> {
-  bool isZero = false;
+  late bool isZero;
+
+  @override
+  void initState() {
+    super.initState();
+    isZero = widget.isZeroPrevio;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(

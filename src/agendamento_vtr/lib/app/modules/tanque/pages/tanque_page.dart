@@ -1,12 +1,14 @@
 import 'package:agendamento_vtr/app/models/compartimento.dart';
 import 'package:agendamento_vtr/app/models/tanque.dart';
 import 'package:agendamento_vtr/app/modules/tanque/models/arquivo.dart';
+import 'package:agendamento_vtr/app/modules/tanque/tanque_controller.dart';
 import 'package:agendamento_vtr/app/modules/tanque/widgets/compartimento_form.dart';
 import 'package:agendamento_vtr/app/modules/tanque/widgets/tanque_page_widgets/doc_widget.dart';
 import 'package:agendamento_vtr/app/modules/tanque/widgets/tanque_page_widgets/tanque_zero_widget.dart';
 import 'package:agendamento_vtr/app/widgets/input_numero_widget.dart';
 import 'package:agendamento_vtr/app/widgets/placa_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 
 class TanquePage extends StatefulWidget {
   const TanquePage({Key? key}) : super(key: key);
@@ -15,8 +17,9 @@ class TanquePage extends StatefulWidget {
   _TanquePageState createState() => _TanquePageState();
 }
 
-class _TanquePageState extends State<TanquePage> {
+class _TanquePageState extends ModularState<TanquePage, TanqueController> {
   final _formKey = GlobalKey<FormState>();
+  BuildContext? ctx;
   Tanque _tanque = Tanque();
   late Widget placaWidget;
   late Widget inmetroWidget;
@@ -36,6 +39,7 @@ class _TanquePageState extends State<TanquePage> {
 
   @override
   Widget build(BuildContext context) {
+    ctx = context;
     final larguraTotal = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
@@ -218,13 +222,65 @@ class _TanquePageState extends State<TanquePage> {
 
   void _setPlaca(String placa, bool isValida) {
     if (!isValida) return;
+    final Tanque? tanqueExistente = controller.findTanqueByPlaca(placa);
+    if (tanqueExistente != null) {
+      _avisaTanqueExistente(tanqueExistente);
+    }
+    _tanque.placa = placa;
   }
 
-  void _setInmetro(String num, bool valido) {}
+  void _setInmetro(int num) {
+    if (num < 1) return;
+    final Tanque? tanqueExistente = controller.findTanqueByinmetro(num);
+    if (tanqueExistente != null) {
+      _avisaTanqueExistente(tanqueExistente);
+    }
+    _tanque.numInmetro = num;
+  }
 
-  void _setDocs(List<Arquivo> arquivos) {}
+  void _setDocs(List<Arquivo> arquivos) {
+    _tanque.docs.clear();
+    _tanque.docs.addAll(arquivos);
+  }
 
-  void _setTanqueZero(bool isZero) {}
+  void _setTanqueZero(bool isZero) {
+    _tanque.isZero = isZero;
+  }
 
-  void _setCompartimentos(List<Compartimento> compartimentos) {}
+  void _setCompartimentos(List<Compartimento> compartimentos) {
+    _tanque.compartimentos.clear();
+    _tanque.compartimentos.addAll(compartimentos);
+  }
+
+  void _avisaTanqueExistente(Tanque tExistente) {
+    ScaffoldMessenger.of(ctx!).showSnackBar(SnackBar(
+      content: Text('Veículo ${tExistente.placa} já existe'),
+      duration: Duration(seconds: 5),
+    ));
+  }
+  // void _populaTanqueExistente(Tanque tExistente) {
+  //   setState(() {
+  //     _tanque = tExistente;
+  //     placaWidget = PlacaWidget(
+  //       callback: _setPlaca,
+  //       placaPrevia: tExistente.placa,
+  //     );
+  //     inmetroWidget = InputNumeroWidget(
+  //       callback: _setInmetro,
+  //       numeroPrevio: tExistente.numInmetro,
+  //     );
+  //     docWidget = DocWidget(
+  //       callback: _setDocs,
+  //       arquivosPrevio: tExistente.docs,
+  //     );
+  //     tanqueZeroWidget = TanqueZeroWidget(
+  //       callback: _setTanqueZero,
+  //       isZeroPrevio: tExistente.isZero,
+  //     );
+  //       compartimentoForm = CompartimentoForm(
+  //       callback: _setCompartimentos,
+  //       compartimentosPrevio: tExistente.compartimentos,
+  //     );
+  //   });
+  // }
 }

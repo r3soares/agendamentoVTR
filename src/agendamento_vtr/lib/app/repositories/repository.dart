@@ -85,8 +85,10 @@ class Repository {
   removeTanque(value) => _tanques.remove(value);
   removeEmpresa(value) => _empresas.remove(value);
 
-  Tanque? findTanque(String placa) =>
+  Tanque? findTanqueByPlaca(String placa) =>
       _tanques.firstWhere((t) => t?.placa == placa, orElse: () => null);
+  Tanque? findTanqueByInmetro(int inmetro) =>
+      _tanques.firstWhere((t) => t?.numInmetro == inmetro, orElse: () => null);
   Empresa? findEmpresa(String cnpjCpf) =>
       _empresas.firstWhere((t) => t?.cnpj == cnpjCpf, orElse: () => null);
 }

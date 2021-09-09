@@ -4,15 +4,27 @@ import 'package:flutter/material.dart';
 
 class DocWidget extends StatefulWidget {
   final Function(List<Arquivo>) callback;
+  final List<Arquivo>? arquivosPrevio;
   final String titulo;
-  const DocWidget({this.titulo = 'CRLV ou NF', required this.callback});
+  DocWidget(
+      {this.titulo = 'CRLV ou NF',
+      this.arquivosPrevio,
+      required this.callback});
 
   @override
   _DocWidgetState createState() => _DocWidgetState();
 }
 
 class _DocWidgetState extends State<DocWidget> {
-  List<Arquivo> _arquivos = List.empty(growable: true);
+  late List<Arquivo> _arquivos;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _arquivos = widget.arquivosPrevio ?? List.empty(growable: true);
+  }
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;

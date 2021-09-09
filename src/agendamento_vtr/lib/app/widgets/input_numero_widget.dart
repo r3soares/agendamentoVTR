@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class InputNumeroWidget extends StatefulWidget {
-  final String numeroPrevio;
+  final int numeroPrevio;
   final String titulo;
   //Termo buscado e Resultado
-  final Function(String, bool) callback;
+  final Function(int) callback;
   InputNumeroWidget(
-      {this.numeroPrevio = '',
+      {this.numeroPrevio = 0,
       this.titulo = 'Número Inmetro',
       required this.callback});
 
@@ -23,7 +23,7 @@ class _InputNumeroWidgetWidgetState extends State<InputNumeroWidget> {
   @override
   void initState() {
     super.initState();
-    _cNumero.text = widget.numeroPrevio;
+    _cNumero.text = widget.numeroPrevio.toString();
     focusNode.addListener(notificaListeners);
   }
 
@@ -52,6 +52,6 @@ class _InputNumeroWidgetWidgetState extends State<InputNumeroWidget> {
   }
 
   void notificaListeners() {
-    widget.callback(_cNumero.text, _cNumero.text.isNotEmpty);
+    if (!focusNode.hasFocus) widget.callback(int.tryParse(_cNumero.text) ?? 0);
   }
 }

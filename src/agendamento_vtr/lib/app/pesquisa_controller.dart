@@ -17,7 +17,7 @@ class PesquisaController extends ChangeNotifier {
     _status = 0;
     _resultado = null;
     print('Pesquisando $termo');
-    var tanque = _repository.findTanque(termo);
+    var tanque = _repository.findTanqueByPlaca(termo);
     if (tanque != null) {
       print('$termo encontrado');
       _resultado = tanque;

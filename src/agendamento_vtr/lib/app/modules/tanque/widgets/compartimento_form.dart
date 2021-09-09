@@ -6,7 +6,8 @@ import 'package:flutter_modular/flutter_modular.dart';
 
 class CompartimentoForm extends StatefulWidget {
   final Function(List<Compartimento>) callback;
-  const CompartimentoForm({Key? key, required this.callback}) : super(key: key);
+  final List<Compartimento>? compartimentosPrevio;
+  const CompartimentoForm({this.compartimentosPrevio, required this.callback});
 
   @override
   _CompartimentoFormState createState() => _CompartimentoFormState();
@@ -14,16 +15,26 @@ class CompartimentoForm extends StatefulWidget {
 
 class _CompartimentoFormState
     extends ModularState<CompartimentoForm, TanqueController> {
-  List<Compartimento> compartimentos =
-      List.generate(10, (index) => Compartimento('C${index + 1}'));
+  late List<Compartimento> compartimentos;
   int _capacidadeTotal = 0;
   double _custoTotal = 0;
   int qtdCompartimentos = 1;
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
+    _configuraCompartimentos();
+  }
+
+  void _configuraCompartimentos() {
+    compartimentos =
+        List.generate(10, (index) => Compartimento('C${index + 1}'));
+    if (widget.compartimentosPrevio != null) {
+      for (int i = 0; i < widget.compartimentosPrevio!.length; i++) {
+        compartimentos[i] = widget.compartimentosPrevio![i];
+      }
+      qtdCompartimentos = widget.compartimentosPrevio!.length;
+    }
   }
 
   @override
