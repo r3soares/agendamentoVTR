@@ -69,7 +69,7 @@ class Repository {
     }());
   }
 
-  addTanque(value) => _tanques.add(value);
+  void addTanque(Tanque value) => _tanques.add(value);
 
   void salvaEmpresa(Empresa value) {
     var pExistente =

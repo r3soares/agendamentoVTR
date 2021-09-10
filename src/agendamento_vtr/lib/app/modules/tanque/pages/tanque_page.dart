@@ -279,6 +279,7 @@ class _TanquePageState extends ModularState<TanquePage, TanqueController> {
       _msgTemporaria('Verifique os campos pendentes');
       return;
     }
+    controller.salvaTanque(_tanque);
     _showDialogTanqueSalvo();
   }
 

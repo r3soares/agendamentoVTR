@@ -16,6 +16,7 @@ class PlacaWidget extends StatefulWidget {
 class _PlacaWidgetState extends State<PlacaWidget> {
   final TextEditingController _cPlaca = TextEditingController();
   final focusNode = FocusNode();
+  bool validou = false;
 
   @override
   void initState() {
@@ -54,16 +55,18 @@ class _PlacaWidgetState extends State<PlacaWidget> {
   }
 
   String? validaPlaca(String? value) {
+    validou = false;
     if (value == null || value.isEmpty) return 'Informe a placa';
     if (value.length != 7) return 'Placa inválida';
     RegExp regex = RegExp('[A-Z]{3}[0-9][0-9A-Z][0-9]{2}');
     if (!regex.hasMatch(value)) return 'Placa inválida';
+    validou = true;
     return null;
   }
 
   void notificaListeners() {
-    if (!focusNode.hasFocus)
-      widget.callback(_cPlaca.text, validaPlaca(_cPlaca.text) == null);
+    if (!focusNode.hasFocus || validou)
+      widget.callback(_cPlaca.text, validou);
     else {
       _cPlaca.selection =
           TextSelection(baseOffset: 0, extentOffset: _cPlaca.text.length);

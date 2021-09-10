@@ -35,7 +35,7 @@ class _CnpjWidgetState extends State<CnpjWidget> {
       children: [
         Container(
             padding: EdgeInsets.all(8),
-            width: larguraTotal * .5,
+            width: larguraTotal * .4,
             child: TextFormField(
               focusNode: focusNode,
               decoration: InputDecoration(

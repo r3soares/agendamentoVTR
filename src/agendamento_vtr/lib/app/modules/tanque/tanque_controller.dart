@@ -19,4 +19,8 @@ class TanqueController {
   Tanque? findTanqueByPlaca(String placa) => _repo.findTanqueByPlaca(placa);
   Tanque? findTanqueByinmetro(int inmetro) =>
       _repo.findTanqueByInmetro(inmetro);
+
+  void salvaTanque(Tanque t) {
+    _repo.addTanque(t);
+  }
 }

@@ -1,5 +1,8 @@
+import 'package:agendamento_vtr/app/models/tanque.dart';
 import 'package:agendamento_vtr/app/modules/empresa/controllers/empresa_controller.dart';
+import 'package:agendamento_vtr/app/modules/tanque/tanque_controller.dart';
 import 'package:agendamento_vtr/app/widgets/cnpj_widget.dart';
+import 'package:agendamento_vtr/app/widgets/placa_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
@@ -12,21 +15,31 @@ class CadastroPage extends StatefulWidget {
 }
 
 class _CadastroPageState extends ModularState<CadastroPage, EmpresaController> {
+  final tanqueController = Modular.get<TanqueController>();
   final _formKey = GlobalKey<FormState>();
+  final List<Tanque> tanques = List.empty(growable: true);
+
   String cnpjProprietario = '';
   String cnpjResponsavel = '';
   bool podeInserirTanque = false;
+  BuildContext? ctx;
+
   late Widget proprietarioWidget = CnpjWidget(
-    titulo: 'CNPJ ou CPF do Proprietário',
+    titulo: 'CNPJ ou CPF',
     callback: (cnpj, valido) => cnpjProprietario = valido ? cnpj : '',
   );
   late Widget responsavelWidget = CnpjWidget(
     titulo: 'CNPJ ou CPF do Responsável pelo Agendamento',
     callback: (cnpj, valido) => cnpjResponsavel = valido ? cnpj : '',
   );
+  late Widget placaWidget = PlacaWidget(
+    titulo: 'Informe a placa, se cadastrado',
+    callback: _getTanque,
+  );
 
   @override
   Widget build(BuildContext context) {
+    ctx = context;
     final larguraTotal = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
@@ -39,20 +52,13 @@ class _CadastroPageState extends ModularState<CadastroPage, EmpresaController> {
           key: _formKey,
           child: SingleChildScrollView(
             child: Container(
-              width: larguraTotal * .5,
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  titulo(),
-                  proprietarioWidget,
-                  responsavelWidget,
-                  Row(
-                    children: [
-                      btnSalvar(context),
-                      btnTanque(context),
-                      //exibeBotoes()
-                    ],
-                  )
+                  _camposPropResp(),
+                  _camposBotoes(),
+                  _camposTanques(),
                 ],
               ),
             ),
@@ -62,16 +68,77 @@ class _CadastroPageState extends ModularState<CadastroPage, EmpresaController> {
     );
   }
 
-  Widget titulo() {
+  Widget _camposPropResp() {
+    return Container(
+      //width: larguraTotal * .4,
+      child: Card(
+        elevation: 4,
+        shadowColor: Colors.black,
+        child: Column(
+          children: [
+            Container(
+              alignment: Alignment.centerLeft,
+              padding: EdgeInsets.all(4),
+              child: titulo('Proprietário'),
+            ),
+            Column(
+              children: [
+                proprietarioWidget,
+                //responsavelWidget,
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _camposBotoes() {
+    return Row(
+      children: [
+        btnSalvar(),
+        btnTanque(),
+
+        //exibeBotoes()
+      ],
+    );
+  }
+
+  Widget _camposTanques() {
+    return Container(
+      //width: larguraTotal * .4,
+      child: Card(
+        elevation: 4,
+        shadowColor: Colors.black,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              alignment: Alignment.centerLeft,
+              padding: EdgeInsets.all(4),
+              child: titulo('Tanques do proprietário'),
+            ),
+            Column(
+              children: [
+                _placaWidget(),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget titulo(String titulo) {
     return Container(
         padding: EdgeInsets.all(8),
         child: Text(
-          "Proprietário e Responsável",
+          titulo,
           style: TextStyle(fontSize: 20),
         ));
   }
 
-  Widget btnSalvar(BuildContext context) {
+  Widget btnSalvar() {
     return Container(
       padding: const EdgeInsets.all(8),
       child: Center(
@@ -79,14 +146,14 @@ class _CadastroPageState extends ModularState<CadastroPage, EmpresaController> {
           padding: const EdgeInsets.all(8.0),
           child: ElevatedButton(
             child: Text('Salvar'),
-            onPressed: () => _salvaDados(context),
+            onPressed: () => _salvaDados(ctx!),
           ),
         ),
       ),
     );
   }
 
-  Widget btnTanque(BuildContext context) {
+  Widget btnTanque() {
     return Container(
       padding: const EdgeInsets.all(8),
       child: Center(
@@ -94,10 +161,16 @@ class _CadastroPageState extends ModularState<CadastroPage, EmpresaController> {
           padding: const EdgeInsets.all(8.0),
           child: ElevatedButton(
             child: Text('Novo Tanque'),
-            onPressed: podeInserirTanque ? () => _novoTanque(context) : null,
+            onPressed: podeInserirTanque ? () => _novoTanque(ctx!) : null,
           ),
         ),
       ),
+    );
+  }
+
+  Widget _placaWidget() {
+    return Container(
+      child: placaWidget,
     );
   }
 
@@ -107,7 +180,7 @@ class _CadastroPageState extends ModularState<CadastroPage, EmpresaController> {
         podeInserirTanque = false;
       });
 
-      exibeAvisoCamposInvalidos(ctx, 'Há campos inválidos');
+      _msgTemporaria('Há campos inválidos');
       return;
     }
     setState(() {
@@ -117,29 +190,37 @@ class _CadastroPageState extends ModularState<CadastroPage, EmpresaController> {
 
   void _novoTanque(BuildContext ctx) {
     if (!podeInserirTanque) {
-      exibeAvisoCamposInvalidos(ctx, 'Salve os dados antes de continuar');
+      _msgTemporaria('Salve os dados antes de continuar');
       return;
     }
     Modular.to.pushNamed('cadastroTanque');
   }
 
-  void exibeAvisoCamposInvalidos(BuildContext context, String msg) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
+  void _msgTemporaria(String msg) {
+    ScaffoldMessenger.of(ctx!).showSnackBar(SnackBar(content: Text(msg)));
   }
-
-  // String? validateEmail(String? value) {
-  //   if (value == null || value.isEmpty) return 'Informe um e-mail';
-  //   String pattern =
-  //       r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]"
-  //       r"{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]"
-  //       r"{0,253}[a-zA-Z0-9])?)*$";
-  //   RegExp regex = new RegExp(pattern);
-  //   if (!regex.hasMatch(value)) return 'E-mail inválido';
-  //   return null;
-  // }
 
   bool _validaForm() {
     if (_formKey.currentState == null) return false;
     return _formKey.currentState!.validate();
+  }
+
+  void _getTanque(String placa, bool valido) {
+    if (valido) {
+      final t = tanqueController.findTanqueByPlaca(placa);
+      if (t == null) {
+        _msgTemporaria('Placa não localizada');
+        return;
+      }
+      setState(() {
+        tanques.add(t);
+      });
+    }
+  }
+
+  void removeTanque(int index) {
+    setState(() {
+      tanques.removeAt(index);
+    });
   }
 }
