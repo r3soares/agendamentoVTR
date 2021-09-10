@@ -62,6 +62,11 @@ class _PlacaWidgetState extends State<PlacaWidget> {
   }
 
   void notificaListeners() {
-    widget.callback(_cPlaca.text, validaPlaca(_cPlaca.text) == null);
+    if (!focusNode.hasFocus)
+      widget.callback(_cPlaca.text, validaPlaca(_cPlaca.text) == null);
+    else {
+      _cPlaca.selection =
+          TextSelection(baseOffset: 0, extentOffset: _cPlaca.text.length);
+    }
   }
 }

@@ -11,7 +11,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
 class TanquePage extends StatefulWidget {
-  const TanquePage({Key? key}) : super(key: key);
+  final Tanque? tanquePrevio;
+  TanquePage({this.tanquePrevio});
 
   @override
   _TanquePageState createState() => _TanquePageState();
@@ -20,7 +21,7 @@ class TanquePage extends StatefulWidget {
 class _TanquePageState extends ModularState<TanquePage, TanqueController> {
   final _formKey = GlobalKey<FormState>();
   BuildContext? ctx;
-  Tanque _tanque = Tanque();
+  late Tanque _tanque;
   late Widget placaWidget;
   late Widget inmetroWidget;
   late Widget docWidget;
@@ -30,11 +31,27 @@ class _TanquePageState extends ModularState<TanquePage, TanqueController> {
   @override
   void initState() {
     super.initState();
-    placaWidget = PlacaWidget(callback: _setPlaca);
-    inmetroWidget = InputNumeroWidget(callback: _setInmetro);
-    docWidget = DocWidget(callback: _setDocs);
-    tanqueZeroWidget = TanqueZeroWidget(callback: _setTanqueZero);
-    compartimentoForm = CompartimentoForm(callback: _setCompartimentos);
+    _tanque = widget.tanquePrevio ?? Tanque();
+    placaWidget = PlacaWidget(
+      placaPrevia: _tanque.placa,
+      callback: _setPlaca,
+    );
+    inmetroWidget = InputNumeroWidget(
+      numeroPrevio: _tanque.numInmetro,
+      callback: _setInmetro,
+    );
+    docWidget = DocWidget(
+      arquivosPrevio: _tanque.docs,
+      callback: _setDocs,
+    );
+    tanqueZeroWidget = TanqueZeroWidget(
+      isZeroPrevio: _tanque.isZero,
+      callback: _setTanqueZero,
+    );
+    compartimentoForm = CompartimentoForm(
+      compartimentosPrevio: _tanque.compartimentos,
+      callback: _setCompartimentos,
+    );
   }
 
   @override
@@ -157,7 +174,7 @@ class _TanquePageState extends ModularState<TanquePage, TanqueController> {
       padding: EdgeInsets.all(8),
       child: ElevatedButton(
         child: Text('Salvar'),
-        onPressed: () => {},
+        onPressed: () => _salvaDados(),
       ),
     );
   }
@@ -167,7 +184,7 @@ class _TanquePageState extends ModularState<TanquePage, TanqueController> {
       padding: EdgeInsets.all(8),
       child: TextButton(
         child: Text('Cancelar'),
-        onPressed: () => {},
+        onPressed: () => _cancela(),
       ),
     );
   }
@@ -223,7 +240,7 @@ class _TanquePageState extends ModularState<TanquePage, TanqueController> {
   void _setPlaca(String placa, bool isValida) {
     if (!isValida) return;
     final Tanque? tanqueExistente = controller.findTanqueByPlaca(placa);
-    if (tanqueExistente != null) {
+    if (tanqueExistente != null && widget.tanquePrevio == null) {
       _avisaTanqueExistente(tanqueExistente);
     }
     _tanque.placa = placa;
@@ -232,7 +249,7 @@ class _TanquePageState extends ModularState<TanquePage, TanqueController> {
   void _setInmetro(int num) {
     if (num < 1) return;
     final Tanque? tanqueExistente = controller.findTanqueByinmetro(num);
-    if (tanqueExistente != null) {
+    if (tanqueExistente != null && widget.tanquePrevio == null) {
       _avisaTanqueExistente(tanqueExistente);
     }
     _tanque.numInmetro = num;
@@ -252,12 +269,100 @@ class _TanquePageState extends ModularState<TanquePage, TanqueController> {
     _tanque.compartimentos.addAll(compartimentos);
   }
 
-  void _avisaTanqueExistente(Tanque tExistente) {
+  void _avisaTanqueExistente(Tanque tExistente) async {
+    await _showDialogTanqueExistente(tExistente);
+  }
+
+  void _salvaDados() {
+    if (_formKey.currentState == null) return;
+    if (!_formKey.currentState!.validate()) {
+      _msgTemporaria('Verifique os campos pendentes');
+      return;
+    }
+    _showDialogTanqueSalvo();
+  }
+
+  void _msgTemporaria(String msg) {
     ScaffoldMessenger.of(ctx!).showSnackBar(SnackBar(
-      content: Text('Veículo ${tExistente.placa} já existe'),
-      duration: Duration(seconds: 5),
+      content: Text(msg),
+      duration: Duration(seconds: 3),
     ));
   }
+
+  void _cancela() {
+    Modular.to.pop();
+  }
+
+  void _carregaTanqueExistente(Tanque tExistente) {
+    Modular.to.popAndPushNamed('cadastroTanque', arguments: tExistente);
+  }
+
+  void _recarregaFormulario() {
+    Modular.to.popAndPushNamed('cadastroTanque');
+  }
+
+  Future<void> _showDialogTanqueExistente(Tanque tExistente) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Veículo ${tExistente.placa} já existe'),
+          content: SingleChildScrollView(
+              child: Container(
+            child: Text('Deseja alterar este veículo?'),
+          )),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Sim'),
+              onPressed: () {
+                Navigator.of(context).pop();
+                _carregaTanqueExistente(tExistente);
+              },
+            ),
+            TextButton(
+              child: const Text('Não'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _showDialogTanqueSalvo() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Veículo ${_tanque.placa} salvo com sucesso'),
+          content: SingleChildScrollView(
+              child: Container(
+            child: Text('Deseja incluir mais veículos para este proprietário?'),
+          )),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Sim'),
+              onPressed: () {
+                Navigator.of(context).pop();
+                _recarregaFormulario();
+              },
+            ),
+            TextButton(
+              child: const Text('Não'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   // void _populaTanqueExistente(Tanque tExistente) {
   //   setState(() {
   //     _tanque = tExistente;

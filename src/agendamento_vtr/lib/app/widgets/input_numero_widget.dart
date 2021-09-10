@@ -23,7 +23,8 @@ class _InputNumeroWidgetWidgetState extends State<InputNumeroWidget> {
   @override
   void initState() {
     super.initState();
-    _cNumero.text = widget.numeroPrevio.toString();
+    _cNumero.text =
+        widget.numeroPrevio == 0 ? '' : widget.numeroPrevio.toString();
     focusNode.addListener(notificaListeners);
   }
 
@@ -48,10 +49,22 @@ class _InputNumeroWidgetWidgetState extends State<InputNumeroWidget> {
             FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
           ],
           controller: _cNumero,
+          validator: validaNumero,
         ));
   }
 
+  String? validaNumero(String? num) {
+    if (num == null || num.isEmpty) return 'Insira um número válido';
+    if (int.tryParse(num) == null) return 'Insira um número válido';
+    return null;
+  }
+
   void notificaListeners() {
-    if (!focusNode.hasFocus) widget.callback(int.tryParse(_cNumero.text) ?? 0);
+    if (!focusNode.hasFocus)
+      widget.callback(int.tryParse(_cNumero.text) ?? 0);
+    else {
+      _cNumero.selection =
+          TextSelection(baseOffset: 0, extentOffset: _cNumero.text.length);
+    }
   }
 }

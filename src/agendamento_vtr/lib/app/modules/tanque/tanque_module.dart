@@ -1,3 +1,4 @@
+import 'package:agendamento_vtr/app/models/tanque.dart';
 import 'package:agendamento_vtr/app/modules/empresa/controllers/empresa_controller.dart';
 import 'package:agendamento_vtr/app/modules/tanque/pages/main_page.dart';
 import 'package:agendamento_vtr/app/modules/tanque/pages/tanque_page.dart';
@@ -19,6 +20,9 @@ class TanqueModule extends Module {
   final List<ModularRoute> routes = [
     ChildRoute(Modular.initialRoute, child: (_, args) => MainPage()),
     ChildRoute('/cadastro', child: (_, args) => CadastroPage()),
-    ChildRoute('/cadastroTanque', child: (_, args) => TanquePage()),
+    ChildRoute('/cadastroTanque',
+        child: (_, args) => TanquePage(
+              tanquePrevio: args.data,
+            )),
   ];
 }
