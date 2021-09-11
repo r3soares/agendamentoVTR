@@ -8,16 +8,13 @@ import 'package:intl/intl.dart';
 class CompartimentoWidget extends StatefulWidget {
   final Compartimento compartimento;
   final Function(Compartimento) callback;
-  const CompartimentoWidget(
-      {Key? key, required this.compartimento, required this.callback})
-      : super(key: key);
+  const CompartimentoWidget({Key? key, required this.compartimento, required this.callback}) : super(key: key);
 
   @override
   _CompartimentoWidgetState createState() => _CompartimentoWidgetState();
 }
 
-class _CompartimentoWidgetState
-    extends ModularState<CompartimentoWidget, TanqueController> {
+class _CompartimentoWidgetState extends ModularState<CompartimentoWidget, TanqueController> {
   final TextEditingController _cCapacidade = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   final focusNode = FocusNode();
@@ -30,8 +27,7 @@ class _CompartimentoWidgetState
     });
     focusNode.addListener(() {
       if (focusNode.hasFocus) {
-        _cCapacidade.selection = TextSelection(
-            baseOffset: 0, extentOffset: _cCapacidade.text.length);
+        _cCapacidade.selection = TextSelection(baseOffset: 0, extentOffset: _cCapacidade.text.length);
       }
     });
     _cCapacidade.text = widget.compartimento.capacidade.toString();
@@ -61,8 +57,7 @@ class _CompartimentoWidgetState
                       hintStyle: TextStyle(fontSize: 10),
                     ),
                     controller: _cCapacidade,
-                    onChanged: (_) => widget.compartimento.capacidade =
-                        int.tryParse(_cCapacidade.text) ?? 0,
+                    onChanged: (_) => widget.compartimento.capacidade = int.tryParse(_cCapacidade.text) ?? 0,
                     keyboardType: TextInputType.number,
                     inputFormatters: <TextInputFormatter>[
                       FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
@@ -82,16 +77,12 @@ class _CompartimentoWidgetState
                           SizedBox(
                             width: 25,
                             child: TextButton(
-                                onPressed: () =>
-                                    {gerSetas(widget.compartimento.setas + 1)},
-                                child: Icon(Icons.add)),
+                                onPressed: () => {gerSetas(widget.compartimento.setas + 1)}, child: Icon(Icons.add)),
                           ),
                           SizedBox(
                             width: 25,
                             child: TextButton(
-                                onPressed: () =>
-                                    {gerSetas(widget.compartimento.setas - 1)},
-                                child: Icon(Icons.remove)),
+                                onPressed: () => {gerSetas(widget.compartimento.setas - 1)}, child: Icon(Icons.remove)),
                           ),
                         ],
                       ),
@@ -100,8 +91,7 @@ class _CompartimentoWidgetState
                   Container(
                     child: Container(
                       alignment: Alignment.centerLeft,
-                      child: Text(_custo(),
-                          style: TextStyle(color: Colors.red[900])),
+                      child: Text(_custo(), style: TextStyle(color: Colors.red[900])),
                     ),
                   )
                 ],
@@ -124,16 +114,6 @@ class _CompartimentoWidgetState
     if (capacidade % 10 != 0) return 'Somente múltiplos de 10';
     return null;
   }
-
-  // String? validaSeta(String? value) {
-  //   if (value == null || value.isEmpty) return 'Informe a capacidade';
-  //   final capacidade = int.tryParse(value);
-  //   if (capacidade == null) return 'Capacidade inválida';
-  //   if (capacidade >= compartimento.capacidade)
-  //     return 'Deve ser menor que ${compartimento.capacidade}L';
-  //   if (capacidade % 10 != 0) return 'Somente múltiplos de 10';
-  //   return null;
-  // }
 
   gerSetas(int value) {
     if (value < 0) return;

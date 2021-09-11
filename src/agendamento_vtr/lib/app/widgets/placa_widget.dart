@@ -6,8 +6,7 @@ class PlacaWidget extends StatefulWidget {
   final String titulo;
   //Termo buscado e Resultado
   final Function(String, bool) callback;
-  PlacaWidget(
-      {this.placaPrevia = '', this.titulo = 'Placa', required this.callback});
+  PlacaWidget({this.placaPrevia = '', this.titulo = 'Placa', required this.callback});
 
   @override
   _PlacaWidgetState createState() => _PlacaWidgetState();
@@ -36,6 +35,21 @@ class _PlacaWidgetState extends State<PlacaWidget> {
           focusNode: focusNode,
           autofocus: true,
           decoration: InputDecoration(
+            // prefixIcon: IconButton(
+            //   splashRadius: 1,
+            //   icon: Icon(
+            //     Icons.clear,
+            //     size: 12,
+            //   ),
+            //   onPressed: () => _cPlaca.clear(),
+            // ),
+            suffix: IconButton(
+              splashRadius: 4,
+              icon: Icon(
+                Icons.arrow_right,
+              ),
+              onPressed: () => widget.callback(_cPlaca.text, validaPlaca(_cPlaca.text) == null),
+            ),
             icon: Icon(Icons.drive_eta),
             hintText: 'Somente letras e números',
             hintStyle: TextStyle(fontSize: 10),
@@ -46,8 +60,7 @@ class _PlacaWidgetState extends State<PlacaWidget> {
             FilteringTextInputFormatter.allow(RegExp('[0-9A-Za-z]')),
           ],
           onChanged: (value) {
-            _cPlaca.value = TextEditingValue(
-                text: value.toUpperCase(), selection: _cPlaca.selection);
+            _cPlaca.value = TextEditingValue(text: value.toUpperCase(), selection: _cPlaca.selection);
           },
           controller: _cPlaca,
           validator: validaPlaca,
@@ -68,8 +81,7 @@ class _PlacaWidgetState extends State<PlacaWidget> {
     if (!focusNode.hasFocus || validou)
       widget.callback(_cPlaca.text, validou);
     else {
-      _cPlaca.selection =
-          TextSelection(baseOffset: 0, extentOffset: _cPlaca.text.length);
+      _cPlaca.selection = TextSelection(baseOffset: 0, extentOffset: _cPlaca.text.length);
     }
   }
 }
