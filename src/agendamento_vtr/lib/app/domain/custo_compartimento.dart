@@ -18,8 +18,26 @@ class CustoCompartimento {
     else //acima de 40.000L
       custoCompartimento = 2268.31;
 
-    custoSetas = setas * 180.9;
+    custoSetas = setas > 0 ? this.custoSetas(setas) : 0;
 
-    return custoCompartimento + custoSetas;
+    return (custoCompartimento + custoSetas).toPrecision(2);
   }
+
+  double custoSetas(int setas) {
+    return setas * 180.9;
+  }
+
+  double getCustoTotal(List<int> caps, int setas) {
+    double custoCompartimento = 0;
+    double custoSetas = 0;
+    for (var c in caps) {
+      custoCompartimento += getCusto(c, 0);
+    }
+    custoSetas = this.custoSetas(setas);
+    return (custoCompartimento + custoSetas).toPrecision(2);
+  }
+}
+
+extension Ex on double {
+  double toPrecision(int n) => double.parse(toStringAsFixed(n));
 }
