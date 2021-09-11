@@ -115,6 +115,7 @@ class _TanquePageState extends ModularState<TanquePage, TanqueController> {
     );
   }
 
+  // #region Widgets
   Widget _camposIdentificacao() {
     return Container(
       //width: larguraTotal * .4,
@@ -232,11 +233,9 @@ class _TanquePageState extends ModularState<TanquePage, TanqueController> {
     );
   }
 
-  bool verificaDadosPreenchidos() {
-    if (_formKey.currentState == null) return false;
-    return _formKey.currentState!.validate();
-  }
+  // #endregion
 
+  // #region Sets Tanque
   void _setPlaca(String placa, bool isValida) {
     if (!isValida) return;
     final Tanque? tanqueExistente = controller.findTanqueByPlaca(placa);
@@ -269,10 +268,9 @@ class _TanquePageState extends ModularState<TanquePage, TanqueController> {
     _tanque.compartimentos.addAll(compartimentos);
   }
 
-  void _avisaTanqueExistente(Tanque tExistente) async {
-    await _showDialogTanqueExistente(tExistente);
-  }
+  // #endregion
 
+  // #region Altera Formulario
   void _salvaDados() {
     if (_formKey.currentState == null) return;
     if (!_formKey.currentState!.validate()) {
@@ -281,13 +279,6 @@ class _TanquePageState extends ModularState<TanquePage, TanqueController> {
     }
     controller.salvaTanque(_tanque);
     _showDialogTanqueSalvo();
-  }
-
-  void _msgTemporaria(String msg) {
-    ScaffoldMessenger.of(ctx!).showSnackBar(SnackBar(
-      content: Text(msg),
-      duration: Duration(seconds: 3),
-    ));
   }
 
   void _cancela() {
@@ -300,6 +291,25 @@ class _TanquePageState extends ModularState<TanquePage, TanqueController> {
 
   void _recarregaFormulario() {
     Modular.to.popAndPushNamed('cadastroTanque');
+  }
+
+  bool verificaDadosPreenchidos() {
+    if (_formKey.currentState == null) return false;
+    return _formKey.currentState!.validate();
+  }
+
+  // #endregion
+
+  // #region Dialogs Mensagens
+  void _msgTemporaria(String msg) {
+    ScaffoldMessenger.of(ctx!).showSnackBar(SnackBar(
+      content: Text(msg),
+      duration: Duration(seconds: 3),
+    ));
+  }
+
+  void _avisaTanqueExistente(Tanque tExistente) async {
+    await _showDialogTanqueExistente(tExistente);
   }
 
   Future<void> _showDialogTanqueExistente(Tanque tExistente) async {
@@ -364,29 +374,5 @@ class _TanquePageState extends ModularState<TanquePage, TanqueController> {
     );
   }
 
-  // void _populaTanqueExistente(Tanque tExistente) {
-  //   setState(() {
-  //     _tanque = tExistente;
-  //     placaWidget = PlacaWidget(
-  //       callback: _setPlaca,
-  //       placaPrevia: tExistente.placa,
-  //     );
-  //     inmetroWidget = InputNumeroWidget(
-  //       callback: _setInmetro,
-  //       numeroPrevio: tExistente.numInmetro,
-  //     );
-  //     docWidget = DocWidget(
-  //       callback: _setDocs,
-  //       arquivosPrevio: tExistente.docs,
-  //     );
-  //     tanqueZeroWidget = TanqueZeroWidget(
-  //       callback: _setTanqueZero,
-  //       isZeroPrevio: tExistente.isZero,
-  //     );
-  //       compartimentoForm = CompartimentoForm(
-  //       callback: _setCompartimentos,
-  //       compartimentosPrevio: tExistente.compartimentos,
-  //     );
-  //   });
-  // }
+  // #endregion
 }
