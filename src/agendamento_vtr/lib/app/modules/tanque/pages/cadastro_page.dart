@@ -18,7 +18,7 @@ class _CadastroPageState extends ModularState<CadastroPage, EmpresaController> {
   final tanqueController = Modular.get<TanqueController>();
   final _formKey = GlobalKey<FormState>();
   final List<Tanque> tanques = List.empty(growable: true);
-  double _larguraTotal = 0;
+  Size? _size;
   String cnpjProprietario = '';
   BuildContext? ctx;
 
@@ -34,13 +34,13 @@ class _CadastroPageState extends ModularState<CadastroPage, EmpresaController> {
   @override
   Widget build(BuildContext context) {
     ctx = context;
-    _larguraTotal = MediaQuery.of(context).size.width;
+    _size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
         title: Text('Cadastro de Veículo Tanque'),
       ),
       body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: _larguraTotal / 4),
+        padding: EdgeInsets.symmetric(horizontal: _size!.width / 4),
         child: Form(
           autovalidateMode: AutovalidateMode.onUserInteraction,
           key: _formKey,
@@ -51,8 +51,8 @@ class _CadastroPageState extends ModularState<CadastroPage, EmpresaController> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   _camposPropResp(),
-                  _camposBotoes(),
                   _camposTanques(),
+                  _camposBotoes(),
                 ],
               ),
             ),
@@ -91,7 +91,6 @@ class _CadastroPageState extends ModularState<CadastroPage, EmpresaController> {
     return Row(
       children: [
         btnSalvar(),
-        btnTanque(),
 
         //exibeBotoes()
       ],
@@ -114,7 +113,12 @@ class _CadastroPageState extends ModularState<CadastroPage, EmpresaController> {
             ),
             Column(
               children: [
-                _placaWidget(),
+                Row(
+                  children: [
+                    _placaWidget(),
+                    btnTanque(),
+                  ],
+                ),
                 _listaTanques(),
               ],
             ),
@@ -162,7 +166,7 @@ class _CadastroPageState extends ModularState<CadastroPage, EmpresaController> {
       child: Center(
         child: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: ElevatedButton(
+          child: TextButton(
             child: Text('Novo Tanque'),
             onPressed: _novoTanque,
           ),
@@ -173,28 +177,36 @@ class _CadastroPageState extends ModularState<CadastroPage, EmpresaController> {
 
   Widget _placaWidget() {
     return Container(
+      padding: const EdgeInsets.all(8),
       alignment: Alignment.centerLeft,
-      child: placaWidget,
+      child: Card(
+        elevation: 4,
+        shadowColor: Colors.black,
+        child: placaWidget,
+      ),
     );
   }
 
   Widget _listaTanques() {
-    return Container(
-        width: _larguraTotal * .5,
-        height: 150,
-        child: tanques.isEmpty
-            ? SizedBox.shrink()
-            : ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: tanques.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return _tanqueWidget(index);
-                },
-              ));
+    return SingleChildScrollView(
+      child: Container(
+          width: _size!.width * .5,
+          height: 170,
+          child: tanques.isEmpty
+              ? SizedBox.shrink()
+              : ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: tanques.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return _tanqueWidget(index);
+                  },
+                )),
+    );
   }
 
   Widget _tanqueWidget(int index) {
     return Container(
+      padding: const EdgeInsets.all(8),
       child: Card(
         elevation: 10,
         shadowColor: Colors.black,

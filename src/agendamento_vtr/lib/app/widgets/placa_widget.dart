@@ -16,6 +16,7 @@ class _PlacaWidgetState extends State<PlacaWidget> {
   final TextEditingController _cPlaca = TextEditingController();
   final focusNode = FocusNode();
   bool validou = false;
+  String _placaOld = '';
 
   @override
   void initState() {
@@ -48,7 +49,7 @@ class _PlacaWidgetState extends State<PlacaWidget> {
               icon: Icon(
                 Icons.arrow_right,
               ),
-              onPressed: () => widget.callback(_cPlaca.text, validaPlaca(_cPlaca.text) == null),
+              onPressed: notificaManualmente,
             ),
             icon: Icon(Icons.drive_eta),
             hintText: 'Somente letras e números',
@@ -78,10 +79,18 @@ class _PlacaWidgetState extends State<PlacaWidget> {
   }
 
   void notificaListeners() {
-    if (!focusNode.hasFocus || validou)
+    if ((!focusNode.hasFocus || validou) && _placaOld != _cPlaca.text) {
+      _placaOld = _cPlaca.text;
       widget.callback(_cPlaca.text, validou);
-    else {
+    } else {
       _cPlaca.selection = TextSelection(baseOffset: 0, extentOffset: _cPlaca.text.length);
+    }
+  }
+
+  void notificaManualmente() {
+    if (_placaOld != _cPlaca.text) {
+      _placaOld = _cPlaca.text;
+      widget.callback(_cPlaca.text, validaPlaca(_cPlaca.text) == null);
     }
   }
 }

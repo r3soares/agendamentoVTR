@@ -46,7 +46,7 @@ class Repository {
       p.telefone = '(47) 9622-5871';
       p.razaoSocial = 'Rolando Milhas';
       empresas.add(p);
-      for (int i = 0; i < Random().nextInt(100) + 15; i++) {
+      for (int i = 0; i < Random().nextInt(500) + 15; i++) {
         Tanque t = Tanque();
         t.proprietario = p.cnpj;
         t.placa = alfabeto[Random().nextInt(alfabeto.length)] +
@@ -61,8 +61,7 @@ class Repository {
           t.compartimentos[j].capacidade = Random().nextInt(50) * 100;
           t.compartimentos[j].setas = Random().nextInt(5);
         }
-        t.dataRegistro = DateTime.now()
-            .subtract(Duration(minutes: Random().nextInt(200000)));
+        t.dataRegistro = DateTime.now().subtract(Duration(minutes: Random().nextInt(200000)));
         _tanques.add(t);
       }
       return true;
@@ -72,8 +71,7 @@ class Repository {
   void addTanque(Tanque value) => _tanques.add(value);
 
   void salvaEmpresa(Empresa value) {
-    var pExistente =
-        empresas.firstWhere((p) => p!.cnpj == value.cnpj, orElse: () => null);
+    var pExistente = empresas.firstWhere((p) => p!.cnpj == value.cnpj, orElse: () => null);
     if (pExistente != null) {
       empresas.remove(pExistente);
       empresas.add(value);
@@ -85,10 +83,7 @@ class Repository {
   removeTanque(value) => _tanques.remove(value);
   removeEmpresa(value) => _empresas.remove(value);
 
-  Tanque? findTanqueByPlaca(String placa) =>
-      _tanques.firstWhere((t) => t?.placa == placa, orElse: () => null);
-  Tanque? findTanqueByInmetro(int inmetro) =>
-      _tanques.firstWhere((t) => t?.numInmetro == inmetro, orElse: () => null);
-  Empresa? findEmpresa(String cnpjCpf) =>
-      _empresas.firstWhere((t) => t?.cnpj == cnpjCpf, orElse: () => null);
+  Tanque? findTanqueByPlaca(String placa) => _tanques.firstWhere((t) => t?.placa == placa, orElse: () => null);
+  Tanque? findTanqueByInmetro(int inmetro) => _tanques.firstWhere((t) => t?.numInmetro == inmetro, orElse: () => null);
+  Empresa? findEmpresa(String cnpjCpf) => _empresas.firstWhere((t) => t?.cnpj == cnpjCpf, orElse: () => null);
 }
