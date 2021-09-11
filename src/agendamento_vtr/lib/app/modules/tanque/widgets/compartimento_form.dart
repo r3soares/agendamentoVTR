@@ -7,14 +7,13 @@ import 'package:flutter_modular/flutter_modular.dart';
 class CompartimentoForm extends StatefulWidget {
   final Function(List<Compartimento>) callback;
   final List<Compartimento>? compartimentosPrevio;
-  const CompartimentoForm({this.compartimentosPrevio, required this.callback});
+  const CompartimentoForm({Key? key, this.compartimentosPrevio, required this.callback}) : super(key: key);
 
   @override
   _CompartimentoFormState createState() => _CompartimentoFormState();
 }
 
-class _CompartimentoFormState
-    extends ModularState<CompartimentoForm, TanqueController> {
+class _CompartimentoFormState extends ModularState<CompartimentoForm, TanqueController> {
   late List<Compartimento> compartimentos;
   int _capacidadeTotal = 0;
   double _custoTotal = 0;
@@ -27,13 +26,14 @@ class _CompartimentoFormState
   }
 
   void _configuraCompartimentos() {
-    compartimentos =
-        List.generate(10, (index) => Compartimento('C${index + 1}'));
+    compartimentos = List.generate(10, (index) => Compartimento('C${index + 1}'));
     if (widget.compartimentosPrevio != null) {
       for (int i = 0; i < widget.compartimentosPrevio!.length; i++) {
         compartimentos[i] = widget.compartimentosPrevio![i];
       }
       qtdCompartimentos = widget.compartimentosPrevio!.length;
+      _calculaCapacidadeTotal();
+      _calculaCustoTotal();
     }
   }
 
@@ -72,19 +72,12 @@ class _CompartimentoFormState
                             SizedBox(
                               width: 30,
                               child: TextButton(
-                                  onPressed: () => {
-                                        geraCompartimentos(
-                                            qtdCompartimentos + 1)
-                                      },
-                                  child: Icon(Icons.add)),
+                                  onPressed: () => {geraCompartimentos(qtdCompartimentos + 1)}, child: Icon(Icons.add)),
                             ),
                             SizedBox(
                               width: 30,
                               child: TextButton(
-                                  onPressed: () => {
-                                        geraCompartimentos(
-                                            qtdCompartimentos - 1)
-                                      },
+                                  onPressed: () => {geraCompartimentos(qtdCompartimentos - 1)},
                                   child: Icon(Icons.remove)),
                             ),
                           ],
@@ -130,6 +123,7 @@ class _CompartimentoFormState
                       callback: (_) => {
                         _calculaCapacidadeTotal(),
                         _calculaCustoTotal(),
+                        _notificaListener(),
                       },
                     );
                   },
@@ -172,6 +166,10 @@ class _CompartimentoFormState
       qtdCompartimentos = value;
     });
     _calculaCapacidadeTotal();
-    widget.callback(compartimentos.sublist(0, qtdCompartimentos - 1));
+    _notificaListener();
+  }
+
+  void _notificaListener() {
+    widget.callback(compartimentos.sublist(0, qtdCompartimentos));
   }
 }

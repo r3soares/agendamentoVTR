@@ -3,7 +3,6 @@ import 'package:agendamento_vtr/app/modules/tanque/tanque_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:intl/intl.dart';
 
 class CompartimentoWidget extends StatefulWidget {
   final Compartimento compartimento;
@@ -16,8 +15,8 @@ class CompartimentoWidget extends StatefulWidget {
 
 class _CompartimentoWidgetState extends ModularState<CompartimentoWidget, TanqueController> {
   final TextEditingController _cCapacidade = TextEditingController();
-  final _formKey = GlobalKey<FormState>();
   final focusNode = FocusNode();
+  final key = GlobalKey<FormState>();
 
   @override
   initState() {
@@ -43,11 +42,11 @@ class _CompartimentoWidgetState extends ModularState<CompartimentoWidget, Tanque
           child: Container(
             padding: const EdgeInsets.all(12),
             child: Form(
-              key: _formKey,
               child: Column(
                 children: [
                   Text(widget.compartimento.id),
                   TextFormField(
+                    key: key,
                     focusNode: focusNode,
                     autofocus: true,
                     autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -108,9 +107,10 @@ class _CompartimentoWidgetState extends ModularState<CompartimentoWidget, Tanque
   }
 
   String? validaCapacidade(String? value) {
-    if (value == null || value.isEmpty) return 'Informe a capacidade';
+    if (value == null || value.isEmpty) return 'Informe um valor';
     final capacidade = int.tryParse(value);
     if (capacidade == null) return 'Capacidade inválida';
+    if (capacidade == 0) return 'Não pode ser zero';
     if (capacidade % 10 != 0) return 'Somente múltiplos de 10';
     return null;
   }
