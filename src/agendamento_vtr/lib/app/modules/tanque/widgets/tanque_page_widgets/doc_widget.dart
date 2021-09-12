@@ -6,10 +6,7 @@ class DocWidget extends StatefulWidget {
   final Function(List<Arquivo>) callback;
   final List<Arquivo>? arquivosPrevio;
   final String titulo;
-  DocWidget(
-      {this.titulo = 'CRLV ou NF',
-      this.arquivosPrevio,
-      required this.callback});
+  DocWidget({this.titulo = 'CRLV ou NF', this.arquivosPrevio, required this.callback});
 
   @override
   _DocWidgetState createState() => _DocWidgetState();
@@ -20,7 +17,6 @@ class _DocWidgetState extends State<DocWidget> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _arquivos = widget.arquivosPrevio ?? List.empty(growable: true);
   }
@@ -85,9 +81,7 @@ class _DocWidgetState extends State<DocWidget> {
                                           onPressed: () => {_removeFile(index)},
                                           child: Text(
                                             'X',
-                                            style: TextStyle(
-                                                fontSize: 12,
-                                                color: Colors.red[900]),
+                                            style: TextStyle(fontSize: 12, color: Colors.red[900]),
                                           )),
                                     ],
                                   ),
@@ -111,16 +105,13 @@ class _DocWidgetState extends State<DocWidget> {
   }
 
   void getFile() async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles(
-        type: FileType.custom,
-        allowMultiple: false,
-        allowedExtensions: ['pdf', 'jpg', 'jpeg', 'png']);
+    FilePickerResult? result = await FilePicker.platform
+        .pickFiles(type: FileType.custom, allowMultiple: false, allowedExtensions: ['pdf', 'jpg', 'jpeg', 'png']);
 
     if (result != null) {
       setState(() {
         result.files.forEach((element) {
-          _arquivos.add(Arquivo(result.files.single.bytes!,
-              result.files.single.name, result.files.single.extension!));
+          _arquivos.add(Arquivo(result.files.single.bytes!, result.files.single.name, result.files.single.extension!));
         });
       });
       widget.callback(_arquivos);

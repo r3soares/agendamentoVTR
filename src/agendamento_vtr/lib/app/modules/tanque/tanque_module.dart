@@ -1,4 +1,3 @@
-import 'package:agendamento_vtr/app/models/tanque.dart';
 import 'package:agendamento_vtr/app/modules/empresa/controllers/empresa_controller.dart';
 import 'package:agendamento_vtr/app/modules/tanque/pages/main_page.dart';
 import 'package:agendamento_vtr/app/modules/tanque/pages/tanque_page.dart';

@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
 class CadastroPage extends StatefulWidget {
-  final largura = .5;
   const CadastroPage({Key? key}) : super(key: key);
 
   @override
@@ -27,7 +26,7 @@ class _CadastroPageState extends ModularState<CadastroPage, EmpresaController> {
     callback: (cnpj, valido) => cnpjProprietario = valido ? cnpj : '',
   );
   late Widget placaWidget = PlacaWidget(
-    titulo: 'Informe a placa, se cadastrado',
+    titulo: 'Informe a placa',
     callback: _getTanque,
   );
 
@@ -136,14 +135,6 @@ class _CadastroPageState extends ModularState<CadastroPage, EmpresaController> {
           style: TextStyle(fontSize: 20),
         ));
   }
-
-  // Widget _btnIncluirTanque() {
-  //   return Container(
-  //       child: ElevatedButton(
-  //     child: Icon(Icons.add),
-  //     onPressed: _incluiTanque,
-  //   ));
-  // }
 
   Widget btnSalvar() {
     return Container(
@@ -282,7 +273,7 @@ class _CadastroPageState extends ModularState<CadastroPage, EmpresaController> {
     if (valido) {
       final t = tanqueController.findTanqueByPlaca(placa);
       if (t == null) {
-        _msgTemporaria('Placa não localizada');
+        _msgTemporaria('Placa não localizada. Cadastre novo tanque');
         return;
       }
       _incluiTanque(t);

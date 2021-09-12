@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:agendamento_vtr/app/domain/custo_compartimento.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -46,5 +44,6 @@ void main() {
     expect(custoCompartimento.getCustoTotal(compartimentos3, 0), equals(tanque3));
     expect(custoCompartimento.getCusto(45000, 4), equals(tanque4));
     expect(custoCompartimento.getCustoTotal(compartimentos5, 0), equals(tanque5));
+    expect(custoCompartimento.getCustoTotal(compartimentos6, 0), equals(tanque6));
   });
 }

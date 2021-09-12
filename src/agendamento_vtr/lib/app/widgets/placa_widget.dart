@@ -34,7 +34,6 @@ class _PlacaWidgetState extends State<PlacaWidget> {
         child: TextFormField(
           textCapitalization: TextCapitalization.characters,
           focusNode: focusNode,
-          autofocus: true,
           decoration: InputDecoration(
             // prefixIcon: IconButton(
             //   splashRadius: 1,
