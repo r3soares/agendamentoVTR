@@ -1,3 +1,4 @@
+import 'package:agendamento_vtr/app/models/empresa.dart';
 import 'package:agendamento_vtr/app/models/tanque.dart';
 import 'package:agendamento_vtr/app/modules/empresa/controllers/empresa_controller.dart';
 import 'package:agendamento_vtr/app/modules/tanque/tanque_controller.dart';
@@ -159,7 +160,7 @@ class _CadastroPageState extends ModularState<CadastroPage, EmpresaController> {
           padding: const EdgeInsets.all(8.0),
           child: TextButton(
             child: Text('Novo Tanque'),
-            onPressed: _novoTanque,
+            onPressed: _goTanquePage,
           ),
         ),
       ),
@@ -206,12 +207,14 @@ class _CadastroPageState extends ModularState<CadastroPage, EmpresaController> {
           child: Column(
             children: [
               Container(
-                padding: const EdgeInsets.all(8),
-                child: Text(
-                  tanques[index].placa.replaceRange(3, 3, '-'),
-                  style: TextStyle(fontSize: 20),
-                ),
-              ),
+                  padding: const EdgeInsets.all(8),
+                  child: TextButton(
+                    child: Text(
+                      tanques[index].placa.replaceRange(3, 3, '-'),
+                      style: TextStyle(fontSize: 20),
+                    ),
+                    onPressed: () => _goTanquePage(tExistente: tanques[index]),
+                  )),
               Container(
                 padding: const EdgeInsets.all(4),
                 child: Text('${tanques[index].capacidadeTotal}L'),
@@ -246,10 +249,23 @@ class _CadastroPageState extends ModularState<CadastroPage, EmpresaController> {
       _msgTemporaria('Há campos inválidos');
       return;
     }
+    _associaPropAosTanques();
+    _msgTemporaria('Dados salvos');
+    Modular.to.pop();
   }
 
-  void _novoTanque() {
-    Modular.to.pushNamed('cadastroTanque');
+  void _associaPropAosTanques() {
+    Empresa? e = controller.findEmpresa(cnpj: cnpjProprietario);
+
+    for (var t in tanques) {
+      t.proprietario = cnpjProprietario;
+      tanqueController.salvaTanque(t);
+      e?.tanques.add(t.placa);
+    }
+  }
+
+  void _goTanquePage({Tanque? tExistente}) {
+    Modular.to.pushNamed('cadastroTanque', arguments: tExistente);
   }
 
   void _incluiTanque(Tanque t) {

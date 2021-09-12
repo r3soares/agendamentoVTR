@@ -68,7 +68,11 @@ class Repository {
     }());
   }
 
-  void addTanque(Tanque value) => _tanques.add(value);
+  void addTanque(Tanque value) {
+    Tanque? tExistente = findTanqueByInmetro(value.numInmetro);
+    if (tExistente != null) removeTanque(tExistente);
+    _tanques.add(value);
+  }
 
   void salvaEmpresa(Empresa value) {
     var pExistente = empresas.firstWhere((p) => p!.cnpj == value.cnpj, orElse: () => null);
@@ -80,8 +84,8 @@ class Repository {
     empresas.add(value);
   }
 
-  removeTanque(value) => _tanques.remove(value);
-  removeEmpresa(value) => _empresas.remove(value);
+  removeTanque(Tanque value) => _tanques.remove(value);
+  removeEmpresa(Empresa value) => _empresas.remove(value);
 
   Tanque? findTanqueByPlaca(String placa) => _tanques.firstWhere((t) => t?.placa == placa, orElse: () => null);
   Tanque? findTanqueByInmetro(int inmetro) => _tanques.firstWhere((t) => t?.numInmetro == inmetro, orElse: () => null);

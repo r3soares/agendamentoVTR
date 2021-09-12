@@ -352,7 +352,7 @@ class _TanquePageState extends ModularState<TanquePage, TanqueController> {
           title: Text('Veículo ${_tanque.placa} salvo com sucesso'),
           content: SingleChildScrollView(
               child: Container(
-            child: Text('Deseja incluir mais veículos para este proprietário?'),
+            child: Text('Deseja incluir mais veículos?'),
           )),
           actions: <Widget>[
             TextButton(
@@ -365,6 +365,7 @@ class _TanquePageState extends ModularState<TanquePage, TanqueController> {
             TextButton(
               child: const Text('Não'),
               onPressed: () {
+                Navigator.of(context).pop();
                 Navigator.of(context).pop();
               },
             ),

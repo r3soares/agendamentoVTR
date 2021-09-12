@@ -87,9 +87,6 @@ class _PlacaWidgetState extends State<PlacaWidget> {
   }
 
   void notificaManualmente() {
-    if (_placaOld != _cPlaca.text) {
-      _placaOld = _cPlaca.text;
-      widget.callback(_cPlaca.text, validaPlaca(_cPlaca.text) == null);
-    }
+    widget.callback(_cPlaca.text, validaPlaca(_cPlaca.text) == null);
   }
 }

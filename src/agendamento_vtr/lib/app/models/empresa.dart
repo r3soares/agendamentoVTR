@@ -11,6 +11,7 @@ class Empresa extends ChangeNotifier {
   final List<String> _tanques = List.empty(growable: true);
 
   void addTanque(String placa) {
+    if (_tanques.contains(placa)) return;
     _tanques.add(placa);
     notifyListeners();
   }
