@@ -27,7 +27,7 @@ class _CadastroPageState extends ModularState<CadastroPage, EmpresaController> {
 
   late Widget cnpjProprietarioWidget = CnpjWidget(
     cnpjPrevio: widget.preCadastro,
-    callback: _atualizaDadosProprietario,
+    callback: _atualizaDadosEmpresa,
   );
 
   @override
@@ -140,7 +140,7 @@ class _CadastroPageState extends ModularState<CadastroPage, EmpresaController> {
             padding: const EdgeInsets.all(8.0),
             child: ElevatedButton(
               child: Text('Salvar'),
-              onPressed: () => _salvaProprietario(context),
+              onPressed: () => _salvaEmpresa(context),
             ),
           ),
         ],
@@ -148,7 +148,7 @@ class _CadastroPageState extends ModularState<CadastroPage, EmpresaController> {
     );
   }
 
-  void _atualizaDadosProprietario(String cnpj, bool valido) {
+  void _atualizaDadosEmpresa(String cnpj, bool valido) {
     if (!valido) return;
     final e = controller.findEmpresa(cnpj: cnpj);
     _empresa = e ?? Empresa();
@@ -177,21 +177,57 @@ class _CadastroPageState extends ModularState<CadastroPage, EmpresaController> {
     return _formKey.currentState!.validate();
   }
 
-  void _insereDadosNoProprietario() {
+  void _insereDadosNaEmpresa() {
     //controller.empresa.cnpj = _cCnpjCpf.text;
     _empresa.email = _cEmail.text;
     _empresa.telefone = _cTelefone.text;
     _empresa.razaoSocial = _cRazaSocialProp.text;
   }
 
-  bool _salvaProprietario(context) {
+  bool _salvaEmpresa(context) {
     if (!verificaDadosPreenchidos()) return false;
-    _insereDadosNoProprietario();
+    _insereDadosNaEmpresa();
     controller.salvaEmpresa(_empresa);
     print('Empresa salva: ' + _empresa.cnpj);
-    Modular.to.pop();
     ScaffoldMessenger.of(context)
-        .showSnackBar(const SnackBar(content: Text('Proprietário Salvo')));
+        .showSnackBar(const SnackBar(content: Text('Empresa Salva')));
+    _showDialogAnexaProprietario();
     return true;
+  }
+
+  void _goAnexaProprietarioPage() {
+    Modular.to.popAndPushNamed('anexa_proprietario', arguments: _empresa);
+  }
+
+  Future<void> _showDialogAnexaProprietario() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Proprietário'),
+          content: SingleChildScrollView(
+              child: Container(
+            child: Text('Deseja incluir código do proprietário?'),
+          )),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Sim'),
+              onPressed: () {
+                Navigator.of(context).pop();
+                _goAnexaProprietarioPage();
+              },
+            ),
+            TextButton(
+              child: const Text('Não'),
+              onPressed: () {
+                Navigator.of(context).pop();
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 }
