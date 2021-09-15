@@ -112,7 +112,8 @@ class _AnexaPropPageState
   }
 
   bool verificaDadosPreenchidos() {
-    if (proprietario.cod == 0 || proprietario.codMunicipio == 0) return false;
+    if (proprietario.codInmetro <= 0 || proprietario.codMunicipio == 0)
+      return false;
     return true;
   }
 
