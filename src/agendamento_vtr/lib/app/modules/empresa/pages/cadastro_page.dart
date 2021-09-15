@@ -33,7 +33,7 @@ class _CadastroPageState extends ModularState<CadastroPage, EmpresaController> {
   @override
   void initState() {
     super.initState();
-    _empresa.cnpj = widget.preCadastro;
+    _empresa.cnpjCpf = widget.preCadastro;
   }
 
   @override
@@ -152,7 +152,7 @@ class _CadastroPageState extends ModularState<CadastroPage, EmpresaController> {
     if (!valido) return;
     final e = controller.findEmpresa(cnpj: cnpj);
     _empresa = e ?? Empresa();
-    _empresa.cnpj = cnpj;
+    _empresa.cnpjCpf = cnpj;
     if (!mounted) return;
     setState(() {
       _cRazaSocialProp.text = _empresa.razaoSocial;
@@ -188,7 +188,7 @@ class _CadastroPageState extends ModularState<CadastroPage, EmpresaController> {
     if (!verificaDadosPreenchidos()) return false;
     _insereDadosNaEmpresa();
     controller.salvaEmpresa(_empresa);
-    print('Empresa salva: ' + _empresa.cnpj);
+    print('Empresa salva: ' + _empresa.cnpjCpf);
     ScaffoldMessenger.of(context)
         .showSnackBar(const SnackBar(content: Text('Empresa Salva')));
     _showDialogAnexaProprietario();

@@ -37,7 +37,7 @@ class _AnexaPropPageState
     final size = MediaQuery.of(context).size;
     return Scaffold(
         appBar: AppBar(
-          title: Text('${widget.empresa.cnpj}'),
+          title: Text('${widget.empresa.cnpjCpf}'),
         ),
         body: Container(
           padding: EdgeInsets.only(bottom: size.height * .3),
@@ -117,7 +117,7 @@ class _AnexaPropPageState
   }
 
   void _insereDadosNaEmpresa() {
-    widget.empresa.proprietario = 0;
+    widget.empresa.proprietario = proprietario;
   }
 
   bool _salvaEmpresa(context) {
@@ -128,7 +128,7 @@ class _AnexaPropPageState
     }
     _insereDadosNaEmpresa();
     controller.salvaEmpresa(widget.empresa);
-    print('Proprietário salvo: ' + widget.empresa.cnpj);
+    print('Proprietário salvo: ' + widget.empresa.cnpjCpf);
     Modular.to.pop();
     ScaffoldMessenger.of(context)
         .showSnackBar(const SnackBar(content: Text('Proprietário salvo')));

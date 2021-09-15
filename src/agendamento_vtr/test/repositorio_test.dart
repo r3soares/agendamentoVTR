@@ -1,15 +1,17 @@
 import 'package:agendamento_vtr/app/models/empresa.dart';
+import 'package:agendamento_vtr/app/models/proprietario.dart';
 import 'package:agendamento_vtr/app/repositories/repository.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   test('Repositorio Empresas', () {
     Empresa e = new Empresa();
-    e.cnpj = '00970455941';
+    e.cnpjCpf = '00970455941';
     e.email = 'teste@teste';
-    e.proprietario = 1;
+    e.proprietario = Proprietario();
     e.telefone = '91977750';
-    e.tanques.addAll(['OKG5498', 'MME1396']);
+    e.addTanque('OKG5498');
+    e.addTanque('MME1396');
 
     Repository repo = Repository();
 
