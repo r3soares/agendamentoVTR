@@ -221,7 +221,8 @@ class _CadastroPageState extends ModularState<CadastroPage, EmpresaController> {
               ),
               Container(
                 padding: const EdgeInsets.all(4),
-                child: Text('${tanques[index].compartimentos.length}C ${_somaSetas(tanques[index])}SS'),
+                child: Text(
+                    '${tanques[index].compartimentos.length}C ${_somaSetas(tanques[index])}SS'),
               ),
               Container(
                 child: IconButton(
@@ -241,7 +242,8 @@ class _CadastroPageState extends ModularState<CadastroPage, EmpresaController> {
   }
 
   int _somaSetas(Tanque t) {
-    return t.compartimentos.fold(0, (previousValue, element) => previousValue + element.setas);
+    return t.compartimentos
+        .fold(0, (previousValue, element) => previousValue + element.setas);
   }
 
   void _salvaDados(BuildContext ctx) {
@@ -260,7 +262,7 @@ class _CadastroPageState extends ModularState<CadastroPage, EmpresaController> {
     for (var t in tanques) {
       t.proprietario = cnpjProprietario;
       tanqueController.salvaTanque(t);
-      e?.tanques.add(t.placa);
+      e?.addTanque(t.placa);
     }
   }
 
