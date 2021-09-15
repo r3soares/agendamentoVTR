@@ -41,7 +41,7 @@ class _CadastroPageState extends ModularState<CadastroPage, EmpresaController> {
     final larguraTotal = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
-        title: Text('Novo Contato'),
+        title: Text('Nova Empresa'),
       ),
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: larguraTotal / 4),
@@ -72,7 +72,7 @@ class _CadastroPageState extends ModularState<CadastroPage, EmpresaController> {
   Widget titulo() {
     return Container(
         child: Text(
-      "Dados do Contato",
+      "Dados da Empresa",
       style: TextStyle(fontSize: 20),
     ));
   }
@@ -83,7 +83,7 @@ class _CadastroPageState extends ModularState<CadastroPage, EmpresaController> {
         child: TextFormField(
           decoration: const InputDecoration(
             icon: Icon(Icons.person),
-            labelText: 'Nome ou Razão Social da Empresa',
+            labelText: 'Nome ou Razão Social',
           ),
           controller: _cRazaSocialProp,
           validator: (String? value) {

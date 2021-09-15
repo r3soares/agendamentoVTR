@@ -29,7 +29,7 @@ class MainPage extends StatelessWidget {
                     padding: EdgeInsets.symmetric(vertical: 20),
                     height: size.height * .1,
                     child: Text(
-                      'Gerenciar Proprietários',
+                      'Gerenciar Empresas',
                       style: TextStyle(fontSize: 24),
                     ),
                   ),
@@ -40,7 +40,7 @@ class MainPage extends StatelessWidget {
                       width: size.width * .2,
                       child: ElevatedButton(
                         onPressed: () => {Modular.to.pushNamed('cadastro')},
-                        child: Text('Novo Proprietário'),
+                        child: Text('Nova Empresa'),
                       ),
                     ),
                   ),
