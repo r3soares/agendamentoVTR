@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:agendamento_vtr/app/models/compartimento.dart';
@@ -84,10 +85,10 @@ class Repository {
     if (pExistente != null) {
       empresas.remove(pExistente);
       empresas.add(value);
-      return await repo.update(value);
+      return await repo.update(jsonEncode(value.toJson()));
     }
     empresas.add(value);
-    return await repo.save(value);
+    return await repo.save(jsonEncode(value.toJson()));
   }
 
   removeTanque(Tanque value) => _tanques.remove(value);

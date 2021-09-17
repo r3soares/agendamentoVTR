@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:agendamento_vtr/app/models/json_serializable.dart';
 
 class Proprietario implements JsonSerializable {
@@ -20,5 +18,5 @@ class Proprietario implements JsonSerializable {
 
   @override
   Map<String, dynamic> toJson() =>
-      {'Cod': cod, 'CodMun': codMun, 'Tanques': jsonEncode(tanques)};
+      {'Cod': cod, 'CodMun': codMun, 'Tanques': tanques};
 }

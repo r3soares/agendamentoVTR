@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:agendamento_vtr/app/models/json_serializable.dart';
 import 'package:agendamento_vtr/app/models/proprietario.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +10,7 @@ class Empresa extends ChangeNotifier implements JsonSerializable {
   String razaoSocial = '';
   String email = '';
   List<String> telefones = List.empty(growable: true);
-  StatusEmpresa status = StatusEmpresa.Ativa;
+  StatusEmpresa status = StatusEmpresa.PreCadastro;
 
   Empresa();
 //tEM QUE REMOVER
@@ -40,7 +42,7 @@ class Empresa extends ChangeNotifier implements JsonSerializable {
         proprietario = json['Proprietario'] == null
             ? null
             : Proprietario.fromJson(json['Proprietario']),
-        status = json['Status'];
+        status = StatusEmpresa.values[json['Status']];
 
   @override
   Map<String, dynamic> toJson() => {
@@ -49,7 +51,7 @@ class Empresa extends ChangeNotifier implements JsonSerializable {
         'Email': email,
         'Telefones': telefones,
         'Status': status.index,
-        'Proprietaro': proprietario == null ? null : proprietario!.toJson(),
+        'Proprietario': proprietario == null ? null : proprietario!.toJson(),
       };
 }
 
