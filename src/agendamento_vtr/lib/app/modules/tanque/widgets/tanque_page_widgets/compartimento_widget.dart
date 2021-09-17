@@ -7,13 +7,16 @@ import 'package:flutter_modular/flutter_modular.dart';
 class CompartimentoWidget extends StatefulWidget {
   final Compartimento compartimento;
   final Function(Compartimento) callback;
-  const CompartimentoWidget({Key? key, required this.compartimento, required this.callback}) : super(key: key);
+  const CompartimentoWidget(
+      {Key? key, required this.compartimento, required this.callback})
+      : super(key: key);
 
   @override
   _CompartimentoWidgetState createState() => _CompartimentoWidgetState();
 }
 
-class _CompartimentoWidgetState extends ModularState<CompartimentoWidget, TanqueController> {
+class _CompartimentoWidgetState
+    extends ModularState<CompartimentoWidget, TanqueController> {
   final TextEditingController _cCapacidade = TextEditingController();
   final focusNode = FocusNode();
   final key = GlobalKey<FormState>();
@@ -26,7 +29,8 @@ class _CompartimentoWidgetState extends ModularState<CompartimentoWidget, Tanque
     });
     focusNode.addListener(() {
       if (focusNode.hasFocus) {
-        _cCapacidade.selection = TextSelection(baseOffset: 0, extentOffset: _cCapacidade.text.length);
+        _cCapacidade.selection = TextSelection(
+            baseOffset: 0, extentOffset: _cCapacidade.text.length);
       }
     });
     _cCapacidade.text = widget.compartimento.capacidade.toString();
@@ -44,7 +48,7 @@ class _CompartimentoWidgetState extends ModularState<CompartimentoWidget, Tanque
             child: Form(
               child: Column(
                 children: [
-                  Text(widget.compartimento.id),
+                  Text('C${widget.compartimento.pos}'),
                   TextFormField(
                     key: key,
                     focusNode: focusNode,
@@ -56,7 +60,8 @@ class _CompartimentoWidgetState extends ModularState<CompartimentoWidget, Tanque
                       hintStyle: TextStyle(fontSize: 10),
                     ),
                     controller: _cCapacidade,
-                    onChanged: (_) => widget.compartimento.capacidade = int.tryParse(_cCapacidade.text) ?? 0,
+                    onChanged: (_) => widget.compartimento.capacidade =
+                        int.tryParse(_cCapacidade.text) ?? 0,
                     keyboardType: TextInputType.number,
                     inputFormatters: <TextInputFormatter>[
                       FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
@@ -76,12 +81,16 @@ class _CompartimentoWidgetState extends ModularState<CompartimentoWidget, Tanque
                           SizedBox(
                             width: 25,
                             child: TextButton(
-                                onPressed: () => {gerSetas(widget.compartimento.setas + 1)}, child: Icon(Icons.add)),
+                                onPressed: () =>
+                                    {gerSetas(widget.compartimento.setas + 1)},
+                                child: Icon(Icons.add)),
                           ),
                           SizedBox(
                             width: 25,
                             child: TextButton(
-                                onPressed: () => {gerSetas(widget.compartimento.setas - 1)}, child: Icon(Icons.remove)),
+                                onPressed: () =>
+                                    {gerSetas(widget.compartimento.setas - 1)},
+                                child: Icon(Icons.remove)),
                           ),
                         ],
                       ),
@@ -90,7 +99,8 @@ class _CompartimentoWidgetState extends ModularState<CompartimentoWidget, Tanque
                   Container(
                     child: Container(
                       alignment: Alignment.centerLeft,
-                      child: Text(_custo(), style: TextStyle(color: Colors.red[900])),
+                      child: Text(_custo(),
+                          style: TextStyle(color: Colors.red[900])),
                     ),
                   )
                 ],

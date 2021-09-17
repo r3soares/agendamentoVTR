@@ -9,7 +9,7 @@ class EmpresaController {
     repo.salvaEmpresa(e);
   }
 
-  Empresa? findEmpresa({String? cnpj}) {
-    if (cnpj != null) return repo.findEmpresa(cnpj);
+  Future<Empresa?> findEmpresa({String? cnpj}) async {
+    if (cnpj != null) return await repo.findEmpresa(cnpj);
   }
 }

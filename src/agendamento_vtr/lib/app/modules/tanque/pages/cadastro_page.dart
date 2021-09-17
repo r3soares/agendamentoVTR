@@ -221,8 +221,7 @@ class _CadastroPageState extends ModularState<CadastroPage, EmpresaController> {
               ),
               Container(
                 padding: const EdgeInsets.all(4),
-                child: Text(
-                    '${tanques[index].compartimentos.length}C ${_somaSetas(tanques[index])}SS'),
+                child: Text('${tanques[index].compartimentos.length}C ${_somaSetas(tanques[index])}SS'),
               ),
               Container(
                 child: IconButton(
@@ -242,8 +241,7 @@ class _CadastroPageState extends ModularState<CadastroPage, EmpresaController> {
   }
 
   int _somaSetas(Tanque t) {
-    return t.compartimentos
-        .fold(0, (previousValue, element) => previousValue + element.setas);
+    return t.compartimentos.fold(0, (previousValue, element) => previousValue + element.setas);
   }
 
   void _salvaDados(BuildContext ctx) {
@@ -256,8 +254,8 @@ class _CadastroPageState extends ModularState<CadastroPage, EmpresaController> {
     Modular.to.pop();
   }
 
-  void _associaPropAosTanques() {
-    Empresa? e = controller.findEmpresa(cnpj: cnpjProprietario);
+  void _associaPropAosTanques() async {
+    Empresa? e = await controller.findEmpresa(cnpj: cnpjProprietario);
 
     for (var t in tanques) {
       t.proprietario = cnpjProprietario;
@@ -287,9 +285,9 @@ class _CadastroPageState extends ModularState<CadastroPage, EmpresaController> {
     return _formKey.currentState!.validate();
   }
 
-  void _getTanque(String placa, bool valido) {
+  void _getTanque(String placa, bool valido) async {
     if (valido) {
-      final t = tanqueController.findTanqueByPlaca(placa);
+      final t = await tanqueController.findTanqueByPlaca(placa);
       if (t == null) {
         _msgTemporaria('Placa não localizada. Cadastre novo tanque');
         return;

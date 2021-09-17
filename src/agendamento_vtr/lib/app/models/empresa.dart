@@ -30,9 +30,7 @@ class Empresa extends ChangeNotifier implements JsonSerializable {
   }
 
   @override
-  Empresa fromJson(Map<String, dynamic> json) {
-    return Empresa.fromJson(json);
-  }
+  Empresa fromJson(Map<String, dynamic> json) => Empresa.fromJson(json);
 
   Empresa.fromJson(Map<String, dynamic> json)
       : cnpjCpf = json['Cnpj'],

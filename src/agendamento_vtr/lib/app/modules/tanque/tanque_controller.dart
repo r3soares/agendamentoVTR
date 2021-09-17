@@ -8,17 +8,15 @@ import 'package:intl/intl.dart';
 class TanqueController {
   final _repo = Modular.get<Repository>();
 
-  final NumberFormat formato =
-      NumberFormat.currency(locale: 'pt_BR', symbol: 'R\$');
+  final NumberFormat formato = NumberFormat.currency(locale: 'pt_BR', symbol: 'R\$');
   final CustoCompartimento _custo = CustoCompartimento();
 
   double getCusto(Compartimento c) {
     return _custo.getCusto(c.capacidade, c.setas);
   }
 
-  Tanque? findTanqueByPlaca(String placa) => _repo.findTanqueByPlaca(placa);
-  Tanque? findTanqueByinmetro(String inmetro) =>
-      _repo.findTanqueByInmetro(inmetro);
+  Future<Tanque?> findTanqueByPlaca(String placa) async => await _repo.findTanqueByPlaca(placa);
+  Future<Tanque?> findTanqueByinmetro(String inmetro) async => await _repo.findTanqueByInmetro(inmetro);
 
   void salvaTanque(Tanque t) {
     _repo.addTanque(t);

@@ -1,23 +1,37 @@
+import 'package:agendamento_vtr/app/models/empresa.dart';
+import 'package:agendamento_vtr/app/models/proprietario.dart';
 import 'package:agendamento_vtr/app/models/tanque.dart';
 import 'package:agendamento_vtr/app/repositories/repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:intl/intl.dart';
 
-class VisualizaTanqueDialog extends StatelessWidget {
-  final Tanque _tanque;
+class VisualizaTanqueDialog extends StatefulWidget {
+  final Tanque tanque;
+
+  VisualizaTanqueDialog(this.tanque);
+
+  @override
+  State<VisualizaTanqueDialog> createState() => _VisualizaTanqueDialogState();
+}
+
+class _VisualizaTanqueDialogState extends State<VisualizaTanqueDialog> {
   final formatoData = 'dd/MM/yy HH:mm';
+  late Empresa proprietario;
   final tanquesRepo = Modular.get<Repository>();
 
-  VisualizaTanqueDialog(this._tanque);
+  @override
+  void initState() {
+    super.initState();
+    if (widget.tanque.proprietario != null) {
+      tanquesRepo.findEmpresa(widget.tanque.proprietario!).then((value) => this.proprietario = value ?? Empresa());
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    final proprietario = _tanque.proprietario != null
-        ? tanquesRepo.findEmpresa(_tanque.proprietario!)
-        : null;
-    final data = DateFormat(formatoData).format(_tanque.dataRegistro);
+    final data = DateFormat(formatoData).format(widget.tanque.dataRegistro);
     return Dialog(
       child: Container(
         width: size.width * .3,
@@ -28,7 +42,7 @@ class VisualizaTanqueDialog extends StatelessWidget {
               padding: EdgeInsets.all(12),
               alignment: Alignment.topCenter,
               child: Text(
-                _tanque.placa.replaceRange(3, 3, '-'),
+                widget.tanque.placa.replaceRange(3, 3, '-'),
                 style: TextStyle(fontSize: 20),
               ),
             ),
@@ -41,7 +55,7 @@ class VisualizaTanqueDialog extends StatelessWidget {
                     style: TextStyle(fontSize: 18),
                   ),
                   Text(
-                    proprietario!.razaoSocial,
+                    proprietario.razaoSocial,
                     style: TextStyle(fontSize: 18, color: Colors.blueAccent),
                   ),
                 ],

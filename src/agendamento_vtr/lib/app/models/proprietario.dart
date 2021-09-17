@@ -7,9 +7,7 @@ class Proprietario implements JsonSerializable {
 
   Proprietario();
   @override
-  fromJson(Map<String, dynamic> json) {
-    return Proprietario.fromJson(json);
-  }
+  fromJson(Map<String, dynamic> json) => Proprietario.fromJson(json);
 
   Proprietario.fromJson(Map<String, dynamic> json)
       : cod = json['Cod'],

@@ -1,15 +1,16 @@
 import 'package:agendamento_vtr/app/models/custo_tanque.dart';
+import 'package:agendamento_vtr/app/models/json_serializable.dart';
 import 'package:agendamento_vtr/app/modules/tanque/models/arquivo.dart';
 import 'package:agendamento_vtr/app/models/compartimento.dart';
 
-class Tanque {
+class Tanque implements JsonSerializable {
   String placa = '';
-  String numInmetro = '';
+  String codInmetro = '';
 
   //CNPJ da empresa que possui o proprietario
   String? proprietario;
-  bool isZero = false;
 
+  double custo = 0;
   DateTime dataRegistro = DateTime.now();
   DateTime dataUltimaAlteracao = DateTime.now();
 
@@ -17,17 +18,44 @@ class Tanque {
 
   StatusTanque status = StatusTanque.Ativo;
 
-  List<Compartimento> compartimentos = [Compartimento('C1')];
-
-  Arquivo? doc; //Tem que remover
+  List<Compartimento> compartimentos = [Compartimento(1)];
+  //Tem que remover
   DateTime? agenda; //Tem que remover
   String? responsavelAgendamento; //Tem que remover
-  CustoTanque? ultimoCusto;
+  //remover daqui
+  bool isZero = false;
 
   final List<Arquivo> docs = List.empty(growable: true);
 
-  int get capacidadeTotal => compartimentos.fold(
-      0, (previousValue, element) => previousValue + element.capacidade);
+  int get capacidadeTotal => compartimentos.fold(0, (previousValue, element) => previousValue + element.capacidade);
+
+  Tanque();
+  @override
+  fromJson(Map<String, dynamic> json) => Tanque.fromJson(json);
+
+  Tanque.fromJson(Map<String, dynamic> json)
+      : placa = json['Placa'],
+        codInmetro = json['CodInmetro'],
+        proprietario = json['Proprietario'],
+        dataRegistro = json['DataRegistro'],
+        dataUltimaAlteracao = json['DataUltimaAlteracao'],
+        tanqueAgendado = json['TanqueAgendado'],
+        status = StatusTanque.values[json['Status']],
+        compartimentos = List.from(json['Compartimentos']),
+        custo = json['Custo'];
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'Placa': placa,
+        'CodInmetro': codInmetro,
+        'Proprietario': proprietario,
+        'DataRegistro': dataRegistro,
+        'DataUltimaAlteracao': dataUltimaAlteracao,
+        'TanqueAgendado': tanqueAgendado,
+        'Status': status.index,
+        'Compartimentos': compartimentos,
+        'Custo': custo,
+      };
 }
 
 enum StatusTanque {

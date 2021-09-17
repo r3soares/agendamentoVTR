@@ -87,9 +87,7 @@ class _CadastroPageState extends ModularState<CadastroPage, EmpresaController> {
           ),
           controller: _cRazaSocialProp,
           validator: (String? value) {
-            return (value != null && value.length > 0)
-                ? null
-                : 'Informe um nome';
+            return (value != null && value.length > 0) ? null : 'Informe um nome';
           },
         ));
   }
@@ -148,9 +146,9 @@ class _CadastroPageState extends ModularState<CadastroPage, EmpresaController> {
     );
   }
 
-  void _atualizaDadosEmpresa(String cnpj, bool valido) {
+  void _atualizaDadosEmpresa(String cnpj, bool valido) async {
     if (!valido) return;
-    final e = controller.findEmpresa(cnpj: cnpj);
+    final e = await controller.findEmpresa(cnpj: cnpj);
     _empresa = e ?? Empresa();
     _empresa.cnpjCpf = cnpj;
     if (!mounted) return;
@@ -163,8 +161,7 @@ class _CadastroPageState extends ModularState<CadastroPage, EmpresaController> {
 
   String? validateEmail(String? value) {
     if (value == null || value.isEmpty) return 'Informe um e-mail';
-    String pattern =
-        r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]"
+    String pattern = r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]"
         r"{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]"
         r"{0,253}[a-zA-Z0-9])?)*$";
     RegExp regex = new RegExp(pattern);
@@ -190,8 +187,7 @@ class _CadastroPageState extends ModularState<CadastroPage, EmpresaController> {
     _insereDadosNaEmpresa();
     controller.salvaEmpresa(_empresa);
     print('Empresa salva: ' + _empresa.cnpjCpf);
-    ScaffoldMessenger.of(context)
-        .showSnackBar(const SnackBar(content: Text('Empresa Salva')));
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Empresa Salva')));
     _showDialogAnexaProprietario();
     return true;
   }

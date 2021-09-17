@@ -11,7 +11,7 @@ class Repository {
   List<Empresa?> _empresas = List.empty(growable: true);
 
   List<Tanque?> get tanques => _tanques;
-  List<Empresa?> get empresas => _empresas;
+  //List<Empresa?> get empresas => _empresas;
 
   final IRepository repo;
 
@@ -49,7 +49,7 @@ class Repository {
       p.email = 'contato@empresa.com';
       p.telefones.add('(47) 9622-5871');
       p.razaoSocial = 'Rolando Milhas';
-      empresas.add(p);
+      salvaEmpresa(p); //empresas.add(p);
       for (int i = 0; i < Random().nextInt(500) + 15; i++) {
         Tanque t = Tanque();
         t.proprietario = p.cnpjCpf;
@@ -61,43 +61,37 @@ class Repository {
             Random().nextInt(10).toString() +
             Random().nextInt(10).toString();
         for (int j = 0; j < Random().nextInt(10); j++) {
-          t.compartimentos.add(Compartimento('C$j'));
+          t.compartimentos.add(Compartimento(j + 1));
           t.compartimentos[j].capacidade = Random().nextInt(50) * 100;
           t.compartimentos[j].setas = Random().nextInt(5);
         }
-        t.dataRegistro = DateTime.now()
-            .subtract(Duration(minutes: Random().nextInt(200000)));
+        t.dataRegistro = DateTime.now().subtract(Duration(minutes: Random().nextInt(200000)));
         _tanques.add(t);
       }
       return true;
     }());
   }
 
-  addTanque(Tanque value) {
-    Tanque? tExistente = findTanqueByInmetro(value.numInmetro);
-    if (tExistente != null) removeTanque(tExistente);
-    _tanques.add(value);
+  addTanque(Tanque value) async {
+    var pExistente = await findTanqueByInmetro(value.codInmetro);
+    if (pExistente != null) {
+      return await repo.update(jsonEncode(value.toJson()));
+    }
+    return await repo.save(jsonEncode(value.toJson()));
   }
 
   salvaEmpresa(Empresa value) async {
-    var pExistente = empresas.firstWhere((p) => p!.cnpjCpf == value.cnpjCpf,
-        orElse: () => null);
+    var pExistente = await findEmpresa(value.cnpjCpf);
     if (pExistente != null) {
-      empresas.remove(pExistente);
-      empresas.add(value);
       return await repo.update(jsonEncode(value.toJson()));
     }
-    empresas.add(value);
     return await repo.save(jsonEncode(value.toJson()));
   }
 
   removeTanque(Tanque value) => _tanques.remove(value);
   removeEmpresa(Empresa value) => _empresas.remove(value);
 
-  Tanque? findTanqueByPlaca(String placa) =>
-      _tanques.firstWhere((t) => t?.placa == placa, orElse: () => null);
-  Tanque? findTanqueByInmetro(String inmetro) =>
-      _tanques.firstWhere((t) => t?.numInmetro == inmetro, orElse: () => null);
-  Empresa? findEmpresa(String cnpjCpf) =>
-      _empresas.firstWhere((t) => t?.cnpjCpf == cnpjCpf, orElse: () => null);
+  Future<Tanque?> findTanqueByPlaca(String placa) async => jsonDecode(await repo.getById(placa)) as Tanque;
+  Future<Tanque?> findTanqueByInmetro(String inmetro) async => jsonDecode(await repo.getById(inmetro)) as Tanque;
+  Future<Empresa?> findEmpresa(String cnpjCpf) async => jsonDecode(await repo.getById(cnpjCpf)) as Empresa;
 }

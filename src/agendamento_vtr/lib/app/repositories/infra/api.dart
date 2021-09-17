@@ -9,32 +9,30 @@ class Api implements IRepository {
   @override
   delete(id) async {
     final uri = Uri.parse(endereco + controller + id);
-    return await http.delete(uri);
+    return (await http.delete(uri)).body;
   }
 
   @override
   getAll() async {
     final uri = Uri.parse(endereco + controller);
-    return await http.get(uri);
+    return (await http.get(uri)).body;
   }
 
   @override
   getById(id) async {
     final uri = Uri.parse(endereco + controller + id);
-    return await http.get(uri);
+    return (await http.get(uri)).body;
   }
 
   @override
   save(data) async {
     final uri = Uri.parse(endereco + controller);
-    return await http
-        .post(uri, body: data, headers: {'Content-Type': 'application/json'});
+    return (await http.post(uri, body: data, headers: {'Content-Type': 'application/json'})).body;
   }
 
   @override
   update(data) async {
     final uri = Uri.parse(endereco + controller);
-    return await http
-        .put(uri, body: data, headers: {'Content-Type': 'application/json'});
+    return (await http.put(uri, body: data, headers: {'Content-Type': 'application/json'})).body;
   }
 }
