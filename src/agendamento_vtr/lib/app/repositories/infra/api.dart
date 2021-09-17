@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:agendamento_vtr/app/repositories/IRepository.dart';
 
 class Api implements IRepository {
-  static const String endereco = '/api/vtr/';
+  static const String endereco = 'localhost:44337/api/vtr/';
   final String controller;
   Api(this.controller);
   @override

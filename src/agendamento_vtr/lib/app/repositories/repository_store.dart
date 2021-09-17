@@ -1,5 +1,6 @@
 import 'package:agendamento_vtr/app/repositories/repository.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 
 class RepositoryStore extends ChangeNotifier {
   //0 -> Inicial
@@ -10,7 +11,7 @@ class RepositoryStore extends ChangeNotifier {
   int _status = 0;
   var _argStatus;
 
-  final Repository _repository = Repository();
+  final Repository _repository = Modular.get<Repository>();
 
   int get status => _status;
   get argStatus => _argStatus;

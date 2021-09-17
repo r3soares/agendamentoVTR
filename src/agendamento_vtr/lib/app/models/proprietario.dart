@@ -1,8 +1,24 @@
-import 'package:agendamento_vtr/app/models/tanque.dart';
+import 'dart:convert';
 
-class Proprietario {
-  int codInmetro = 0;
-  String empresa = '';
-  int codMunicipio = 0;
-  final List<Tanque> tanques = List.empty(growable: true);
+import 'package:agendamento_vtr/app/models/json_serializable.dart';
+
+class Proprietario implements JsonSerializable {
+  int cod = 0;
+  int codMun = 0;
+  List<String> tanques = List.empty(growable: true);
+
+  Proprietario();
+  @override
+  fromJson(Map<String, dynamic> json) {
+    return Proprietario.fromJson(json);
+  }
+
+  Proprietario.fromJson(Map<String, dynamic> json)
+      : cod = json['Cod'],
+        codMun = json['CodMun'],
+        tanques = List.from(json['Tanques']);
+
+  @override
+  Map<String, dynamic> toJson() =>
+      {'Cod': cod, 'CodMun': codMun, 'Tanques': jsonEncode(tanques)};
 }

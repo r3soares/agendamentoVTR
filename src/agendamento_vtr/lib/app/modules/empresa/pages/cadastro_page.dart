@@ -156,7 +156,7 @@ class _CadastroPageState extends ModularState<CadastroPage, EmpresaController> {
     if (!mounted) return;
     setState(() {
       _cRazaSocialProp.text = _empresa.razaoSocial;
-      _cTelefone.text = _empresa.telefone ?? '';
+      _cTelefone.text = _empresa.telefones.isEmpty ? '' : _empresa.telefones[0];
       _cEmail.text = _empresa.email;
     });
   }
@@ -180,7 +180,8 @@ class _CadastroPageState extends ModularState<CadastroPage, EmpresaController> {
   void _insereDadosNaEmpresa() {
     //controller.empresa.cnpj = _cCnpjCpf.text;
     _empresa.email = _cEmail.text;
-    _empresa.telefone = _cTelefone.text;
+    _empresa.telefones.clear();
+    _empresa.telefones.add(_cTelefone.text);
     _empresa.razaoSocial = _cRazaSocialProp.text;
   }
 

@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:agendamento_vtr/app/models/compartimento.dart';
 import 'package:agendamento_vtr/app/models/empresa.dart';
 import 'package:agendamento_vtr/app/models/tanque.dart';
+import 'package:agendamento_vtr/app/repositories/IRepository.dart';
 
 class Repository {
   List<Tanque?> _tanques = List.empty(growable: true);
@@ -11,7 +12,9 @@ class Repository {
   List<Tanque?> get tanques => _tanques;
   List<Empresa?> get empresas => _empresas;
 
-  Repository() {
+  final IRepository repo;
+
+  Repository(this.repo) {
     assert(() {
       final alfabeto = [
         'A',
@@ -43,7 +46,7 @@ class Repository {
       Empresa p = Empresa();
       p.cnpjCpf = '00970455941';
       p.email = 'contato@empresa.com';
-      p.telefone = '(47) 9622-5871';
+      p.telefones.add('(47) 9622-5871');
       p.razaoSocial = 'Rolando Milhas';
       empresas.add(p);
       for (int i = 0; i < Random().nextInt(500) + 15; i++) {
@@ -69,21 +72,22 @@ class Repository {
     }());
   }
 
-  void addTanque(Tanque value) {
+  addTanque(Tanque value) {
     Tanque? tExistente = findTanqueByInmetro(value.numInmetro);
     if (tExistente != null) removeTanque(tExistente);
     _tanques.add(value);
   }
 
-  void salvaEmpresa(Empresa value) {
+  salvaEmpresa(Empresa value) async {
     var pExistente = empresas.firstWhere((p) => p!.cnpjCpf == value.cnpjCpf,
         orElse: () => null);
     if (pExistente != null) {
       empresas.remove(pExistente);
       empresas.add(value);
-      return;
+      return await repo.update(value);
     }
     empresas.add(value);
+    return await repo.save(value);
   }
 
   removeTanque(Tanque value) => _tanques.remove(value);

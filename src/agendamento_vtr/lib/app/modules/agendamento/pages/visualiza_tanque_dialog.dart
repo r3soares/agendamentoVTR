@@ -64,7 +64,7 @@ class VisualizaTanqueDialog extends StatelessWidget {
             ),
             Container(
               padding: EdgeInsets.all(8),
-              child: proprietario.telefone != null
+              child: proprietario.telefones.isNotEmpty
                   ? Row(
                       children: [
                         Text(
@@ -72,7 +72,7 @@ class VisualizaTanqueDialog extends StatelessWidget {
                           style: TextStyle(fontSize: 18),
                         ),
                         Text(
-                          proprietario.telefone!,
+                          proprietario.telefones[0],
                           style: TextStyle(fontSize: 18),
                         ),
                       ],

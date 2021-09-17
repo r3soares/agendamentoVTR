@@ -24,11 +24,11 @@ class _AnexaPropPageState
   void initState() {
     super.initState();
     inmetroWidget = InputNumeroWidget(
-      callback: (codInmetro) => proprietario.codInmetro = codInmetro,
+      callback: (codInmetro) => proprietario.cod = codInmetro,
     );
     codMunWidget = InputNumeroWidget(
       titulo: 'Código do Município',
-      callback: (codMun) => proprietario.codMunicipio = codMun,
+      callback: (codMun) => proprietario.codMun = codMun,
     );
   }
 
@@ -112,8 +112,7 @@ class _AnexaPropPageState
   }
 
   bool verificaDadosPreenchidos() {
-    if (proprietario.codInmetro <= 0 || proprietario.codMunicipio == 0)
-      return false;
+    if (proprietario.cod <= 0 || proprietario.codMun == 0) return false;
     return true;
   }
 
