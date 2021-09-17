@@ -15362,8 +15362,7 @@
 											"_parent": {
 												"$ref": "AAAAAAF7gvL3m0Xy+rw="
 											},
-											"name": "num_inmetro",
-											"type": ""
+											"name": "cod_inmetro"
 										},
 										{
 											"_type": "UMLAttribute",
@@ -16496,7 +16495,7 @@
 															"top": 117,
 															"width": 223.73583984375,
 															"height": 13,
-															"text": "+num_inmetro",
+															"text": "+cod_inmetro",
 															"horizontalAlignment": 0
 														},
 														{
