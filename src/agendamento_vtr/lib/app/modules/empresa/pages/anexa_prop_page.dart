@@ -24,10 +24,13 @@ class _AnexaPropPageState
   void initState() {
     super.initState();
     inmetroWidget = InputNumeroWidget(
+      titulo: 'Número Inmetro',
+      input: TipoInput.Numeros,
       callback: (codInmetro) => proprietario.cod = codInmetro,
     );
     codMunWidget = InputNumeroWidget(
       titulo: 'Código do Município',
+      input: TipoInput.Numeros,
       callback: (codMun) => proprietario.codMun = codMun,
     );
   }

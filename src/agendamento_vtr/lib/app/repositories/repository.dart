@@ -95,7 +95,7 @@ class Repository {
 
   Tanque? findTanqueByPlaca(String placa) =>
       _tanques.firstWhere((t) => t?.placa == placa, orElse: () => null);
-  Tanque? findTanqueByInmetro(int inmetro) =>
+  Tanque? findTanqueByInmetro(String inmetro) =>
       _tanques.firstWhere((t) => t?.numInmetro == inmetro, orElse: () => null);
   Empresa? findEmpresa(String cnpjCpf) =>
       _empresas.firstWhere((t) => t?.cnpjCpf == cnpjCpf, orElse: () => null);

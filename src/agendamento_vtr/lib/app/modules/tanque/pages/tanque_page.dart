@@ -37,7 +37,8 @@ class _TanquePageState extends ModularState<TanquePage, TanqueController> {
       callback: _setPlaca,
     );
     inmetroWidget = InputNumeroWidget(
-      numeroPrevio: _tanque.numInmetro,
+      campoPrevio: _tanque.numInmetro,
+      input: TipoInput.NumLetras,
       callback: _setInmetro,
     );
     docWidget = DocWidget(
@@ -245,13 +246,13 @@ class _TanquePageState extends ModularState<TanquePage, TanqueController> {
     _tanque.placa = placa;
   }
 
-  void _setInmetro(int num) {
-    if (num < 1) return;
-    final Tanque? tanqueExistente = controller.findTanqueByinmetro(num);
+  void _setInmetro(campo) {
+    if (campo.isEmpty) return;
+    final Tanque? tanqueExistente = controller.findTanqueByinmetro(campo);
     if (tanqueExistente != null && widget.tanquePrevio == null) {
       _avisaTanqueExistente(tanqueExistente);
     }
-    _tanque.numInmetro = num;
+    _tanque.numInmetro = campo;
   }
 
   void _setDocs(List<Arquivo> arquivos) {

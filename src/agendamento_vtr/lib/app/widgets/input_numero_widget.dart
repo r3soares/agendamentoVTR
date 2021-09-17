@@ -2,13 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class InputNumeroWidget extends StatefulWidget {
-  final int numeroPrevio;
+  final String campoPrevio;
   final String titulo;
+  final TipoInput input;
   //Termo buscado e Resultado
-  final Function(int) callback;
+  final Function(dynamic) callback;
   InputNumeroWidget(
-      {this.numeroPrevio = 0,
-      this.titulo = 'Número Inmetro',
+      {this.campoPrevio = '',
+      this.titulo = '',
+      required this.input,
       required this.callback});
 
   @override
@@ -17,15 +19,51 @@ class InputNumeroWidget extends StatefulWidget {
 }
 
 class _InputNumeroWidgetWidgetState extends State<InputNumeroWidget> {
-  final TextEditingController _cNumero = TextEditingController();
+  final TextEditingController _cCampo = TextEditingController();
   final focusNode = FocusNode();
+
+  late List<TextInputFormatter> inputFormater;
+  late String? Function(String?) validaInput;
+  late String dicaTexto;
 
   @override
   void initState() {
     super.initState();
-    _cNumero.text =
-        widget.numeroPrevio == 0 ? '' : widget.numeroPrevio.toString();
+    _setValidators();
+    _cCampo.text = widget.campoPrevio;
     focusNode.addListener(notificaListeners);
+  }
+
+  void _setValidators() {
+    switch (widget.input) {
+      case (TipoInput.Letras):
+        {
+          validaInput = validaLetras;
+          inputFormater = <TextInputFormatter>[
+            FilteringTextInputFormatter.allow(RegExp(r'[A-Za-z]')),
+          ];
+          dicaTexto = 'Somente letras';
+          break;
+        }
+      case (TipoInput.Numeros):
+        {
+          validaInput = validaNumero;
+          inputFormater = <TextInputFormatter>[
+            FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+          ];
+          dicaTexto = 'Somente números';
+          break;
+        }
+      case (TipoInput.NumLetras):
+        {
+          validaInput = validaNumLetras;
+          inputFormater = <TextInputFormatter>[
+            FilteringTextInputFormatter.allow(RegExp(r'[0-9a-zA-Z]')),
+          ];
+          dicaTexto = 'Somente letras e números';
+          break;
+        }
+    }
   }
 
   @override
@@ -40,16 +78,13 @@ class _InputNumeroWidgetWidgetState extends State<InputNumeroWidget> {
           decoration: InputDecoration(
             //icon: Image.asset('assets/images/inmetro.png'),
             icon: Icon(Icons.arrow_right),
-            hintText: 'Somente números',
+            hintText: dicaTexto,
             hintStyle: TextStyle(fontSize: 10),
             labelText: widget.titulo,
           ),
-          keyboardType: TextInputType.number,
-          inputFormatters: <TextInputFormatter>[
-            FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-          ],
-          controller: _cNumero,
-          validator: validaNumero,
+          inputFormatters: inputFormater,
+          controller: _cCampo,
+          validator: validaInput,
         ));
   }
 
@@ -59,12 +94,28 @@ class _InputNumeroWidgetWidgetState extends State<InputNumeroWidget> {
     return null;
   }
 
+  String? validaLetras(String? num) {
+    if (num == null || num.isEmpty) return 'Insira um nome válido';
+    return null;
+  }
+
+  String? validaNumLetras(String? num) {
+    if (num == null || num.isEmpty) return 'Insira um valor válido';
+    return null;
+  }
+
   void notificaListeners() {
     if (!focusNode.hasFocus)
-      widget.callback(int.tryParse(_cNumero.text) ?? 0);
+      widget.callback(int.tryParse(_cCampo.text) ?? 0);
     else {
-      _cNumero.selection =
-          TextSelection(baseOffset: 0, extentOffset: _cNumero.text.length);
+      _cCampo.selection =
+          TextSelection(baseOffset: 0, extentOffset: _cCampo.text.length);
     }
   }
+}
+
+enum TipoInput {
+  Numeros,
+  Letras,
+  NumLetras,
 }
