@@ -53,6 +53,7 @@ class Repository {
       for (int i = 0; i < Random().nextInt(500) + 15; i++) {
         Tanque t = Tanque();
         t.proprietario = p.cnpjCpf;
+        t.codInmetro = "${Random().nextInt(alfabeto.length)}$i";
         t.placa = alfabeto[Random().nextInt(alfabeto.length)] +
             alfabeto[Random().nextInt(alfabeto.length)] +
             alfabeto[Random().nextInt(alfabeto.length)] +
@@ -72,26 +73,37 @@ class Repository {
     }());
   }
 
-  addTanque(Tanque value) async {
+  Future<bool> salvaTanque(Tanque value) async {
     var pExistente = await findTanqueByInmetro(value.codInmetro);
     if (pExistente != null) {
-      return await repo.update(jsonEncode(value.toJson()));
+      return await repo.update(jsonEncode(value.toJson())) != null;
     }
-    return await repo.save(jsonEncode(value.toJson()));
+    return await repo.save(jsonEncode(value.toJson())) != null;
   }
 
-  salvaEmpresa(Empresa value) async {
+  Future<bool> salvaEmpresa(Empresa value) async {
     var pExistente = await findEmpresa(value.cnpjCpf);
     if (pExistente != null) {
-      return await repo.update(jsonEncode(value.toJson()));
+      return await repo.update(jsonEncode(value.toJson())) != null;
     }
-    return await repo.save(jsonEncode(value.toJson()));
+    return await repo.save(jsonEncode(value.toJson())) != null;
   }
 
   removeTanque(Tanque value) => _tanques.remove(value);
   removeEmpresa(Empresa value) => _empresas.remove(value);
 
-  Future<Tanque?> findTanqueByPlaca(String placa) async => jsonDecode(await repo.getById(placa)) as Tanque;
-  Future<Tanque?> findTanqueByInmetro(String inmetro) async => jsonDecode(await repo.getById(inmetro)) as Tanque;
-  Future<Empresa?> findEmpresa(String cnpjCpf) async => jsonDecode(await repo.getById(cnpjCpf)) as Empresa;
+  Future<Tanque?> findTanqueByPlaca(String placa) async {
+    var result = await repo.find('placa', placa);
+    return result == null ? null : Tanque.fromJson(result);
+  }
+
+  Future<Tanque?> findTanqueByInmetro(String inmetro) async {
+    var result = await await repo.getById(inmetro);
+    return result == null ? null : Tanque.fromJson(result);
+  }
+
+  Future<Empresa?> findEmpresa(String cnpjCpf) async {
+    var result = await await repo.getById(cnpjCpf);
+    return result == null ? null : Empresa.fromJson(result);
+  }
 }

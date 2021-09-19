@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:http/http.dart' as http;
 
 import 'package:agendamento_vtr/app/repositories/IRepository.dart';
@@ -26,6 +28,12 @@ class Api implements IRepository {
   }
 
   @override
+  find(instrucao, termo) async {
+    final uri = Uri.parse('$endereco$controller/$instrucao/$termo');
+    return _resposta(await http.get(uri));
+  }
+
+  @override
   save(data) async {
     final uri = Uri.parse(endereco + controller);
     return _resposta(await http.post(uri, body: data, headers: {'Content-Type': 'application/json'}));
@@ -38,8 +46,7 @@ class Api implements IRepository {
   }
 
   _resposta(Response req) {
-    if (req.statusCode != 200) return '';
-    if (req.headers['Content-Type'] != 'application/json') return '';
-    return req.body;
+    if (req.statusCode != 200) return null;
+    return req.body.length > 3 ? jsonDecode(req.body) : null;
   }
 }

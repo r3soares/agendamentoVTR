@@ -19,6 +19,6 @@ class TanqueController {
   Future<Tanque?> findTanqueByinmetro(String inmetro) async => await _repo.findTanqueByInmetro(inmetro);
 
   void salvaTanque(Tanque t) {
-    _repo.addTanque(t);
+    _repo.salvaTanque(t);
   }
 }

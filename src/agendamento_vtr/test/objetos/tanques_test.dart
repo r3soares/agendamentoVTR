@@ -35,6 +35,7 @@ class TanquesTest {
     ];
     for (int i = 0; i < Random().nextInt(500) + 15; i++) {
       Tanque t = Tanque();
+      t.codInmetro = "${Random().nextInt(alfabeto.length)}$i";
       t.proprietario = '00970455941';
       t.placa = alfabeto[Random().nextInt(alfabeto.length)] +
           alfabeto[Random().nextInt(alfabeto.length)] +

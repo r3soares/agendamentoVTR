@@ -33,23 +33,21 @@ class Empresa extends ChangeNotifier implements JsonSerializable {
   Empresa fromJson(Map<String, dynamic> json) => Empresa.fromJson(json);
 
   Empresa.fromJson(Map<String, dynamic> json)
-      : cnpjCpf = json['Cnpj'],
-        razaoSocial = json['Nome'],
-        email = json['Email'],
-        telefones = List.from(json['Telefones']),
-        proprietario = json['Proprietario'] == null
-            ? null
-            : Proprietario.fromJson(json['Proprietario']),
-        status = StatusEmpresa.values[json['Status']];
+      : cnpjCpf = json['cnpj'],
+        razaoSocial = json['nome'],
+        email = json['email'],
+        telefones = List.from(json['telefones']),
+        proprietario = json['proprietario'] == null ? null : Proprietario.fromJson(json['proprietario']),
+        status = StatusEmpresa.values[json['status']];
 
   @override
   Map<String, dynamic> toJson() => {
-        'Cnpj': cnpjCpf,
-        'Nome': razaoSocial,
-        'Email': email,
-        'Telefones': telefones,
-        'Status': status.index,
-        'Proprietario': proprietario == null ? null : proprietario!.toJson(),
+        'cnpj': cnpjCpf,
+        'nome': razaoSocial,
+        'email': email,
+        'telefones': telefones,
+        'status': status.index,
+        'proprietario': proprietario == null ? null : proprietario!.toJson(),
       };
 }
 

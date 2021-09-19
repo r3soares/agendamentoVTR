@@ -16,13 +16,17 @@ void main() {
 
       Repository repo = Repository(Api('empresa'));
 
-      Response resp = await repo.salvaEmpresa(e);
-      print(resp);
-      e.email = 'teste2';
+      bool salvou = await repo.salvaEmpresa(e);
+      expect(salvou, equals(true));
+      Empresa? e2 = await repo.findEmpresa('00970455941');
+      expect(e2, isNot(equals(null)));
+      expect(e2!.email, equals('teste@teste'));
 
-      Empresa? eSalva = await repo.findEmpresa('00970455941');
-      expect(eSalva, isNot(equals(null)));
-      expect(eSalva!.email, equals('teste@teste'));
+      e.email = 'teste2';
+      salvou = await repo.salvaEmpresa(e);
+      e2 = await repo.findEmpresa('00970455941');
+      expect(e2, isNot(equals(null)));
+      expect(e2!.email, equals('teste2'));
     });
 
     test('Tanques', () async {
@@ -30,8 +34,9 @@ void main() {
       TanquesTest tt = TanquesTest();
       for (int i = 0; i < tt.tanques.length; i++) {
         Tanque t1 = tt.tanques[i];
-        Response resp = await repo.addTanque(t1);
+        bool salvou = await repo.salvaTanque(t1);
+        expect(salvou, equals(true));
       }
-    });
+    }, timeout: Timeout(Duration(minutes: 2)));
   });
 }

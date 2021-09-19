@@ -10,11 +10,10 @@ class Proprietario implements JsonSerializable {
   fromJson(Map<String, dynamic> json) => Proprietario.fromJson(json);
 
   Proprietario.fromJson(Map<String, dynamic> json)
-      : cod = json['Cod'],
-        codMun = json['CodMun'],
-        tanques = List.from(json['Tanques']);
+      : cod = json['cod'],
+        codMun = json['codMun'],
+        tanques = List.from(json['tanques']);
 
   @override
-  Map<String, dynamic> toJson() =>
-      {'Cod': cod, 'CodMun': codMun, 'Tanques': tanques};
+  Map<String, dynamic> toJson() => {'cod': cod, 'codMun': codMun, 'tanques': tanques};
 }

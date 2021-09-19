@@ -34,27 +34,27 @@ class Tanque implements JsonSerializable {
   fromJson(Map<String, dynamic> json) => Tanque.fromJson(json);
 
   Tanque.fromJson(Map<String, dynamic> json)
-      : placa = json['Placa'],
-        codInmetro = json['CodInmetro'],
-        proprietario = json['Proprietario'],
-        dataRegistro = json['DataRegistro'],
-        dataUltimaAlteracao = json['DataUltimaAlteracao'],
-        tanqueAgendado = json['TanqueAgendado'],
-        status = StatusTanque.values[json['Status']],
-        compartimentos = List.from(json['Compartimentos']),
-        custo = json['Custo'];
+      : placa = json['placa'],
+        codInmetro = json['codInmetro'],
+        proprietario = json['proprietario'],
+        dataRegistro = DateTime.parse(json['dataRegistro']),
+        dataUltimaAlteracao = DateTime.parse(json['dataUltimaAlteracao']),
+        tanqueAgendado = json['tanqueAgendado'],
+        status = StatusTanque.values[json['status']],
+        compartimentos = List.from(json['compartimentos']),
+        custo = json['custo'];
 
   @override
   Map<String, dynamic> toJson() => {
-        'Placa': placa,
-        'CodInmetro': codInmetro,
-        'Proprietario': proprietario,
-        'DataRegistro': dataRegistro,
-        'DataUltimaAlteracao': dataUltimaAlteracao,
-        'TanqueAgendado': tanqueAgendado,
-        'Status': status.index,
-        'Compartimentos': compartimentos,
-        'Custo': custo,
+        'placa': placa,
+        'codInmetro': codInmetro,
+        'proprietario': proprietario,
+        'dataRegistro': dataRegistro.toIso8601String(),
+        'dataUltimaAlteracao': dataUltimaAlteracao.toIso8601String(),
+        'tanqueAgendado': tanqueAgendado,
+        'status': status.index,
+        'compartimentos': compartimentos,
+        'custo': custo,
       };
 }
 

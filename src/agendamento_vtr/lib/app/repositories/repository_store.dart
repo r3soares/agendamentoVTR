@@ -17,7 +17,7 @@ class RepositoryStore extends ChangeNotifier {
   get argStatus => _argStatus;
 
   addTanque(value) {
-    _repository.addTanque(value);
+    _repository.salvaTanque(value);
     _status = 1;
     _argStatus = value;
     notifyListeners();
