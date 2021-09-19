@@ -46,7 +46,31 @@ class Api implements IRepository {
   }
 
   _resposta(Response req) {
-    if (req.statusCode != 200) return null;
-    return req.body.length > 3 ? jsonDecode(req.body) : null;
+    switch (req.statusCode) {
+      case 200: //Ok
+        {
+          return jsonDecode(req.body);
+        }
+      case 202: //Accepted
+        {
+          return true;
+        }
+      case 204: //No Content
+        {
+          return null;
+        }
+      case 400: //Bad Request
+        {
+          return Exception('Bad Request');
+        }
+      case 404: //Not Found
+        {
+          return null;
+        }
+      case 500: //Internal Server Error
+        {
+          return Exception('Erro interno do servidor');
+        }
+    }
   }
 }

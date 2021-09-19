@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:agendamento_vtr/app/models/json_serializable.dart';
 import 'package:agendamento_vtr/app/models/proprietario.dart';
 import 'package:flutter/material.dart';

@@ -1,4 +1,3 @@
-import 'package:agendamento_vtr/app/models/custo_tanque.dart';
 import 'package:agendamento_vtr/app/models/json_serializable.dart';
 import 'package:agendamento_vtr/app/modules/tanque/models/arquivo.dart';
 import 'package:agendamento_vtr/app/models/compartimento.dart';

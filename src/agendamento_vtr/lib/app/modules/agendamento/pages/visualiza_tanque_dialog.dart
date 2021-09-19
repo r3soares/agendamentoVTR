@@ -1,5 +1,4 @@
 import 'package:agendamento_vtr/app/models/empresa.dart';
-import 'package:agendamento_vtr/app/models/proprietario.dart';
 import 'package:agendamento_vtr/app/models/tanque.dart';
 import 'package:agendamento_vtr/app/repositories/repository.dart';
 import 'package:flutter/material.dart';
@@ -24,7 +23,7 @@ class _VisualizaTanqueDialogState extends State<VisualizaTanqueDialog> {
   void initState() {
     super.initState();
     if (widget.tanque.proprietario != null) {
-      tanquesRepo.findEmpresa(widget.tanque.proprietario!).then((value) => this.proprietario = value ?? Empresa());
+      tanquesRepo.getEmpresa(widget.tanque.proprietario!).then((value) => this.proprietario = value ?? Empresa());
     }
   }
 

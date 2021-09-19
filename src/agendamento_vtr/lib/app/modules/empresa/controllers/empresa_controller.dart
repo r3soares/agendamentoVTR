@@ -10,6 +10,6 @@ class EmpresaController {
   }
 
   Future<Empresa?> findEmpresa({String? cnpj}) async {
-    if (cnpj != null) return await repo.findEmpresa(cnpj);
+    if (cnpj != null) return await repo.getEmpresa(cnpj);
   }
 }

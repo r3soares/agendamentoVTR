@@ -13,8 +13,7 @@ class TanquesPendentesWidget extends StatefulWidget {
   _TanquesPendentesWidgetState createState() => _TanquesPendentesWidgetState();
 }
 
-class _TanquesPendentesWidgetState
-    extends ModularState<TanquesPendentesWidget, AgendaStore> {
+class _TanquesPendentesWidgetState extends ModularState<TanquesPendentesWidget, AgendaStore> {
   final List<Tanque?> tanques = List.empty(growable: true);
 
   final formatoData = 'dd/MM/yy HH:mm';
@@ -55,8 +54,7 @@ class _TanquesPendentesWidgetState
                     itemCount: tanques.length,
                     itemBuilder: (BuildContext context, int index) {
                       Tanque t = tanques.elementAt(index)!;
-                      final data =
-                          DateFormat(formatoData).format(t.dataRegistro);
+                      final data = DateFormat(formatoData).format(t.dataRegistro);
                       return Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Card(
@@ -66,12 +64,10 @@ class _TanquesPendentesWidgetState
                                 onPressed: () => {
                                       showDialog(
                                           barrierDismissible: true,
-                                          barrierColor:
-                                              Color.fromRGBO(0, 0, 0, .5),
+                                          barrierColor: Color.fromRGBO(0, 0, 0, .5),
                                           useSafeArea: true,
                                           context: context,
-                                          builder: (_) =>
-                                              VisualizaTanqueDialog(t)),
+                                          builder: (_) => VisualizaTanqueDialog(t)),
                                     },
                                 child: Icon(Icons.remove_red_eye)),
                             title: Row(children: [
@@ -79,8 +75,7 @@ class _TanquesPendentesWidgetState
                                 t.placa.replaceRange(3, 3, '-'),
                               ),
                               Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 20),
+                                padding: const EdgeInsets.symmetric(horizontal: 20),
                                 child: Text(
                                   '${t.capacidadeTotal.toString()}L (${t.compartimentos.length}C ${_somaSetas(t)}S)',
                                   style: TextStyle(fontSize: 12),
@@ -102,12 +97,9 @@ class _TanquesPendentesWidgetState
     );
   }
 
-  _getTanques() {
+  _getTanques() async {
     tanques.clear();
-    tanques.addAll(Modular.get<Repository>()
-        .tanques
-        .where((t) => t?.agenda == null)
-        .toList());
+    tanques.addAll((await Modular.get<Repository>().getTanques()).where((t) => t.agenda == null).toList());
   }
 
   agendaTanque(Tanque t) {
@@ -119,7 +111,6 @@ class _TanquesPendentesWidgetState
   }
 
   _somaSetas(Tanque t) {
-    return t.compartimentos
-        .fold(0, (int previousValue, element) => previousValue + element.setas);
+    return t.compartimentos.fold(0, (int previousValue, element) => previousValue + element.setas);
   }
 }

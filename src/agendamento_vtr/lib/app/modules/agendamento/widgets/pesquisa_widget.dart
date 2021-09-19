@@ -41,8 +41,7 @@ class _PesquisaWidgetState extends State<PesquisaWidget> {
             controller: _cPesquisa,
             textCapitalization: TextCapitalization.characters,
             onChanged: (value) {
-              _cPesquisa.value = TextEditingValue(
-                  text: value.toUpperCase(), selection: _cPesquisa.selection);
+              _cPesquisa.value = TextEditingValue(text: value.toUpperCase(), selection: _cPesquisa.selection);
             },
             maxLength: 7,
             validator: buscaTermo,
@@ -64,8 +63,7 @@ class _PesquisaWidgetState extends State<PesquisaWidget> {
                             barrierColor: Color.fromRGBO(0, 0, 0, .5),
                             useSafeArea: true,
                             context: context,
-                            builder: (_) => VisualizaTanqueDialog(
-                                _tanqueResultadoPesquisa)),
+                            builder: (_) => VisualizaTanqueDialog(_tanqueResultadoPesquisa)),
                       },
                   child: Text('${_tanqueResultadoPesquisa.placa}'))
               : SizedBox.shrink(),
@@ -84,9 +82,7 @@ class _PesquisaWidgetState extends State<PesquisaWidget> {
 
   String? buscaTermo(String? termo) {
     if (termo == null || termo.isEmpty || termo.length < 7) return null;
-    if (!controller.pesquisaTanque(termo)) {
-      return 'Não localizado';
-    }
+    controller.pesquisaTanque(termo);
     _cPesquisa.clear();
   }
 

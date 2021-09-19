@@ -14,8 +14,7 @@ class AgendaDoDiaWidget extends StatefulWidget {
   _AgendaDoDiaWidgetState createState() => _AgendaDoDiaWidgetState();
 }
 
-class _AgendaDoDiaWidgetState
-    extends ModularState<AgendaDoDiaWidget, AgendaStore> {
+class _AgendaDoDiaWidgetState extends ModularState<AgendaDoDiaWidget, AgendaStore> {
   //final agendaStore = Modular.get<AgendaStore>();
   final tanquesRepo = Modular.get<Repository>();
   final formatoData = 'dd/MM/yy';
@@ -32,12 +31,11 @@ class _AgendaDoDiaWidgetState
     print('Tanques do dia ${tanquesDoDia.length}');
   }
 
-  _getTanques() {
+  _getTanques() async {
     tanquesDoDia.clear();
-    setState(() {
-      tanquesDoDia.addAll(tanquesRepo.tanques
-          .where((t) => store.agenda.tanques.contains(t?.placa))
-          .toList());
+    setState(() async {
+      tanquesDoDia
+          .addAll((await tanquesRepo.getTanques()).where((t) => store.agenda.tanques.contains(t.placa)).toList());
       //tanquesDoDia.sort((b, a) => a!.agenda!.compareTo(b!.agenda!));
     });
   }
@@ -70,8 +68,7 @@ class _AgendaDoDiaWidgetState
                         itemCount: tanquesDoDia.length,
                         itemBuilder: (BuildContext ctx, int index) {
                           Tanque t = tanquesDoDia.elementAt(index)!;
-                          final data =
-                              DateFormat(formatoData).format(t.dataRegistro);
+                          final data = DateFormat(formatoData).format(t.dataRegistro);
                           return Card(
                             elevation: 12,
                             child: ListTile(
@@ -79,12 +76,10 @@ class _AgendaDoDiaWidgetState
                                     onPressed: () => {
                                           showDialog(
                                               barrierDismissible: true,
-                                              barrierColor:
-                                                  Color.fromRGBO(0, 0, 0, .5),
+                                              barrierColor: Color.fromRGBO(0, 0, 0, .5),
                                               useSafeArea: true,
                                               context: context,
-                                              builder: (_) =>
-                                                  VisualizaTanqueDialog(t)),
+                                              builder: (_) => VisualizaTanqueDialog(t)),
                                         },
                                     child: Icon(Icons.remove_red_eye)),
                                 title: Row(children: [
@@ -92,8 +87,7 @@ class _AgendaDoDiaWidgetState
                                     t.placa.replaceRange(3, 3, '-'),
                                   ),
                                   Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 20),
+                                    padding: const EdgeInsets.symmetric(horizontal: 20),
                                     child: Text(
                                       '${t.capacidadeTotal.toString()}L (${t.compartimentos.length}C)',
                                       style: TextStyle(fontSize: 12),
@@ -107,25 +101,18 @@ class _AgendaDoDiaWidgetState
                                     mainAxisAlignment: MainAxisAlignment.end,
                                     children: [
                                       TextButton(
-                                          onPressed: () =>
-                                              confirmaTanqueDialog(context, t),
+                                          onPressed: () => confirmaTanqueDialog(context, t),
                                           child: Icon(
                                             Icons.check_circle_outline,
-                                            color: store
-                                                    .agenda.tanquesConfirmados
-                                                    .contains(t.placa)
+                                            color: store.agenda.tanquesConfirmados.contains(t.placa)
                                                 ? Colors.green
                                                 : Colors.orange,
                                           )),
                                       TextButton(
-                                          onPressed: () =>
-                                              reagendaTanqueDialog(context, t),
-                                          child: Icon(
-                                              Icons.calendar_today_outlined)),
+                                          onPressed: () => reagendaTanqueDialog(context, t),
+                                          child: Icon(Icons.calendar_today_outlined)),
                                       TextButton(
-                                          onPressed: () =>
-                                              excluiTanqueDialog(context, t),
-                                          child: Icon(Icons.close)),
+                                          onPressed: () => excluiTanqueDialog(context, t), child: Icon(Icons.close)),
                                     ],
                                   ),
                                 )),
@@ -144,8 +131,7 @@ class _AgendaDoDiaWidgetState
             content: SingleChildScrollView(
               child: ListBody(
                 children: const <Widget>[
-                  Text(
-                      'O tanque será excluído da agenda do dia e retornará para o final da fila.'),
+                  Text('O tanque será excluído da agenda do dia e retornará para o final da fila.'),
                   Text('\nConfirma ação?'),
                 ],
               ),
@@ -202,8 +188,7 @@ class _AgendaDoDiaWidgetState
                     store.confirmaTanque(t.placa);
                   });
                   Navigator.of(context).pop();
-                  ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Veículo confirmado')));
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Veículo confirmado')));
                 },
               ),
               TextButton(

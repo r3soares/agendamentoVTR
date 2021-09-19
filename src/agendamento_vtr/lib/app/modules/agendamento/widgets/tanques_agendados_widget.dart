@@ -13,8 +13,7 @@ class TanquesAgendadosWidget extends StatefulWidget {
   _TanquesAgendadosWidgetState createState() => _TanquesAgendadosWidgetState();
 }
 
-class _TanquesAgendadosWidgetState
-    extends ModularState<TanquesAgendadosWidget, AgendaStore> {
+class _TanquesAgendadosWidgetState extends ModularState<TanquesAgendadosWidget, AgendaStore> {
   final List<Tanque?> tanques = List.empty(growable: true);
 
   final formatoData = 'dd/MM/yy HH:mm';
@@ -69,12 +68,10 @@ class _TanquesAgendadosWidgetState
                                       onPressed: () => {
                                             showDialog(
                                                 barrierDismissible: true,
-                                                barrierColor:
-                                                    Color.fromRGBO(0, 0, 0, .5),
+                                                barrierColor: Color.fromRGBO(0, 0, 0, .5),
                                                 useSafeArea: true,
                                                 context: context,
-                                                builder: (_) =>
-                                                    VisualizaTanqueDialog(t)),
+                                                builder: (_) => VisualizaTanqueDialog(t)),
                                           },
                                       child: Icon(Icons.remove_red_eye)),
                                   Text(
@@ -84,19 +81,15 @@ class _TanquesAgendadosWidgetState
                                 ],
                               ),
                             ),
-                            title: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    t.placa.replaceRange(3, 3, '-'),
-                                  ),
-                                  Text(
-                                    '${t.capacidadeTotal.toString()}L (${t.compartimentos.length}C ${_somaSetas(t)}S)',
-                                    style: TextStyle(
-                                        fontSize: 12, color: Colors.grey),
-                                  )
-                                ]),
+                            title: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                              Text(
+                                t.placa.replaceRange(3, 3, '-'),
+                              ),
+                              Text(
+                                '${t.capacidadeTotal.toString()}L (${t.compartimentos.length}C ${_somaSetas(t)}S)',
+                                style: TextStyle(fontSize: 12, color: Colors.grey),
+                              )
+                            ]),
                             trailing: TextButton(
                               child: Text('Remover'),
                               onPressed: () => {},
@@ -111,16 +104,12 @@ class _TanquesAgendadosWidgetState
     );
   }
 
-  _getTanques() {
+  _getTanques() async {
     tanques.clear();
-    tanques.addAll(Modular.get<Repository>()
-        .tanques
-        .where((t) => t?.agenda != null)
-        .toList());
+    tanques.addAll((await Modular.get<Repository>().getTanques()).where((t) => t.agenda != null).toList());
   }
 
   _somaSetas(Tanque t) {
-    return t.compartimentos
-        .fold(0, (int previousValue, element) => previousValue + element.setas);
+    return t.compartimentos.fold(0, (int previousValue, element) => previousValue + element.setas);
   }
 }

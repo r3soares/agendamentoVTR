@@ -13,11 +13,11 @@ class PesquisaController extends ChangeNotifier {
   get resultado => _resultado;
   int get status => _status;
 
-  bool pesquisaTanque(String termo) {
+  Future<bool> pesquisaTanque(String termo) async {
     _status = 0;
     _resultado = null;
     print('Pesquisando $termo');
-    var tanque = _repository.findTanqueByPlaca(termo);
+    var tanque = await _repository.findTanqueByPlaca(termo);
     if (tanque != null) {
       print('$termo encontrado');
       _resultado = tanque;
@@ -30,9 +30,9 @@ class PesquisaController extends ChangeNotifier {
     return false;
   }
 
-  bool pesquisaEmpresa(String termo) {
+  Future<bool> pesquisaEmpresa(String termo) async {
     print('Pesquisando $termo');
-    var empresa = _repository.findEmpresa(termo);
+    var empresa = await _repository.getEmpresa(termo);
     if (empresa != null) {
       print('$termo encontrado');
       _resultado = empresa;
