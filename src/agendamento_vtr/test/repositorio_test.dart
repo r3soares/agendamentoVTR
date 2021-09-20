@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:math';
 
 import 'package:agendamento_vtr/app/models/empresa.dart';
 import 'package:agendamento_vtr/app/models/tanque.dart';
@@ -13,22 +12,30 @@ import 'objetos/tanques_test.dart';
 void main() {
   group('Teste de repositorios', () {
     test('Empresas', () async {
-      Empresa e = EmpresasTest().empresa1;
-
+      EmpresasTest et = EmpresasTest();
       Repository repo = Repository(Api('empresa'));
-
-      bool salvou = await repo.salvaEmpresa(e);
-      expect(salvou, equals(true));
-      Empresa? e2 = await repo.getEmpresa('00970455941');
-      expect(e2, isNot(equals(null)));
-      expect(e2!.email, equals('teste@teste'));
-
-      e.email = 'teste2';
-      salvou = await repo.salvaEmpresa(e);
-      e2 = await repo.getEmpresa('00970455941');
-      expect(e2, isNotNull);
-      expect(e2!.email, equals('teste2'));
-    });
+      for (int i = 0; i < et.empresas.length; i++) {
+        Empresa e = et.empresas[i];
+        bool salvou = await repo.salvaEmpresa(e);
+        expect(salvou, isTrue, reason: '$i -> ${e.cnpjCpf}');
+      }
+      sleep(Duration(seconds: 1));
+      for (int i = 0; i < et.empresas.length; i++) {
+        Empresa e = et.empresas[i];
+        Empresa? e2 = await repo.getEmpresa(e.cnpjCpf);
+        expect(e2, isNotNull);
+        expect(e2!.email, equals(e.email));
+        if (e.proprietario != null) {
+          expect(e2.proprietario, isNotNull);
+          expect(e2.proprietario!.cod, equals(e.proprietario!.cod));
+          expect(e2.proprietario!.codMun, equals(e.proprietario!.codMun));
+          expect(e2.proprietario!.tanques.length, equals(e2.proprietario!.tanques.length));
+        }
+        expect(e2.razaoSocial, equals(e.razaoSocial));
+        expect(e2.status, equals(e.status));
+        expect(e2.telefones.length, equals(e.telefones.length));
+      }
+    }, timeout: Timeout(Duration(minutes: 2)));
 
     test('Tanques', () async {
       Repository repo = Repository(Api('tanque'));
@@ -36,7 +43,7 @@ void main() {
       for (int i = 0; i < tt.tanques.length; i++) {
         Tanque t1 = tt.tanques[i];
         bool salvou = await repo.salvaTanque(t1);
-        expect(salvou, equals(true), reason: '$i -> ${t1.placa}');
+        expect(salvou, isTrue, reason: '$i -> ${t1.placa}');
       }
       sleep(Duration(seconds: 1));
       for (int i = 0; i < tt.tanques.length; i++) {

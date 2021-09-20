@@ -4,46 +4,40 @@ import 'package:agendamento_vtr/app/models/tanque.dart';
 
 class TanquesTest {
   List<Tanque> tanques = List.empty(growable: true);
+  static List<String> alfabeto = [
+    'A',
+    'B',
+    'C',
+    'D',
+    'E',
+    'F',
+    'G',
+    'H',
+    'I',
+    'J',
+    'K',
+    'L',
+    'M',
+    'N',
+    'O',
+    'P',
+    'Q',
+    'R',
+    'S',
+    'T',
+    'U',
+    'V',
+    'X',
+    'Y',
+    'Z'
+  ];
 
   TanquesTest() {
-    final alfabeto = [
-      'A',
-      'B',
-      'C',
-      'D',
-      'E',
-      'F',
-      'G',
-      'H',
-      'I',
-      'J',
-      'K',
-      'L',
-      'M',
-      'N',
-      'O',
-      'P',
-      'Q',
-      'R',
-      'S',
-      'T',
-      'U',
-      'V',
-      'X',
-      'Y',
-      'Z'
-    ];
     for (int i = 0; i < Random().nextInt(500) + 15; i++) {
       Tanque t = Tanque();
       t.codInmetro = "${Random().nextInt(alfabeto.length)}$i";
       t.proprietario = '00970455941';
-      t.placa = alfabeto[Random().nextInt(alfabeto.length)] +
-          alfabeto[Random().nextInt(alfabeto.length)] +
-          alfabeto[Random().nextInt(alfabeto.length)] +
-          Random().nextInt(10).toString() +
-          Random().nextInt(10).toString() +
-          Random().nextInt(10).toString() +
-          Random().nextInt(10).toString();
+      t.placa = geraPlaca();
       for (int j = 0; j < Random().nextInt(10); j++) {
         t.compartimentos.add(Compartimento(j + 1));
         t.compartimentos[j].capacidade = Random().nextInt(50) * 100;
@@ -56,4 +50,13 @@ class TanquesTest {
       tanques.add(t);
     }
   }
+
+  static String geraPlaca() =>
+      alfabeto[Random().nextInt(alfabeto.length)] +
+      alfabeto[Random().nextInt(alfabeto.length)] +
+      alfabeto[Random().nextInt(alfabeto.length)] +
+      Random().nextInt(10).toString() +
+      Random().nextInt(10).toString() +
+      Random().nextInt(10).toString() +
+      Random().nextInt(10).toString();
 }

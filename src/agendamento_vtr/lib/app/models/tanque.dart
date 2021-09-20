@@ -1,7 +1,6 @@
 import 'package:agendamento_vtr/app/models/json_serializable.dart';
 import 'package:agendamento_vtr/app/modules/tanque/models/arquivo.dart';
 import 'package:agendamento_vtr/app/models/compartimento.dart';
-import 'package:intl/intl.dart';
 
 class Tanque implements JsonSerializable {
   String placa = '';
