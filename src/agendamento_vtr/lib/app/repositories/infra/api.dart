@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:agendamento_vtr/app/models/compartimento.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:agendamento_vtr/app/repositories/IRepository.dart';
@@ -49,7 +50,15 @@ class Api implements IRepository {
     switch (req.statusCode) {
       case 200: //Ok
         {
-          return jsonDecode(req.body);
+          return jsonDecode(req.body, reviver: (key, value) {
+            switch (key) {
+              case "compartimentos":
+                {
+                  return (value as List).map((e) => Compartimento.fromJson(e)).toList();
+                }
+            }
+            return value;
+          });
         }
       case 202: //Accepted
         {
@@ -61,7 +70,7 @@ class Api implements IRepository {
         }
       case 400: //Bad Request
         {
-          return Exception('Bad Request');
+          return false; //Exception('Bad Request');
         }
       case 404: //Not Found
         {
@@ -69,7 +78,7 @@ class Api implements IRepository {
         }
       case 500: //Internal Server Error
         {
-          return Exception('Erro interno do servidor');
+          return false; //Exception('Erro interno do servidor');
         }
     }
   }

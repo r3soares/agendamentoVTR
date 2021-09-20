@@ -1,3 +1,6 @@
+import 'dart:io';
+import 'dart:math';
+
 import 'package:agendamento_vtr/app/models/empresa.dart';
 import 'package:agendamento_vtr/app/models/tanque.dart';
 import 'package:agendamento_vtr/app/repositories/infra/api.dart';
@@ -23,7 +26,7 @@ void main() {
       e.email = 'teste2';
       salvou = await repo.salvaEmpresa(e);
       e2 = await repo.getEmpresa('00970455941');
-      expect(e2, isNot(equals(null)));
+      expect(e2, isNotNull);
       expect(e2!.email, equals('teste2'));
     });
 
@@ -34,6 +37,22 @@ void main() {
         Tanque t1 = tt.tanques[i];
         bool salvou = await repo.salvaTanque(t1);
         expect(salvou, equals(true), reason: '$i -> ${t1.placa}');
+      }
+      sleep(Duration(seconds: 1));
+      for (int i = 0; i < tt.tanques.length; i++) {
+        Tanque t1 = tt.tanques[i];
+        Tanque? t2 = await repo.findTanqueByPlaca(t1.placa);
+        expect(t2, isNotNull);
+        expect(t2!.codInmetro, t1.codInmetro);
+        expect(t2.placa, t1.placa);
+        expect(t2.compartimentos[0].capacidade, t1.compartimentos[0].capacidade);
+        expect(t2.dataRegistro.second, t1.dataRegistro.second);
+        expect(t2.dataRegistro.minute, t1.dataRegistro.minute);
+        expect(t2.dataRegistro.hour, t1.dataRegistro.hour);
+        expect(t2.dataRegistro.day, t1.dataRegistro.day);
+        expect(t2.dataRegistro.month, t1.dataRegistro.month);
+        expect(t2.dataRegistro.year, t1.dataRegistro.year);
+        //expect(t2.dataUltimaAlteracao, t1.dataUltimaAlteracao);
       }
     }, timeout: Timeout(Duration(minutes: 2)));
   });

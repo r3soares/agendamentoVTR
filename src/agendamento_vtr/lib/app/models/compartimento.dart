@@ -20,14 +20,14 @@ class Compartimento extends ChangeNotifier implements JsonSerializable {
   }
 
   Compartimento.fromJson(Map<String, dynamic> json)
-      : pos = json['Pos'],
-        _capacidade = json['Cap'],
-        _setas = json['Setas'];
+      : pos = json['pos'],
+        _capacidade = json['cap'],
+        _setas = json['setas'];
 
   @override
   Map<String, dynamic> toJson() => {
-        'Pos': pos,
-        'Cap': capacidade,
-        'Setas': setas,
+        'pos': pos,
+        'cap': capacidade,
+        'setas': setas,
       };
 }

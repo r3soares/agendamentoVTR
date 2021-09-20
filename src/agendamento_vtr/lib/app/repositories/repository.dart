@@ -75,17 +75,11 @@ class Repository {
   }
 
   Future<bool> salvaTanque(Tanque value) async {
-    var pExistente = await repo.getById(value.codInmetro);
-    return pExistente == null
-        ? await repo.save(jsonEncode(value.toJson()))
-        : await repo.update(jsonEncode(value.toJson()));
+    return await repo.save(jsonEncode(value.toJson()));
   }
 
   Future<bool> salvaEmpresa(Empresa value) async {
-    var pExistente = await repo.getById(value.cnpjCpf);
-    return pExistente == null
-        ? await repo.save(jsonEncode(value.toJson()))
-        : await repo.update(jsonEncode(value.toJson()));
+    return await repo.save(jsonEncode(value.toJson()));
   }
 
   Future<bool> removeTanque(String inmetro) async {
@@ -114,5 +108,10 @@ class Repository {
   Future<Empresa?> getEmpresa(String cnpjCpf) async {
     var result = await repo.getById(cnpjCpf);
     return result == null ? null : Empresa.fromJson(result);
+  }
+
+  Future<List<Empresa>> getEmpresas() async {
+    var result = await repo.getAll();
+    return result == null ? List.empty(growable: true) : (result as List).map((n) => Empresa.fromJson(n)).toList();
   }
 }
