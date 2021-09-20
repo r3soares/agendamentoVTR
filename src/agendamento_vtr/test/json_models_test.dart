@@ -8,15 +8,24 @@ import 'objetos/tanques_test.dart';
 void main() {
   group('Teste de conversao Json <-> Model', () {
     test('Empresa', () {
-      Empresa e = EmpresasTest().empresa1;
-      Map<String, dynamic> json = e.toJson();
-      Empresa e2 = e.fromJson(json);
-      expect(e.cnpjCpf, equals(e2.cnpjCpf), reason: 'CNPJ não validou');
-      expect(e.email, equals(e2.email), reason: 'Email não validou');
-      expect(e.status, equals(e2.status), reason: 'Status não validou');
-      expect(e.proprietario!.cod, equals(e2.proprietario!.cod), reason: 'CodProp não validou');
-      expect(e.proprietario!.codMun, equals(e2.proprietario!.codMun), reason: 'CodMunProp não validou');
-      expect(e.proprietario!.tanques[0], equals(e2.proprietario!.tanques[0]), reason: 'TanqueProp não validou');
+      EmpresasTest et = EmpresasTest();
+      for (int i = 0; i < et.empresas.length; i++) {
+        Empresa e = et.empresas[i];
+        Map<String, dynamic> json = e.toJson();
+        Empresa e2 = e.fromJson(json);
+        expect(e.cnpjCpf, equals(e2.cnpjCpf), reason: 'CNPJ não validou');
+        expect(e.email, equals(e2.email), reason: 'Email não validou');
+        expect(e.status, equals(e2.status), reason: 'Status não validou');
+        expect(e.razaoSocial, equals(e2.razaoSocial), reason: 'Nome não validou');
+        expect(e.telefones.length, equals(e2.telefones.length), reason: 'Telefone não validou');
+        if (e.proprietario != null) {
+          expect(e2.proprietario, isNotNull);
+          expect(e.proprietario!.cod, equals(e2.proprietario!.cod), reason: 'CodProp não validou');
+          expect(e.proprietario!.codMun, equals(e2.proprietario!.codMun), reason: 'CodMunProp não validou');
+          expect(e.proprietario!.tanques.length, equals(e2.proprietario!.tanques.length),
+              reason: 'TanqueProp não validou');
+        }
+      }
     });
     test('Tanque', () {
       TanquesTest tt = TanquesTest();
