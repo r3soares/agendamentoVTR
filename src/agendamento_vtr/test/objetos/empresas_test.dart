@@ -83,7 +83,7 @@ class EmpresasTest {
     '21904035000125'
   ];
   EmpresasTest() {
-    for (int i = 0; i < r.nextInt(50) + 15; i++) {
+    for (int i = 0; i < cpfs.length; i++) {
       Empresa e = new Empresa()
         ..cnpjCpf = cpfs[i]
         ..email = cpfs[r.nextInt(emails.length - 1)]

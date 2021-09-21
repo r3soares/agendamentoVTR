@@ -9,41 +9,77 @@ import 'package:http/http.dart';
 class Api implements IRepository {
   static const String endereco = 'https://localhost:44337/api/vtr/';
   final String controller;
+  final headers = {
+    'Content-Type': 'application/json',
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': 'GET, POST, DELETE, PUT',
+    'Access-Control-Allow-Headers': 'X-Requested-With'
+  };
   Api(this.controller);
   @override
   delete(id) async {
-    final uri = Uri.parse('$endereco$controller/$id');
-    return _resposta(await http.delete(uri));
+    try {
+      final uri = Uri.parse('$endereco$controller/$id');
+      return _resposta(await http.delete(uri, headers: this.headers));
+    } catch (e) {
+      print(e);
+      return null;
+    }
   }
 
   @override
   getAll() async {
-    final uri = Uri.parse(endereco + controller);
-    return _resposta(await http.get(uri));
+    try {
+      final uri = Uri.parse(endereco + controller);
+      return _resposta(await http.get(uri, headers: this.headers));
+    } catch (e) {
+      print(e);
+      return null;
+    }
   }
 
   @override
   getById(id) async {
-    final uri = Uri.parse('$endereco$controller/$id');
-    return _resposta(await http.get(uri));
+    try {
+      final uri = Uri.parse('$endereco$controller/$id');
+      return _resposta(await http.get(uri, headers: this.headers));
+    } catch (e) {
+      print(e);
+      return null;
+    }
   }
 
   @override
   find(instrucao, termo) async {
-    final uri = Uri.parse('$endereco$controller/$instrucao/$termo');
-    return _resposta(await http.get(uri));
+    try {
+      final uri = Uri.parse('$endereco$controller/$instrucao/$termo');
+      return _resposta(await http.get(uri, headers: this.headers));
+    } catch (e) {
+      print(e);
+      return null;
+    }
   }
 
   @override
   save(data) async {
-    final uri = Uri.parse(endereco + controller);
-    return _resposta(await http.post(uri, body: data, headers: {'Content-Type': 'application/json'}));
+    try {
+      final uri = Uri.parse(endereco + controller);
+      return _resposta(await http.post(uri, body: data, headers: this.headers));
+    } catch (e) {
+      print(e);
+      return false;
+    }
   }
 
   @override
   update(data) async {
-    final uri = Uri.parse(endereco + controller);
-    return _resposta(await http.put(uri, body: data, headers: {'Content-Type': 'application/json'}));
+    try {
+      final uri = Uri.parse(endereco + controller);
+      return _resposta(await http.put(uri, body: data, headers: this.headers));
+    } catch (e) {
+      print(e);
+      return false;
+    }
   }
 
   _resposta(Response req) {

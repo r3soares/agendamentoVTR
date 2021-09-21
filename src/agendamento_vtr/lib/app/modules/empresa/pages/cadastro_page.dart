@@ -1,9 +1,12 @@
+import 'dart:async';
+
 import 'package:agendamento_vtr/app/models/empresa.dart';
 import 'package:agendamento_vtr/app/modules/empresa/controllers/empresa_controller.dart';
 import 'package:agendamento_vtr/app/widgets/cnpj_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:rxdart/rxdart.dart';
 
 class CadastroPage extends StatefulWidget {
   final String preCadastro;
@@ -23,6 +26,9 @@ class _CadastroPageState extends ModularState<CadastroPage, EmpresaController> {
 
   final TextEditingController _cEmail = TextEditingController();
 
+  late StreamController<String> pesquisaEmpresa;
+  late StreamController<BuildContext> salvaEmpresa;
+
   Empresa _empresa = Empresa();
 
   late Widget cnpjProprietarioWidget = CnpjWidget(
@@ -34,6 +40,46 @@ class _CadastroPageState extends ModularState<CadastroPage, EmpresaController> {
   void initState() {
     super.initState();
     _empresa.cnpjCpf = widget.preCadastro;
+    _configStream();
+  }
+
+  void _configStream() {
+    pesquisaEmpresa = BehaviorSubject<String>();
+    pesquisaEmpresa.stream.listen((cnpj) async {
+      Empresa? e = await controller.findEmpresa(cnpj: cnpj);
+      _empresa = e ?? Empresa();
+      _empresa.cnpjCpf = cnpj;
+      if (e != null) {
+        setState(() {
+          _cRazaSocialProp.text = _empresa.razaoSocial;
+          _cTelefone.text = _empresa.telefones.isEmpty ? '' : _empresa.telefones[0];
+          _cEmail.text = _empresa.email;
+        });
+      }
+    });
+
+    salvaEmpresa = BehaviorSubject<BuildContext>();
+    salvaEmpresa.stream.listen((ctx) async {
+      if (!verificaDadosPreenchidos()) {
+        ScaffoldMessenger.of(ctx).showSnackBar(const SnackBar(content: Text('Verifique os dados pendentes')));
+        return;
+      }
+      _insereDadosNaEmpresa();
+      bool salvou = await controller.salvaEmpresa(_empresa);
+      print('Salvando empresa: ' + _empresa.cnpjCpf);
+      salvou
+          ? ScaffoldMessenger.of(ctx).showSnackBar(const SnackBar(content: Text('Empresa Salva')))
+          : ScaffoldMessenger.of(ctx)
+              .showSnackBar(const SnackBar(content: Text('Não foi possível salvar os dados. Servidor indisponível')));
+      if (salvou) _showDialogAnexaProprietario();
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    pesquisaEmpresa.close();
+    salvaEmpresa.close();
   }
 
   @override
@@ -51,17 +97,21 @@ class _CadastroPageState extends ModularState<CadastroPage, EmpresaController> {
           child: SingleChildScrollView(
             child: Container(
               width: larguraTotal * .5,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  titulo(),
-                  cnpjProprietarioWidget,
-                  razaoSocial(),
-                  telefone(),
-                  email(),
-                  btnSalvar(),
-                ],
-              ),
+              child: StreamBuilder<String>(
+                  stream: pesquisaEmpresa.stream,
+                  builder: (context, snapshot) {
+                    return Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        titulo(),
+                        cnpjProprietarioWidget,
+                        razaoSocial(),
+                        telefone(),
+                        email(),
+                        btnSalvar(context),
+                      ],
+                    );
+                  }),
             ),
           ),
         ),
@@ -129,17 +179,21 @@ class _CadastroPageState extends ModularState<CadastroPage, EmpresaController> {
     );
   }
 
-  Widget btnSalvar() {
+  Widget btnSalvar(BuildContext ctx) {
     return Center(
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: ElevatedButton(
-              child: Text('Salvar'),
-              onPressed: () => _salvaEmpresa(context),
-            ),
+            child: StreamBuilder<BuildContext>(
+                stream: salvaEmpresa.stream,
+                builder: (context, snapshot) {
+                  return ElevatedButton(
+                    child: Text('Salvar'),
+                    onPressed: () => salvaEmpresa.add(ctx),
+                  );
+                }),
           ),
         ],
       ),
@@ -148,15 +202,7 @@ class _CadastroPageState extends ModularState<CadastroPage, EmpresaController> {
 
   void _atualizaDadosEmpresa(String cnpj, bool valido) async {
     if (!valido) return;
-    final e = await controller.findEmpresa(cnpj: cnpj);
-    _empresa = e ?? Empresa();
-    _empresa.cnpjCpf = cnpj;
-    if (!mounted) return;
-    setState(() {
-      _cRazaSocialProp.text = _empresa.razaoSocial;
-      _cTelefone.text = _empresa.telefones.isEmpty ? '' : _empresa.telefones[0];
-      _cEmail.text = _empresa.email;
-    });
+    pesquisaEmpresa.add(cnpj);
   }
 
   String? validateEmail(String? value) {
@@ -180,16 +226,6 @@ class _CadastroPageState extends ModularState<CadastroPage, EmpresaController> {
     _empresa.telefones.clear();
     _empresa.telefones.add(_cTelefone.text);
     _empresa.razaoSocial = _cRazaSocialProp.text;
-  }
-
-  bool _salvaEmpresa(context) {
-    if (!verificaDadosPreenchidos()) return false;
-    _insereDadosNaEmpresa();
-    controller.salvaEmpresa(_empresa);
-    print('Empresa salva: ' + _empresa.cnpjCpf);
-    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Empresa Salva')));
-    _showDialogAnexaProprietario();
-    return true;
   }
 
   void _goAnexaProprietarioPage() {

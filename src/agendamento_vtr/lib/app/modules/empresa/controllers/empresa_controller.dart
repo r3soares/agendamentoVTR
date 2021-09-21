@@ -5,8 +5,8 @@ import 'package:flutter_modular/flutter_modular.dart';
 class EmpresaController {
   final repo = Modular.get<Repository>();
 
-  salvaEmpresa(Empresa e) {
-    repo.salvaEmpresa(e);
+  Future<bool> salvaEmpresa(Empresa e) async {
+    return repo.salvaEmpresa(e);
   }
 
   Future<Empresa?> findEmpresa({String? cnpj}) async {
