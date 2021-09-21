@@ -189,6 +189,9 @@ class _CadastroPageState extends ModularState<CadastroPage, EmpresaController> {
             child: StreamBuilder<BuildContext>(
                 stream: salvaEmpresa.stream,
                 builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.active) {
+                    return CircularProgressIndicator();
+                  }
                   return ElevatedButton(
                     child: Text('Salvar'),
                     onPressed: () => salvaEmpresa.add(ctx),
