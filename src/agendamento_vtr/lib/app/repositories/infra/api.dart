@@ -1,5 +1,8 @@
 import 'dart:convert';
+import 'dart:io';
+import 'dart:math';
 
+import 'package:agendamento_vtr/app/domain/erros.dart';
 import 'package:agendamento_vtr/app/models/compartimento.dart';
 import 'package:http/http.dart' as http;
 
@@ -20,10 +23,11 @@ class Api implements IRepository {
   delete(id) async {
     try {
       final uri = Uri.parse('$endereco$controller/$id');
-      return _resposta(await http.delete(uri, headers: this.headers));
+      final req = await _request(tipo: TipoRequest.Delete, uri: uri);
+      return _resposta(req);
     } catch (e) {
       print(e);
-      return null;
+      throw e;
     }
   }
 
@@ -31,10 +35,11 @@ class Api implements IRepository {
   getAll() async {
     try {
       final uri = Uri.parse(endereco + controller);
-      return _resposta(await http.get(uri, headers: this.headers));
+      final req = await _request(tipo: TipoRequest.Get, uri: uri);
+      return _resposta(req);
     } catch (e) {
       print(e);
-      return null;
+      throw e;
     }
   }
 
@@ -42,10 +47,11 @@ class Api implements IRepository {
   getById(id) async {
     try {
       final uri = Uri.parse('$endereco$controller/$id');
-      return _resposta(await http.get(uri, headers: this.headers));
+      final req = await _request(tipo: TipoRequest.Get, uri: uri);
+      return _resposta(req);
     } catch (e) {
       print(e);
-      return null;
+      throw e;
     }
   }
 
@@ -53,10 +59,11 @@ class Api implements IRepository {
   find(instrucao, termo) async {
     try {
       final uri = Uri.parse('$endereco$controller/$instrucao/$termo');
-      return _resposta(await http.get(uri, headers: this.headers));
+      final req = await _request(tipo: TipoRequest.Get, uri: uri);
+      return _resposta(req);
     } catch (e) {
       print(e);
-      return null;
+      throw e;
     }
   }
 
@@ -64,10 +71,11 @@ class Api implements IRepository {
   save(data) async {
     try {
       final uri = Uri.parse(endereco + controller);
-      return _resposta(await http.post(uri, body: data, headers: this.headers));
+      final req = await _request(tipo: TipoRequest.Post, uri: uri, data: data);
+      return _resposta(req);
     } catch (e) {
       print(e);
-      return false;
+      throw e;
     }
   }
 
@@ -75,10 +83,38 @@ class Api implements IRepository {
   update(data) async {
     try {
       final uri = Uri.parse(endereco + controller);
-      return _resposta(await http.put(uri, body: data, headers: this.headers));
+      final req = await _request(tipo: TipoRequest.Put, uri: uri, data: data);
+      return _resposta(req);
     } catch (e) {
       print(e);
-      return false;
+      throw e;
+    }
+  }
+
+  _request({required tipo, required Uri uri, String data = ''}) async {
+    try {
+      switch (tipo) {
+        case TipoRequest.Get:
+          {
+            return await http.get(uri, headers: this.headers);
+          }
+        case TipoRequest.Post:
+          {
+            return await http.post(uri, body: data, headers: this.headers);
+          }
+        case TipoRequest.Put:
+          {
+            return await http.post(uri, body: data, headers: this.headers);
+          }
+        case TipoRequest.Delete:
+          {
+            return await http.delete(uri, headers: this.headers);
+          }
+      }
+    } on SocketException catch (e) {
+      throw new ErroConexao(e.message);
+    } on Exception catch (e) {
+      throw new Falha(e);
     }
   }
 
@@ -102,20 +138,23 @@ class Api implements IRepository {
         }
       case 204: //No Content
         {
-          return null;
+          return false;
         }
       case 400: //Bad Request
         {
-          return false; //Exception('Bad Request');
+          throw ErroRequisicao('Bad Request (400)');
         }
       case 404: //Not Found
         {
-          return null;
+          throw NaoEncontrado('Not Found (404)');
         }
       case 500: //Internal Server Error
         {
-          return false; //Exception('Erro interno do servidor');
+          throw ErroServidor('Internal Server Error (500)'); //Exception('Erro interno do servidor');
         }
     }
+    throw Falha('Código de retorno não esperados: ${req.statusCode}');
   }
 }
+
+enum TipoRequest { Get, Post, Put, Delete }

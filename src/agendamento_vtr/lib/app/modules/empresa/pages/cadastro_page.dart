@@ -1,12 +1,13 @@
 import 'dart:async';
 
+import 'package:agendamento_vtr/app/domain/erros.dart';
 import 'package:agendamento_vtr/app/models/empresa.dart';
-import 'package:agendamento_vtr/app/modules/empresa/controllers/empresa_controller.dart';
+import 'package:agendamento_vtr/app/modules/empresa/stores/empresa_store.dart';
 import 'package:agendamento_vtr/app/widgets/cnpj_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:rxdart/rxdart.dart';
+import 'package:flutter_triple/flutter_triple.dart';
 
 class CadastroPage extends StatefulWidget {
   final String preCadastro;
@@ -17,7 +18,7 @@ class CadastroPage extends StatefulWidget {
   _CadastroPageState createState() => _CadastroPageState();
 }
 
-class _CadastroPageState extends ModularState<CadastroPage, EmpresaController> {
+class _CadastroPageState extends ModularState<CadastroPage, EmpresaStore> {
   final _formKey = GlobalKey<FormState>();
 
   final TextEditingController _cRazaSocialProp = TextEditingController();
@@ -26,10 +27,17 @@ class _CadastroPageState extends ModularState<CadastroPage, EmpresaController> {
 
   final TextEditingController _cEmail = TextEditingController();
 
-  late StreamController<String> pesquisaEmpresa;
-  late StreamController<BuildContext> salvaEmpresa;
-
   Empresa _empresa = Empresa();
+
+  late Disposer _disposer;
+
+  late OverlayEntry loadingOverlay = OverlayEntry(builder: (_) {
+    return Container(
+      alignment: Alignment.center,
+      color: Colors.black38,
+      child: CircularProgressIndicator(),
+    );
+  });
 
   late Widget cnpjProprietarioWidget = CnpjWidget(
     cnpjPrevio: widget.preCadastro,
@@ -44,42 +52,39 @@ class _CadastroPageState extends ModularState<CadastroPage, EmpresaController> {
   }
 
   void _configStream() {
-    pesquisaEmpresa = BehaviorSubject<String>();
-    pesquisaEmpresa.stream.listen((cnpj) async {
-      Empresa? e = await controller.findEmpresa(cnpj: cnpj);
-      _empresa = e ?? Empresa();
-      _empresa.cnpjCpf = cnpj;
-      if (e != null) {
-        setState(() {
-          _cRazaSocialProp.text = _empresa.razaoSocial;
-          _cTelefone.text = _empresa.telefones.isEmpty ? '' : _empresa.telefones[0];
-          _cEmail.text = _empresa.email;
+    _disposer = store.observer(
+        onState: (e) => {
+              print('onState: $e'),
+              if (e is Empresa)
+                {
+                  setState(() {
+                    _cRazaSocialProp.text = _empresa.razaoSocial;
+                    _cTelefone.text = _empresa.telefones.isEmpty ? '' : _empresa.telefones[0];
+                    _cEmail.text = _empresa.email;
+                  }),
+                }
+              else if (e == true)
+                {
+                  _showDialogAnexaProprietario(),
+                }
+            },
+        onLoading: (isLoading) {
+          if (store.isLoading) {
+            Overlay.of(context)?.insert(loadingOverlay);
+          } else {
+            loadingOverlay.remove();
+          }
+        },
+        onError: (error) {
+          _showErro(context, error);
         });
-      }
-    });
-
-    salvaEmpresa = BehaviorSubject<BuildContext>();
-    salvaEmpresa.stream.listen((ctx) async {
-      if (!verificaDadosPreenchidos()) {
-        ScaffoldMessenger.of(ctx).showSnackBar(const SnackBar(content: Text('Verifique os dados pendentes')));
-        return;
-      }
-      _insereDadosNaEmpresa();
-      bool salvou = await controller.salvaEmpresa(_empresa);
-      print('Salvando empresa: ' + _empresa.cnpjCpf);
-      salvou
-          ? ScaffoldMessenger.of(ctx).showSnackBar(const SnackBar(content: Text('Empresa Salva')))
-          : ScaffoldMessenger.of(ctx)
-              .showSnackBar(const SnackBar(content: Text('Não foi possível salvar os dados. Servidor indisponível')));
-      if (salvou) _showDialogAnexaProprietario();
-    });
   }
 
   @override
   void dispose() {
+    // TODO: implement dispose
     super.dispose();
-    pesquisaEmpresa.close();
-    salvaEmpresa.close();
+    _disposer();
   }
 
   @override
@@ -97,21 +102,25 @@ class _CadastroPageState extends ModularState<CadastroPage, EmpresaController> {
           child: SingleChildScrollView(
             child: Container(
               width: larguraTotal * .5,
-              child: StreamBuilder<String>(
-                  stream: pesquisaEmpresa.stream,
-                  builder: (context, snapshot) {
-                    return Column(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  titulo(),
+                  cnpjProprietarioWidget,
+                  razaoSocial(),
+                  telefone(),
+                  email(),
+                  Container(
+                    child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        titulo(),
-                        cnpjProprietarioWidget,
-                        razaoSocial(),
-                        telefone(),
-                        email(),
                         btnSalvar(context),
+                        _btnVoltar(),
                       ],
-                    );
-                  }),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -179,33 +188,68 @@ class _CadastroPageState extends ModularState<CadastroPage, EmpresaController> {
     );
   }
 
-  Widget btnSalvar(BuildContext ctx) {
+  Widget _btnVoltar() {
     return Center(
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: StreamBuilder<BuildContext>(
-                stream: salvaEmpresa.stream,
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.active) {
-                    return CircularProgressIndicator();
-                  }
-                  return ElevatedButton(
-                    child: Text('Salvar'),
-                    onPressed: () => salvaEmpresa.add(ctx),
-                  );
-                }),
+            child: ElevatedButton(
+              child: Text('Voltar'),
+              onPressed: () => Modular.to.pop(),
+            ),
           ),
         ],
       ),
     );
   }
 
+  Widget btnSalvar(BuildContext ctx) {
+    return Center(
+      child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: ElevatedButton(
+            child: Text('Salvar'),
+            onPressed: () => _salvaEmpresa(ctx),
+          )),
+    );
+  }
+
+  _showErro(BuildContext ctx, Falha erro) {
+    if (!verificaDadosPreenchidos()) return;
+    switch (erro.runtimeType) {
+      case ErroConexao:
+        {
+          ScaffoldMessenger.of(ctx).showSnackBar(SnackBar(
+            content: Text('Não foi possível salvar os dados. Erro de conexão'),
+            backgroundColor: Colors.red[900],
+          ));
+          break;
+        }
+      case Falha:
+        {
+          ScaffoldMessenger.of(ctx).showSnackBar(SnackBar(
+              content: Text('Não foi possível salvar os dados. ${erro.msg}'), backgroundColor: Colors.red[900]));
+          break;
+        }
+    }
+  }
+
+  void _salvaEmpresa(BuildContext ctx) {
+    if (!verificaDadosPreenchidos()) {
+      ScaffoldMessenger.of(ctx).showSnackBar(const SnackBar(content: Text('Verifique os dados pendentes')));
+      return;
+    }
+    _insereDadosNaEmpresa();
+    store.salva(_empresa);
+    print('Salvando empresa: ' + _empresa.cnpjCpf);
+  }
+
   void _atualizaDadosEmpresa(String cnpj, bool valido) async {
     if (!valido) return;
-    pesquisaEmpresa.add(cnpj);
+    _empresa.cnpjCpf = cnpj;
+    store.consulta(cnpj);
   }
 
   String? validateEmail(String? value) {

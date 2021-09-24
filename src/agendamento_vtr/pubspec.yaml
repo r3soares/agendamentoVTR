@@ -25,8 +25,8 @@ dependencies:
     sdk: flutter
   file_picker: ^4.0.2
   cupertino_icons: ^1.0.3
-  flutter_modular: ^3.4.1+1
-  flutter_triple: ^1.2.4+3
+  flutter_modular:
+  flutter_triple: any
   table_calendar: ^3.0.2
   intl: ^0.17.0
   http:

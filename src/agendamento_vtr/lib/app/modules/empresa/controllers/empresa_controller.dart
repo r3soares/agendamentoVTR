@@ -6,10 +6,20 @@ class EmpresaController {
   final repo = Modular.get<Repository>();
 
   Future<bool> salvaEmpresa(Empresa e) async {
-    return repo.salvaEmpresa(e);
+    try {
+      return repo.salvaEmpresa(e);
+    } catch (e) {
+      throw e;
+    }
   }
 
   Future<Empresa?> findEmpresa({String? cnpj}) async {
-    if (cnpj != null) return await repo.getEmpresa(cnpj);
+    if (cnpj != null) {
+      try {
+        return await repo.getEmpresa(cnpj);
+      } catch (e) {
+        throw e;
+      }
+    }
   }
 }

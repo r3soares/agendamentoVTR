@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:math';
 
+import 'package:agendamento_vtr/app/domain/erros.dart';
 import 'package:agendamento_vtr/app/models/compartimento.dart';
 import 'package:agendamento_vtr/app/models/empresa.dart';
 import 'package:agendamento_vtr/app/models/tanque.dart';
@@ -75,43 +76,88 @@ class Repository {
   }
 
   Future<bool> salvaTanque(Tanque value) async {
-    return await repo.save(jsonEncode(value.toJson()));
+    try {
+      return await repo.save(jsonEncode(value.toJson()));
+    } on Falha catch (e) {
+      print('Erro ao salvar tanque ${value.placa}: $e');
+      throw e;
+    }
   }
 
   Future<bool> salvaEmpresa(Empresa value) async {
-    return await repo.save(jsonEncode(value.toJson()));
+    try {
+      return await repo.save(jsonEncode(value.toJson()));
+    } on Falha catch (e) {
+      print('Erro ao salvar empresa ${value.cnpjCpf}: $e');
+      throw e;
+    }
   }
 
   Future<bool> removeTanque(String inmetro) async {
-    return await repo.delete(inmetro) != null;
+    try {
+      return await repo.delete(inmetro);
+    } on Falha catch (e) {
+      print('Erro ao remover tanque $inmetro: $e');
+      throw e;
+    }
   }
 
   Future<bool> removeEmpresa(String cnpj) async {
-    return await repo.delete(cnpj) != null;
+    try {
+      return await repo.delete(cnpj);
+    } on Falha catch (e) {
+      print('Erro ao remover empresa $cnpj: $e');
+      throw e;
+    }
   }
 
   Future<Tanque?> findTanqueByPlaca(String placa) async {
-    var result = await repo.find('placa', placa);
-    return result == null ? null : Tanque.fromJson(result);
+    try {
+      var result = await repo.find('placa', placa);
+      return result == false ? null : Tanque.fromJson(result);
+    } on Falha catch (e) {
+      print('Erro ao procurar tanque pela placa $placa: $e');
+      throw e;
+    }
   }
 
   Future<Tanque?> getTanque(String inmetro) async {
-    var result = await repo.getById(inmetro);
-    return result == null ? null : Tanque.fromJson(result);
+    try {
+      var result = await repo.getById(inmetro);
+      return result == false ? null : Tanque.fromJson(result);
+    } on Falha catch (e) {
+      print('Erro ao procurar tanque $inmetro: $e');
+      throw e;
+    }
   }
 
   Future<List<Tanque>> getTanques() async {
-    var result = await repo.getAll();
-    return result == null ? List.empty(growable: true) : (result as List).map((n) => Tanque.fromJson(n)).toList();
+    try {
+      var result = await repo.getAll();
+      return result == false ? List.empty(growable: true) : (result as List).map((n) => Tanque.fromJson(n)).toList();
+    } on Falha catch (e) {
+      print('Erro ao buscar tanques: $e');
+      throw e;
+    }
   }
 
-  Future<Empresa?> getEmpresa(String cnpjCpf) async {
-    var result = await repo.getById(cnpjCpf);
-    return result == null ? null : Empresa.fromJson(result);
+  Future<Empresa> getEmpresa(String cnpjCpf) async {
+    try {
+      var result = await repo.getById(cnpjCpf);
+      return result == false ? throw NaoEncontrado(cnpjCpf) : Empresa.fromJson(result);
+    } on Falha catch (e) {
+      print('Erro ao buscar empresa $cnpjCpf: ${e.msg}');
+      throw e;
+    }
   }
 
   Future<List<Empresa>> getEmpresas() async {
-    var result = await repo.getAll();
-    return result == null ? List.empty(growable: true) : (result as List).map((n) => Empresa.fromJson(n)).toList();
+    try {
+      var result = await repo.getAll();
+      return result == false ? List.empty(growable: true) : (result as List).map((n) => Empresa.fromJson(n)).toList();
+    } on Falha catch (e) {
+      print('Erro ao buscar empresas: $e');
+      throw e;
+    }
   }
 }
