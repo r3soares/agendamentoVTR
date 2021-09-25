@@ -23,7 +23,7 @@ class _VisualizaTanqueDialogState extends State<VisualizaTanqueDialog> {
   void initState() {
     super.initState();
     if (widget.tanque.proprietario != null) {
-      tanquesRepo.getEmpresa(widget.tanque.proprietario!).then((value) => this.proprietario = value ?? Empresa());
+      tanquesRepo.getEmpresa(widget.tanque.proprietario!).then((value) => this.proprietario = value.empresa);
     }
   }
 

@@ -1,4 +1,5 @@
 import 'package:agendamento_vtr/app/models/empresa.dart';
+import 'package:agendamento_vtr/app/modules/empresa/models/empresa_model.dart';
 import 'package:agendamento_vtr/app/repositories/repository.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
@@ -7,7 +8,7 @@ class EmpresaController {
 
   Future<bool> salvaEmpresa(Empresa e) async {
     try {
-      return repo.salvaEmpresa(e);
+      return (await repo.salvaEmpresa(e)).status == Status.Salva;
     } catch (e) {
       throw e;
     }
@@ -16,7 +17,7 @@ class EmpresaController {
   Future<Empresa?> findEmpresa({String? cnpj}) async {
     if (cnpj != null) {
       try {
-        return await repo.getEmpresa(cnpj);
+        return (await repo.getEmpresa(cnpj)).empresa;
       } catch (e) {
         throw e;
       }

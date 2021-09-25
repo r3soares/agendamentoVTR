@@ -5,6 +5,7 @@ import 'package:agendamento_vtr/app/domain/erros.dart';
 import 'package:agendamento_vtr/app/models/compartimento.dart';
 import 'package:agendamento_vtr/app/models/empresa.dart';
 import 'package:agendamento_vtr/app/models/tanque.dart';
+import 'package:agendamento_vtr/app/modules/empresa/models/empresa_model.dart';
 import 'package:agendamento_vtr/app/repositories/IRepository.dart';
 
 class Repository {
@@ -84,9 +85,10 @@ class Repository {
     }
   }
 
-  Future<bool> salvaEmpresa(Empresa value) async {
+  Future<EmpresaModel> salvaEmpresa(Empresa value) async {
     try {
-      return await repo.save(jsonEncode(value.toJson()));
+      bool salvou = await repo.save(jsonEncode(value.toJson()));
+      return EmpresaModel(salvou ? Status.Salva : Status.NaoSalva, value);
     } on Falha catch (e) {
       print('Erro ao salvar empresa ${value.cnpjCpf}: $e');
       throw e;
@@ -141,10 +143,11 @@ class Repository {
     }
   }
 
-  Future<Empresa> getEmpresa(String cnpjCpf) async {
+  Future<EmpresaModel> getEmpresa(String cnpjCpf) async {
     try {
       var result = await repo.getById(cnpjCpf);
-      return result == false ? throw NaoEncontrado(cnpjCpf) : Empresa.fromJson(result);
+      var empresa = result == false ? throw NaoEncontrado(cnpjCpf) : Empresa.fromJson(result);
+      return EmpresaModel(Status.Consulta, empresa);
     } on Falha catch (e) {
       print('Erro ao buscar empresa $cnpjCpf: ${e.msg}');
       throw e;

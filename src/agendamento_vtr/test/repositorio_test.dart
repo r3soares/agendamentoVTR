@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:agendamento_vtr/app/models/empresa.dart';
 import 'package:agendamento_vtr/app/models/tanque.dart';
+import 'package:agendamento_vtr/app/modules/empresa/models/empresa_model.dart';
 import 'package:agendamento_vtr/app/repositories/infra/api.dart';
 import 'package:agendamento_vtr/app/repositories/repository.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -16,15 +17,15 @@ void main() {
       Repository repo = Repository(Api('empresa'));
       for (int i = 0; i < et.empresas.length; i++) {
         Empresa e = et.empresas[i];
-        bool salvou = await repo.salvaEmpresa(e);
+        bool salvou = (await repo.salvaEmpresa(e)).status == Status.Salva;
         expect(salvou, isTrue, reason: '$i -> ${e.cnpjCpf}');
       }
       sleep(Duration(seconds: 1));
       for (int i = 0; i < et.empresas.length; i++) {
         Empresa e = et.empresas[i];
-        Empresa? e2 = await repo.getEmpresa(e.cnpjCpf);
+        Empresa? e2 = (await repo.getEmpresa(e.cnpjCpf)).empresa;
         expect(e2, isNotNull);
-        expect(e2!.email, equals(e.email));
+        expect(e2.email, equals(e.email));
         if (e.proprietario != null) {
           expect(e2.proprietario, isNotNull);
           expect(e2.proprietario!.cod, equals(e.proprietario!.cod));

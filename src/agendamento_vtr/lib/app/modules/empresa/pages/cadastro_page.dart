@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:agendamento_vtr/app/domain/erros.dart';
 import 'package:agendamento_vtr/app/models/empresa.dart';
+import 'package:agendamento_vtr/app/modules/empresa/models/empresa_model.dart';
 import 'package:agendamento_vtr/app/modules/empresa/stores/empresa_store.dart';
 import 'package:agendamento_vtr/app/widgets/cnpj_widget.dart';
 import 'package:flutter/material.dart';
@@ -55,15 +56,15 @@ class _CadastroPageState extends ModularState<CadastroPage, EmpresaStore> {
     _disposer = store.observer(
         onState: (e) => {
               print('onState: $e'),
-              if (e is Empresa)
+              if (e.status == Status.Consulta)
                 {
                   setState(() {
-                    _cRazaSocialProp.text = _empresa.razaoSocial;
-                    _cTelefone.text = _empresa.telefones.isEmpty ? '' : _empresa.telefones[0];
-                    _cEmail.text = _empresa.email;
+                    _cRazaSocialProp.text = e.empresa.razaoSocial;
+                    _cTelefone.text = e.empresa.telefones.isEmpty ? '' : e.empresa.telefones[0];
+                    _cEmail.text = e.empresa.email;
                   }),
                 }
-              else if (e == true)
+              else if (e.status == Status.Salva)
                 {
                   _showDialogAnexaProprietario(),
                 }
@@ -82,7 +83,6 @@ class _CadastroPageState extends ModularState<CadastroPage, EmpresaStore> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
     _disposer();
   }
