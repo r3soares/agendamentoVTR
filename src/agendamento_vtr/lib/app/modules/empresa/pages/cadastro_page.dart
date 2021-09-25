@@ -58,6 +58,7 @@ class _CadastroPageState extends ModularState<CadastroPage, EmpresaStore> {
               print('onState: $e'),
               if (e.status == Status.Consulta)
                 {
+                  _empresa = e.empresa,
                   setState(() {
                     _cRazaSocialProp.text = e.empresa.razaoSocial;
                     _cTelefone.text = e.empresa.telefones.isEmpty ? '' : e.empresa.telefones[0];
@@ -271,7 +272,7 @@ class _CadastroPageState extends ModularState<CadastroPage, EmpresaStore> {
     //controller.empresa.cnpj = _cCnpjCpf.text;
     _empresa.email = _cEmail.text;
     _empresa.telefones.clear();
-    _empresa.telefones.add(_cTelefone.text);
+    if (_cTelefone.text.isNotEmpty) _empresa.telefones.add(_cTelefone.text);
     _empresa.razaoSocial = _cRazaSocialProp.text;
   }
 

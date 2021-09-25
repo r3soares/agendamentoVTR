@@ -1,4 +1,3 @@
-import 'package:agendamento_vtr/app/models/empresa.dart';
 import 'package:agendamento_vtr/app/modules/empresa/pages/anexa_prop_page.dart';
 import 'package:agendamento_vtr/app/modules/empresa/pages/cadastro_page.dart';
 import 'package:agendamento_vtr/app/modules/empresa/pages/main_page.dart';
@@ -10,7 +9,7 @@ class EmpresaModule extends Module {
   @override
   final List<Bind> binds = [
     Bind.singleton((i) => PesquisaController()),
-    Bind((i) => EmpresaStore()),
+    Bind.factory((i) => EmpresaStore()),
   ];
 
   @override
