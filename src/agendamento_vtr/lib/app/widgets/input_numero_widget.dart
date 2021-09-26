@@ -7,15 +7,10 @@ class InputNumeroWidget extends StatefulWidget {
   final TipoInput input;
   //Termo buscado e Resultado
   final Function(dynamic) callback;
-  InputNumeroWidget(
-      {this.campoPrevio = '',
-      this.titulo = '',
-      required this.input,
-      required this.callback});
+  InputNumeroWidget({this.campoPrevio = '', this.titulo = '', required this.input, required this.callback});
 
   @override
-  _InputNumeroWidgetWidgetState createState() =>
-      _InputNumeroWidgetWidgetState();
+  _InputNumeroWidgetWidgetState createState() => _InputNumeroWidgetWidgetState();
 }
 
 class _InputNumeroWidgetWidgetState extends State<InputNumeroWidget> {
@@ -106,10 +101,9 @@ class _InputNumeroWidgetWidgetState extends State<InputNumeroWidget> {
 
   void notificaListeners() {
     if (!focusNode.hasFocus)
-      widget.callback(int.tryParse(_cCampo.text) ?? 0);
+      widget.callback(_cCampo.text);
     else {
-      _cCampo.selection =
-          TextSelection(baseOffset: 0, extentOffset: _cCampo.text.length);
+      _cCampo.selection = TextSelection(baseOffset: 0, extentOffset: _cCampo.text.length);
     }
   }
 }

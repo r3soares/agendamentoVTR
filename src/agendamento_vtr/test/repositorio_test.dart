@@ -1,9 +1,8 @@
 import 'dart:io';
 
 import 'package:agendamento_vtr/app/models/empresa.dart';
+import 'package:agendamento_vtr/app/models/model_base.dart';
 import 'package:agendamento_vtr/app/models/tanque.dart';
-import 'package:agendamento_vtr/app/modules/empresa/models/empresa_model.dart';
-import 'package:agendamento_vtr/app/repositories/infra/api.dart';
 import 'package:agendamento_vtr/app/repositories/repository.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -14,7 +13,7 @@ void main() {
   group('Teste de repositorios', () {
     test('Empresas', () async {
       EmpresasTest et = EmpresasTest();
-      Repository repo = Repository(Api('empresa'));
+      Repository repo = Repository();
       for (int i = 0; i < et.empresas.length; i++) {
         Empresa e = et.empresas[i];
         bool salvou = (await repo.salvaEmpresa(e)).status == Status.Salva;
@@ -23,7 +22,7 @@ void main() {
       sleep(Duration(seconds: 1));
       for (int i = 0; i < et.empresas.length; i++) {
         Empresa e = et.empresas[i];
-        Empresa? e2 = (await repo.getEmpresa(e.cnpjCpf)).empresa;
+        Empresa e2 = (await repo.getEmpresa(e.cnpjCpf)).model;
         expect(e2, isNotNull);
         expect(e2.email, equals(e.email));
         if (e.proprietario != null) {
@@ -39,19 +38,19 @@ void main() {
     }, timeout: Timeout(Duration(minutes: 2)));
 
     test('Tanques', () async {
-      Repository repo = Repository(Api('tanque'));
+      Repository repo = Repository();
       TanquesTest tt = TanquesTest();
       for (int i = 0; i < tt.tanques.length; i++) {
         Tanque t1 = tt.tanques[i];
-        bool salvou = await repo.salvaTanque(t1);
+        bool salvou = (await repo.salvaTanque(t1)).status == Status.Salva;
         expect(salvou, isTrue, reason: '$i -> ${t1.placa}');
       }
       sleep(Duration(seconds: 1));
       for (int i = 0; i < tt.tanques.length; i++) {
         Tanque t1 = tt.tanques[i];
-        Tanque? t2 = await repo.findTanqueByPlaca(t1.placa);
+        Tanque t2 = (await repo.findTanqueByPlaca(t1.placa)).model;
         expect(t2, isNotNull);
-        expect(t2!.codInmetro, t1.codInmetro);
+        expect(t2.codInmetro, t1.codInmetro);
         expect(t2.placa, t1.placa);
         expect(t2.compartimentos[0].capacidade, t1.compartimentos[0].capacidade);
         expect(t2.dataRegistro.second, t1.dataRegistro.second);

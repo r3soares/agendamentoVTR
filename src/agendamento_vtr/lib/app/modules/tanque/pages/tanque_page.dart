@@ -1,7 +1,9 @@
+import 'package:agendamento_vtr/app/domain/erros.dart';
 import 'package:agendamento_vtr/app/models/compartimento.dart';
+import 'package:agendamento_vtr/app/models/model_base.dart';
 import 'package:agendamento_vtr/app/models/tanque.dart';
 import 'package:agendamento_vtr/app/modules/tanque/models/arquivo.dart';
-import 'package:agendamento_vtr/app/modules/tanque/tanque_controller.dart';
+import 'package:agendamento_vtr/app/modules/tanque/stores/tanque_store.dart';
 import 'package:agendamento_vtr/app/modules/tanque/widgets/compartimento_form.dart';
 import 'package:agendamento_vtr/app/modules/tanque/widgets/tanque_page_widgets/doc_widget.dart';
 import 'package:agendamento_vtr/app/modules/tanque/widgets/tanque_page_widgets/tanque_zero_widget.dart';
@@ -9,6 +11,7 @@ import 'package:agendamento_vtr/app/widgets/input_numero_widget.dart';
 import 'package:agendamento_vtr/app/widgets/placa_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:flutter_triple/flutter_triple.dart';
 
 class TanquePage extends StatefulWidget {
   final Tanque? tanquePrevio;
@@ -18,15 +21,24 @@ class TanquePage extends StatefulWidget {
   _TanquePageState createState() => _TanquePageState();
 }
 
-class _TanquePageState extends ModularState<TanquePage, TanqueController> {
+class _TanquePageState extends ModularState<TanquePage, TanqueStore> {
   final _formKey = GlobalKey<FormState>();
-  BuildContext? ctx;
   late Tanque _tanque;
   late Widget placaWidget;
   late Widget inmetroWidget;
   late Widget docWidget;
   late Widget tanqueZeroWidget;
   late Widget compartimentoForm;
+
+  late Disposer _disposer;
+
+  late OverlayEntry loadingOverlay = OverlayEntry(builder: (_) {
+    return Container(
+      alignment: Alignment.center,
+      color: Colors.black38,
+      child: CircularProgressIndicator(),
+    );
+  });
 
   @override
   void initState() {
@@ -53,11 +65,54 @@ class _TanquePageState extends ModularState<TanquePage, TanqueController> {
       compartimentosPrevio: _tanque.compartimentos,
       callback: _setCompartimentos,
     );
+
+    _configStream();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _disposer();
+  }
+
+  void _configStream() {
+    _disposer = store.observer(
+        onState: (ModelBase t) => {
+              if (t.status == Status.ConsultaInmetro)
+                {
+                  if (widget.tanquePrevio == null)
+                    {
+                      _avisaTanqueExistente(t.model),
+                    },
+                  _tanque.codInmetro = (t.model as Tanque).codInmetro,
+                }
+              else if (t.status == Status.ConsultaPlaca)
+                {
+                  if (widget.tanquePrevio == null)
+                    {
+                      _avisaTanqueExistente(t.model),
+                    },
+                  _tanque.placa = (t.model as Tanque).placa,
+                }
+              else if (t.status == Status.Salva)
+                {
+                  _showDialogTanqueSalvo(),
+                }
+            },
+        onLoading: (isLoading) {
+          if (store.isLoading) {
+            Overlay.of(context)?.insert(loadingOverlay);
+          } else {
+            loadingOverlay.remove();
+          }
+        },
+        onError: (error) {
+          _showErro(error);
+        });
   }
 
   @override
   Widget build(BuildContext context) {
-    ctx = context;
     final larguraTotal = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
@@ -237,22 +292,14 @@ class _TanquePageState extends ModularState<TanquePage, TanqueController> {
   // #endregion
 
   // #region Sets Tanque
-  void _setPlaca(String placa, bool isValida) async {
+  void _setPlaca(String placa, bool isValida) {
     if (!isValida) return;
-    final Tanque? tanqueExistente = await controller.findTanqueByPlaca(placa);
-    if (tanqueExistente != null && widget.tanquePrevio == null) {
-      _avisaTanqueExistente(tanqueExistente);
-    }
-    _tanque.placa = placa;
+    store.consultaPlaca(placa);
   }
 
-  void _setInmetro(campo) async {
+  void _setInmetro(campo) {
     if (campo.isEmpty) return;
-    final Tanque? tanqueExistente = await controller.findTanqueByinmetro(campo);
-    if (tanqueExistente != null && widget.tanquePrevio == null) {
-      _avisaTanqueExistente(tanqueExistente);
-    }
-    _tanque.codInmetro = campo;
+    store.consultaInmetro(campo);
   }
 
   void _setDocs(List<Arquivo> arquivos) {
@@ -278,8 +325,7 @@ class _TanquePageState extends ModularState<TanquePage, TanqueController> {
       _msgTemporaria('Verifique os campos pendentes');
       return;
     }
-    controller.salvaTanque(_tanque);
-    _showDialogTanqueSalvo();
+    store.salva(_tanque);
   }
 
   void _cancela() {
@@ -303,7 +349,7 @@ class _TanquePageState extends ModularState<TanquePage, TanqueController> {
 
   // #region Dialogs Mensagens
   void _msgTemporaria(String msg) {
-    ScaffoldMessenger.of(ctx!).showSnackBar(SnackBar(
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Text(msg),
       duration: Duration(seconds: 3),
     ));
@@ -374,6 +420,31 @@ class _TanquePageState extends ModularState<TanquePage, TanqueController> {
         );
       },
     );
+  }
+
+  _showErro(Falha erro) {
+    if (!verificaDadosPreenchidos()) return;
+    switch (erro.runtimeType) {
+      case ErroConexao:
+        {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text('Não foi possível salvar os dados. Erro de conexão'),
+            backgroundColor: Colors.red[900],
+          ));
+          break;
+        }
+      case NaoEncontrado:
+        {
+          //ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Não localizado. ${erro.msg}')));
+          break;
+        }
+      case Falha:
+        {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text('Não foi possível salvar os dados. ${erro.msg}'), backgroundColor: Colors.red[900]));
+          break;
+        }
+    }
   }
 
   // #endregion

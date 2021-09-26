@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:agendamento_vtr/app/domain/erros.dart';
 import 'package:agendamento_vtr/app/models/empresa.dart';
-import 'package:agendamento_vtr/app/modules/empresa/models/empresa_model.dart';
+import 'package:agendamento_vtr/app/models/model_base.dart';
 import 'package:agendamento_vtr/app/modules/empresa/stores/empresa_store.dart';
 import 'package:agendamento_vtr/app/widgets/cnpj_widget.dart';
 import 'package:flutter/material.dart';
@@ -58,11 +58,11 @@ class _CadastroPageState extends ModularState<CadastroPage, EmpresaStore> {
               print('onState: $e'),
               if (e.status == Status.Consulta)
                 {
-                  _empresa = e.empresa,
+                  _empresa = e.model,
                   setState(() {
-                    _cRazaSocialProp.text = e.empresa.razaoSocial;
-                    _cTelefone.text = e.empresa.telefones.isEmpty ? '' : e.empresa.telefones[0];
-                    _cEmail.text = e.empresa.email;
+                    _cRazaSocialProp.text = e.model.razaoSocial;
+                    _cTelefone.text = e.model.telefones.isEmpty ? '' : e.model.telefones[0];
+                    _cEmail.text = e.model.email;
                   }),
                 }
               else if (e.status == Status.Salva)

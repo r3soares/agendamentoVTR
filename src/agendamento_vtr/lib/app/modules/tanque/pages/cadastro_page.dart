@@ -1,11 +1,14 @@
+import 'package:agendamento_vtr/app/domain/erros.dart';
 import 'package:agendamento_vtr/app/models/empresa.dart';
+import 'package:agendamento_vtr/app/models/model_base.dart';
 import 'package:agendamento_vtr/app/models/tanque.dart';
-import 'package:agendamento_vtr/app/modules/empresa/controllers/empresa_controller.dart';
-import 'package:agendamento_vtr/app/modules/tanque/tanque_controller.dart';
+import 'package:agendamento_vtr/app/modules/empresa/stores/empresa_store.dart';
+import 'package:agendamento_vtr/app/modules/tanque/stores/tanque_store.dart';
 import 'package:agendamento_vtr/app/widgets/cnpj_widget.dart';
 import 'package:agendamento_vtr/app/widgets/placa_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:flutter_triple/flutter_triple.dart';
 
 class CadastroPage extends StatefulWidget {
   const CadastroPage({Key? key}) : super(key: key);
@@ -14,26 +17,94 @@ class CadastroPage extends StatefulWidget {
   _CadastroPageState createState() => _CadastroPageState();
 }
 
-class _CadastroPageState extends ModularState<CadastroPage, EmpresaController> {
-  final tanqueController = Modular.get<TanqueController>();
+class _CadastroPageState extends ModularState<CadastroPage, TanqueStore> {
   final _formKey = GlobalKey<FormState>();
   final List<Tanque> tanques = List.empty(growable: true);
+  final EmpresaStore storeEmpresa = EmpresaStore();
   Size? _size;
   String cnpjProprietario = '';
-  BuildContext? ctx;
+  late Disposer _disposer;
+  late Disposer _disposerEmpresa;
 
   late Widget proprietarioWidget = CnpjWidget(
     titulo: 'CNPJ ou CPF',
     callback: (cnpj, valido) => cnpjProprietario = valido ? cnpj : '',
   );
   late Widget placaWidget = PlacaWidget(
-    titulo: 'Informe a placa',
+    titulo: 'Buscar placa',
     callback: _getTanque,
   );
 
+  late OverlayEntry loadingOverlay = OverlayEntry(builder: (_) {
+    return Container(
+      alignment: Alignment.center,
+      color: Colors.black38,
+      child: CircularProgressIndicator(),
+    );
+  });
+
+  @override
+  void initState() {
+    super.initState();
+    _configStream();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _disposer();
+    _disposerEmpresa();
+    storeEmpresa.destroy();
+  }
+
+  void _configStream() {
+    _disposer = store.observer(
+        onState: (ModelBase t) => {
+              if (t.status == Status.ConsultaPlaca)
+                {
+                  _incluiTanque(t.model),
+                }
+              else if (t.status == Status.Salva)
+                {}
+            },
+        onLoading: (isLoading) {
+          if (store.isLoading) {
+            Overlay.of(context)?.insert(loadingOverlay);
+          } else {
+            loadingOverlay.remove();
+          }
+        },
+        onError: (error) {
+          _showErro(context, error);
+        });
+    _disposerEmpresa = storeEmpresa.observer(
+        onState: (e) => {
+              if (e.status == Status.Consulta)
+                {
+                  for (var t in tanques)
+                    {
+                      t.proprietario = cnpjProprietario,
+                      store.salva(t),
+                      (e.model as Empresa).addTanque(t.placa),
+                    },
+                  _msgTemporaria('Dados salvos'),
+                  Modular.to.pop(),
+                }
+            },
+        onLoading: (isLoading) {
+          if (store.isLoading) {
+            Overlay.of(context)?.insert(loadingOverlay);
+          } else {
+            loadingOverlay.remove();
+          }
+        },
+        onError: (error) {
+          _showErro(context, error);
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
-    ctx = context;
     _size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
@@ -41,20 +112,16 @@ class _CadastroPageState extends ModularState<CadastroPage, EmpresaController> {
       ),
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: _size!.width / 4),
-        child: Form(
-          autovalidateMode: AutovalidateMode.onUserInteraction,
-          key: _formKey,
-          child: SingleChildScrollView(
-            child: Container(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  _camposPropResp(),
-                  _camposTanques(),
-                  _camposBotoes(),
-                ],
-              ),
+        child: SingleChildScrollView(
+          child: Container(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                _camposPropResp(),
+                _camposTanques(),
+                _camposBotoes(),
+              ],
             ),
           ),
         ),
@@ -77,7 +144,11 @@ class _CadastroPageState extends ModularState<CadastroPage, EmpresaController> {
             ),
             Column(
               children: [
-                proprietarioWidget,
+                Form(
+                  child: proprietarioWidget,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  key: _formKey,
+                ),
                 //responsavelWidget,
               ],
             ),
@@ -145,7 +216,7 @@ class _CadastroPageState extends ModularState<CadastroPage, EmpresaController> {
           padding: const EdgeInsets.all(8.0),
           child: ElevatedButton(
             child: Text('Salvar'),
-            onPressed: () => _salvaDados(ctx!),
+            onPressed: () => _salvaDados(),
           ),
         ),
       ),
@@ -244,27 +315,24 @@ class _CadastroPageState extends ModularState<CadastroPage, EmpresaController> {
     return t.compartimentos.fold(0, (previousValue, element) => previousValue + element.setas);
   }
 
-  void _salvaDados(BuildContext ctx) {
+  void _salvaDados() {
     if (!_validaForm()) {
       _msgTemporaria('Há campos inválidos');
       return;
     }
     _associaPropAosTanques();
-    _msgTemporaria('Dados salvos');
-    Modular.to.pop();
   }
 
-  void _associaPropAosTanques() async {
-    Empresa? e = await controller.findEmpresa(cnpj: cnpjProprietario);
-
-    for (var t in tanques) {
-      t.proprietario = cnpjProprietario;
-      tanqueController.salvaTanque(t);
-      e?.addTanque(t.placa);
-    }
+  void _associaPropAosTanques() {
+    storeEmpresa.consulta(cnpjProprietario);
   }
 
   void _goTanquePage({Tanque? tExistente}) {
+    if (!_validaForm()) {
+      _msgTemporaria('Informe um CNPJ/CPF válido');
+      return;
+    }
+
     Modular.to.pushNamed('cadastroTanque', arguments: tExistente);
   }
 
@@ -277,7 +345,7 @@ class _CadastroPageState extends ModularState<CadastroPage, EmpresaController> {
   }
 
   void _msgTemporaria(String msg) {
-    ScaffoldMessenger.of(ctx!).showSnackBar(SnackBar(content: Text(msg)));
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
   }
 
   bool _validaForm() {
@@ -287,12 +355,7 @@ class _CadastroPageState extends ModularState<CadastroPage, EmpresaController> {
 
   void _getTanque(String placa, bool valido) async {
     if (valido) {
-      final t = await tanqueController.findTanqueByPlaca(placa);
-      if (t == null) {
-        _msgTemporaria('Placa não localizada. Cadastre novo tanque');
-        return;
-      }
-      _incluiTanque(t);
+      store.consultaPlaca(placa);
     }
   }
 
@@ -300,5 +363,30 @@ class _CadastroPageState extends ModularState<CadastroPage, EmpresaController> {
     setState(() {
       tanques.removeAt(index);
     });
+  }
+
+  _showErro(BuildContext ctx, Falha erro) {
+    if (!_validaForm()) return;
+    switch (erro.runtimeType) {
+      case ErroConexao:
+        {
+          ScaffoldMessenger.of(ctx).showSnackBar(SnackBar(
+            content: Text('Não foi possível salvar os dados. Erro de conexão'),
+            backgroundColor: Colors.red[900],
+          ));
+          break;
+        }
+      case NaoEncontrado:
+        {
+          ScaffoldMessenger.of(ctx).showSnackBar(SnackBar(content: Text('Não localizado. ${erro.msg}')));
+          break;
+        }
+      case Falha:
+        {
+          ScaffoldMessenger.of(ctx).showSnackBar(SnackBar(
+              content: Text('Não foi possível salvar os dados. ${erro.msg}'), backgroundColor: Colors.red[900]));
+          break;
+        }
+    }
   }
 }

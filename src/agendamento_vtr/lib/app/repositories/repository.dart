@@ -4,15 +4,17 @@ import 'dart:math';
 import 'package:agendamento_vtr/app/domain/erros.dart';
 import 'package:agendamento_vtr/app/models/compartimento.dart';
 import 'package:agendamento_vtr/app/models/empresa.dart';
+import 'package:agendamento_vtr/app/models/model_base.dart';
 import 'package:agendamento_vtr/app/models/tanque.dart';
-import 'package:agendamento_vtr/app/modules/empresa/models/empresa_model.dart';
 import 'package:agendamento_vtr/app/repositories/IRepository.dart';
+import 'package:agendamento_vtr/app/repositories/infra/api.dart';
 
 class Repository {
-  final IRepository repo;
+  final IRepository repoTanque = Api('tanque');
+  final IRepository repoEmpresa = Api('empresa');
   static const bool populaTeste = false;
 
-  Repository(this.repo) {
+  Repository() {
     if (populaTeste) {
       assert(() {
         final alfabeto = [
@@ -76,19 +78,20 @@ class Repository {
     }
   }
 
-  Future<bool> salvaTanque(Tanque value) async {
+  Future<ModelBase> salvaTanque(Tanque value) async {
     try {
-      return await repo.save(jsonEncode(value.toJson()));
+      bool salvou = await repoTanque.save(jsonEncode(value.toJson()));
+      return ModelBase(salvou ? Status.Salva : Status.NaoSalva, value);
     } on Falha catch (e) {
       print('Erro ao salvar tanque ${value.placa}: $e');
       throw e;
     }
   }
 
-  Future<EmpresaModel> salvaEmpresa(Empresa value) async {
+  Future<ModelBase> salvaEmpresa(Empresa value) async {
     try {
-      bool salvou = await repo.save(jsonEncode(value.toJson()));
-      return EmpresaModel(salvou ? Status.Salva : Status.NaoSalva, value);
+      bool salvou = await repoEmpresa.save(jsonEncode(value.toJson()));
+      return ModelBase(salvou ? Status.Salva : Status.NaoSalva, value);
     } on Falha catch (e) {
       print('Erro ao salvar empresa ${value.cnpjCpf}: $e');
       throw e;
@@ -97,7 +100,7 @@ class Repository {
 
   Future<bool> removeTanque(String inmetro) async {
     try {
-      return await repo.delete(inmetro);
+      return await repoTanque.delete(inmetro);
     } on Falha catch (e) {
       print('Erro ao remover tanque $inmetro: $e');
       throw e;
@@ -106,27 +109,29 @@ class Repository {
 
   Future<bool> removeEmpresa(String cnpj) async {
     try {
-      return await repo.delete(cnpj);
+      return await repoEmpresa.delete(cnpj);
     } on Falha catch (e) {
       print('Erro ao remover empresa $cnpj: $e');
       throw e;
     }
   }
 
-  Future<Tanque?> findTanqueByPlaca(String placa) async {
+  Future<ModelBase> findTanqueByPlaca(String placa) async {
     try {
-      var result = await repo.find('placa', placa);
-      return result == false ? null : Tanque.fromJson(result);
+      var result = await repoTanque.find('placa', placa);
+      var tanque = result == false ? throw NaoEncontrado(placa) : Tanque.fromJson(result);
+      return ModelBase(Status.ConsultaPlaca, tanque);
     } on Falha catch (e) {
       print('Erro ao procurar tanque pela placa $placa: $e');
       throw e;
     }
   }
 
-  Future<Tanque?> getTanque(String inmetro) async {
+  Future<ModelBase> getTanque(String inmetro) async {
     try {
-      var result = await repo.getById(inmetro);
-      return result == false ? null : Tanque.fromJson(result);
+      var result = await repoTanque.getById(inmetro);
+      var tanque = result == false ? throw NaoEncontrado(inmetro) : Tanque.fromJson(result);
+      return ModelBase(Status.ConsultaInmetro, tanque);
     } on Falha catch (e) {
       print('Erro ao procurar tanque $inmetro: $e');
       throw e;
@@ -135,7 +140,7 @@ class Repository {
 
   Future<List<Tanque>> getTanques() async {
     try {
-      var result = await repo.getAll();
+      var result = await repoTanque.getAll();
       return result == false ? List.empty(growable: true) : (result as List).map((n) => Tanque.fromJson(n)).toList();
     } on Falha catch (e) {
       print('Erro ao buscar tanques: $e');
@@ -143,11 +148,11 @@ class Repository {
     }
   }
 
-  Future<EmpresaModel> getEmpresa(String cnpjCpf) async {
+  Future<ModelBase> getEmpresa(String cnpjCpf) async {
     try {
-      var result = await repo.getById(cnpjCpf);
+      var result = await repoEmpresa.getById(cnpjCpf);
       var empresa = result == false ? throw NaoEncontrado(cnpjCpf) : Empresa.fromJson(result);
-      return EmpresaModel(Status.Consulta, empresa);
+      return ModelBase(Status.Consulta, empresa);
     } on Falha catch (e) {
       print('Erro ao buscar empresa $cnpjCpf: ${e.msg}');
       throw e;
@@ -156,7 +161,7 @@ class Repository {
 
   Future<List<Empresa>> getEmpresas() async {
     try {
-      var result = await repo.getAll();
+      var result = await repoEmpresa.getAll();
       return result == false ? List.empty(growable: true) : (result as List).map((n) => Empresa.fromJson(n)).toList();
     } on Falha catch (e) {
       print('Erro ao buscar empresas: $e');
