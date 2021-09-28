@@ -46,6 +46,7 @@ class Api implements IRepository {
   getById(id) async {
     try {
       final uri = Uri.parse('$endereco$controller/$id');
+      print('Api $uri');
       final req = await _request(tipo: TipoRequest.Get, uri: uri);
       return _resposta(req);
     } catch (e) {

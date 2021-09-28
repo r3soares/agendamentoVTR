@@ -1,14 +1,13 @@
 import 'package:agendamento_vtr/app/domain/erros.dart';
-import 'package:agendamento_vtr/app/models/empresa.dart';
 import 'package:agendamento_vtr/app/models/model_base.dart';
 import 'package:agendamento_vtr/app/models/tanque.dart';
-import 'package:agendamento_vtr/app/modules/empresa/stores/empresa_store.dart';
 import 'package:agendamento_vtr/app/modules/tanque/stores/tanque_store.dart';
 import 'package:agendamento_vtr/app/widgets/cnpj_widget.dart';
 import 'package:agendamento_vtr/app/widgets/placa_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_triple/flutter_triple.dart';
+import 'package:collection/collection.dart';
 
 class CadastroPage extends StatefulWidget {
   const CadastroPage({Key? key}) : super(key: key);
@@ -20,15 +19,13 @@ class CadastroPage extends StatefulWidget {
 class _CadastroPageState extends ModularState<CadastroPage, TanqueStore> {
   final _formKey = GlobalKey<FormState>();
   final List<Tanque> tanques = List.empty(growable: true);
-  final EmpresaStore storeEmpresa = EmpresaStore();
   Size? _size;
   String cnpjProprietario = '';
   late Disposer _disposer;
-  late Disposer _disposerEmpresa;
 
   late Widget proprietarioWidget = CnpjWidget(
     titulo: 'CNPJ ou CPF',
-    callback: (cnpj, valido) => cnpjProprietario = valido ? cnpj : '',
+    callback: (cnpj, valido) => _setProprietario(cnpj, valido),
   );
   late Widget placaWidget = PlacaWidget(
     titulo: 'Buscar placa',
@@ -53,8 +50,6 @@ class _CadastroPageState extends ModularState<CadastroPage, TanqueStore> {
   void dispose() {
     super.dispose();
     _disposer();
-    _disposerEmpresa();
-    storeEmpresa.destroy();
   }
 
   void _configStream() {
@@ -65,30 +60,16 @@ class _CadastroPageState extends ModularState<CadastroPage, TanqueStore> {
                   _incluiTanque(t.model),
                 }
               else if (t.status == Status.Salva)
-                {}
-            },
-        onLoading: (isLoading) {
-          if (store.isLoading) {
-            Overlay.of(context)?.insert(loadingOverlay);
-          } else {
-            loadingOverlay.remove();
-          }
-        },
-        onError: (error) {
-          _showErro(context, error);
-        });
-    _disposerEmpresa = storeEmpresa.observer(
-        onState: (e) => {
-              if (e.status == Status.Consulta)
                 {
-                  for (var t in tanques)
+                  _showDialogTanquesSalvos(),
+                }
+              else if (t.status == Status.ConsultaMuitos)
+                {
+                  for (var t in (t.model as List<Tanque>))
                     {
-                      t.proprietario = cnpjProprietario,
-                      store.salva(t),
-                      (e.model as Empresa).addTanque(t.placa),
+                      _incluiTanque(t),
                     },
-                  _msgTemporaria('Dados salvos'),
-                  Modular.to.pop(),
+                  _msgTemporaria('Encontrado veículo(s) associados a este proprietário.')
                 }
             },
         onLoading: (isLoading) {
@@ -99,7 +80,7 @@ class _CadastroPageState extends ModularState<CadastroPage, TanqueStore> {
           }
         },
         onError: (error) {
-          _showErro(context, error);
+          _showErro(error);
         });
   }
 
@@ -162,8 +143,7 @@ class _CadastroPageState extends ModularState<CadastroPage, TanqueStore> {
     return Row(
       children: [
         btnSalvar(),
-
-        //exibeBotoes()
+        btnVoltar(),
       ],
     );
   }
@@ -217,6 +197,21 @@ class _CadastroPageState extends ModularState<CadastroPage, TanqueStore> {
           child: ElevatedButton(
             child: Text('Salvar'),
             onPressed: () => _salvaDados(),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget btnVoltar() {
+    return Container(
+      padding: const EdgeInsets.all(8),
+      child: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: ElevatedButton(
+            child: Text('Voltar'),
+            onPressed: () => Modular.to.pop(),
           ),
         ),
       ),
@@ -292,7 +287,7 @@ class _CadastroPageState extends ModularState<CadastroPage, TanqueStore> {
               ),
               Container(
                 padding: const EdgeInsets.all(4),
-                child: Text('${tanques[index].compartimentos.length}C ${_somaSetas(tanques[index])}SS'),
+                child: Text('${tanques[index].compartimentos.length}C ${formataExibicaoSetas(tanques[index])}'),
               ),
               Container(
                 child: IconButton(
@@ -311,8 +306,20 @@ class _CadastroPageState extends ModularState<CadastroPage, TanqueStore> {
     );
   }
 
+  void _setProprietario(String cnpj, bool valido) {
+    cnpjProprietario = valido ? cnpj : '';
+    if (valido) {
+      store.consultaProprietario(cnpj);
+    }
+  }
+
   int _somaSetas(Tanque t) {
     return t.compartimentos.fold(0, (previousValue, element) => previousValue + element.setas);
+  }
+
+  String formataExibicaoSetas(Tanque t) {
+    int setas = _somaSetas(t);
+    return setas > 0 ? '${setas}SS' : '';
   }
 
   void _salvaDados() {
@@ -324,20 +331,19 @@ class _CadastroPageState extends ModularState<CadastroPage, TanqueStore> {
   }
 
   void _associaPropAosTanques() {
-    storeEmpresa.consulta(cnpjProprietario);
+    for (var t in tanques) {
+      t.proprietario = cnpjProprietario;
+    }
+    store.salvaMuitos(tanques);
   }
 
   void _goTanquePage({Tanque? tExistente}) {
-    if (!_validaForm()) {
-      _msgTemporaria('Informe um CNPJ/CPF válido');
-      return;
-    }
-
     Modular.to.pushNamed('cadastroTanque', arguments: tExistente);
   }
 
   void _incluiTanque(Tanque t) {
-    if (!tanques.contains(t)) {
+    Tanque? tExiste = tanques.firstWhereOrNull((element) => element.codInmetro == t.codInmetro);
+    if (tExiste == null) {
       setState(() {
         tanques.add(t);
       });
@@ -365,12 +371,12 @@ class _CadastroPageState extends ModularState<CadastroPage, TanqueStore> {
     });
   }
 
-  _showErro(BuildContext ctx, Falha erro) {
-    if (!_validaForm()) return;
+  _showErro(Falha erro) {
+    if (store.status != TanqueStoreState.Salvando) return;
     switch (erro.runtimeType) {
       case ErroConexao:
         {
-          ScaffoldMessenger.of(ctx).showSnackBar(SnackBar(
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content: Text('Não foi possível salvar os dados. Erro de conexão'),
             backgroundColor: Colors.red[900],
           ));
@@ -378,15 +384,41 @@ class _CadastroPageState extends ModularState<CadastroPage, TanqueStore> {
         }
       case NaoEncontrado:
         {
-          ScaffoldMessenger.of(ctx).showSnackBar(SnackBar(content: Text('Não localizado. ${erro.msg}')));
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Não localizado.')));
           break;
         }
       case Falha:
         {
-          ScaffoldMessenger.of(ctx).showSnackBar(SnackBar(
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
               content: Text('Não foi possível salvar os dados. ${erro.msg}'), backgroundColor: Colors.red[900]));
           break;
         }
     }
+  }
+
+  Future<void> _showDialogTanquesSalvos() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Salvo com sucesso!'),
+          content: SingleChildScrollView(
+              child: Container(
+            child: Text(tanques.length > 1
+                ? '${tanques.length} veículos foram associados ao proprietário $cnpjProprietario.'
+                : '${tanques[0].placa} foi associado ao proprietário $cnpjProprietario.'),
+          )),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('ok'),
+              onPressed: () {
+                Modular.to.pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 }

@@ -78,25 +78,14 @@ class _TanquePageState extends ModularState<TanquePage, TanqueStore> {
   void _configStream() {
     _disposer = store.observer(
         onState: (ModelBase t) => {
-              if (t.status == Status.ConsultaInmetro)
-                {
-                  if (widget.tanquePrevio == null)
-                    {
-                      _avisaTanqueExistente(t.model),
-                    },
-                  _tanque.codInmetro = (t.model as Tanque).codInmetro,
-                }
-              else if (t.status == Status.ConsultaPlaca)
-                {
-                  if (widget.tanquePrevio == null)
-                    {
-                      _avisaTanqueExistente(t.model),
-                    },
-                  _tanque.placa = (t.model as Tanque).placa,
-                }
-              else if (t.status == Status.Salva)
+              if (t.status == Status.Salva)
                 {
                   _showDialogTanqueSalvo(),
+                }
+              else if (widget.tanquePrevio == null &&
+                  (t.status == Status.ConsultaPlaca || t.status == Status.ConsultaInmetro))
+                {
+                  _avisaTanqueExistente(t.model),
                 }
             },
         onLoading: (isLoading) {
@@ -294,11 +283,13 @@ class _TanquePageState extends ModularState<TanquePage, TanqueStore> {
   // #region Sets Tanque
   void _setPlaca(String placa, bool isValida) {
     if (!isValida) return;
+    _tanque.placa = placa;
     store.consultaPlaca(placa);
   }
 
   void _setInmetro(campo) {
     if (campo.isEmpty) return;
+    _tanque.codInmetro = campo;
     store.consultaInmetro(campo);
   }
 
@@ -374,7 +365,7 @@ class _TanquePageState extends ModularState<TanquePage, TanqueStore> {
             TextButton(
               child: const Text('Sim'),
               onPressed: () {
-                Navigator.of(context).pop();
+                Modular.to.pop();
                 _carregaTanqueExistente(tExistente);
               },
             ),
@@ -424,6 +415,10 @@ class _TanquePageState extends ModularState<TanquePage, TanqueStore> {
 
   _showErro(Falha erro) {
     if (!verificaDadosPreenchidos()) return;
+    if (store.status != TanqueStoreState.Salvando) {
+      print(store.status);
+      return;
+    }
     switch (erro.runtimeType) {
       case ErroConexao:
         {

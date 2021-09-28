@@ -88,6 +88,19 @@ class Repository {
     }
   }
 
+  Future<ModelBase> salvaTanques(List<Tanque> lista) async {
+    try {
+      bool salvou = true;
+      for (var item in lista) {
+        salvou = salvou && await repoTanque.save(jsonEncode(item.toJson()));
+      }
+      return ModelBase(salvou ? Status.Salva : Status.NaoSalva, lista);
+    } on Falha catch (e) {
+      print('Erro ao salvar lista de tanques: $e');
+      throw e;
+    }
+  }
+
   Future<ModelBase> salvaEmpresa(Empresa value) async {
     try {
       bool salvou = await repoEmpresa.save(jsonEncode(value.toJson()));
@@ -123,6 +136,18 @@ class Repository {
       return ModelBase(Status.ConsultaPlaca, tanque);
     } on Falha catch (e) {
       print('Erro ao procurar tanque pela placa $placa: $e');
+      throw e;
+    }
+  }
+
+  Future<ModelBase> findTanquesByProprietario(String proprietario) async {
+    try {
+      var result = await repoTanque.find('proprietario', proprietario);
+      var lista =
+          result == false ? List.empty(growable: true) : (result as List).map((n) => Tanque.fromJson(n)).toList();
+      return ModelBase(Status.ConsultaMuitos, lista);
+    } on Falha catch (e) {
+      print('Erro ao procurar tanques pelo proprietário $proprietario: $e');
       throw e;
     }
   }

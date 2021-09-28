@@ -5,4 +5,4 @@ class ModelBase {
   ModelBase(this.status, this.model);
 }
 
-enum Status { Consulta, ConsultaPlaca, ConsultaInmetro, Salva, NaoSalva, Inicial }
+enum Status { Consulta, ConsultaMuitos, ConsultaPlaca, ConsultaInmetro, Salva, NaoSalva, Inicial }
