@@ -3,8 +3,6 @@ import 'dart:math';
 import 'package:agendamento_vtr/app/models/empresa.dart';
 import 'package:agendamento_vtr/app/models/proprietario.dart';
 
-import 'tanques_test.dart';
-
 class EmpresasTest {
   List<Empresa> empresas = List.empty(growable: true);
   Random r = Random();
@@ -90,8 +88,8 @@ class EmpresasTest {
         ..proprietario = r.nextBool() == true
             ? (Proprietario()
               ..cod = i
-              ..codMun = r.nextInt(1000)
-              ..tanques = List.generate(r.nextInt(10), (index) => TanquesTest.geraPlaca()))
+              ..codMun = r.nextInt(1000))
+            //..tanques = List.generate(r.nextInt(10), (index) => TanquesTest.geraPlaca()))
             : null
         ..razaoSocial = nomes[i]
         ..status = StatusEmpresa.values[r.nextInt(StatusEmpresa.values.length)]

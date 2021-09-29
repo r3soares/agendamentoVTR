@@ -18,6 +18,8 @@ class CadastroPage extends StatefulWidget {
 
 class _CadastroPageState extends ModularState<CadastroPage, TanqueStore> {
   final _formKey = GlobalKey<FormState>();
+  final _scrollController = ScrollController();
+  final _cPesquisaPlaca = TextEditingController();
   final List<Tanque> tanques = List.empty(growable: true);
   Size? _size;
   String cnpjProprietario = '';
@@ -56,10 +58,8 @@ class _CadastroPageState extends ModularState<CadastroPage, TanqueStore> {
     _disposer = store.observer(
         onState: (ModelBase t) => {
               if (t.status == Status.ConsultaPlaca)
-                {
-                  _incluiTanque(t.model),
-                }
-              else if (t.status == Status.Salva)
+                {_incluiTanque(t.model), limpaTermo(), _msgTemporaria('${(t.model as Tanque).placa} adicionado.')}
+              else if (store.status == TanqueStoreState.SalvandoMuitos)
                 {
                   _showDialogTanquesSalvos(),
                 }
@@ -112,6 +112,7 @@ class _CadastroPageState extends ModularState<CadastroPage, TanqueStore> {
 
   Widget _camposPropResp() {
     return Container(
+      margin: EdgeInsets.only(top: 30),
       //width: larguraTotal * .4,
       child: Card(
         elevation: 4,
@@ -165,8 +166,9 @@ class _CadastroPageState extends ModularState<CadastroPage, TanqueStore> {
             Column(
               children: [
                 Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    _placaWidget(),
+                    _pesquisaPlaca(), //_placaWidget(),
                     btnTanque(),
                   ],
                 ),
@@ -191,14 +193,9 @@ class _CadastroPageState extends ModularState<CadastroPage, TanqueStore> {
   Widget btnSalvar() {
     return Container(
       padding: const EdgeInsets.all(8),
-      child: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: ElevatedButton(
-            child: Text('Salvar'),
-            onPressed: () => _salvaDados(),
-          ),
-        ),
+      child: ElevatedButton(
+        child: Text('Salvar'),
+        onPressed: () => _salvaDados(),
       ),
     );
   }
@@ -206,14 +203,9 @@ class _CadastroPageState extends ModularState<CadastroPage, TanqueStore> {
   Widget btnVoltar() {
     return Container(
       padding: const EdgeInsets.all(8),
-      child: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: ElevatedButton(
-            child: Text('Voltar'),
-            onPressed: () => Modular.to.pop(),
-          ),
-        ),
+      child: ElevatedButton(
+        child: Text('Voltar'),
+        onPressed: () => Modular.to.pop(),
       ),
     );
   }
@@ -221,15 +213,38 @@ class _CadastroPageState extends ModularState<CadastroPage, TanqueStore> {
   Widget btnTanque() {
     return Container(
       padding: const EdgeInsets.all(8),
-      child: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: TextButton(
-            child: Text('Novo Tanque'),
-            onPressed: _goTanquePage,
+      child: TextButton(
+        child: Text('Novo Tanque'),
+        onPressed: _goTanquePage,
+      ),
+    );
+  }
+
+  Widget _pesquisaPlaca() {
+    return Container(
+      width: 250,
+      padding: const EdgeInsets.all(8),
+      child: ListTile(
+          title: TextFormField(
+        autovalidateMode: AutovalidateMode.onUserInteraction,
+        controller: _cPesquisaPlaca,
+        textCapitalization: TextCapitalization.characters,
+        onChanged: (value) {
+          _cPesquisaPlaca.value = TextEditingValue(text: value.toUpperCase(), selection: _cPesquisaPlaca.selection);
+        },
+        maxLength: 7,
+        validator: _validaPlaca,
+        decoration: InputDecoration(
+          border: OutlineInputBorder(),
+          labelText: 'Pesquisar',
+          hintText: 'Informe a placa',
+          suffixIcon: IconButton(
+            onPressed: limpaTermo,
+            icon: Icon(Icons.clear),
+            splashRadius: 5,
           ),
         ),
-      ),
+      )),
     );
   }
 
@@ -246,20 +261,24 @@ class _CadastroPageState extends ModularState<CadastroPage, TanqueStore> {
   }
 
   Widget _listaTanques() {
-    return SingleChildScrollView(
-      child: Container(
-          width: _size!.width * .5,
-          height: 170,
-          child: tanques.isEmpty
-              ? SizedBox.shrink()
-              : ListView.builder(
+    return Container(
+        width: _size!.width * .5,
+        height: 170,
+        child: tanques.isEmpty
+            ? SizedBox.shrink()
+            : Scrollbar(
+                isAlwaysShown: true,
+                controller: _scrollController,
+                child: ListView.builder(
+                  controller: _scrollController,
                   scrollDirection: Axis.horizontal,
                   itemCount: tanques.length,
+                  shrinkWrap: true,
                   itemBuilder: (BuildContext context, int index) {
                     return _tanqueWidget(index);
                   },
-                )),
-    );
+                ),
+              ));
   }
 
   Widget _tanqueWidget(int index) {
@@ -308,9 +327,9 @@ class _CadastroPageState extends ModularState<CadastroPage, TanqueStore> {
 
   void _setProprietario(String cnpj, bool valido) {
     cnpjProprietario = valido ? cnpj : '';
-    if (valido) {
-      store.consultaProprietario(cnpj);
-    }
+    // if (valido) {
+    //   store.consultaProprietario(cnpj);
+    // }
   }
 
   int _somaSetas(Tanque t) {
@@ -366,13 +385,14 @@ class _CadastroPageState extends ModularState<CadastroPage, TanqueStore> {
   }
 
   void _removeTanque(int index) {
-    setState(() {
-      tanques.removeAt(index);
-    });
+    Tanque t = tanques.removeAt(index);
+    t.proprietario = null;
+    store.salva(t);
+    setState(() {});
   }
 
   _showErro(Falha erro) {
-    if (store.status != TanqueStoreState.Salvando) return;
+    if (store.status != TanqueStoreState.Salvando && store.status != TanqueStoreState.ConsultandoPlaca) return;
     switch (erro.runtimeType) {
       case ErroConexao:
         {
@@ -420,5 +440,18 @@ class _CadastroPageState extends ModularState<CadastroPage, TanqueStore> {
         );
       },
     );
+  }
+
+  String? _validaPlaca(String? value) {
+    if (value == null || value.isEmpty) return null;
+    if (value.length != 7) return 'Placa inválida';
+    RegExp regex = RegExp('[A-Z]{3}[0-9][0-9A-Z][0-9]{2}');
+    if (!regex.hasMatch(value)) return 'Placa inválida';
+    _getTanque(value, true);
+    return null;
+  }
+
+  void limpaTermo() {
+    _cPesquisaPlaca.clear();
   }
 }

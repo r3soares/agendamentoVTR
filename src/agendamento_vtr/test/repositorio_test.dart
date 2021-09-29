@@ -29,7 +29,7 @@ void main() {
           expect(e2.proprietario, isNotNull);
           expect(e2.proprietario!.cod, equals(e.proprietario!.cod));
           expect(e2.proprietario!.codMun, equals(e.proprietario!.codMun));
-          expect(e2.proprietario!.tanques.length, equals(e2.proprietario!.tanques.length));
+          //expect(e2.proprietario!.tanques.length, equals(e2.proprietario!.tanques.length));
         }
         expect(e2.razaoSocial, equals(e.razaoSocial));
         expect(e2.status, equals(e.status));
