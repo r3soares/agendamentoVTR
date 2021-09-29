@@ -7,20 +7,17 @@ import 'package:flutter_modular/flutter_modular.dart';
 class CompartimentoForm extends StatefulWidget {
   final Function(List<Compartimento>) callback;
   final List<Compartimento>? compartimentosPrevio;
-  const CompartimentoForm(
-      {Key? key, this.compartimentosPrevio, required this.callback})
-      : super(key: key);
+  const CompartimentoForm({Key? key, this.compartimentosPrevio, required this.callback}) : super(key: key);
 
   @override
   _CompartimentoFormState createState() => _CompartimentoFormState();
 }
 
-class _CompartimentoFormState
-    extends ModularState<CompartimentoForm, TanqueController> {
+class _CompartimentoFormState extends ModularState<CompartimentoForm, TanqueController> {
   late List<Compartimento> compartimentos;
   int _capacidadeTotal = 0;
   double _custoTotal = 0;
-  int qtdCompartimentos = 1;
+  int qtdCompartimentos = 0;
 
   @override
   void initState() {
@@ -75,19 +72,12 @@ class _CompartimentoFormState
                             SizedBox(
                               width: 30,
                               child: TextButton(
-                                  onPressed: () => {
-                                        geraCompartimentos(
-                                            qtdCompartimentos + 1)
-                                      },
-                                  child: Icon(Icons.add)),
+                                  onPressed: () => {geraCompartimentos(qtdCompartimentos + 1)}, child: Icon(Icons.add)),
                             ),
                             SizedBox(
                               width: 30,
                               child: TextButton(
-                                  onPressed: () => {
-                                        geraCompartimentos(
-                                            qtdCompartimentos - 1)
-                                      },
+                                  onPressed: () => {geraCompartimentos(qtdCompartimentos - 1)},
                                   child: Icon(Icons.remove)),
                             ),
                           ],
@@ -169,9 +159,9 @@ class _CompartimentoFormState
   }
 
   void geraCompartimentos(int value) {
-    if (value > 10) return;
-    if (value == 0) return;
     if (value == qtdCompartimentos) return;
+    if (value > 10) return;
+    if (value == -1) return;
     setState(() {
       qtdCompartimentos = value;
     });

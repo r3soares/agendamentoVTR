@@ -35,21 +35,13 @@ class _PlacaWidgetState extends State<PlacaWidget> {
           textCapitalization: TextCapitalization.characters,
           focusNode: focusNode,
           decoration: InputDecoration(
-            // prefixIcon: IconButton(
-            //   splashRadius: 1,
+            // suffix: IconButton(
+            //   splashRadius: 4,
             //   icon: Icon(
-            //     Icons.clear,
-            //     size: 12,
+            //     Icons.arrow_right,
             //   ),
-            //   onPressed: () => _cPlaca.clear(),
+            //   onPressed: notificaManualmente,
             // ),
-            suffix: IconButton(
-              splashRadius: 4,
-              icon: Icon(
-                Icons.arrow_right,
-              ),
-              onPressed: notificaManualmente,
-            ),
             icon: Icon(Icons.drive_eta),
             hintText: 'Somente letras e números',
             hintStyle: TextStyle(fontSize: 10),

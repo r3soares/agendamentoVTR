@@ -49,6 +49,7 @@ class _TanquePageState extends ModularState<TanquePage, TanqueStore> {
       callback: _setPlaca,
     );
     inmetroWidget = InputNumeroWidget(
+      titulo: 'Cod. Inmetro',
       campoPrevio: _tanque.codInmetro,
       input: TipoInput.NumLetras,
       callback: _setInmetro,

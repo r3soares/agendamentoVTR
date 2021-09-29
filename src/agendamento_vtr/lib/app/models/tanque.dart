@@ -17,7 +17,7 @@ class Tanque implements JsonSerializable {
 
   StatusTanque status = StatusTanque.Ativo;
 
-  List<Compartimento> compartimentos = [Compartimento(1)];
+  List<Compartimento> compartimentos = List.empty(growable: true);
   //Tem que remover
   DateTime? agenda; //Tem que remover
   String? responsavelAgendamento; //Tem que remover

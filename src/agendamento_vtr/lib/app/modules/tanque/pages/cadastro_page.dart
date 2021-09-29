@@ -94,6 +94,7 @@ class _CadastroPageState extends ModularState<CadastroPage, TanqueStore> {
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: _size!.width / 4),
         child: SingleChildScrollView(
+          physics: const NeverScrollableScrollPhysics(),
           child: Container(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -248,18 +249,6 @@ class _CadastroPageState extends ModularState<CadastroPage, TanqueStore> {
     );
   }
 
-  Widget _placaWidget() {
-    return Container(
-      padding: const EdgeInsets.all(8),
-      alignment: Alignment.centerLeft,
-      child: Card(
-        elevation: 4,
-        shadowColor: Colors.black,
-        child: placaWidget,
-      ),
-    );
-  }
-
   Widget _listaTanques() {
     return Container(
         width: _size!.width * .5,
@@ -267,6 +256,7 @@ class _CadastroPageState extends ModularState<CadastroPage, TanqueStore> {
         child: tanques.isEmpty
             ? SizedBox.shrink()
             : Scrollbar(
+                interactive: true,
                 isAlwaysShown: true,
                 controller: _scrollController,
                 child: ListView.builder(
@@ -282,6 +272,11 @@ class _CadastroPageState extends ModularState<CadastroPage, TanqueStore> {
   }
 
   Widget _tanqueWidget(int index) {
+    return tanques[index].capacidadeTotal > 0 ? _tanqueComCapacidadeWidget(index) : _tanqueSemCapacidadeWidget(index);
+  }
+
+  Widget _tanqueComCapacidadeWidget(int index) {
+    Tanque t = tanques[index];
     return Container(
       padding: const EdgeInsets.all(8),
       child: Card(
@@ -295,19 +290,56 @@ class _CadastroPageState extends ModularState<CadastroPage, TanqueStore> {
                   padding: const EdgeInsets.all(8),
                   child: TextButton(
                     child: Text(
-                      tanques[index].placa.replaceRange(3, 3, '-'),
+                      t.placa.replaceRange(3, 3, '-'),
                       style: TextStyle(fontSize: 20),
                     ),
-                    onPressed: () => _goTanquePage(tExistente: tanques[index]),
+                    onPressed: () => _goTanquePage(tExistente: t),
                   )),
               Container(
                 padding: const EdgeInsets.all(4),
-                child: Text('${tanques[index].capacidadeTotal}L'),
+                child: Text('${t.capacidadeTotal}L'),
               ),
               Container(
                 padding: const EdgeInsets.all(4),
-                child: Text('${tanques[index].compartimentos.length}C ${formataExibicaoSetas(tanques[index])}'),
+                child: Text('${t.compartimentos.length}C ${formataExibicaoSetas(t)}'),
               ),
+              Container(
+                child: IconButton(
+                  splashRadius: 10,
+                  icon: Icon(
+                    Icons.close,
+                    color: Colors.red[900],
+                  ),
+                  onPressed: () => _removeTanque(index),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _tanqueSemCapacidadeWidget(int index) {
+    Tanque t = tanques[index];
+    return Container(
+      padding: const EdgeInsets.all(8),
+      child: Card(
+        elevation: 10,
+        shadowColor: Colors.black,
+        child: Container(
+          padding: const EdgeInsets.all(4),
+          child: Column(
+            children: [
+              Container(
+                  padding: const EdgeInsets.all(8),
+                  child: TextButton(
+                    child: Text(
+                      t.placa.replaceRange(3, 3, '-'),
+                      style: TextStyle(fontSize: 20),
+                    ),
+                    onPressed: () => _goTanquePage(tExistente: t),
+                  )),
               Container(
                 child: IconButton(
                   splashRadius: 10,

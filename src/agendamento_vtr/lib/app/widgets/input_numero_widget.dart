@@ -68,11 +68,10 @@ class _InputNumeroWidgetWidgetState extends State<InputNumeroWidget> {
         padding: EdgeInsets.all(8),
         width: larguraTotal * .2,
         child: TextFormField(
-          autofocus: true,
           focusNode: focusNode,
           decoration: InputDecoration(
             //icon: Image.asset('assets/images/inmetro.png'),
-            icon: Icon(Icons.arrow_right),
+            icon: Icon(Icons.drive_eta),
             hintText: dicaTexto,
             hintStyle: TextStyle(fontSize: 10),
             labelText: widget.titulo,
