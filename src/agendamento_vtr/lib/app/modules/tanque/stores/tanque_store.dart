@@ -1,4 +1,6 @@
+import 'package:agendamento_vtr/app/domain/custo_compartimento.dart';
 import 'package:agendamento_vtr/app/domain/erros.dart';
+import 'package:agendamento_vtr/app/models/compartimento.dart';
 import 'package:agendamento_vtr/app/models/model_base.dart';
 import 'package:agendamento_vtr/app/models/tanque.dart';
 import 'package:agendamento_vtr/app/modules/tanque/models/tanque_model.dart';
@@ -35,6 +37,10 @@ class TanqueStore extends StreamStore<Falha, ModelBase> {
   consultaProprietario(String proprietario) async {
     status = TanqueStoreState.ConsultandoProprietario;
     execute(() => repo.findTanquesByProprietario(proprietario));
+  }
+
+  double getCusto(List<Compartimento> compartimentos) {
+    return compartimentos.fold(0, (acumulado, c) => acumulado + CustoCompartimento().getCusto(c.capacidade, c.setas));
   }
 }
 

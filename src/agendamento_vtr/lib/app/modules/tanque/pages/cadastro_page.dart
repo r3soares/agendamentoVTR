@@ -271,11 +271,11 @@ class _CadastroPageState extends ModularState<CadastroPage, TanqueStore> {
               ));
   }
 
+  // Widget _tanqueWidget(int index) {
+  //   return tanques[index].capacidadeTotal > 0 ? _tanqueComCapacidadeWidget(index) : _tanqueSemCapacidadeWidget(index);
+  // }
+
   Widget _tanqueWidget(int index) {
-    return tanques[index].capacidadeTotal > 0 ? _tanqueComCapacidadeWidget(index) : _tanqueSemCapacidadeWidget(index);
-  }
-
-  Widget _tanqueComCapacidadeWidget(int index) {
     Tanque t = tanques[index];
     return Container(
       padding: const EdgeInsets.all(8),
@@ -297,11 +297,13 @@ class _CadastroPageState extends ModularState<CadastroPage, TanqueStore> {
                   )),
               Container(
                 padding: const EdgeInsets.all(4),
-                child: Text('${t.capacidadeTotal}L'),
+                child: t.capacidadeTotal > 0 ? Text('${t.capacidadeTotal}L') : Text('Capacidade'),
               ),
               Container(
                 padding: const EdgeInsets.all(4),
-                child: Text('${t.compartimentos.length}C ${formataExibicaoSetas(t)}'),
+                child: t.capacidadeTotal > 0
+                    ? Text('${t.compartimentos.length}C ${formataExibicaoSetas(t)}')
+                    : Text('não informada'),
               ),
               Container(
                 child: IconButton(
@@ -320,42 +322,42 @@ class _CadastroPageState extends ModularState<CadastroPage, TanqueStore> {
     );
   }
 
-  Widget _tanqueSemCapacidadeWidget(int index) {
-    Tanque t = tanques[index];
-    return Container(
-      padding: const EdgeInsets.all(8),
-      child: Card(
-        elevation: 10,
-        shadowColor: Colors.black,
-        child: Container(
-          padding: const EdgeInsets.all(4),
-          child: Column(
-            children: [
-              Container(
-                  padding: const EdgeInsets.all(8),
-                  child: TextButton(
-                    child: Text(
-                      t.placa.replaceRange(3, 3, '-'),
-                      style: TextStyle(fontSize: 20),
-                    ),
-                    onPressed: () => _goTanquePage(tExistente: t),
-                  )),
-              Container(
-                child: IconButton(
-                  splashRadius: 10,
-                  icon: Icon(
-                    Icons.close,
-                    color: Colors.red[900],
-                  ),
-                  onPressed: () => _removeTanque(index),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
+  // Widget _tanqueSemCapacidadeWidget(int index) {
+  //   Tanque t = tanques[index];
+  //   return Container(
+  //     padding: const EdgeInsets.all(8),
+  //     child: Card(
+  //       elevation: 10,
+  //       shadowColor: Colors.black,
+  //       child: Container(
+  //         padding: const EdgeInsets.all(4),
+  //         child: Column(
+  //           children: [
+  //             Container(
+  //                 padding: const EdgeInsets.all(8),
+  //                 child: TextButton(
+  //                   child: Text(
+  //                     t.placa.replaceRange(3, 3, '-'),
+  //                     style: TextStyle(fontSize: 20),
+  //                   ),
+  //                   onPressed: () => _goTanquePage(tExistente: t),
+  //                 )),
+  //             Container(
+  //               child: IconButton(
+  //                 splashRadius: 10,
+  //                 icon: Icon(
+  //                   Icons.close,
+  //                   color: Colors.red[900],
+  //                 ),
+  //                 onPressed: () => _removeTanque(index),
+  //               ),
+  //             ),
+  //           ],
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  // }
 
   void _setProprietario(String cnpj, bool valido) {
     cnpjProprietario = valido ? cnpj : '';

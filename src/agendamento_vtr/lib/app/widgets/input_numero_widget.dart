@@ -6,7 +6,7 @@ class InputNumeroWidget extends StatefulWidget {
   final String titulo;
   final TipoInput input;
   //Termo buscado e Resultado
-  final Function(dynamic) callback;
+  final Function(String) callback;
   InputNumeroWidget({this.campoPrevio = '', this.titulo = '', required this.input, required this.callback});
 
   @override

@@ -23,6 +23,7 @@ class _CompartimentoFormState extends ModularState<CompartimentoForm, TanqueCont
   void initState() {
     super.initState();
     _configuraCompartimentos();
+    _notificaListener();
   }
 
   void _configuraCompartimentos() {
