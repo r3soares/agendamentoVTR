@@ -1,4 +1,5 @@
 import 'package:agendamento_vtr/app/domain/erros.dart';
+import 'package:agendamento_vtr/app/domain/validacoes.dart';
 import 'package:agendamento_vtr/app/models/empresa.dart';
 import 'package:agendamento_vtr/app/models/model_base.dart';
 import 'package:agendamento_vtr/app/modules/empresa/models/empresa_model.dart';
@@ -7,6 +8,7 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_triple/flutter_triple.dart';
 
 class EmpresaStore extends StreamStore<Falha, ModelBase> {
+  final valida = Validacoes();
   final Repository repo = Modular.get<Repository>();
   EmpresaStore() : super(EmpresaModel(Status.Inicial, Empresa()));
 
@@ -16,5 +18,13 @@ class EmpresaStore extends StreamStore<Falha, ModelBase> {
 
   void consulta(String cnpj) async {
     execute(() => repo.getEmpresa(cnpj));
+  }
+
+  bool validaEmail(String email) {
+    return valida.validaEmail(email);
+  }
+
+  bool validaTelefone(String telefone) {
+    return valida.validaTelefone(telefone);
   }
 }

@@ -4,11 +4,13 @@ import 'package:agendamento_vtr/app/domain/erros.dart';
 import 'package:agendamento_vtr/app/models/empresa.dart';
 import 'package:agendamento_vtr/app/models/model_base.dart';
 import 'package:agendamento_vtr/app/modules/empresa/stores/empresa_store.dart';
+import 'package:agendamento_vtr/app/modules/empresa/widgets/telefone_widget.dart';
 import 'package:agendamento_vtr/app/widgets/cnpj_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_triple/flutter_triple.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 class CadastroPage extends StatefulWidget {
   final String preCadastro;
@@ -25,6 +27,7 @@ class _CadastroPageState extends ModularState<CadastroPage, EmpresaStore> {
   final TextEditingController _cRazaSocialProp = TextEditingController();
 
   final TextEditingController _cTelefone = TextEditingController();
+  //final TextEditingController _cCelular = TextEditingController();
 
   final TextEditingController _cEmail = TextEditingController();
 
@@ -44,6 +47,8 @@ class _CadastroPageState extends ModularState<CadastroPage, EmpresaStore> {
     cnpjPrevio: widget.preCadastro,
     callback: _atualizaDadosEmpresa,
   );
+
+  late Widget _telefoneWidget = TelefoneWidget();
 
   @override
   void initState() {
@@ -109,7 +114,7 @@ class _CadastroPageState extends ModularState<CadastroPage, EmpresaStore> {
                   titulo(),
                   cnpjProprietarioWidget,
                   razaoSocial(),
-                  telefone(),
+                  telefones(),
                   email(),
                   Container(
                     child: Row(
@@ -152,21 +157,8 @@ class _CadastroPageState extends ModularState<CadastroPage, EmpresaStore> {
         ));
   }
 
-  Widget telefone() {
-    return Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: TextFormField(
-          keyboardType: TextInputType.number,
-          decoration: const InputDecoration(
-            icon: Icon(Icons.phone),
-            hintStyle: TextStyle(fontSize: 10),
-            labelText: 'Telefone para contato, se houver',
-          ),
-          controller: _cTelefone,
-          inputFormatters: <TextInputFormatter>[
-            FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-          ],
-        ));
+  Widget telefones() {
+    return Padding(padding: const EdgeInsets.all(8.0), child: _telefoneWidget);
   }
 
   Widget email() {
@@ -255,12 +247,7 @@ class _CadastroPageState extends ModularState<CadastroPage, EmpresaStore> {
 
   String? validateEmail(String? value) {
     if (value == null || value.isEmpty) return 'Informe um e-mail';
-    String pattern = r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]"
-        r"{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]"
-        r"{0,253}[a-zA-Z0-9])?)*$";
-    RegExp regex = new RegExp(pattern);
-    if (!regex.hasMatch(value)) return 'E-mail inválido';
-    return null;
+    return store.validaEmail(value) ? null : 'E-mail inválido';
   }
 
   bool verificaDadosPreenchidos() {
@@ -273,6 +260,7 @@ class _CadastroPageState extends ModularState<CadastroPage, EmpresaStore> {
     _empresa.email = _cEmail.text;
     _empresa.telefones.clear();
     if (_cTelefone.text.isNotEmpty) _empresa.telefones.add(_cTelefone.text);
+    //if (_cCelular.text.isNotEmpty) _empresa.telefones.add(_cCelular.text);
     _empresa.razaoSocial = _cRazaSocialProp.text;
   }
 
