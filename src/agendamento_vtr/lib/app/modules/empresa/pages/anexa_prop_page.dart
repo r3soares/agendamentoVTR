@@ -38,13 +38,13 @@ class _AnexaPropPageState extends ModularState<AnexaPropPage, EmpresaStore> {
     inmetroWidget = InputNumeroWidget(
       titulo: 'Número Inmetro',
       input: TipoInput.Numeros,
-      callback: (codInmetro) => proprietario.cod = codInmetro,
+      callback: (codInmetro) => proprietario.cod = int.tryParse(codInmetro) ?? 0,
       campoPrevio: '${proprietario.cod}',
     );
     codMunWidget = InputNumeroWidget(
         titulo: 'Código do Município',
         input: TipoInput.Numeros,
-        callback: (codMun) => proprietario.codMun = codMun,
+        callback: (codMun) => proprietario.codMun = int.tryParse(codMun) ?? 0,
         campoPrevio: '${proprietario.codMun}');
     _configStream();
   }
@@ -184,6 +184,7 @@ class _AnexaPropPageState extends ModularState<AnexaPropPage, EmpresaStore> {
   _salvaEmpresa() {
     if (!verificaDadosPreenchidos()) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Informe os campos corretamente')));
+      return;
     }
     _insereDadosNaEmpresa();
     store.salva(widget.empresa);
