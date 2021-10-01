@@ -1,3 +1,6 @@
+import 'package:agendamento_vtr/app/domain/util/cnpj.dart';
+import 'package:agendamento_vtr/app/domain/util/cpf.dart';
+
 class Validacoes {
   bool validaPlaca(String placa) {
     RegExp regex = RegExp('[A-Z]{3}[0-9][0-9A-Z][0-9]{2}');
@@ -17,5 +20,9 @@ class Validacoes {
     String pattern = '[1-9]{2}[1-9]?[0-9]{8}';
     RegExp regex = new RegExp(pattern);
     return regex.hasMatch(telefone);
+  }
+
+  bool validaCPF_CNPJ(value) {
+    return CPF.isValid(value) || CNPJ.isValid(value);
   }
 }

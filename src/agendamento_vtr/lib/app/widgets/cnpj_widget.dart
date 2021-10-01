@@ -1,31 +1,33 @@
-import 'package:agendamento_vtr/app/modules/util/cnpj.dart';
-import 'package:agendamento_vtr/app/modules/util/cpf.dart';
+import 'package:agendamento_vtr/app/domain/validacoes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 class CnpjWidget extends StatefulWidget {
   final String cnpjPrevio;
   final String titulo;
   //Termo buscado e Resultado
   final Function(String, bool) callback;
-  CnpjWidget(
-      {this.cnpjPrevio = '',
-      this.titulo = 'CPF ou CNPJ',
-      required this.callback});
+  CnpjWidget({this.cnpjPrevio = '', this.titulo = 'CPF ou CNPJ', required this.callback});
 
   @override
   _CnpjWidgetState createState() => _CnpjWidgetState();
 }
 
 class _CnpjWidgetState extends State<CnpjWidget> {
-  final TextEditingController _cCnpjCpf = TextEditingController();
-  final focusNode = FocusNode();
+  final Validacoes _valida = Validacoes();
+  final TextEditingController _controller = TextEditingController();
+  final MaskTextInputFormatter _maskInicial =
+      new MaskTextInputFormatter(mask: '###############', filter: {"#": RegExp(r'[0-9]')});
+  final String _maskCPF = '###.###.###-##';
+  final String _maskCNPJ = '##.###.###/####-##';
+  final _focusNode = FocusNode();
 
   @override
   void initState() {
     super.initState();
-    _cCnpjCpf.text = widget.cnpjPrevio;
-    focusNode.addListener(notificaListeners);
+    _controller.text = widget.cnpjPrevio;
+    _focusNode.addListener(notificaListeners);
   }
 
   @override
@@ -37,7 +39,7 @@ class _CnpjWidgetState extends State<CnpjWidget> {
             padding: EdgeInsets.all(8),
             width: larguraTotal * .4,
             child: TextFormField(
-              focusNode: focusNode,
+              focusNode: _focusNode,
               decoration: InputDecoration(
                 icon: Icon(Icons.badge),
                 hintText: 'Somente números',
@@ -45,10 +47,8 @@ class _CnpjWidgetState extends State<CnpjWidget> {
                 labelText: widget.titulo,
               ),
               keyboardType: TextInputType.number,
-              inputFormatters: <TextInputFormatter>[
-                FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-              ],
-              controller: _cCnpjCpf,
+              inputFormatters: [_maskInicial],
+              controller: _controller,
               validator: validaCNPJCPF,
             )),
       ],
@@ -58,13 +58,21 @@ class _CnpjWidgetState extends State<CnpjWidget> {
   String? validaCNPJCPF(String? value) {
     if (value == null || value.isEmpty) return 'Informe o CNPJ ou CPF';
     if (value.length != 14 && value.length != 11) return 'CNPJ ou CPF inválido';
-    if (!CPF.isValid(value) && !CNPJ.isValid(value))
-      return 'CNPJ ou CPF inválido';
+    if (!_valida.validaCPF_CNPJ(value)) return 'CNPJ ou CPF inválido';
     return null;
   }
 
   void notificaListeners() {
-    widget.callback(_cCnpjCpf.text, validaCNPJCPF(_cCnpjCpf.text) == null);
+    if (_focusNode.hasFocus) {
+      _controller.value = _maskInicial.updateMask(mask: '###############');
+    } else {
+      setState(() {
+        _controller.value = _maskInicial.getUnmaskedText().length > 11
+            ? _maskInicial.updateMask(mask: _maskCNPJ)
+            : _maskInicial.updateMask(mask: _maskCPF);
+      });
+      widget.callback(_controller.text, validaCNPJCPF(_maskInicial.getUnmaskedText()) == null);
+    }
   }
 
   // void buscaEmpresa() {
