@@ -1,3 +1,4 @@
+import 'package:agendamento_vtr/app/domain/validacoes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -15,6 +16,7 @@ class PlacaWidget extends StatefulWidget {
 class _PlacaWidgetState extends State<PlacaWidget> {
   final TextEditingController _cPlaca = TextEditingController();
   final focusNode = FocusNode();
+  final Validacoes valida = Validacoes();
   bool validou = false;
   String _placaOld = '';
 
@@ -63,8 +65,7 @@ class _PlacaWidgetState extends State<PlacaWidget> {
     validou = false;
     if (value == null || value.isEmpty) return 'Informe a placa';
     if (value.length != 7) return 'Placa inválida';
-    RegExp regex = RegExp('[A-Z]{3}[0-9][0-9A-Z][0-9]{2}');
-    if (!regex.hasMatch(value)) return 'Placa inválida';
+    if (!valida.validaPlaca(value)) return 'Placa inválida';
     validou = true;
     return null;
   }

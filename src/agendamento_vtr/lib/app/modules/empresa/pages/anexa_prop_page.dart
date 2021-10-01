@@ -3,15 +3,16 @@ import 'package:agendamento_vtr/app/models/empresa.dart';
 import 'package:agendamento_vtr/app/models/model_base.dart';
 import 'package:agendamento_vtr/app/models/proprietario.dart';
 import 'package:agendamento_vtr/app/modules/empresa/stores/empresa_store.dart';
+import 'package:agendamento_vtr/app/widgets/base_widgets.dart';
 import 'package:agendamento_vtr/app/widgets/input_numero_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_triple/flutter_triple.dart';
 
-class AnexaPropPage extends StatefulWidget {
+class AnexaPropPage extends BaseWidgets {
   final Empresa empresa;
   final largura = .5;
-  const AnexaPropPage({required this.empresa});
+  AnexaPropPage({required this.empresa});
 
   @override
   _AnexaPropPageState createState() => _AnexaPropPageState();
@@ -22,14 +23,6 @@ class _AnexaPropPageState extends ModularState<AnexaPropPage, EmpresaStore> {
   late Widget inmetroWidget;
   late Widget codMunWidget;
   late Disposer _disposer;
-
-  late OverlayEntry loadingOverlay = OverlayEntry(builder: (_) {
-    return Container(
-      alignment: Alignment.center,
-      color: Colors.black38,
-      child: CircularProgressIndicator(),
-    );
-  });
 
   @override
   void initState() {
@@ -53,17 +46,17 @@ class _AnexaPropPageState extends ModularState<AnexaPropPage, EmpresaStore> {
     _disposer = store.observer(
         onState: (e) => {
               print('onState: $e'),
-              if (e.status == Status.Salva) {_exibeMsg(context, 'Empresa salva com sucesso.'), Modular.to.pop()}
+              if (e.status == Status.Salva) {_exibeMsg('Empresa salva com sucesso.'), Modular.to.pop()}
             },
         onLoading: (isLoading) {
           if (store.isLoading) {
-            Overlay.of(context)?.insert(loadingOverlay);
+            Overlay.of(context)?.insert(widget.loadingOverlay);
           } else {
-            loadingOverlay.remove();
+            widget.loadingOverlay.remove();
           }
         },
         onError: (error) {
-          _showErro(context, error);
+          _showErro(error);
         });
   }
 
@@ -98,7 +91,7 @@ class _AnexaPropPageState extends ModularState<AnexaPropPage, EmpresaStore> {
                   _codMunWidget(),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: [_btnSalvar(), _btnVoltar()],
+                    children: [widget.btnsalvar(onPressed: _salvaEmpresa), widget.btnVoltar()],
                   ),
                 ],
               ),
@@ -138,47 +131,9 @@ class _AnexaPropPageState extends ModularState<AnexaPropPage, EmpresaStore> {
     );
   }
 
-  Widget _btnSalvar() {
-    return Center(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: ElevatedButton(
-              child: Text('Salvar'),
-              onPressed: () => _salvaEmpresa(),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _btnVoltar() {
-    return Center(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: ElevatedButton(
-              child: Text('Voltar'),
-              onPressed: () => Modular.to.pop(),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   bool verificaDadosPreenchidos() {
     if (proprietario.cod <= 0 || proprietario.codMun == 0) return false;
     return true;
-  }
-
-  void _insereDadosNaEmpresa() {
-    widget.empresa.proprietario = proprietario;
   }
 
   _salvaEmpresa() {
@@ -186,21 +141,21 @@ class _AnexaPropPageState extends ModularState<AnexaPropPage, EmpresaStore> {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Informe os campos corretamente')));
       return;
     }
-    _insereDadosNaEmpresa();
+    widget.empresa.proprietario = proprietario;
     store.salva(widget.empresa);
     print('Salvando proprietario: ${proprietario.cod}');
   }
 
-  void _exibeMsg(BuildContext ctx, String msg) {
-    ScaffoldMessenger.of(ctx).showSnackBar(SnackBar(content: Text(msg)));
+  _exibeMsg(String msg) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
   }
 
-  _showErro(BuildContext ctx, Falha erro) {
+  _showErro(Falha erro) {
     if (!verificaDadosPreenchidos()) return;
     switch (erro.runtimeType) {
       case ErroConexao:
         {
-          ScaffoldMessenger.of(ctx).showSnackBar(SnackBar(
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content: Text('Não foi possível salvar os dados. Erro de conexão'),
             backgroundColor: Colors.red[900],
           ));
@@ -208,7 +163,7 @@ class _AnexaPropPageState extends ModularState<AnexaPropPage, EmpresaStore> {
         }
       case Falha:
         {
-          ScaffoldMessenger.of(ctx).showSnackBar(SnackBar(
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
               content: Text('Não foi possível salvar os dados. ${erro.msg}'), backgroundColor: Colors.red[900]));
           break;
         }

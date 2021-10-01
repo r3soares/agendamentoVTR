@@ -22,7 +22,11 @@ class Validacoes {
     return regex.hasMatch(telefone);
   }
 
-  bool validaCPF_CNPJ(value) {
-    return CPF.isValid(value) || CNPJ.isValid(value);
+  bool validaCNPJ(value) {
+    return CNPJ.isValid(value);
+  }
+
+  bool validaCPF(value) {
+    return CPF.isValid(value);
   }
 }

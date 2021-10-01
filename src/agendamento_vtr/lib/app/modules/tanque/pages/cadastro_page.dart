@@ -2,6 +2,7 @@ import 'package:agendamento_vtr/app/domain/erros.dart';
 import 'package:agendamento_vtr/app/models/model_base.dart';
 import 'package:agendamento_vtr/app/models/tanque.dart';
 import 'package:agendamento_vtr/app/modules/tanque/stores/tanque_store.dart';
+import 'package:agendamento_vtr/app/widgets/base_widgets.dart';
 import 'package:agendamento_vtr/app/widgets/cnpj_widget.dart';
 import 'package:agendamento_vtr/app/widgets/placa_widget.dart';
 import 'package:flutter/material.dart';
@@ -9,8 +10,8 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_triple/flutter_triple.dart';
 import 'package:collection/collection.dart';
 
-class CadastroPage extends StatefulWidget {
-  const CadastroPage({Key? key}) : super(key: key);
+class CadastroPage extends BaseWidgets {
+  CadastroPage({Key? key});
 
   @override
   _CadastroPageState createState() => _CadastroPageState();
@@ -125,18 +126,20 @@ class _CadastroPageState extends ModularState<CadastroPage, TanqueStore> {
               padding: EdgeInsets.all(4),
               child: titulo('Proprietário'),
             ),
-            Column(
-              children: [
-                Form(
-                  child: proprietarioWidget,
-                  autovalidateMode: AutovalidateMode.onUserInteraction,
-                  key: _formKey,
-                ),
-                //responsavelWidget,
-              ],
-            ),
+            _buildCNPJWidget()
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildCNPJWidget() {
+    return Container(
+      padding: EdgeInsets.only(bottom: 15, left: 12, right: MediaQuery.of(context).size.width * .3),
+      child: Form(
+        child: proprietarioWidget,
+        autovalidateMode: AutovalidateMode.onUserInteraction,
+        key: _formKey,
       ),
     );
   }
@@ -144,8 +147,8 @@ class _CadastroPageState extends ModularState<CadastroPage, TanqueStore> {
   Widget _camposBotoes() {
     return Row(
       children: [
-        btnSalvar(),
-        btnVoltar(),
+        widget.btnsalvar(onPressed: _salvaDados),
+        widget.btnVoltar(),
       ],
     );
   }
@@ -189,26 +192,6 @@ class _CadastroPageState extends ModularState<CadastroPage, TanqueStore> {
           titulo,
           style: TextStyle(fontSize: 20),
         ));
-  }
-
-  Widget btnSalvar() {
-    return Container(
-      padding: const EdgeInsets.all(8),
-      child: ElevatedButton(
-        child: Text('Salvar'),
-        onPressed: () => _salvaDados(),
-      ),
-    );
-  }
-
-  Widget btnVoltar() {
-    return Container(
-      padding: const EdgeInsets.all(8),
-      child: ElevatedButton(
-        child: Text('Voltar'),
-        onPressed: () => Modular.to.pop(),
-      ),
-    );
   }
 
   Widget btnTanque() {
@@ -271,10 +254,6 @@ class _CadastroPageState extends ModularState<CadastroPage, TanqueStore> {
               ));
   }
 
-  // Widget _tanqueWidget(int index) {
-  //   return tanques[index].capacidadeTotal > 0 ? _tanqueComCapacidadeWidget(index) : _tanqueSemCapacidadeWidget(index);
-  // }
-
   Widget _tanqueWidget(int index) {
     Tanque t = tanques[index];
     return Container(
@@ -322,43 +301,6 @@ class _CadastroPageState extends ModularState<CadastroPage, TanqueStore> {
     );
   }
 
-  // Widget _tanqueSemCapacidadeWidget(int index) {
-  //   Tanque t = tanques[index];
-  //   return Container(
-  //     padding: const EdgeInsets.all(8),
-  //     child: Card(
-  //       elevation: 10,
-  //       shadowColor: Colors.black,
-  //       child: Container(
-  //         padding: const EdgeInsets.all(4),
-  //         child: Column(
-  //           children: [
-  //             Container(
-  //                 padding: const EdgeInsets.all(8),
-  //                 child: TextButton(
-  //                   child: Text(
-  //                     t.placa.replaceRange(3, 3, '-'),
-  //                     style: TextStyle(fontSize: 20),
-  //                   ),
-  //                   onPressed: () => _goTanquePage(tExistente: t),
-  //                 )),
-  //             Container(
-  //               child: IconButton(
-  //                 splashRadius: 10,
-  //                 icon: Icon(
-  //                   Icons.close,
-  //                   color: Colors.red[900],
-  //                 ),
-  //                 onPressed: () => _removeTanque(index),
-  //               ),
-  //             ),
-  //           ],
-  //         ),
-  //       ),
-  //     ),
-  //   );
-  // }
-
   void _setProprietario(String cnpj, bool valido) {
     cnpjProprietario = valido ? cnpj : '';
     // if (valido) {
@@ -375,7 +317,7 @@ class _CadastroPageState extends ModularState<CadastroPage, TanqueStore> {
     return setas > 0 ? '${setas}SS' : '';
   }
 
-  void _salvaDados() {
+  _salvaDados() {
     if (!_validaForm()) {
       _msgTemporaria('Há campos inválidos');
       return;
@@ -431,7 +373,7 @@ class _CadastroPageState extends ModularState<CadastroPage, TanqueStore> {
       case ErroConexao:
         {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text('Não foi possível salvar os dados. Erro de conexão'),
+            content: Text('Erro de conexão'),
             backgroundColor: Colors.red[900],
           ));
           break;

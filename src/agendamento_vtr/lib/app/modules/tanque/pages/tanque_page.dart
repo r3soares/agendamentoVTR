@@ -7,13 +7,14 @@ import 'package:agendamento_vtr/app/modules/tanque/stores/tanque_store.dart';
 import 'package:agendamento_vtr/app/modules/tanque/widgets/compartimento_form.dart';
 import 'package:agendamento_vtr/app/modules/tanque/widgets/tanque_page_widgets/doc_widget.dart';
 import 'package:agendamento_vtr/app/modules/tanque/widgets/tanque_page_widgets/tanque_zero_widget.dart';
+import 'package:agendamento_vtr/app/widgets/base_widgets.dart';
 import 'package:agendamento_vtr/app/widgets/input_numero_widget.dart';
 import 'package:agendamento_vtr/app/widgets/placa_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_triple/flutter_triple.dart';
 
-class TanquePage extends StatefulWidget {
+class TanquePage extends BaseWidgets {
   final Tanque? tanquePrevio;
   TanquePage({this.tanquePrevio});
 
@@ -146,8 +147,8 @@ class _TanquePageState extends ModularState<TanquePage, TanqueStore> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        btnSalvar(),
-                        btnCancelar(),
+                        widget.btnsalvar(onPressed: _salvaDados),
+                        widget.btnVoltar(),
                         //exibeBotoes()
                       ],
                     )
@@ -214,26 +215,6 @@ class _TanquePageState extends ModularState<TanquePage, TanqueStore> {
         ],
       ),
     ));
-  }
-
-  Widget btnSalvar() {
-    return Container(
-      padding: EdgeInsets.all(8),
-      child: ElevatedButton(
-        child: Text('Salvar'),
-        onPressed: () => _salvaDados(),
-      ),
-    );
-  }
-
-  Widget btnCancelar() {
-    return Container(
-      padding: EdgeInsets.all(8),
-      child: TextButton(
-        child: Text('Cancelar'),
-        onPressed: () => _cancela(),
-      ),
-    );
   }
 
   Widget _titulo() {
@@ -312,17 +293,13 @@ class _TanquePageState extends ModularState<TanquePage, TanqueStore> {
   // #endregion
 
   // #region Altera Formulario
-  void _salvaDados() {
+  _salvaDados() {
     if (_formKey.currentState == null) return;
     if (!_formKey.currentState!.validate()) {
       _msgTemporaria('Verifique os campos pendentes');
       return;
     }
     store.salva(_tanque);
-  }
-
-  void _cancela() {
-    Modular.to.pop();
   }
 
   void _carregaTanqueExistente(Tanque tExistente) {

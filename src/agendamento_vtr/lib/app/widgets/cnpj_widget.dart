@@ -32,33 +32,25 @@ class _CnpjWidgetState extends State<CnpjWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final larguraTotal = MediaQuery.of(context).size.width;
-    return Row(
-      children: [
-        Container(
-            padding: EdgeInsets.all(8),
-            width: larguraTotal * .4,
-            child: TextFormField(
-              focusNode: _focusNode,
-              decoration: InputDecoration(
-                icon: Icon(Icons.badge),
-                hintText: 'Somente números',
-                hintStyle: TextStyle(fontSize: 10),
-                labelText: widget.titulo,
-              ),
-              keyboardType: TextInputType.number,
-              inputFormatters: [_maskInicial],
-              controller: _controller,
-              validator: validaCNPJCPF,
-            )),
-      ],
+    return TextFormField(
+      focusNode: _focusNode,
+      decoration: InputDecoration(
+        icon: Icon(Icons.badge),
+        hintText: 'Somente números',
+        hintStyle: TextStyle(fontSize: 10),
+        labelText: widget.titulo,
+      ),
+      keyboardType: TextInputType.number,
+      inputFormatters: [_maskInicial],
+      controller: _controller,
+      validator: validaCNPJCPF,
     );
   }
 
   String? validaCNPJCPF(String? value) {
     if (value == null || value.isEmpty) return 'Informe o CNPJ ou CPF';
     if (value.length != 14 && value.length != 11) return 'CNPJ ou CPF inválido';
-    if (!_valida.validaCPF_CNPJ(value)) return 'CNPJ ou CPF inválido';
+    if (!_valida.validaCPF(value) && !_valida.validaCNPJ(value)) return 'CNPJ ou CPF inválido';
     return null;
   }
 
@@ -71,7 +63,7 @@ class _CnpjWidgetState extends State<CnpjWidget> {
             ? _maskInicial.updateMask(mask: _maskCNPJ)
             : _maskInicial.updateMask(mask: _maskCPF);
       });
-      widget.callback(_controller.text, validaCNPJCPF(_maskInicial.getUnmaskedText()) == null);
+      widget.callback(_maskInicial.getUnmaskedText(), validaCNPJCPF(_maskInicial.getUnmaskedText()) == null);
     }
   }
 

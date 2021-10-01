@@ -1,21 +1,22 @@
 import 'dart:async';
 
 import 'package:agendamento_vtr/app/domain/erros.dart';
+import 'package:agendamento_vtr/app/models/bloc.dart';
 import 'package:agendamento_vtr/app/models/empresa.dart';
 import 'package:agendamento_vtr/app/models/model_base.dart';
 import 'package:agendamento_vtr/app/modules/empresa/stores/empresa_store.dart';
 import 'package:agendamento_vtr/app/modules/empresa/widgets/telefone_widget.dart';
+import 'package:agendamento_vtr/app/widgets/base_widgets.dart';
 import 'package:agendamento_vtr/app/widgets/cnpj_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_triple/flutter_triple.dart';
-import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
-class CadastroPage extends StatefulWidget {
-  final String preCadastro;
+class CadastroPage extends BaseWidgets {
+  final Empresa? preCadastro;
   final largura = .5;
-  const CadastroPage({this.preCadastro = ''});
+  CadastroPage({this.preCadastro});
 
   @override
   _CadastroPageState createState() => _CadastroPageState();
@@ -24,36 +25,32 @@ class CadastroPage extends StatefulWidget {
 class _CadastroPageState extends ModularState<CadastroPage, EmpresaStore> {
   final _formKey = GlobalKey<FormState>();
 
+  late Empresa _empresa;
+
   final TextEditingController _cRazaSocialProp = TextEditingController();
-
-  final TextEditingController _cTelefone = TextEditingController();
-  //final TextEditingController _cCelular = TextEditingController();
-
   final TextEditingController _cEmail = TextEditingController();
 
-  Empresa _empresa = Empresa();
-
   late Disposer _disposer;
+  late Disposer _disposerTel;
 
-  late OverlayEntry loadingOverlay = OverlayEntry(builder: (_) {
-    return Container(
-      alignment: Alignment.center,
-      color: Colors.black38,
-      child: CircularProgressIndicator(),
-    );
-  });
+  final Bloc blocTelefone = Bloc('');
 
-  late Widget cnpjProprietarioWidget = CnpjWidget(
-    cnpjPrevio: widget.preCadastro,
-    callback: _atualizaDadosEmpresa,
-  );
-
-  late Widget _telefoneWidget = TelefoneWidget();
+  late Widget cnpjProprietarioWidget;
+  late Widget _telefoneWidget;
 
   @override
   void initState() {
     super.initState();
-    _empresa.cnpjCpf = widget.preCadastro;
+    _empresa = widget.preCadastro ?? Empresa();
+    _cEmail.text = _empresa.email;
+    _cRazaSocialProp.text = _empresa.razaoSocial;
+
+    cnpjProprietarioWidget = CnpjWidget(
+      cnpjPrevio: _empresa.cnpjCpf,
+      callback: _atualizaDadosEmpresa,
+    );
+
+    _telefoneWidget = TelefoneWidget(bloc: blocTelefone);
     _configStream();
   }
 
@@ -63,12 +60,7 @@ class _CadastroPageState extends ModularState<CadastroPage, EmpresaStore> {
               print('onState: $e'),
               if (e.status == Status.Consulta)
                 {
-                  _empresa = e.model,
-                  setState(() {
-                    _cRazaSocialProp.text = e.model.razaoSocial;
-                    _cTelefone.text = e.model.telefones.isEmpty ? '' : e.model.telefones[0];
-                    _cEmail.text = e.model.email;
-                  }),
+                  Modular.to.popAndPushNamed('cadastro', arguments: e.model),
                 }
               else if (e.status == Status.Salva)
                 {
@@ -77,20 +69,27 @@ class _CadastroPageState extends ModularState<CadastroPage, EmpresaStore> {
             },
         onLoading: (isLoading) {
           if (store.isLoading) {
-            Overlay.of(context)?.insert(loadingOverlay);
+            Overlay.of(context)?.insert(widget.loadingOverlay);
           } else {
-            loadingOverlay.remove();
+            widget.loadingOverlay.remove();
           }
         },
         onError: (error) {
-          _showErro(context, error);
+          _showErro(error);
         });
+
+    _disposerTel = blocTelefone.observer(
+        onState: (telefone) => {
+              _empresa.telefones.clear(),
+              _empresa.telefones.add(telefone as String),
+            });
   }
 
   @override
   void dispose() {
     super.dispose();
     _disposer();
+    _disposerTel();
   }
 
   @override
@@ -111,18 +110,15 @@ class _CadastroPageState extends ModularState<CadastroPage, EmpresaStore> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  titulo(),
-                  cnpjProprietarioWidget,
-                  razaoSocial(),
-                  telefones(),
-                  email(),
+                  buildTitulo(),
+                  _buildCNPJWidget(),
+                  buildRazaoSocial(),
+                  buildTelefone(),
+                  buildEmail(),
                   Container(
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        btnSalvar(context),
-                        _btnVoltar(),
-                      ],
+                      children: [widget.btnsalvar(onPressed: _salvaEmpresa), widget.btnVoltar()],
                     ),
                   ),
                 ],
@@ -134,7 +130,14 @@ class _CadastroPageState extends ModularState<CadastroPage, EmpresaStore> {
     );
   }
 
-  Widget titulo() {
+  Widget _buildCNPJWidget() {
+    return Container(
+      padding: const EdgeInsets.all(8),
+      child: cnpjProprietarioWidget,
+    );
+  }
+
+  Widget buildTitulo() {
     return Container(
         child: Text(
       "Dados da Empresa",
@@ -142,7 +145,7 @@ class _CadastroPageState extends ModularState<CadastroPage, EmpresaStore> {
     ));
   }
 
-  Widget razaoSocial() {
+  Widget buildRazaoSocial() {
     return Padding(
         padding: const EdgeInsets.all(8.0),
         child: TextFormField(
@@ -154,14 +157,18 @@ class _CadastroPageState extends ModularState<CadastroPage, EmpresaStore> {
           validator: (String? value) {
             return (value != null && value.length > 0) ? null : 'Informe um nome';
           },
+          onChanged: (razaoSocial) => _empresa.razaoSocial = razaoSocial,
         ));
   }
 
-  Widget telefones() {
-    return Padding(padding: const EdgeInsets.all(8.0), child: _telefoneWidget);
+  Widget buildTelefone() {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: _telefoneWidget,
+    );
   }
 
-  Widget email() {
+  Widget buildEmail() {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: TextFormField(
@@ -173,76 +180,9 @@ class _CadastroPageState extends ModularState<CadastroPage, EmpresaStore> {
         keyboardType: TextInputType.emailAddress,
         controller: _cEmail,
         validator: validateEmail,
-        onSaved: (String? value) {
-          // This optional block of code can be used to run
-          // code when the user saves the form.
-        },
+        onChanged: (email) => _empresa.email = email,
       ),
     );
-  }
-
-  Widget _btnVoltar() {
-    return Center(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: ElevatedButton(
-              child: Text('Voltar'),
-              onPressed: () => Modular.to.pop(),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget btnSalvar(BuildContext ctx) {
-    return Center(
-      child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: ElevatedButton(
-            child: Text('Salvar'),
-            onPressed: () => _salvaEmpresa(ctx),
-          )),
-    );
-  }
-
-  _showErro(BuildContext ctx, Falha erro) {
-    if (!verificaDadosPreenchidos()) return;
-    switch (erro.runtimeType) {
-      case ErroConexao:
-        {
-          ScaffoldMessenger.of(ctx).showSnackBar(SnackBar(
-            content: Text('Não foi possível salvar os dados. Erro de conexão'),
-            backgroundColor: Colors.red[900],
-          ));
-          break;
-        }
-      case Falha:
-        {
-          ScaffoldMessenger.of(ctx).showSnackBar(SnackBar(
-              content: Text('Não foi possível salvar os dados. ${erro.msg}'), backgroundColor: Colors.red[900]));
-          break;
-        }
-    }
-  }
-
-  void _salvaEmpresa(BuildContext ctx) {
-    if (!verificaDadosPreenchidos()) {
-      ScaffoldMessenger.of(ctx).showSnackBar(const SnackBar(content: Text('Verifique os dados pendentes')));
-      return;
-    }
-    _insereDadosNaEmpresa();
-    store.salva(_empresa);
-    print('Salvando empresa: ' + _empresa.cnpjCpf);
-  }
-
-  void _atualizaDadosEmpresa(String cnpj, bool valido) async {
-    if (!valido) return;
-    _empresa.cnpjCpf = cnpj;
-    store.consulta(cnpj);
   }
 
   String? validateEmail(String? value) {
@@ -253,19 +193,6 @@ class _CadastroPageState extends ModularState<CadastroPage, EmpresaStore> {
   bool verificaDadosPreenchidos() {
     if (_formKey.currentState == null) return false;
     return _formKey.currentState!.validate();
-  }
-
-  void _insereDadosNaEmpresa() {
-    //controller.empresa.cnpj = _cCnpjCpf.text;
-    _empresa.email = _cEmail.text;
-    _empresa.telefones.clear();
-    if (_cTelefone.text.isNotEmpty) _empresa.telefones.add(_cTelefone.text);
-    //if (_cCelular.text.isNotEmpty) _empresa.telefones.add(_cCelular.text);
-    _empresa.razaoSocial = _cRazaSocialProp.text;
-  }
-
-  void _goAnexaProprietarioPage() {
-    Modular.to.popAndPushNamed('anexa_proprietario', arguments: _empresa);
   }
 
   Future<void> _showDialogAnexaProprietario() async {
@@ -298,5 +225,44 @@ class _CadastroPageState extends ModularState<CadastroPage, EmpresaStore> {
         );
       },
     );
+  }
+
+  _atualizaDadosEmpresa(String cnpj, bool valido) async {
+    if (!valido) return;
+    _empresa.cnpjCpf = cnpj;
+    store.consulta(cnpj);
+  }
+
+  _goAnexaProprietarioPage() {
+    Modular.to.popAndPushNamed('anexa_proprietario', arguments: _empresa);
+  }
+
+  _showErro(Falha erro) {
+    if (!verificaDadosPreenchidos()) return;
+    switch (erro.runtimeType) {
+      case ErroConexao:
+        {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text('Não foi possível salvar os dados. Erro de conexão'),
+            backgroundColor: Colors.red[900],
+          ));
+          break;
+        }
+      case Falha:
+        {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text('Não foi possível salvar os dados. ${erro.msg}'), backgroundColor: Colors.red[900]));
+          break;
+        }
+    }
+  }
+
+  _salvaEmpresa() {
+    if (!verificaDadosPreenchidos()) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Verifique os dados pendentes')));
+      return;
+    }
+    store.salva(_empresa);
+    print('Salvando empresa: ' + _empresa.cnpjCpf);
   }
 }

@@ -1,10 +1,12 @@
 import 'package:agendamento_vtr/app/domain/validacoes.dart';
+import 'package:agendamento_vtr/app/models/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 class TelefoneWidget extends StatefulWidget {
-  const TelefoneWidget({Key? key}) : super(key: key);
+  final Bloc bloc;
+  const TelefoneWidget({Key? key, required this.bloc}) : super(key: key);
 
   @override
   _TelefoneWidgetState createState() => _TelefoneWidgetState();
@@ -21,8 +23,8 @@ class _TelefoneWidgetState extends State<TelefoneWidget> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
+
     _focusNode.addListener(() {
       if (!_focusNode.hasFocus) {
         setState(() {
@@ -32,6 +34,7 @@ class _TelefoneWidgetState extends State<TelefoneWidget> {
         });
       } else {
         _controller.value = _maskInicial.updateMask(mask: '(##) #########');
+        widget.bloc.update(_maskInicial.getUnmaskedText());
       }
     });
   }

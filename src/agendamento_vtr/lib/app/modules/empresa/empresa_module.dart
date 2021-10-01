@@ -15,7 +15,7 @@ class EmpresaModule extends Module {
   @override
   final List<ModularRoute> routes = [
     ChildRoute(Modular.initialRoute, child: (_, args) => MainPage()),
-    ChildRoute('/cadastro', child: (_, args) => CadastroPage(preCadastro: args.data ?? '')),
+    ChildRoute('/cadastro', child: (_, args) => CadastroPage(preCadastro: args.data)),
     ChildRoute('/anexa_proprietario', child: (_, args) => AnexaPropPage(empresa: args.data)),
   ];
 }
