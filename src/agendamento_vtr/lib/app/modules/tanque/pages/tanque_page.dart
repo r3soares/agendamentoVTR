@@ -12,7 +12,6 @@ import 'package:agendamento_vtr/app/widgets/input_numero_widget.dart';
 import 'package:agendamento_vtr/app/widgets/placa_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:flutter_triple/flutter_triple.dart';
 
 class TanquePage extends BaseWidgets {
   final Tanque? tanquePrevio;
@@ -31,7 +30,7 @@ class _TanquePageState extends ModularState<TanquePage, TanqueStore> {
   late Widget tanqueZeroWidget;
   late Widget compartimentoForm;
 
-  late Disposer _disposer;
+  //late Disposer _disposer;
 
   late OverlayEntry loadingOverlay = OverlayEntry(builder: (_) {
     return Container(
@@ -74,32 +73,49 @@ class _TanquePageState extends ModularState<TanquePage, TanqueStore> {
   @override
   void dispose() {
     super.dispose();
-    _disposer();
+    //_disposer();
   }
 
   void _configStream() {
-    _disposer = store.observer(
-        onState: (ModelBase t) => {
-              if (t.status == Status.Salva)
-                {
-                  _showDialogTanqueSalvo(),
-                }
-              else if (widget.tanquePrevio == null &&
-                  (t.status == Status.ConsultaPlaca || t.status == Status.ConsultaInmetro))
-                {
-                  _avisaTanqueExistente(t.model),
-                }
-            },
-        onLoading: (isLoading) {
-          if (store.isLoading) {
-            Overlay.of(context)?.insert(loadingOverlay);
-          } else {
-            loadingOverlay.remove();
-          }
-        },
-        onError: (error) {
-          _showErro(error);
-        });
+    store.sTanque.observer(onState: (_) => _showDialogTanqueSalvo());
+    if (widget.tanquePrevio == null) {
+      store.cPlaca.observer(
+        onState: (t) => {t = t as ModelBase, _avisaTanqueExistente(t.model)},
+        onLoading: loading,
+        onError: _showErro,
+      );
+      store.cInmetro.observer(
+        onState: (t) => {t = t as ModelBase, _avisaTanqueExistente(t.model)},
+        onLoading: loading,
+        onError: _showErro,
+      );
+    }
+    // _disposer = store.observer(
+    //     onState: (ModelBase t) => {
+    //           if (t.status == Status.Salva)
+    //             {
+    //               _showDialogTanqueSalvo(),
+    //             }
+    //           else if (widget.tanquePrevio == null &&
+    //               (t.status == Status.ConsultaPlaca || t.status == Status.ConsultaInmetro))
+    //             {
+    //               _avisaTanqueExistente(t.model),
+    //             }
+    //         },
+    //     onLoading: (isLoading) {
+    //       if (store.isLoading) {
+    //         Overlay.of(context)?.insert(loadingOverlay);
+    //       } else {
+    //         loadingOverlay.remove();
+    //       }
+    //     },
+    //     onError: (error) {
+    //       _showErro(error);
+    //     });
+  }
+
+  loading(bool isLoading) {
+    widget.loading(isLoading, context);
   }
 
   @override
@@ -294,6 +310,7 @@ class _TanquePageState extends ModularState<TanquePage, TanqueStore> {
 
   // #region Altera Formulario
   _salvaDados() {
+    print('Salvando em TanquePage...');
     if (_formKey.currentState == null) return;
     if (!_formKey.currentState!.validate()) {
       _msgTemporaria('Verifique os campos pendentes');

@@ -7,7 +7,6 @@ import 'package:agendamento_vtr/app/widgets/cnpj_widget.dart';
 import 'package:agendamento_vtr/app/widgets/placa_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:flutter_triple/flutter_triple.dart';
 import 'package:collection/collection.dart';
 
 class CadastroPage extends BaseWidgets {
@@ -24,7 +23,7 @@ class _CadastroPageState extends ModularState<CadastroPage, TanqueStore> {
   final List<Tanque> tanques = List.empty(growable: true);
   Size? _size;
   String cnpjProprietario = '';
-  late Disposer _disposer;
+  //late Disposer _disposer;
 
   late Widget proprietarioWidget = CnpjWidget(
     titulo: 'CNPJ ou CPF',
@@ -52,37 +51,65 @@ class _CadastroPageState extends ModularState<CadastroPage, TanqueStore> {
   @override
   void dispose() {
     super.dispose();
-    _disposer();
+    //_disposer();
   }
 
   void _configStream() {
-    _disposer = store.observer(
-        onState: (ModelBase t) => {
-              if (t.status == Status.ConsultaPlaca)
-                {_incluiTanque(t.model), limpaTermo(), _msgTemporaria('${(t.model as Tanque).placa} adicionado.')}
-              else if (store.status == TanqueStoreState.SalvandoMuitos)
-                {
-                  _showDialogTanquesSalvos(),
-                }
-              else if (t.status == Status.ConsultaMuitos)
-                {
-                  for (var t in (t.model as List<Tanque>))
-                    {
-                      _incluiTanque(t),
-                    },
-                  _msgTemporaria('Encontrado veículo(s) associados a este proprietário.')
-                }
+    store.cPlaca.observer(
+        onState: (t) => {
+              t = t as ModelBase,
+              _incluiTanque(t.model),
+              limpaTermo(),
+              _msgTemporaria('${(t.model as Tanque).placa} adicionado.')
             },
-        onLoading: (isLoading) {
-          if (store.isLoading) {
-            Overlay.of(context)?.insert(loadingOverlay);
-          } else {
-            loadingOverlay.remove();
-          }
-        },
-        onError: (error) {
-          _showErro(error);
-        });
+        onLoading: loading,
+        onError: _showErro);
+
+    store.cProprietario.observer(
+        onState: (t) => {
+              t = t as ModelBase,
+              for (var t in (t.model as List<Tanque>))
+                {
+                  _incluiTanque(t),
+                },
+              _msgTemporaria('Encontrado veículo(s) associados a este proprietário.'),
+            },
+        onLoading: loading,
+        onError: _showErro);
+
+    store.sTanques.observer(
+      onState: (t) => _showDialogTanquesSalvos(),
+      onLoading: loading,
+      onError: _showErro,
+    );
+
+    // _disposer = store.observer(
+    //     onState: (ModelBase t) => {
+    //           if (t.status == Status.ConsultaPlaca)
+    //             {_incluiTanque(t.model), limpaTermo(), _msgTemporaria('${(t.model as Tanque).placa} adicionado.')}
+    //           else if (store.status == TanqueStoreState.SalvandoMuitos)
+    //             {
+    //               _showDialogTanquesSalvos(),
+    //             }
+    //           else if (t.status == Status.ConsultaMuitos)
+    //             {
+    //               for (var t in (t.model as List<Tanque>))
+    //                 {
+    //                   _incluiTanque(t),
+    //                 },
+    //               _msgTemporaria('Encontrado veículo(s) associados a este proprietário.')
+    //             }
+    //         },
+    //     onLoading: (isLoading) {
+    //       if (store.isLoading) {
+    //         Overlay.of(context)?.insert(loadingOverlay);
+    //       } else {
+    //         loadingOverlay.remove();
+    //       }
+    //     },
+    //     onError: (error) {
+    //   _showErro(error);
+    // });
   }
 
   @override
@@ -110,6 +137,10 @@ class _CadastroPageState extends ModularState<CadastroPage, TanqueStore> {
         ),
       ),
     );
+  }
+
+  loading(bool isLoading) {
+    widget.loading(isLoading, context);
   }
 
   Widget _camposPropResp() {

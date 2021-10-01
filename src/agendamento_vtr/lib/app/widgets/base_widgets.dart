@@ -10,6 +10,14 @@ abstract class BaseWidgets extends StatefulWidget {
     );
   });
 
+  loading(bool isLoading, BuildContext context) {
+    if (isLoading) {
+      Overlay.of(context)?.insert(loadingOverlay);
+    } else {
+      loadingOverlay.remove();
+    }
+  }
+
   Widget btnsalvar({String nome = 'Salvar', required void Function() onPressed}) {
     return Container(
       padding: const EdgeInsets.all(8),
