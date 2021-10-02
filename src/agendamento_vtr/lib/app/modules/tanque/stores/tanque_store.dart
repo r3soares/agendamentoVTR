@@ -18,7 +18,6 @@ class TanqueStore extends StreamStore<Falha, ModelBase> {
   final Bloc sTanques = Bloc(ModelBase(Status.Inicial, null));
   final valida = Validacoes();
   final Repository repo = Modular.get<Repository>();
-  TanqueStoreState status = TanqueStoreState.Inicial;
   TanqueStore() : super(TanqueModel(Status.Inicial, Tanque()));
 
   @override
@@ -67,13 +66,4 @@ class TanqueStore extends StreamStore<Falha, ModelBase> {
   bool validaPlaca(String placa) {
     return valida.validaPlaca(placa);
   }
-}
-
-enum TanqueStoreState {
-  Inicial,
-  Salvando,
-  SalvandoMuitos,
-  ConsultandoPlaca,
-  ConsultandoInmetro,
-  ConsultandoProprietario
 }

@@ -11,7 +11,6 @@ import 'package:agendamento_vtr/app/widgets/cnpj_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:flutter_triple/flutter_triple.dart';
 
 class CadastroPage extends BaseWidgets {
   final Empresa? preCadastro;
@@ -29,9 +28,6 @@ class _CadastroPageState extends ModularState<CadastroPage, EmpresaStore> {
 
   final TextEditingController _cRazaSocialProp = TextEditingController();
   final TextEditingController _cEmail = TextEditingController();
-
-  late Disposer _disposer;
-  late Disposer _disposerTel;
 
   final Bloc blocTelefone = Bloc('');
 
@@ -55,41 +51,26 @@ class _CadastroPageState extends ModularState<CadastroPage, EmpresaStore> {
   }
 
   void _configStream() {
-    _disposer = store.observer(
-        onState: (e) => {
-              print('onState: $e'),
-              if (e.status == Status.Consulta)
-                {
-                  Modular.to.popAndPushNamed('cadastro', arguments: e.model),
-                }
-              else if (e.status == Status.Salva)
-                {
-                  _showDialogAnexaProprietario(),
-                }
-            },
-        onLoading: (isLoading) {
-          if (store.isLoading) {
-            Overlay.of(context)?.insert(widget.loadingOverlay);
-          } else {
-            widget.loadingOverlay.remove();
-          }
-        },
-        onError: (error) {
-          _showErro(error);
-        });
+    store.cEmpresa.observer(
+      onState: (e) => Modular.to.popAndPushNamed('cadastro', arguments: (e as ModelBase).model),
+      onLoading: loading,
+      onError: _showErro,
+    );
+    store.sEmpresa.observer(
+      onState: (e) => _showDialogAnexaProprietario(),
+      onLoading: loading,
+      onError: _showErro,
+    );
 
-    _disposerTel = blocTelefone.observer(
+    blocTelefone.observer(
         onState: (telefone) => {
               _empresa.telefones.clear(),
               _empresa.telefones.add(telefone as String),
             });
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-    _disposer();
-    _disposerTel();
+  loading(bool isLoading) {
+    widget.loading(isLoading, context);
   }
 
   @override

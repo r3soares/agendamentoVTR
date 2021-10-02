@@ -1,13 +1,11 @@
 import 'package:agendamento_vtr/app/domain/erros.dart';
 import 'package:agendamento_vtr/app/models/empresa.dart';
-import 'package:agendamento_vtr/app/models/model_base.dart';
 import 'package:agendamento_vtr/app/models/proprietario.dart';
 import 'package:agendamento_vtr/app/modules/empresa/stores/empresa_store.dart';
 import 'package:agendamento_vtr/app/widgets/base_widgets.dart';
 import 'package:agendamento_vtr/app/widgets/input_numero_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:flutter_triple/flutter_triple.dart';
 
 class AnexaPropPage extends BaseWidgets {
   final Empresa empresa;
@@ -22,7 +20,6 @@ class _AnexaPropPageState extends ModularState<AnexaPropPage, EmpresaStore> {
   late Proprietario proprietario;
   late Widget inmetroWidget;
   late Widget codMunWidget;
-  late Disposer _disposer;
 
   @override
   void initState() {
@@ -43,27 +40,18 @@ class _AnexaPropPageState extends ModularState<AnexaPropPage, EmpresaStore> {
   }
 
   void _configStream() {
-    _disposer = store.observer(
-        onState: (e) => {
-              print('onState: $e'),
-              if (e.status == Status.Salva) {_exibeMsg('Empresa salva com sucesso.'), Modular.to.pop()}
-            },
-        onLoading: (isLoading) {
-          if (store.isLoading) {
-            Overlay.of(context)?.insert(widget.loadingOverlay);
-          } else {
-            widget.loadingOverlay.remove();
-          }
-        },
-        onError: (error) {
-          _showErro(error);
-        });
+    store.sEmpresa.observer(
+      onState: (e) => {
+        _exibeMsg('Empresa salva com sucesso.'),
+        Modular.to.pop(),
+      },
+      onLoading: loading,
+      onError: _showErro,
+    );
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-    _disposer();
+  loading(bool isLoading) {
+    widget.loading(isLoading, context);
   }
 
   @override

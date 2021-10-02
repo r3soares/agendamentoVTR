@@ -1,4 +1,3 @@
-import 'package:agendamento_vtr/app/domain/erros.dart';
 import 'package:agendamento_vtr/app/models/compartimento.dart';
 import 'package:agendamento_vtr/app/models/model_base.dart';
 import 'package:agendamento_vtr/app/models/tanque.dart';
@@ -77,41 +76,21 @@ class _TanquePageState extends ModularState<TanquePage, TanqueStore> {
   }
 
   void _configStream() {
-    store.sTanque.observer(onState: (_) => _showDialogTanqueSalvo());
+    store.sTanque.observer(
+        onState: (_) => _showDialogTanqueSalvo(),
+        onError: (erro) => ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text('Não foi possível salvar os dados. ${erro.msg}'), backgroundColor: Colors.red[900])));
+
     if (widget.tanquePrevio == null) {
       store.cPlaca.observer(
         onState: (t) => {t = t as ModelBase, _avisaTanqueExistente(t.model)},
         onLoading: loading,
-        onError: _showErro,
       );
       store.cInmetro.observer(
         onState: (t) => {t = t as ModelBase, _avisaTanqueExistente(t.model)},
         onLoading: loading,
-        onError: _showErro,
       );
     }
-    // _disposer = store.observer(
-    //     onState: (ModelBase t) => {
-    //           if (t.status == Status.Salva)
-    //             {
-    //               _showDialogTanqueSalvo(),
-    //             }
-    //           else if (widget.tanquePrevio == null &&
-    //               (t.status == Status.ConsultaPlaca || t.status == Status.ConsultaInmetro))
-    //             {
-    //               _avisaTanqueExistente(t.model),
-    //             }
-    //         },
-    //     onLoading: (isLoading) {
-    //       if (store.isLoading) {
-    //         Overlay.of(context)?.insert(loadingOverlay);
-    //       } else {
-    //         loadingOverlay.remove();
-    //       }
-    //     },
-    //     onError: (error) {
-    //       _showErro(error);
-    //     });
   }
 
   loading(bool isLoading) {
@@ -408,35 +387,5 @@ class _TanquePageState extends ModularState<TanquePage, TanqueStore> {
       },
     );
   }
-
-  _showErro(Falha erro) {
-    if (!verificaDadosPreenchidos()) return;
-    if (store.status != TanqueStoreState.Salvando) {
-      print(store.status);
-      return;
-    }
-    switch (erro.runtimeType) {
-      case ErroConexao:
-        {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text('Não foi possível salvar os dados. Erro de conexão'),
-            backgroundColor: Colors.red[900],
-          ));
-          break;
-        }
-      case NaoEncontrado:
-        {
-          //ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Não localizado. ${erro.msg}')));
-          break;
-        }
-      case Falha:
-        {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              content: Text('Não foi possível salvar os dados. ${erro.msg}'), backgroundColor: Colors.red[900]));
-          break;
-        }
-    }
-  }
-
   // #endregion
 }

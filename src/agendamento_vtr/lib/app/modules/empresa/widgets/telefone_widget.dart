@@ -40,6 +40,12 @@ class _TelefoneWidgetState extends State<TelefoneWidget> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+    widget.bloc.destroy();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return TextFormField(
         focusNode: _focusNode,

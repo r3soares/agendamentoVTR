@@ -1,4 +1,3 @@
-import 'package:agendamento_vtr/app/domain/erros.dart';
 import 'package:agendamento_vtr/app/models/model_base.dart';
 import 'package:agendamento_vtr/app/models/tanque.dart';
 import 'package:agendamento_vtr/app/modules/tanque/stores/tanque_store.dart';
@@ -48,12 +47,6 @@ class _CadastroPageState extends ModularState<CadastroPage, TanqueStore> {
     _configStream();
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-    //_disposer();
-  }
-
   void _configStream() {
     store.cPlaca.observer(
         onState: (t) => {
@@ -63,7 +56,7 @@ class _CadastroPageState extends ModularState<CadastroPage, TanqueStore> {
               _msgTemporaria('${(t.model as Tanque).placa} adicionado.')
             },
         onLoading: loading,
-        onError: _showErro);
+        onError: (_) => ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Não localizado.'))));
 
     store.cProprietario.observer(
         onState: (t) => {
@@ -74,42 +67,14 @@ class _CadastroPageState extends ModularState<CadastroPage, TanqueStore> {
                 },
               _msgTemporaria('Encontrado veículo(s) associados a este proprietário.'),
             },
-        onLoading: loading,
-        onError: _showErro);
+        onLoading: loading);
 
     store.sTanques.observer(
       onState: (t) => _showDialogTanquesSalvos(),
       onLoading: loading,
-      onError: _showErro,
+      onError: (erro) => ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Não foi possível salvar os dados. ${erro.msg}'), backgroundColor: Colors.red[900])),
     );
-
-    // _disposer = store.observer(
-    //     onState: (ModelBase t) => {
-    //           if (t.status == Status.ConsultaPlaca)
-    //             {_incluiTanque(t.model), limpaTermo(), _msgTemporaria('${(t.model as Tanque).placa} adicionado.')}
-    //           else if (store.status == TanqueStoreState.SalvandoMuitos)
-    //             {
-    //               _showDialogTanquesSalvos(),
-    //             }
-    //           else if (t.status == Status.ConsultaMuitos)
-    //             {
-    //               for (var t in (t.model as List<Tanque>))
-    //                 {
-    //                   _incluiTanque(t),
-    //                 },
-    //               _msgTemporaria('Encontrado veículo(s) associados a este proprietário.')
-    //             }
-    //         },
-    //     onLoading: (isLoading) {
-    //       if (store.isLoading) {
-    //         Overlay.of(context)?.insert(loadingOverlay);
-    //       } else {
-    //         loadingOverlay.remove();
-    //       }
-    //     },
-    //     onError: (error) {
-    //   _showErro(error);
-    // });
   }
 
   @override
@@ -396,31 +361,6 @@ class _CadastroPageState extends ModularState<CadastroPage, TanqueStore> {
     t.proprietario = null;
     store.salva(t);
     setState(() {});
-  }
-
-  _showErro(Falha erro) {
-    if (store.status != TanqueStoreState.Salvando && store.status != TanqueStoreState.ConsultandoPlaca) return;
-    switch (erro.runtimeType) {
-      case ErroConexao:
-        {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text('Erro de conexão'),
-            backgroundColor: Colors.red[900],
-          ));
-          break;
-        }
-      case NaoEncontrado:
-        {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Não localizado.')));
-          break;
-        }
-      case Falha:
-        {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              content: Text('Não foi possível salvar os dados. ${erro.msg}'), backgroundColor: Colors.red[900]));
-          break;
-        }
-    }
   }
 
   Future<void> _showDialogTanquesSalvos() async {
