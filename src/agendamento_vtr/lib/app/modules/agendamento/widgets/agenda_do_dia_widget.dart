@@ -2,7 +2,7 @@ import 'package:agendamento_vtr/app/models/tanque.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/agenda_store.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/pages/reagenda_dialog.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/pages/visualiza_tanque_dialog.dart';
-import 'package:agendamento_vtr/app/repositories/repository.dart';
+import 'package:agendamento_vtr/app/repositories/repository_tanque.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:intl/intl.dart';
@@ -16,7 +16,7 @@ class AgendaDoDiaWidget extends StatefulWidget {
 
 class _AgendaDoDiaWidgetState extends ModularState<AgendaDoDiaWidget, AgendaStore> {
   //final agendaStore = Modular.get<AgendaStore>();
-  final tanquesRepo = Modular.get<Repository>();
+  final tanquesRepo = Modular.get<RepositoryTanque>();
   final formatoData = 'dd/MM/yy';
   final List<Tanque?> tanquesDoDia = List.empty(growable: true);
   String data = '';

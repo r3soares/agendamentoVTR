@@ -1,4 +1,5 @@
-import 'package:agendamento_vtr/app/repositories/repository.dart';
+import 'package:agendamento_vtr/app/repositories/repository_empresa.dart';
+import 'package:agendamento_vtr/app/repositories/repository_tanque.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
@@ -11,7 +12,8 @@ class RepositoryStore extends ChangeNotifier {
   int _status = 0;
   var _argStatus;
 
-  final Repository _repository = Modular.get<Repository>();
+  final RepositoryTanque _repository = Modular.get<RepositoryTanque>();
+  final RepositoryEmpresa _repositoryE = Modular.get<RepositoryEmpresa>();
 
   int get status => _status;
   get argStatus => _argStatus;
@@ -31,14 +33,14 @@ class RepositoryStore extends ChangeNotifier {
   }
 
   addEmpresa(value) {
-    _repository.salvaEmpresa(value);
+    _repositoryE.salvaEmpresa(value);
     _status = 3;
     _argStatus = value;
     notifyListeners();
   }
 
   removeEmpresa(value) {
-    _repository.removeEmpresa(value);
+    _repositoryE.removeEmpresa(value);
     _status = 4;
     _argStatus = value;
     notifyListeners();

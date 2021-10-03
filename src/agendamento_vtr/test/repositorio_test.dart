@@ -2,7 +2,9 @@ import 'dart:io';
 
 import 'package:agendamento_vtr/app/models/empresa.dart';
 import 'package:agendamento_vtr/app/models/tanque.dart';
-import 'package:agendamento_vtr/app/repositories/repository.dart';
+import 'package:agendamento_vtr/app/repositories/infra/api.dart';
+import 'package:agendamento_vtr/app/repositories/repository_empresa.dart';
+import 'package:agendamento_vtr/app/repositories/repository_tanque.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'objetos/empresas.dart';
@@ -11,7 +13,7 @@ import 'objetos/tanques.dart';
 void main() {
   group('Teste de repositorios', () {
     test('Empresas', () async {
-      Repository repo = Repository();
+      var repo = RepositoryEmpresa(Api('empresa'));
       for (int i = 0; i < Empresas.empresas.length; i++) {
         Empresa e = Empresas.empresas[i];
         await repo.salvaEmpresa(e);
@@ -36,7 +38,7 @@ void main() {
     }, timeout: Timeout(Duration(minutes: 2)));
 
     test('Tanques', () async {
-      Repository repo = Repository();
+      var repo = RepositoryTanque(Api('tanque'));
       for (int i = 0; i < Tanques.tanques.length; i++) {
         Tanque t1 = Tanques.tanques[i];
         await repo.salvaTanque(t1);

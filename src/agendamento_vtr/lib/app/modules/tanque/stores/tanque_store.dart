@@ -6,7 +6,7 @@ import 'package:agendamento_vtr/app/models/compartimento.dart';
 import 'package:agendamento_vtr/app/models/model_base.dart';
 import 'package:agendamento_vtr/app/models/tanque.dart';
 import 'package:agendamento_vtr/app/modules/tanque/models/tanque_model.dart';
-import 'package:agendamento_vtr/app/repositories/repository.dart';
+import 'package:agendamento_vtr/app/repositories/repository_tanque.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_triple/flutter_triple.dart';
 
@@ -17,7 +17,7 @@ class TanqueStore extends StreamStore<Falha, ModelBase> {
   final Bloc sTanque = Bloc(ModelBase(null));
   final Bloc sTanques = Bloc(ModelBase(null));
   final valida = Validacoes();
-  final Repository repo = Modular.get<Repository>();
+  final RepositoryTanque repo = Modular.get<RepositoryTanque>();
   TanqueStore() : super(TanqueModel(Tanque()));
 
   @override

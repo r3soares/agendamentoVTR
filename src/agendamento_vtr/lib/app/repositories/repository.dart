@@ -1,10 +1,6 @@
-import 'dart:convert';
 import 'dart:math';
-
-import 'package:agendamento_vtr/app/domain/erros.dart';
 import 'package:agendamento_vtr/app/models/compartimento.dart';
 import 'package:agendamento_vtr/app/models/empresa.dart';
-import 'package:agendamento_vtr/app/models/model_base.dart';
 import 'package:agendamento_vtr/app/models/tanque.dart';
 import 'package:agendamento_vtr/app/repositories/infra/IDatabase.dart';
 import 'package:agendamento_vtr/app/repositories/infra/api.dart';
@@ -49,7 +45,7 @@ class Repository {
         p.email = 'contato@empresa.com';
         p.telefones.add('(47) 9622-5871');
         p.razaoSocial = 'Rolando Milhas';
-        salvaEmpresa(p); //empresas.add(p);
+        //salvaEmpresa(p); //empresas.add(p);
         for (int i = 0; i < Random().nextInt(500) + 15; i++) {
           Tanque t = Tanque();
           t.proprietario = p.cnpjCpf;
@@ -71,128 +67,128 @@ class Repository {
           t.dataRegistro = DateTime.now().subtract(Duration(minutes: Random().nextInt(200000)));
           t.custo = (Random().nextDouble() * 5000);
           t.status = StatusTanque.values[Random().nextInt(2)];
-          salvaTanque(t);
+          //salvaTanque(t);
         }
         return true;
       }());
     }
   }
 
-  Future<ModelBase> salvaTanque(Tanque value) async {
-    try {
-      bool salvou = await dataTanque.save(jsonEncode(value.toJson()));
-      if (!salvou) print('Erro ao Salvar em Repository Tanque');
-      return ModelBase(value);
-    } on Falha catch (e) {
-      print('Erro ao salvar tanque ${value.placa}: $e');
-      throw e;
-    }
-  }
+  // Future<ModelBase> salvaTanque(Tanque value) async {
+  //   try {
+  //     bool salvou = await dataTanque.save(jsonEncode(value.toJson()));
+  //     if (!salvou) print('Erro ao Salvar em Repository Tanque');
+  //     return ModelBase(value);
+  //   } on Falha catch (e) {
+  //     print('Erro ao salvar tanque ${value.placa}: $e');
+  //     throw e;
+  //   }
+  // }
 
-  Future<ModelBase> salvaTanques(List<Tanque> lista) async {
-    try {
-      bool salvou = true;
-      for (var item in lista) {
-        salvou = salvou && await dataTanque.save(jsonEncode(item.toJson()));
-      }
-      return ModelBase(lista);
-    } on Falha catch (e) {
-      print('Erro ao salvar lista de tanques: $e');
-      throw e;
-    }
-  }
+  // Future<ModelBase> salvaTanques(List<Tanque> lista) async {
+  //   try {
+  //     bool salvou = true;
+  //     for (var item in lista) {
+  //       salvou = salvou && await dataTanque.save(jsonEncode(item.toJson()));
+  //     }
+  //     return ModelBase(lista);
+  //   } on Falha catch (e) {
+  //     print('Erro ao salvar lista de tanques: $e');
+  //     throw e;
+  //   }
+  // }
 
-  Future<ModelBase> salvaEmpresa(Empresa value) async {
-    try {
-      bool salvou = await dataEmpresa.save(jsonEncode(value.toJson()));
-      if (!salvou) print('Erro ao Salvar em Repository Empresa');
-      return ModelBase(value);
-    } on Falha catch (e) {
-      print('Erro ao salvar empresa ${value.cnpjCpf}: $e');
-      throw e;
-    }
-  }
+  // Future<ModelBase> salvaEmpresa(Empresa value) async {
+  //   try {
+  //     bool salvou = await dataEmpresa.save(jsonEncode(value.toJson()));
+  //     if (!salvou) print('Erro ao Salvar em Repository Empresa');
+  //     return ModelBase(value);
+  //   } on Falha catch (e) {
+  //     print('Erro ao salvar empresa ${value.cnpjCpf}: $e');
+  //     throw e;
+  //   }
+  // }
 
-  Future<bool> removeTanque(String inmetro) async {
-    try {
-      return await dataTanque.delete(inmetro);
-    } on Falha catch (e) {
-      print('Erro ao remover tanque $inmetro: $e');
-      throw e;
-    }
-  }
+  // Future<bool> removeTanque(String inmetro) async {
+  //   try {
+  //     return await dataTanque.delete(inmetro);
+  //   } on Falha catch (e) {
+  //     print('Erro ao remover tanque $inmetro: $e');
+  //     throw e;
+  //   }
+  // }
 
-  Future<bool> removeEmpresa(String cnpj) async {
-    try {
-      return await dataEmpresa.delete(cnpj);
-    } on Falha catch (e) {
-      print('Erro ao remover empresa $cnpj: $e');
-      throw e;
-    }
-  }
+  // Future<bool> removeEmpresa(String cnpj) async {
+  //   try {
+  //     return await dataEmpresa.delete(cnpj);
+  //   } on Falha catch (e) {
+  //     print('Erro ao remover empresa $cnpj: $e');
+  //     throw e;
+  //   }
+  // }
 
-  Future<ModelBase> findTanqueByPlaca(String placa) async {
-    try {
-      var result = await dataTanque.find('placa', placa);
-      var tanque = result == false ? throw NaoEncontrado(placa) : Tanque.fromJson(result);
-      return ModelBase(tanque);
-    } on Falha catch (e) {
-      print('Erro ao procurar tanque pela placa $placa: $e');
-      throw e;
-    }
-  }
+  // Future<ModelBase> findTanqueByPlaca(String placa) async {
+  //   try {
+  //     var result = await dataTanque.find('placa', placa);
+  //     var tanque = result == false ? throw NaoEncontrado(placa) : Tanque.fromJson(result);
+  //     return ModelBase(tanque);
+  //   } on Falha catch (e) {
+  //     print('Erro ao procurar tanque pela placa $placa: $e');
+  //     throw e;
+  //   }
+  // }
 
-  Future<ModelBase> findTanquesByProprietario(String proprietario) async {
-    try {
-      var result = await dataTanque.find('proprietario', proprietario);
-      var lista =
-          result == false ? List.empty(growable: true) : (result as List).map((n) => Tanque.fromJson(n)).toList();
-      return ModelBase(lista);
-    } on Falha catch (e) {
-      print('Erro ao procurar tanques pelo proprietário $proprietario: $e');
-      throw e;
-    }
-  }
+  // Future<ModelBase> findTanquesByProprietario(String proprietario) async {
+  //   try {
+  //     var result = await dataTanque.find('proprietario', proprietario);
+  //     var lista =
+  //         result == false ? List.empty(growable: true) : (result as List).map((n) => Tanque.fromJson(n)).toList();
+  //     return ModelBase(lista);
+  //   } on Falha catch (e) {
+  //     print('Erro ao procurar tanques pelo proprietário $proprietario: $e');
+  //     throw e;
+  //   }
+  // }
 
-  Future<ModelBase> getTanque(String inmetro) async {
-    try {
-      var result = await dataTanque.getById(inmetro);
-      var tanque = result == false ? throw NaoEncontrado(inmetro) : Tanque.fromJson(result);
-      return ModelBase(tanque);
-    } on Falha catch (e) {
-      print('Erro ao procurar tanque $inmetro: $e');
-      throw e;
-    }
-  }
+  // Future<ModelBase> getTanque(String inmetro) async {
+  //   try {
+  //     var result = await dataTanque.getById(inmetro);
+  //     var tanque = result == false ? throw NaoEncontrado(inmetro) : Tanque.fromJson(result);
+  //     return ModelBase(tanque);
+  //   } on Falha catch (e) {
+  //     print('Erro ao procurar tanque $inmetro: $e');
+  //     throw e;
+  //   }
+  // }
 
-  Future<List<Tanque>> getTanques() async {
-    try {
-      var result = await dataTanque.getAll();
-      return result == false ? List.empty(growable: true) : (result as List).map((n) => Tanque.fromJson(n)).toList();
-    } on Falha catch (e) {
-      print('Erro ao buscar tanques: $e');
-      throw e;
-    }
-  }
+  // Future<List<Tanque>> getTanques() async {
+  //   try {
+  //     var result = await dataTanque.getAll();
+  //     return result == false ? List.empty(growable: true) : (result as List).map((n) => Tanque.fromJson(n)).toList();
+  //   } on Falha catch (e) {
+  //     print('Erro ao buscar tanques: $e');
+  //     throw e;
+  //   }
+  // }
 
-  Future<ModelBase> getEmpresa(String cnpjCpf) async {
-    try {
-      var result = await dataEmpresa.getById(cnpjCpf);
-      var empresa = result == false ? throw NaoEncontrado(cnpjCpf) : Empresa.fromJson(result);
-      return ModelBase(empresa);
-    } on Falha catch (e) {
-      print('Erro ao buscar empresa $cnpjCpf: ${e.msg}');
-      throw e;
-    }
-  }
+  // Future<ModelBase> getEmpresa(String cnpjCpf) async {
+  //   try {
+  //     var result = await dataEmpresa.getById(cnpjCpf);
+  //     var empresa = result == false ? throw NaoEncontrado(cnpjCpf) : Empresa.fromJson(result);
+  //     return ModelBase(empresa);
+  //   } on Falha catch (e) {
+  //     print('Erro ao buscar empresa $cnpjCpf: ${e.msg}');
+  //     throw e;
+  //   }
+  // }
 
-  Future<List<Empresa>> getEmpresas() async {
-    try {
-      var result = await dataEmpresa.getAll();
-      return result == false ? List.empty(growable: true) : (result as List).map((n) => Empresa.fromJson(n)).toList();
-    } on Falha catch (e) {
-      print('Erro ao buscar empresas: $e');
-      throw e;
-    }
-  }
+  // Future<List<Empresa>> getEmpresas() async {
+  //   try {
+  //     var result = await dataEmpresa.getAll();
+  //     return result == false ? List.empty(growable: true) : (result as List).map((n) => Empresa.fromJson(n)).toList();
+  //   } on Falha catch (e) {
+  //     print('Erro ao buscar empresas: $e');
+  //     throw e;
+  //   }
+  // }
 }

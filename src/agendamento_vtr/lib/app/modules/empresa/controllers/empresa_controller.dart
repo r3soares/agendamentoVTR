@@ -1,10 +1,10 @@
 import 'package:agendamento_vtr/app/models/empresa.dart';
 import 'package:agendamento_vtr/app/models/model_base.dart';
-import 'package:agendamento_vtr/app/repositories/repository.dart';
+import 'package:agendamento_vtr/app/repositories/repository_empresa.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
 class EmpresaController {
-  final repo = Modular.get<Repository>();
+  final repo = Modular.get<RepositoryEmpresa>();
 
   Future<ModelBase> salvaEmpresa(Empresa e) async {
     try {

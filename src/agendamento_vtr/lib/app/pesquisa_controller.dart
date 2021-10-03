@@ -1,5 +1,6 @@
 import 'package:agendamento_vtr/app/modules/empresa/models/empresa_model.dart';
-import 'package:agendamento_vtr/app/repositories/repository.dart';
+import 'package:agendamento_vtr/app/repositories/repository_empresa.dart';
+import 'package:agendamento_vtr/app/repositories/repository_tanque.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
@@ -9,7 +10,8 @@ class PesquisaController extends ChangeNotifier {
   //2 -> nao localizado
   int _status = 0;
   var _resultado;
-  final _repository = Modular.get<Repository>();
+  final _repositoryT = Modular.get<RepositoryTanque>();
+  final _repositoryE = Modular.get<RepositoryEmpresa>();
 
   get resultado => _resultado;
   int get status => _status;
@@ -18,7 +20,7 @@ class PesquisaController extends ChangeNotifier {
     _status = 0;
     _resultado = null;
     print('Pesquisando $termo');
-    var tanque = (await _repository.findTanqueByPlaca(termo)).model;
+    var tanque = (await _repositoryT.findTanqueByPlaca(termo)).model;
     if (tanque != null) {
       print('$termo encontrado');
       _resultado = tanque;
@@ -33,7 +35,7 @@ class PesquisaController extends ChangeNotifier {
 
   Future<bool> pesquisaEmpresa(String termo) async {
     print('Pesquisando $termo');
-    EmpresaModel empresaM = (await _repository.getEmpresa(termo)) as EmpresaModel;
+    EmpresaModel empresaM = (await _repositoryE.getEmpresa(termo)) as EmpresaModel;
     if (empresaM.model != null) {
       print('$termo encontrado');
       _resultado = empresaM.model;

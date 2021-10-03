@@ -41,10 +41,12 @@ class RepositoryEmpresa {
     }
   }
 
-  Future<List<Empresa>> getEmpresas() async {
+  Future<ModelBase> getEmpresas() async {
     try {
       var result = await dataEmpresa.getAll();
-      return result == false ? List.empty(growable: true) : (result as List).map((n) => Empresa.fromJson(n)).toList();
+      List<Empresa> lista =
+          result == false ? List.empty(growable: true) : (result as List).map((n) => Empresa.fromJson(n)).toList();
+      return ModelBase(lista);
     } on Falha catch (e) {
       print('Erro ao buscar empresas: $e');
       throw e;

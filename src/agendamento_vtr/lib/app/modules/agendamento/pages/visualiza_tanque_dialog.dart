@@ -1,6 +1,7 @@
 import 'package:agendamento_vtr/app/models/empresa.dart';
 import 'package:agendamento_vtr/app/models/tanque.dart';
-import 'package:agendamento_vtr/app/repositories/repository.dart';
+import 'package:agendamento_vtr/app/repositories/repository_empresa.dart';
+import 'package:agendamento_vtr/app/repositories/repository_tanque.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:intl/intl.dart';
@@ -17,13 +18,14 @@ class VisualizaTanqueDialog extends StatefulWidget {
 class _VisualizaTanqueDialogState extends State<VisualizaTanqueDialog> {
   final formatoData = 'dd/MM/yy HH:mm';
   late Empresa proprietario;
-  final tanquesRepo = Modular.get<Repository>();
+  final tanquesRepo = Modular.get<RepositoryTanque>();
+  final empresasRepo = Modular.get<RepositoryEmpresa>();
 
   @override
   void initState() {
     super.initState();
     if (widget.tanque.proprietario != null) {
-      tanquesRepo.getEmpresa(widget.tanque.proprietario!).then((value) => this.proprietario = value.model);
+      empresasRepo.getEmpresa(widget.tanque.proprietario!).then((value) => this.proprietario = value.model);
     }
   }
 

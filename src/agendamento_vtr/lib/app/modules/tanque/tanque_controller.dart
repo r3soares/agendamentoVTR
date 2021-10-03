@@ -2,12 +2,12 @@ import 'package:agendamento_vtr/app/domain/custo_compartimento.dart';
 import 'package:agendamento_vtr/app/models/compartimento.dart';
 import 'package:agendamento_vtr/app/models/model_base.dart';
 import 'package:agendamento_vtr/app/models/tanque.dart';
-import 'package:agendamento_vtr/app/repositories/repository.dart';
+import 'package:agendamento_vtr/app/repositories/repository_tanque.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:intl/intl.dart';
 
 class TanqueController {
-  final _repo = Modular.get<Repository>();
+  final _repo = Modular.get<RepositoryTanque>();
 
   final NumberFormat formato = NumberFormat.currency(locale: 'pt_BR', symbol: 'R\$');
   final CustoCompartimento _custo = CustoCompartimento();
