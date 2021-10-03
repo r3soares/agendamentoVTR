@@ -1,12 +1,32 @@
-class Agenda {
-  final DateTime _data;
-  List<String> _tanques = List.empty(growable: true);
-  List<String> _tanquesConfirmados = List.empty(growable: true);
+import 'package:agendamento_vtr/app/models/json_serializable.dart';
 
-  Agenda(this._data);
+class Agenda implements JsonSerializable {
+  final String id;
+  DateTime data = DateTime.now();
+  List<String> tanquesAgendados = List.empty(growable: true);
+  StatusAgenda status = StatusAgenda.Disponivel;
+  String? obs;
 
-  DateTime get data => this._data;
+  Agenda(this.id);
 
-  List<String> get tanques => this._tanques;
-  List<String> get tanquesConfirmados => this._tanquesConfirmados;
+  @override
+  fromJson(Map<String, dynamic> json) => Agenda.fromJson(json);
+
+  Agenda.fromJson(Map<String, dynamic> json)
+      : id = json['id'],
+        data = DateTime.parse(json['data']),
+        tanquesAgendados = List.from(json['tanquesAgendados']),
+        status = StatusAgenda.values[json['status']],
+        obs = json['obs'] == null ? null : json['obs'];
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'data': data.toIso8601String(),
+        'tanquesAgendados': tanquesAgendados,
+        'status': status.index,
+        'obs': obs,
+      };
 }
+
+enum StatusAgenda { Disponivel, Cheia, Encerrada, Indisponivel }

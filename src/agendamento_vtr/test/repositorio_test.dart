@@ -12,7 +12,6 @@ import 'objetos/tanques.dart';
 void main() {
   group('Teste de repositorios', () {
     test('Empresas', () async {
-      Empresas et = Empresas();
       Repository repo = Repository();
       for (int i = 0; i < Empresas.empresas.length; i++) {
         Empresa e = Empresas.empresas[i];
@@ -39,7 +38,6 @@ void main() {
 
     test('Tanques', () async {
       Repository repo = Repository();
-      Tanques tt = Tanques();
       for (int i = 0; i < Tanques.tanques.length; i++) {
         Tanque t1 = Tanques.tanques[i];
         bool salvou = (await repo.salvaTanque(t1)).status == Status.Salva;
