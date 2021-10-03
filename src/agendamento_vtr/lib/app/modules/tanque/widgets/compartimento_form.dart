@@ -1,5 +1,5 @@
 import 'package:agendamento_vtr/app/models/compartimento.dart';
-import 'package:agendamento_vtr/app/modules/tanque/tanque_controller.dart';
+import 'package:agendamento_vtr/app/modules/tanque/stores/tanque_store.dart';
 import 'package:agendamento_vtr/app/modules/tanque/widgets/tanque_page_widgets/compartimento_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
@@ -13,7 +13,7 @@ class CompartimentoForm extends StatefulWidget {
   _CompartimentoFormState createState() => _CompartimentoFormState();
 }
 
-class _CompartimentoFormState extends ModularState<CompartimentoForm, TanqueController> {
+class _CompartimentoFormState extends ModularState<CompartimentoForm, TanqueStore> {
   late List<Compartimento> compartimentos;
   int _capacidadeTotal = 0;
   double _custoTotal = 0;
@@ -147,9 +147,7 @@ class _CompartimentoFormState extends ModularState<CompartimentoForm, TanqueCont
 
   void _calculaCustoTotal() {
     double custoCompartimentos = 0;
-    for (int i = 0; i < qtdCompartimentos; i++) {
-      custoCompartimentos += controller.getCusto(compartimentos[i]);
-    }
+    custoCompartimentos = store.getCusto(compartimentos);
     setState(() {
       _custoTotal = custoCompartimentos;
     });

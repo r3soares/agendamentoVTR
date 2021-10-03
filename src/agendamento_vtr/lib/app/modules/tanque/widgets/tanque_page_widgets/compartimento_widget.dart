@@ -1,5 +1,5 @@
 import 'package:agendamento_vtr/app/models/compartimento.dart';
-import 'package:agendamento_vtr/app/modules/tanque/tanque_controller.dart';
+import 'package:agendamento_vtr/app/modules/tanque/stores/tanque_store.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_modular/flutter_modular.dart';
@@ -7,16 +7,13 @@ import 'package:flutter_modular/flutter_modular.dart';
 class CompartimentoWidget extends StatefulWidget {
   final Compartimento compartimento;
   final Function(Compartimento) callback;
-  const CompartimentoWidget(
-      {Key? key, required this.compartimento, required this.callback})
-      : super(key: key);
+  const CompartimentoWidget({Key? key, required this.compartimento, required this.callback}) : super(key: key);
 
   @override
   _CompartimentoWidgetState createState() => _CompartimentoWidgetState();
 }
 
-class _CompartimentoWidgetState
-    extends ModularState<CompartimentoWidget, TanqueController> {
+class _CompartimentoWidgetState extends ModularState<CompartimentoWidget, TanqueStore> {
   final TextEditingController _cCapacidade = TextEditingController();
   final focusNode = FocusNode();
   final key = GlobalKey<FormState>();
@@ -29,8 +26,7 @@ class _CompartimentoWidgetState
     });
     focusNode.addListener(() {
       if (focusNode.hasFocus) {
-        _cCapacidade.selection = TextSelection(
-            baseOffset: 0, extentOffset: _cCapacidade.text.length);
+        _cCapacidade.selection = TextSelection(baseOffset: 0, extentOffset: _cCapacidade.text.length);
       }
     });
     _cCapacidade.text = widget.compartimento.capacidade.toString();
@@ -60,8 +56,7 @@ class _CompartimentoWidgetState
                       hintStyle: TextStyle(fontSize: 10),
                     ),
                     controller: _cCapacidade,
-                    onChanged: (_) => widget.compartimento.capacidade =
-                        int.tryParse(_cCapacidade.text) ?? 0,
+                    onChanged: (_) => widget.compartimento.capacidade = int.tryParse(_cCapacidade.text) ?? 0,
                     keyboardType: TextInputType.number,
                     inputFormatters: <TextInputFormatter>[
                       FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
@@ -81,16 +76,12 @@ class _CompartimentoWidgetState
                           SizedBox(
                             width: 25,
                             child: TextButton(
-                                onPressed: () =>
-                                    {gerSetas(widget.compartimento.setas + 1)},
-                                child: Icon(Icons.add)),
+                                onPressed: () => {gerSetas(widget.compartimento.setas + 1)}, child: Icon(Icons.add)),
                           ),
                           SizedBox(
                             width: 25,
                             child: TextButton(
-                                onPressed: () =>
-                                    {gerSetas(widget.compartimento.setas - 1)},
-                                child: Icon(Icons.remove)),
+                                onPressed: () => {gerSetas(widget.compartimento.setas - 1)}, child: Icon(Icons.remove)),
                           ),
                         ],
                       ),
@@ -99,8 +90,7 @@ class _CompartimentoWidgetState
                   Container(
                     child: Container(
                       alignment: Alignment.centerLeft,
-                      child: Text(_custo(),
-                          style: TextStyle(color: Colors.red[900])),
+                      child: Text(_custo(), style: TextStyle(color: Colors.red[900])),
                     ),
                   )
                 ],
@@ -111,7 +101,7 @@ class _CompartimentoWidgetState
   }
 
   String _custo() {
-    double valor = controller.getCusto(widget.compartimento);
+    double valor = store.getCustoInidividual(widget.compartimento);
     if (valor == 0) return '';
     return controller.formato.format(valor);
   }

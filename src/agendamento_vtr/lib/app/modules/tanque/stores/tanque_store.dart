@@ -9,6 +9,7 @@ import 'package:agendamento_vtr/app/modules/tanque/models/tanque_model.dart';
 import 'package:agendamento_vtr/app/repositories/repository_tanque.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_triple/flutter_triple.dart';
+import 'package:intl/intl.dart';
 
 class TanqueStore extends StreamStore<Falha, ModelBase> {
   final Bloc cPlaca = Bloc(ModelBase(null));
@@ -18,6 +19,7 @@ class TanqueStore extends StreamStore<Falha, ModelBase> {
   final Bloc sTanques = Bloc(ModelBase(null));
   final valida = Validacoes();
   final RepositoryTanque repo = Modular.get<RepositoryTanque>();
+  final NumberFormat formato = NumberFormat.currency(locale: 'pt_BR', symbol: 'R\$');
   TanqueStore() : super(TanqueModel(Tanque()));
 
   @override
@@ -61,6 +63,10 @@ class TanqueStore extends StreamStore<Falha, ModelBase> {
 
   double getCusto(List<Compartimento> compartimentos) {
     return compartimentos.fold(0, (acumulado, c) => acumulado + CustoCompartimento().getCusto(c.capacidade, c.setas));
+  }
+
+  double getCustoInidividual(Compartimento compartimento) {
+    return CustoCompartimento().getCusto(compartimento.capacidade, compartimento.setas);
   }
 
   bool validaPlaca(String placa) {
