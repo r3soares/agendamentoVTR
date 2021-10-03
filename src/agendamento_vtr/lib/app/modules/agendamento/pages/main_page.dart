@@ -4,8 +4,8 @@ import 'package:agendamento_vtr/app/modules/agendamento/widgets/pesquisa_widget.
 import 'package:agendamento_vtr/app/modules/agendamento/widgets/tanques_pendentes_widget.dart';
 import 'package:flutter/material.dart';
 
-class AgendamentoPage extends StatelessWidget {
-  const AgendamentoPage({Key? key}) : super(key: key);
+class MainPage extends StatelessWidget {
+  const MainPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
