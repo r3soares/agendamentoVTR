@@ -11,14 +11,14 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_triple/flutter_triple.dart';
 
 class TanqueStore extends StreamStore<Falha, ModelBase> {
-  final Bloc cPlaca = Bloc(ModelBase(Status.Inicial, null));
-  final Bloc cInmetro = Bloc(ModelBase(Status.Inicial, null));
-  final Bloc cProprietario = Bloc(ModelBase(Status.Inicial, null));
-  final Bloc sTanque = Bloc(ModelBase(Status.Inicial, null));
-  final Bloc sTanques = Bloc(ModelBase(Status.Inicial, null));
+  final Bloc cPlaca = Bloc(ModelBase(null));
+  final Bloc cInmetro = Bloc(ModelBase(null));
+  final Bloc cProprietario = Bloc(ModelBase(null));
+  final Bloc sTanque = Bloc(ModelBase(null));
+  final Bloc sTanques = Bloc(ModelBase(null));
   final valida = Validacoes();
   final Repository repo = Modular.get<Repository>();
-  TanqueStore() : super(TanqueModel(Status.Inicial, Tanque()));
+  TanqueStore() : super(TanqueModel(Tanque()));
 
   @override
   Future destroy() async {

@@ -1,7 +1,7 @@
 import 'package:agendamento_vtr/app/models/empresa.dart';
 import 'package:agendamento_vtr/app/models/tanque.dart';
-import 'package:agendamento_vtr/app/modules/agendamento/models/agenda_do_dia.dart';
-import 'package:agendamento_vtr/app/modules/agendamento/models/agenda_do_tanque.dart';
+import 'package:agendamento_vtr/app/modules/agendamento/models/agenda.dart';
+import 'package:agendamento_vtr/app/modules/agendamento/models/agenda_tanque.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'objetos/agendas_do_dia.dart';
@@ -12,7 +12,6 @@ import 'objetos/tanques.dart';
 void main() {
   group('Teste de conversao Json <-> Model', () {
     test('Empresa', () {
-      Empresas et = Empresas();
       for (int i = 0; i < Empresas.empresas.length; i++) {
         Empresa e = Empresas.empresas[i];
         Map<String, dynamic> json = e.toJson();
@@ -32,7 +31,6 @@ void main() {
       }
     });
     test('Tanque', () {
-      Tanques tt = Tanques();
       for (int i = 0; i < Tanques.tanques.length; i++) {
         Tanque t1 = Tanques.tanques[i];
         Map<String, dynamic> json = t1.toJson();
@@ -80,9 +78,9 @@ void main() {
     test('AgendasDoDia', () {
       AgendasDoDia();
       for (int i = 0; i < AgendasDoDia.agendas.length; i++) {
-        AgendaDoDia a1 = AgendasDoDia.agendas[i];
+        Agenda a1 = AgendasDoDia.agendas[i];
         Map<String, dynamic> json = a1.toJson();
-        AgendaDoDia a2 = a1.fromJson(json);
+        Agenda a2 = a1.fromJson(json);
         expect(a1.data, equals(a2.data), reason: 'data não validou');
         expect(a1.id, equals(a2.id), reason: 'id não validou');
         expect(a1.obs, equals(a2.obs), reason: 'obs não validou');

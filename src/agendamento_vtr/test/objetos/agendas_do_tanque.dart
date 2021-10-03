@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:agendamento_vtr/app/modules/agendamento/models/agenda_do_tanque.dart';
+import 'package:agendamento_vtr/app/modules/agendamento/models/agenda_tanque.dart';
 import 'package:uuid/uuid.dart';
 
 import 'agendas_do_dia.dart';

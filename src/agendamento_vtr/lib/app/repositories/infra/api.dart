@@ -5,10 +5,10 @@ import 'package:agendamento_vtr/app/domain/erros.dart';
 import 'package:agendamento_vtr/app/models/compartimento.dart';
 import 'package:http/http.dart' as http;
 
-import 'package:agendamento_vtr/app/repositories/IRepository.dart';
+import 'package:agendamento_vtr/app/repositories/infra/IDatabase.dart';
 import 'package:http/http.dart';
 
-class Api implements IRepository {
+class Api implements IDatabase {
   static const String endereco = 'https://localhost:44337/api/vtr/';
   final String controller;
   final headers = {

@@ -1,26 +1,23 @@
-import 'package:agendamento_vtr/app/modules/agendamento/models/agenda.dart';
+import 'package:agendamento_vtr/app/modules/agendamento/models/agenda_antiga.dart';
 
 class AgendaRepository {
-  List<Agenda?> _agendas = List.empty(growable: true);
+  List<AgendaAntiga?> _agendas = List.empty(growable: true);
 
-  addAgenda(Agenda value) {
+  addAgenda(AgendaAntiga value) {
     _agendas.add(value);
   }
 
-  removeAgenda(Agenda value) {
+  removeAgenda(AgendaAntiga value) {
     _agendas.remove(value);
   }
 
-  Map<DateTime, Agenda> agendasOcupadas() {
-    final agendasOcupadas =
-        _agendas.where((a) => a!.tanques.isNotEmpty).toList();
-    return Map<DateTime, Agenda>.fromIterable(agendasOcupadas,
-        key: (k) => k.data, value: (v) => v);
+  Map<DateTime, AgendaAntiga> agendasOcupadas() {
+    final agendasOcupadas = _agendas.where((a) => a!.tanques.isNotEmpty).toList();
+    return Map<DateTime, AgendaAntiga>.fromIterable(agendasOcupadas, key: (k) => k.data, value: (v) => v);
   }
 
-  Agenda? findAgenda(DateTime data) {
-    return _agendas.firstWhere((a) => a != null && _comparaData(a.data, data),
-        orElse: () => null);
+  AgendaAntiga? findAgenda(DateTime data) {
+    return _agendas.firstWhere((a) => a != null && _comparaData(a.data, data), orElse: () => null);
   }
 
   bool _comparaData(DateTime a, DateTime b) {

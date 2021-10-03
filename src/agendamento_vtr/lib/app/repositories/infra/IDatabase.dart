@@ -1,4 +1,4 @@
-abstract class IRepository<T> {
+abstract class IDatabase {
   getById(id);
   getAll();
   find(instrucao, termo);

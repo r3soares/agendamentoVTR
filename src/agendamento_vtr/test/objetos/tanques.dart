@@ -3,7 +3,7 @@ import 'package:agendamento_vtr/app/models/compartimento.dart';
 import 'package:agendamento_vtr/app/models/tanque.dart';
 
 class Tanques {
-  static final QUANTIDADE = 2000;
+  static const QUANTIDADE = 2000;
   static List<Tanque> tanques = List.empty(growable: true);
   static List<String> alfabeto = [
     'A',

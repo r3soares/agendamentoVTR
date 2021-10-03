@@ -10,10 +10,10 @@ import 'package:flutter_triple/flutter_triple.dart';
 
 class EmpresaStore extends StreamStore<Falha, ModelBase> {
   final valida = Validacoes();
-  final Bloc sEmpresa = Bloc(ModelBase(Status.Inicial, null));
-  final Bloc cEmpresa = Bloc(ModelBase(Status.Inicial, null));
+  final Bloc sEmpresa = Bloc(ModelBase(null));
+  final Bloc cEmpresa = Bloc(ModelBase(null));
   final Repository repo = Modular.get<Repository>();
-  EmpresaStore() : super(EmpresaModel(Status.Inicial, Empresa()));
+  EmpresaStore() : super(EmpresaModel(Empresa()));
 
   void salva(Empresa e) async {
     sEmpresa.execute(() => repo.salvaEmpresa(e));

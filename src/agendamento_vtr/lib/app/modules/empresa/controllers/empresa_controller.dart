@@ -6,9 +6,9 @@ import 'package:flutter_modular/flutter_modular.dart';
 class EmpresaController {
   final repo = Modular.get<Repository>();
 
-  Future<bool> salvaEmpresa(Empresa e) async {
+  Future<ModelBase> salvaEmpresa(Empresa e) async {
     try {
-      return (await repo.salvaEmpresa(e)).status == Status.Salva;
+      return await repo.salvaEmpresa(e);
     } catch (e) {
       throw e;
     }

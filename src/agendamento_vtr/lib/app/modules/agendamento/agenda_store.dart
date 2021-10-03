@@ -1,4 +1,4 @@
-import 'package:agendamento_vtr/app/modules/agendamento/models/agenda.dart';
+import 'package:agendamento_vtr/app/modules/agendamento/models/agenda_antiga.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
@@ -6,13 +6,13 @@ import 'agenda_repository.dart';
 
 class AgendaStore extends ChangeNotifier {
   final _repository = Modular.get<AgendaRepository>();
-  Agenda _agenda = Agenda(DateTime.now());
+  AgendaAntiga _agenda = AgendaAntiga(DateTime.now());
   int _statusTanque = 0;
   //0 -> inicial
   //1 -> adicionou
   //2 -> removeu
 
-  Agenda get agenda => _agenda;
+  AgendaAntiga get agenda => _agenda;
   int get statusTanque => _statusTanque;
 
   update(DateTime data) {
@@ -24,14 +24,14 @@ class AgendaStore extends ChangeNotifier {
     notifyListeners();
   }
 
-  Agenda _novaAgenda(DateTime data) {
+  AgendaAntiga _novaAgenda(DateTime data) {
     print('Nova agenda');
-    final agenda = Agenda(data);
+    final agenda = AgendaAntiga(data);
     _repository.addAgenda(agenda);
     return agenda;
   }
 
-  Map<DateTime, Agenda> getAgendasOcupadas() {
+  Map<DateTime, AgendaAntiga> getAgendasOcupadas() {
     return _repository.agendasOcupadas();
   }
 

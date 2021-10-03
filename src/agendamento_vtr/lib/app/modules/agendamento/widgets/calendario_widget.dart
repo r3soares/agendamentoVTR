@@ -1,5 +1,5 @@
 import 'package:agendamento_vtr/app/modules/agendamento/agenda_store.dart';
-import 'package:agendamento_vtr/app/modules/agendamento/models/agenda.dart';
+import 'package:agendamento_vtr/app/modules/agendamento/models/agenda_antiga.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:intl/intl.dart';
@@ -21,7 +21,7 @@ class _CalendarioWidgetState extends State<CalendarioWidget> {
   final kToday = DateTime.now();
   late DateTime kFirstDay;
   late DateTime kLastDay;
-  Map<DateTime, Agenda> agendasOcupadas = {};
+  Map<DateTime, AgendaAntiga> agendasOcupadas = {};
   final bolinhaNaoConfirmado = Container(
       margin: EdgeInsets.all(1),
       width: 5.0,
@@ -106,8 +106,7 @@ class _CalendarioWidgetState extends State<CalendarioWidget> {
       },
       calendarBuilders: CalendarBuilders(
         dowBuilder: (context, day) {
-          if (day.weekday == DateTime.sunday ||
-              day.weekday == DateTime.saturday) {
+          if (day.weekday == DateTime.sunday || day.weekday == DateTime.saturday) {
             final text = DateFormat.E('pt_BR').format(day);
             return Center(
               child: Text(
@@ -118,8 +117,7 @@ class _CalendarioWidgetState extends State<CalendarioWidget> {
           }
         },
         defaultBuilder: (context, day, focusedDay) => diaWidget(day),
-        selectedBuilder: (context, day, focusedDay) =>
-            diaSelecionadoWidget(day),
+        selectedBuilder: (context, day, focusedDay) => diaSelecionadoWidget(day),
         todayBuilder: (context, day, focusedDay) => hojeWidget(day),
       ),
     );
@@ -138,8 +136,7 @@ class _CalendarioWidgetState extends State<CalendarioWidget> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: List.generate(
                     agenda.tanques.length,
-                    (index) => agenda.tanquesConfirmados
-                            .contains(agenda.tanques[index])
+                    (index) => agenda.tanquesConfirmados.contains(agenda.tanques[index])
                         ? bolinhaConfirmado
                         : bolinhaNaoConfirmado),
               )

@@ -3,8 +3,6 @@ import 'package:agendamento_vtr/app/repositories/repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
-import 'models/model_base.dart';
-
 class PesquisaController extends ChangeNotifier {
   //0 -> sem pesquisa ativa
   //1 -> localizado
@@ -36,7 +34,7 @@ class PesquisaController extends ChangeNotifier {
   Future<bool> pesquisaEmpresa(String termo) async {
     print('Pesquisando $termo');
     EmpresaModel empresaM = (await _repository.getEmpresa(termo)) as EmpresaModel;
-    if (empresaM.status == Status.Consulta) {
+    if (empresaM.model != null) {
       print('$termo encontrado');
       _resultado = empresaM.model;
       _status = 1;

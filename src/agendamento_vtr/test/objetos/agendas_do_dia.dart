@@ -1,13 +1,13 @@
 import 'dart:math';
 
-import 'package:agendamento_vtr/app/modules/agendamento/models/agenda_do_dia.dart';
+import 'package:agendamento_vtr/app/modules/agendamento/models/agenda.dart';
 import 'package:uuid/uuid.dart';
 
 import 'agendas_do_tanque.dart';
 
 class AgendasDoDia {
-  static final int QUANTIDADE = 1500;
-  static List<AgendaDoDia> agendas = List.empty(growable: true);
+  static const int QUANTIDADE = 1500;
+  static List<Agenda> agendas = List.empty(growable: true);
   static List<String> uuids = List.generate(QUANTIDADE, (index) => Uuid().v1());
   Random r = Random();
   AgendasDoDia() {
@@ -16,7 +16,7 @@ class AgendasDoDia {
     AgendasDoTanque();
 
     for (int i = 0; i < QUANTIDADE; i++) {
-      AgendaDoDia a = AgendaDoDia(uuids[i]);
+      Agenda a = Agenda(uuids[i]);
       a.data = DateTime(2017).add(Duration(days: i));
       a.status = StatusAgenda.values[r.nextInt(StatusAgenda.values.length)];
       a.tanquesAgendados = r.nextInt(10) > 6

@@ -1,8 +1,8 @@
 class ModelBase {
   final model;
-  final Status status;
+  //final Status status;
 
-  ModelBase(this.status, this.model);
+  ModelBase(this.model);
 }
 
-enum Status { Consulta, ConsultaMuitos, ConsultaPlaca, ConsultaInmetro, Salva, NaoSalva, Inicial }
+//enum Status { Consulta, ConsultaMuitos, ConsultaPlaca, ConsultaInmetro, Salva, NaoSalva, Inicial }
