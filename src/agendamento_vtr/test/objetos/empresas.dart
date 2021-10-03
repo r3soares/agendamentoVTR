@@ -3,8 +3,8 @@ import 'dart:math';
 import 'package:agendamento_vtr/app/models/empresa.dart';
 import 'package:agendamento_vtr/app/models/proprietario.dart';
 
-class EmpresasTest {
-  List<Empresa> empresas = List.empty(growable: true);
+class Empresas {
+  static List<Empresa> empresas = List.empty(growable: true);
   Random r = Random();
 
   final emails = [
@@ -80,7 +80,8 @@ class EmpresasTest {
     '87355717480',
     '21904035000125'
   ];
-  EmpresasTest() {
+  Empresas() {
+    if (empresas.isNotEmpty) return;
     for (int i = 0; i < cpfs.length; i++) {
       Empresa e = new Empresa()
         ..cnpjCpf = cpfs[i]

@@ -7,6 +7,8 @@ class AgendaDoDia implements JsonSerializable {
   StatusAgenda status = StatusAgenda.Disponivel;
   String? obs;
 
+  AgendaDoDia(this.id);
+
   @override
   fromJson(Map<String, dynamic> json) => AgendaDoDia.fromJson(json);
 

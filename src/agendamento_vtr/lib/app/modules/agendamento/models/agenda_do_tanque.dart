@@ -3,9 +3,10 @@ import 'package:agendamento_vtr/app/models/json_serializable.dart';
 class AgendaDoTanque implements JsonSerializable {
   final String id;
   final String tanque;
+  final String agenda;
   String responsavel = '';
   String? bitremAgenda;
-  String? tanqueAgendado;
+
   String? agendaAnterior;
 
   StatusConfirmacao statusConfirmacao = StatusConfirmacao.NaoConfirmado;
@@ -14,6 +15,8 @@ class AgendaDoTanque implements JsonSerializable {
   double custoVerificacao = 0;
   int tempoVerificacao = 0;
   String? obs;
+
+  AgendaDoTanque({required this.id, required this.tanque, required this.agenda});
 
   @override
   fromJson(Map<String, dynamic> json) => AgendaDoTanque.fromJson(json);
@@ -24,7 +27,7 @@ class AgendaDoTanque implements JsonSerializable {
         responsavel = json['responsavel'],
         bitremAgenda = json['bitremAgenda'],
         agendaAnterior = json['agendaAnterior'],
-        tanqueAgendado = json['tanqueAgendado'],
+        agenda = json['agenda'],
         statusConfirmacao = StatusConfirmacao.values[json['statusConfirmacao']],
         statusPagamento = StatusPagamento.values[json['statusPagamento']],
         custoVerificacao = json['custoVerificacao'],
@@ -38,7 +41,7 @@ class AgendaDoTanque implements JsonSerializable {
         'responsavel': responsavel,
         'bitremAgenda': bitremAgenda,
         'agendaAnterior': agendaAnterior,
-        'tanqueAgendado': tanqueAgendado,
+        'agenda': agenda,
         'statusConfirmacao': statusConfirmacao.index,
         'statusPagamento': statusPagamento.index,
         'custoVerificacao': custoVerificacao,

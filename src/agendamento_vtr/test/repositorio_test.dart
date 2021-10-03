@@ -6,22 +6,22 @@ import 'package:agendamento_vtr/app/models/tanque.dart';
 import 'package:agendamento_vtr/app/repositories/repository.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'objetos/empresas_test.dart';
-import 'objetos/tanques_test.dart';
+import 'objetos/empresas.dart';
+import 'objetos/tanques.dart';
 
 void main() {
   group('Teste de repositorios', () {
     test('Empresas', () async {
-      EmpresasTest et = EmpresasTest();
+      Empresas et = Empresas();
       Repository repo = Repository();
-      for (int i = 0; i < et.empresas.length; i++) {
-        Empresa e = et.empresas[i];
+      for (int i = 0; i < Empresas.empresas.length; i++) {
+        Empresa e = Empresas.empresas[i];
         bool salvou = (await repo.salvaEmpresa(e)).status == Status.Salva;
         expect(salvou, isTrue, reason: '$i -> ${e.cnpjCpf}');
       }
       sleep(Duration(seconds: 1));
-      for (int i = 0; i < et.empresas.length; i++) {
-        Empresa e = et.empresas[i];
+      for (int i = 0; i < Empresas.empresas.length; i++) {
+        Empresa e = Empresas.empresas[i];
         Empresa e2 = (await repo.getEmpresa(e.cnpjCpf)).model;
         expect(e2, isNotNull);
         expect(e2.email, equals(e.email));
@@ -39,15 +39,15 @@ void main() {
 
     test('Tanques', () async {
       Repository repo = Repository();
-      TanquesTest tt = TanquesTest();
-      for (int i = 0; i < tt.tanques.length; i++) {
-        Tanque t1 = tt.tanques[i];
+      Tanques tt = Tanques();
+      for (int i = 0; i < Tanques.tanques.length; i++) {
+        Tanque t1 = Tanques.tanques[i];
         bool salvou = (await repo.salvaTanque(t1)).status == Status.Salva;
         expect(salvou, isTrue, reason: '$i -> ${t1.placa}');
       }
       sleep(Duration(seconds: 1));
-      for (int i = 0; i < tt.tanques.length; i++) {
-        Tanque t1 = tt.tanques[i];
+      for (int i = 0; i < Tanques.tanques.length; i++) {
+        Tanque t1 = Tanques.tanques[i];
         Tanque t2 = (await repo.findTanqueByPlaca(t1.placa)).model;
         expect(t2, isNotNull);
         expect(t2.codInmetro, t1.codInmetro);

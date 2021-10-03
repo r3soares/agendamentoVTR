@@ -2,8 +2,9 @@ import 'dart:math';
 import 'package:agendamento_vtr/app/models/compartimento.dart';
 import 'package:agendamento_vtr/app/models/tanque.dart';
 
-class TanquesTest {
-  List<Tanque> tanques = List.empty(growable: true);
+class Tanques {
+  static final QUANTIDADE = 2000;
+  static List<Tanque> tanques = List.empty(growable: true);
   static List<String> alfabeto = [
     'A',
     'B',
@@ -32,8 +33,9 @@ class TanquesTest {
     'Z'
   ];
 
-  TanquesTest() {
-    for (int i = 0; i < Random().nextInt(500) + 15; i++) {
+  Tanques() {
+    if (tanques.isNotEmpty) return;
+    for (int i = 0; i < QUANTIDADE; i++) {
       Tanque t = Tanque();
       t.codInmetro = "${Random().nextInt(alfabeto.length)}$i";
       t.proprietario = '00970455941';
