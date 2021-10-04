@@ -1,3 +1,5 @@
+import 'package:agendamento_vtr/app/domain/extensions.dart';
+
 class CustoCompartimento {
   double getCusto(int cap, int setas) {
     if (cap == 0) return 0;
@@ -36,8 +38,4 @@ class CustoCompartimento {
     custoSetas = this.custoSetas(setas);
     return (custoCompartimento + custoSetas).toPrecision(2);
   }
-}
-
-extension Ex on double {
-  double toPrecision(int n) => double.parse(toStringAsFixed(n));
 }

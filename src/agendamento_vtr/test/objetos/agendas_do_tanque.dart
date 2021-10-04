@@ -8,14 +8,14 @@ import 'empresas.dart';
 import 'tanques.dart';
 
 class AgendasDoTanque {
-  static List<AgendaDoTanque> agendas = List.empty(growable: true);
+  static List<AgendaTanque> agendas = List.empty(growable: true);
   Random r = Random();
   AgendasDoTanque() {
     if (agendas.isNotEmpty) return;
     Tanques();
     Empresas();
     for (int i = 0; i < Tanques.tanques.length; i++) {
-      AgendaDoTanque a = AgendaDoTanque(
+      AgendaTanque a = AgendaTanque(
           id: Uuid().v1(),
           tanque: Tanques.tanques[i].placa,
           agenda: AgendasDoDia.uuids[r.nextInt(AgendasDoDia.QUANTIDADE)]);

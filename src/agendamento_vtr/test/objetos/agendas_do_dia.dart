@@ -16,8 +16,7 @@ class AgendasDoDia {
     AgendasDoTanque();
 
     for (int i = 0; i < QUANTIDADE; i++) {
-      Agenda a = Agenda(uuids[i]);
-      a.data = DateTime(2017).add(Duration(days: i));
+      Agenda a = Agenda(uuids[i], DateTime(2017).add(Duration(days: i)));
       a.status = StatusAgenda.values[r.nextInt(StatusAgenda.values.length)];
       a.tanquesAgendados = r.nextInt(10) > 6
           ? List.generate(

@@ -4,7 +4,7 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-import '../agenda_store.dart';
+import '../agenda_antiga_store.dart';
 
 class ReagendaWidget extends StatefulWidget {
   final Tanque tanque;
@@ -15,7 +15,7 @@ class ReagendaWidget extends StatefulWidget {
 }
 
 class _ReagendaWidgetState extends State<ReagendaWidget> {
-  final agendaStore = Modular.get<AgendaStore>();
+  final agendaStore = Modular.get<AgendaAntigaStore>();
   CalendarFormat _calendarFormat = CalendarFormat.month;
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
@@ -102,8 +102,7 @@ class _ReagendaWidgetState extends State<ReagendaWidget> {
       },
       calendarBuilders: CalendarBuilders(
         dowBuilder: (context, day) {
-          if (day.weekday == DateTime.sunday ||
-              day.weekday == DateTime.saturday) {
+          if (day.weekday == DateTime.sunday || day.weekday == DateTime.saturday) {
             final text = DateFormat.E('pt_BR').format(day);
             return Center(
               child: Text(
@@ -114,8 +113,7 @@ class _ReagendaWidgetState extends State<ReagendaWidget> {
           }
         },
         defaultBuilder: (context, day, focusedDay) => diaWidget(day),
-        selectedBuilder: (context, day, focusedDay) =>
-            diaSelecionadoWidget(day),
+        selectedBuilder: (context, day, focusedDay) => diaSelecionadoWidget(day),
         todayBuilder: (context, day, focusedDay) => hojeWidget(day),
       ),
     );
@@ -134,8 +132,7 @@ class _ReagendaWidgetState extends State<ReagendaWidget> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: List.generate(
                     agenda.tanques.length,
-                    (index) => agenda.tanquesConfirmados
-                            .contains(agenda.tanques[index])
+                    (index) => agenda.tanquesConfirmados.contains(agenda.tanques[index])
                         ? bolinhaConfirmado
                         : bolinhaNaoConfirmado),
               )

@@ -58,9 +58,9 @@ void main() {
     test('AgendasDoTanque', () {
       AgendasDoTanque();
       for (int i = 0; i < AgendasDoTanque.agendas.length; i++) {
-        AgendaDoTanque a1 = AgendasDoTanque.agendas[i];
+        AgendaTanque a1 = AgendasDoTanque.agendas[i];
         Map<String, dynamic> json = a1.toJson();
-        AgendaDoTanque a2 = a1.fromJson(json);
+        AgendaTanque a2 = a1.fromJson(json);
         expect(a1.agenda, equals(a2.agenda), reason: 'Agenda não validou');
         expect(a1.agendaAnterior, equals(a2.agendaAnterior), reason: 'agendaAnterior não validou');
         expect(a1.bitremAgenda, equals(a2.bitremAgenda), reason: 'bitremAgenda não validou');

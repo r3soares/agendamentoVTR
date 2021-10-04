@@ -1,27 +1,30 @@
-import 'package:agendamento_vtr/app/modules/agendamento/agenda_store.dart';
-import 'package:agendamento_vtr/app/modules/agendamento/models/agenda_antiga.dart';
+import 'package:agendamento_vtr/app/models/bloc.dart';
+import 'package:agendamento_vtr/app/models/model_base.dart';
+import 'package:agendamento_vtr/app/modules/agendamento/models/agenda.dart';
+import 'package:agendamento_vtr/app/modules/agendamento/models/agenda_tanque.dart';
+import 'package:agendamento_vtr/app/modules/agendamento/stores/calendario_store.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class CalendarioWidget extends StatefulWidget {
-  const CalendarioWidget({Key? key}) : super(key: key);
+  final Bloc diaAtual;
+  const CalendarioWidget({Key? key, required this.diaAtual}) : super(key: key);
 
   @override
   _CalendarioWidgetState createState() => _CalendarioWidgetState();
 }
 
-class _CalendarioWidgetState extends State<CalendarioWidget> {
-  final agendaStore = Modular.get<AgendaStore>();
-
+class _CalendarioWidgetState extends ModularState<CalendarioWidget, CalendarioStore> {
   CalendarFormat _calendarFormat = CalendarFormat.month;
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
   final kToday = DateTime.now();
   late DateTime kFirstDay;
   late DateTime kLastDay;
-  Map<DateTime, AgendaAntiga> agendasOcupadas = {};
+  Map<DateTime, Agenda> agendasOcupadas = {};
+  Map<String, AgendaTanque> agendasTanque = {};
   final bolinhaNaoConfirmado = Container(
       margin: EdgeInsets.all(1),
       width: 5.0,
@@ -44,18 +47,34 @@ class _CalendarioWidgetState extends State<CalendarioWidget> {
     kFirstDay = DateTime(kToday.year, kToday.month - 3, kToday.day);
     kLastDay = DateTime(kToday.year, kToday.month + 3, kToday.day);
     _selectedDay = kToday;
-    agendaStore.update(kToday);
   }
 
   @override
   void initState() {
     super.initState();
-    agendasOcupadas = agendaStore.getAgendasOcupadas();
-    agendaStore.addListener(() {
-      setState(() {
-        agendasOcupadas = agendaStore.getAgendasOcupadas();
-      });
+
+    store.blocDiaAtual.observer(onState: (e) {
+      ModelBase m = e as ModelBase;
+      widget.diaAtual.update(m.model);
     });
+    store.alteraDiaAtual(kToday);
+
+    store.agendasTanque.observer(onState: (e) {
+      ModelBase m = e as ModelBase;
+      for (AgendaTanque at in m.model) {
+        agendasTanque[at.id] = at;
+      }
+    });
+
+    store.agendasOcupadas.observer(onState: (e) {
+      ModelBase m = e as ModelBase;
+      agendasOcupadas.clear();
+      for (Agenda a in m.model) {
+        agendasOcupadas[a.data] = a;
+      }
+      store.listaAgendasTanque(agendasOcupadas.entries.map((e) => e.value.id).toList());
+    });
+    store.listaAgendasOcupadas(kFirstDay, kLastDay);
   }
 
   @override
@@ -89,7 +108,7 @@ class _CalendarioWidgetState extends State<CalendarioWidget> {
             _selectedDay = selectedDay;
             _focusedDay = focusedDay;
           });
-          agendaStore.update(selectedDay);
+          store.alteraDiaAtual(selectedDay);
         }
       },
       onFormatChanged: (format) {
@@ -103,6 +122,7 @@ class _CalendarioWidgetState extends State<CalendarioWidget> {
       onPageChanged: (focusedDay) {
         // No need to call `setState()` here
         _focusedDay = focusedDay;
+        store.alteraDiaAtual(focusedDay);
       },
       calendarBuilders: CalendarBuilders(
         dowBuilder: (context, day) {
@@ -135,10 +155,11 @@ class _CalendarioWidgetState extends State<CalendarioWidget> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: List.generate(
-                    agenda.tanques.length,
-                    (index) => agenda.tanquesConfirmados.contains(agenda.tanques[index])
-                        ? bolinhaConfirmado
-                        : bolinhaNaoConfirmado),
+                    agenda.tanquesAgendados.length,
+                    (index) =>
+                        agendasTanque[agenda.tanquesAgendados[index]]!.statusConfirmacao == StatusConfirmacao.Confirmado
+                            ? bolinhaConfirmado
+                            : bolinhaNaoConfirmado),
               )
             ],
           ),

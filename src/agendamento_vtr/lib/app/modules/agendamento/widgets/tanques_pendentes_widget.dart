@@ -1,5 +1,5 @@
 import 'package:agendamento_vtr/app/models/tanque.dart';
-import 'package:agendamento_vtr/app/modules/agendamento/agenda_store.dart';
+import 'package:agendamento_vtr/app/modules/agendamento/agenda_antiga_store.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/pages/visualiza_tanque_dialog.dart';
 import 'package:agendamento_vtr/app/repositories/repository_tanque.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +13,7 @@ class TanquesPendentesWidget extends StatefulWidget {
   _TanquesPendentesWidgetState createState() => _TanquesPendentesWidgetState();
 }
 
-class _TanquesPendentesWidgetState extends ModularState<TanquesPendentesWidget, AgendaStore> {
+class _TanquesPendentesWidgetState extends ModularState<TanquesPendentesWidget, AgendaAntigaStore> {
   final List<Tanque?> tanques = List.empty(growable: true);
 
   final formatoData = 'dd/MM/yy HH:mm';

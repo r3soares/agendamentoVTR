@@ -2,12 +2,12 @@ import 'package:agendamento_vtr/app/models/json_serializable.dart';
 
 class Agenda implements JsonSerializable {
   final String id;
-  DateTime data = DateTime.now();
+  final DateTime data;
   List<String> tanquesAgendados = List.empty(growable: true);
   StatusAgenda status = StatusAgenda.Disponivel;
   String? obs;
 
-  Agenda(this.id);
+  Agenda(this.id, this.data);
 
   @override
   fromJson(Map<String, dynamic> json) => Agenda.fromJson(json);

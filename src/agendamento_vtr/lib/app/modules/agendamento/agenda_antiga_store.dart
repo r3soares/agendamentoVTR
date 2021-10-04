@@ -2,10 +2,10 @@ import 'package:agendamento_vtr/app/modules/agendamento/models/agenda_antiga.dar
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
-import 'agenda_repository.dart';
+import 'agenda_antiga_repository.dart';
 
-class AgendaStore extends ChangeNotifier {
-  final _repository = Modular.get<AgendaRepository>();
+class AgendaAntigaStore extends ChangeNotifier {
+  final _repository = Modular.get<AgendaAntigaRepository>();
   AgendaAntiga _agenda = AgendaAntiga(DateTime.now());
   int _statusTanque = 0;
   //0 -> inicial

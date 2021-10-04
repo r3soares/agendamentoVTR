@@ -1,6 +1,6 @@
 import 'package:agendamento_vtr/app/modules/agendamento/models/agenda_antiga.dart';
 
-class AgendaRepository {
+class AgendaAntigaRepository {
   List<AgendaAntiga?> _agendas = List.empty(growable: true);
 
   addAgenda(AgendaAntiga value) {
@@ -13,7 +13,7 @@ class AgendaRepository {
 
   Map<DateTime, AgendaAntiga> agendasOcupadas() {
     final agendasOcupadas = _agendas.where((a) => a!.tanques.isNotEmpty).toList();
-    return Map<DateTime, AgendaAntiga>.fromIterable(agendasOcupadas, key: (k) => k.data, value: (v) => v);
+    return Map<DateTime, AgendaAntiga>.fromIterable(agendasOcupadas, key: (k) => k.db, value: (v) => v);
   }
 
   AgendaAntiga? findAgenda(DateTime data) {
