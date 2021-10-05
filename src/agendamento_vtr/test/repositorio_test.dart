@@ -17,16 +17,16 @@ import 'objetos/agendas_do_dia.dart';
 import 'objetos/agendas_do_tanque.dart';
 import 'objetos/empresas.dart';
 import 'objetos/tanques.dart';
-import 'package:collection/collection.dart';
 
 void main() {
   group('Teste de repositorios', () {
     test('Empresas', () async {
       var repo = RepositoryEmpresa(Api('empresa'));
+      Empresas();
       for (int i = 0; i < Empresas.empresas.length; i++) {
         Empresa e = Empresas.empresas[i];
-        await repo.salvaEmpresa(e);
-        //expect(salvou, isTrue, reason: '$i -> ${e.cnpjCpf}');
+        ModelBase mb = await repo.salvaEmpresa(e);
+        expect(mb.model, isTrue, reason: '$i Não salvou -> ${e.cnpjCpf}');
       }
       sleep(Duration(seconds: 1));
       for (int i = 0; i < Empresas.empresas.length; i++) {
@@ -48,10 +48,11 @@ void main() {
 
     test('Tanques', () async {
       var repo = RepositoryTanque(Api('tanque'));
+      Tanques();
       for (int i = 0; i < Tanques.tanques.length; i++) {
         Tanque t1 = Tanques.tanques[i];
-        await repo.salvaTanque(t1);
-        //expect(salvou, isTrue, reason: '$i -> ${t1.placa}');
+        ModelBase mb = await repo.salvaTanque(t1);
+        expect(mb.model, isTrue, reason: '$i Não salvou -> ${t1.placa}');
       }
       sleep(Duration(seconds: 1));
       for (int i = 0; i < Tanques.tanques.length; i++) {
@@ -60,7 +61,9 @@ void main() {
         expect(t2, isNotNull);
         expect(t2.codInmetro, t1.codInmetro);
         expect(t2.placa, t1.placa);
-        expect(t2.compartimentos[0].capacidade, t1.compartimentos[0].capacidade);
+        if (t1.compartimentos.isNotEmpty) {
+          expect(t2.compartimentos[0].capacidade, t1.compartimentos[0].capacidade);
+        }
         expect(t2.dataRegistro.second, t1.dataRegistro.second);
         expect(t2.dataRegistro.minute, t1.dataRegistro.minute);
         expect(t2.dataRegistro.hour, t1.dataRegistro.hour);

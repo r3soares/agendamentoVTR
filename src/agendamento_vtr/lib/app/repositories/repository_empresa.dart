@@ -14,7 +14,7 @@ class RepositoryEmpresa {
     try {
       bool salvou = await db.save(jsonEncode(value.toJson()));
       if (!salvou) print('Erro em salvaEmpresa em Repository Empresa');
-      return ModelBase(value);
+      return ModelBase(salvou);
     } on Falha catch (e) {
       print('Erro ao salvar empresa ${value.cnpjCpf}: $e');
       throw e;

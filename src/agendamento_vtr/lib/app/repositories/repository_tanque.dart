@@ -15,7 +15,7 @@ class RepositoryTanque {
     try {
       bool salvou = await db.save(jsonEncode(value.toJson()));
       if (!salvou) print('Erro em salvaTanque em Repository Tanque');
-      return ModelBase(value);
+      return ModelBase(salvou);
     } on Falha catch (e) {
       print('Erro ao salvar tanque ${value.placa}: $e');
       throw e;

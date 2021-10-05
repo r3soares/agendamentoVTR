@@ -37,7 +37,7 @@ class Tanques {
     if (tanques.isNotEmpty) return;
     for (int i = 0; i < QUANTIDADE; i++) {
       Tanque t = Tanque();
-      t.codInmetro = "${Random().nextInt(alfabeto.length)}$i";
+      t.codInmetro = "$i";
       t.proprietario = '00970455941';
       t.placa = geraPlaca();
       for (int j = 0; j < Random().nextInt(10); j++) {
