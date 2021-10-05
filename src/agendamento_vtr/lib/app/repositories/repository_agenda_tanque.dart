@@ -1,11 +1,7 @@
 import 'dart:convert';
-
 import 'package:agendamento_vtr/app/domain/erros.dart';
-import 'package:agendamento_vtr/app/domain/extensions.dart';
 import 'package:agendamento_vtr/app/models/model_base.dart';
-import 'package:agendamento_vtr/app/modules/agendamento/models/agenda.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/models/agenda_tanque.dart';
-import 'package:uuid/uuid.dart';
 
 import 'infra/IDatabase.dart';
 
@@ -65,7 +61,7 @@ class RepositoryAgendaTanque {
     try {
       bool salvou = await db.save(jsonEncode(value.toJson()));
       if (!salvou) print('Erro em salvaAgenda em Repository Agenda');
-      return ModelBase(value);
+      return ModelBase(salvou);
     } on Falha catch (e) {
       print('Erro ao salvar agendaTanque ${value.id}: $e');
       throw e;

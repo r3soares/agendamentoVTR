@@ -1,12 +1,20 @@
 import 'dart:io';
 
+import 'package:agendamento_vtr/app/domain/extensions.dart';
 import 'package:agendamento_vtr/app/models/empresa.dart';
+import 'package:agendamento_vtr/app/models/model_base.dart';
 import 'package:agendamento_vtr/app/models/tanque.dart';
+import 'package:agendamento_vtr/app/modules/agendamento/models/agenda.dart';
+import 'package:agendamento_vtr/app/modules/agendamento/models/agenda_tanque.dart';
 import 'package:agendamento_vtr/app/repositories/infra/api.dart';
+import 'package:agendamento_vtr/app/repositories/repository_agenda.dart';
+import 'package:agendamento_vtr/app/repositories/repository_agenda_tanque.dart';
 import 'package:agendamento_vtr/app/repositories/repository_empresa.dart';
 import 'package:agendamento_vtr/app/repositories/repository_tanque.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import 'objetos/agendas_do_dia.dart';
+import 'objetos/agendas_do_tanque.dart';
 import 'objetos/empresas.dart';
 import 'objetos/tanques.dart';
 
@@ -63,7 +71,58 @@ void main() {
     }, timeout: Timeout(Duration(minutes: 2)));
 
     test('AgendasTanque', () async {
-      /////Teste aqui////////
+      var repo = RepositoryAgendaTanque(Api('agendaTanque'));
+      AgendasDoTanque();
+      AgendasDoDia();
+      for (AgendaTanque at in AgendasDoTanque.agendas) {
+        ModelBase mb = await repo.salvaAgendaTanque(at);
+        expect(mb.model, isTrue);
+      }
+      var lista = AgendasDoTanque.agendas;
+      for (int i = 0; i < lista.length; i++) {
+        ModelBase mb = await repo.getAgendaTanque(lista[i].id);
+        expect(mb, isNotNull);
+        AgendaTanque at = mb.model;
+        expect(at, isNotNull);
+        expect(at.agenda, equals(lista[i].agenda));
+        expect(at.agendaAnterior, equals(lista[i].agendaAnterior));
+        expect(at.bitremAgenda, equals(lista[i].bitremAgenda));
+        expect(at.custoVerificacao, equals(lista[i].custoVerificacao));
+        expect(at.id, equals(lista[i].id));
+        expect(at.obs, equals(lista[i].obs));
+        expect(at.responsavel, equals(lista[i].responsavel));
+        expect(at.statusConfirmacao, equals(lista[i].statusConfirmacao));
+        expect(at.statusPagamento, equals(lista[i].statusPagamento));
+        expect(at.tanque, equals(lista[i].tanque));
+        expect(at.tempoVerificacao, equals(lista[i].tempoVerificacao));
+      }
+    }, timeout: Timeout(Duration(minutes: 2)));
+    test('Agendas', () async {
+      var repo = RepositoryAgenda(Api('agenda'));
+      AgendasDoTanque();
+      AgendasDoDia();
+      for (Agenda a in AgendasDoDia.agendas) {
+        ModelBase mb = await repo.salvaAgenda(a);
+        expect(mb.model, isTrue);
+      }
+      var lista = AgendasDoDia.agendas;
+      for (int i = 0; i < lista.length; i++) {
+        ModelBase mb = await repo.getAgenda(lista[i].id);
+        expect(mb, isNotNull);
+        Agenda a = mb.model;
+        expect(a, isNotNull);
+        expect(a.data.diaMesAno(), equals(lista[i].data.diaMesAno()));
+        //expect(a.data.m, equals(lista[i].data.day));
+        //expect(a.data.day, equals(lista[i].data.day));
+        expect(a.id, equals(lista[i].id));
+        expect(a.obs, equals(lista[i].obs));
+        expect(a.status, equals(lista[i].status));
+        if (lista[i].tanquesAgendados.isNotEmpty) {
+          for (int j = 0; j < lista[i].tanquesAgendados.length; j++) {
+            expect(a.tanquesAgendados[j], equals(lista[i].tanquesAgendados[j]));
+          }
+        }
+      }
     }, timeout: Timeout(Duration(minutes: 2)));
   });
 }

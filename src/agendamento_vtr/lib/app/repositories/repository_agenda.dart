@@ -64,7 +64,7 @@ class RepositoryAgenda {
     try {
       bool salvou = await db.save(jsonEncode(value.toJson()));
       if (!salvou) print('Erro em salvaAgenda em Repository Agenda');
-      return ModelBase(value);
+      return ModelBase(salvou);
     } on Falha catch (e) {
       print('Erro ao salvar agenda do dia ${value.data.diaMesAnoToString()}: $e');
       throw e;

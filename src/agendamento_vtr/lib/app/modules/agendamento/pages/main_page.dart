@@ -1,9 +1,7 @@
 import 'package:agendamento_vtr/app/models/bloc.dart';
 import 'package:agendamento_vtr/app/models/model_base.dart';
-import 'package:agendamento_vtr/app/modules/agendamento/widgets/agenda_do_dia_widget.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/widgets/calendario_widget.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/widgets/pesquisa_widget.dart';
-import 'package:agendamento_vtr/app/modules/agendamento/widgets/tanques_pendentes_widget.dart';
 import 'package:flutter/material.dart';
 
 class MainPage extends StatelessWidget {

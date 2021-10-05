@@ -6,7 +6,7 @@ import 'package:uuid/uuid.dart';
 import 'agendas_do_tanque.dart';
 
 class AgendasDoDia {
-  static const int QUANTIDADE = 1500;
+  static const int QUANTIDADE = 300;
   static List<Agenda> agendas = List.empty(growable: true);
   static List<String> uuids = List.generate(QUANTIDADE, (index) => Uuid().v1());
   Random r = Random();
