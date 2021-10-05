@@ -38,7 +38,7 @@ class RepositoryAgenda {
 
   Future<ModelBase> findAgenda(DateTime data) async {
     try {
-      var result = await db.find('data', data.diaMesAno());
+      var result = await db.find('data', data.anoMesDiaToString());
       var agenda = result == false ? throw NaoEncontrado(data) : Agenda.fromJson(result);
       return ModelBase(agenda);
     } on Falha catch (e) {

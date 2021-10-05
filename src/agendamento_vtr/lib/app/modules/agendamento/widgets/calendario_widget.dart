@@ -53,11 +53,11 @@ class _CalendarioWidgetState extends ModularState<CalendarioWidget, CalendarioSt
   void initState() {
     super.initState();
 
-    store.blocDiaAtual.observer(onState: (e) {
-      ModelBase m = e as ModelBase;
-      widget.diaAtual.update(m.model);
-    });
-    store.alteraDiaAtual(kToday);
+    // store.blocDiaAtual.observer(onState: (e) {
+    //   ModelBase m = e as ModelBase;
+    //   widget.diaAtual.update(m.model);
+    // });
+    // store.alteraDiaAtual(kToday);
 
     store.agendasTanque.observer(onState: (e) {
       ModelBase m = e as ModelBase;
@@ -108,7 +108,7 @@ class _CalendarioWidgetState extends ModularState<CalendarioWidget, CalendarioSt
             _selectedDay = selectedDay;
             _focusedDay = focusedDay;
           });
-          store.alteraDiaAtual(selectedDay);
+          widget.diaAtual.update(selectedDay);
         }
       },
       onFormatChanged: (format) {

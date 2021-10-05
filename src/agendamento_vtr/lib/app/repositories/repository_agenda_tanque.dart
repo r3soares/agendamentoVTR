@@ -47,7 +47,10 @@ class RepositoryAgendaTanque {
 
   Future<ModelBase> findAgendasTanqueByAgendas(List<String> agendas) async {
     try {
-      var result = await db.find('agenda', agendas);
+      ///VERIFICAR
+      //var listaFormatada = agendas.fold('', (previousValue, element) => '$previousValue|$element');
+      //print(listaFormatada);
+      var result = await db.find2('agendas', agendas);
       var lista =
           result == false ? List.empty(growable: true) : (result as List).map((n) => AgendaTanque.fromJson(n)).toList();
       return ModelBase(lista);

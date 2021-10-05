@@ -69,6 +69,19 @@ class Api implements IDatabase {
   }
 
   @override
+  find2(instrucao, data) async {
+    try {
+      final uri = Uri.parse('$endereco$controller/$instrucao');
+      //print(uri);
+      final req = await _request(tipo: TipoRequest.Get, uri: uri, data: data);
+      return _resposta(req);
+    } catch (e) {
+      print(e);
+      throw e;
+    }
+  }
+
+  @override
   save(data) async {
     try {
       final uri = Uri.parse(endereco + controller);

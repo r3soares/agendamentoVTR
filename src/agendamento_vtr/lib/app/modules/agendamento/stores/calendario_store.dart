@@ -15,7 +15,8 @@ class CalendarioStore extends StreamStore<Falha, ModelBase> {
   CalendarioStore(this.repoAgenda, this.repoAt) : super(ModelBase(null));
 
   alteraDiaAtual(DateTime dia) async {
-    blocDiaAtual.execute(() => repoAgenda.findCreateAgenda(dia));
+    //blocDiaAtual.execute(() => repoAgenda.findCreateAgenda(dia));
+    blocDiaAtual.update(dia);
   }
 
   listaAgendasOcupadas(DateTime inicio, DateTime fim) async {
