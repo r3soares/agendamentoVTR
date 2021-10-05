@@ -13,6 +13,18 @@ class RepositoryAgenda {
 
   RepositoryAgenda(this.db);
 
+  Future<ModelBase> getAgendas() async {
+    try {
+      var result = await db.getAll();
+      var agendas =
+          result == false ? List.empty(growable: true) : (result as List).map((n) => Agenda.fromJson(n)).toList();
+      return ModelBase(agendas);
+    } on Falha catch (e) {
+      print('GetAgendas => Erro ao buscar todas as agendas: $e');
+      throw e;
+    }
+  }
+
   Future<ModelBase> getAgenda(String id) async {
     try {
       var result = await db.getById(id);
@@ -37,7 +49,7 @@ class RepositoryAgenda {
 
   Future<ModelBase> findAgendas(DateTime inicio, DateTime fim) async {
     try {
-      var result = await db.find('periodo', [inicio.diaMesAno(), fim.diaMesAno()]);
+      var result = await db.find('periodo', '${inicio.anoMesDiaToString()}|${fim.anoMesDiaToString()}');
       var agendas =
           result == false ? List.empty(growable: true) : (result as List).map((n) => Agenda.fromJson(n)).toList();
       return ModelBase(agendas);

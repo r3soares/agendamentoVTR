@@ -10,4 +10,8 @@ extension DatetimeEx on DateTime {
   String diaMesAnoToString() {
     return '${this.day}/${this.month}/${this.year}';
   }
+
+  String anoMesDiaToString() {
+    return '${this.year}-${this.month}-${this.day}';
+  }
 }

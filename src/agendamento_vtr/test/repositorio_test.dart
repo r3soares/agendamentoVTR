@@ -17,6 +17,7 @@ import 'objetos/agendas_do_dia.dart';
 import 'objetos/agendas_do_tanque.dart';
 import 'objetos/empresas.dart';
 import 'objetos/tanques.dart';
+import 'package:collection/collection.dart';
 
 void main() {
   group('Teste de repositorios', () {
@@ -106,10 +107,15 @@ void main() {
         expect(mb.model, isTrue);
       }
       var lista = AgendasDoDia.agendas;
+      var menorData = DateTime.now().add(Duration(days: 3000));
+      var maiorData = DateTime.now().add(Duration(days: -3000));
       for (int i = 0; i < lista.length; i++) {
         ModelBase mb = await repo.getAgenda(lista[i].id);
         expect(mb, isNotNull);
         Agenda a = mb.model;
+        menorData = a.data.compareTo(menorData) < 0 ? a.data : menorData;
+        maiorData = a.data.compareTo(menorData) > 0 ? a.data : maiorData;
+
         expect(a, isNotNull);
         expect(a.data.diaMesAno(), equals(lista[i].data.diaMesAno()));
         //expect(a.data.m, equals(lista[i].data.day));
@@ -123,6 +129,22 @@ void main() {
           }
         }
       }
+      ModelBase mb = await repo.getAgendas();
+      List<Agenda> todas = mb.model;
+      expect(lista.length, equals(todas.length));
+
+      mb = await repo.findAgendas(menorData.subtract(Duration(hours: 12)), maiorData);
+      List<Agenda> periodo = mb.model;
+      // lista.removeWhere((x) => periodo.firstWhereOrNull((e) => e.id == x.id) != null);
+      // if (lista.isNotEmpty) {
+      //   print('Inconsistencia no periodo (${lista.length})');
+      //   print('Menor data: $menorData');
+      //   print('Maior data: $maiorData');
+      //   for (var item in lista) {
+      //     print('${item.id} => ${item.data}');
+      //   }
+      // }
+      expect(lista.length, equals(periodo.length));
     }, timeout: Timeout(Duration(minutes: 2)));
   });
 }

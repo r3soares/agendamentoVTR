@@ -6,7 +6,7 @@ import 'package:uuid/uuid.dart';
 import 'agendas_do_tanque.dart';
 
 class AgendasDoDia {
-  static const int QUANTIDADE = 300;
+  static const int QUANTIDADE = 600;
   static List<Agenda> agendas = List.empty(growable: true);
   static List<String> uuids = List.generate(QUANTIDADE, (index) => Uuid().v1());
   Random r = Random();
@@ -16,7 +16,7 @@ class AgendasDoDia {
     AgendasDoTanque();
 
     for (int i = 0; i < QUANTIDADE; i++) {
-      Agenda a = Agenda(uuids[i], DateTime(2017).add(Duration(days: i)));
+      Agenda a = Agenda(uuids[i], DateTime(2020).add(Duration(days: i + 1)));
       a.status = StatusAgenda.values[r.nextInt(StatusAgenda.values.length)];
       a.tanquesAgendados = r.nextInt(10) > 6
           ? List.generate(

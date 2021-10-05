@@ -44,8 +44,8 @@ class _CalendarioWidgetState extends ModularState<CalendarioWidget, CalendarioSt
       ));
 
   _CalendarioWidgetState() {
-    kFirstDay = DateTime(kToday.year, kToday.month - 3, kToday.day);
-    kLastDay = DateTime(kToday.year, kToday.month + 3, kToday.day);
+    kFirstDay = DateTime(kToday.year - 1, kToday.month, kToday.day);
+    kLastDay = DateTime(kToday.year + 1, kToday.month, kToday.day);
     _selectedDay = kToday;
   }
 
@@ -122,6 +122,14 @@ class _CalendarioWidgetState extends ModularState<CalendarioWidget, CalendarioSt
       onPageChanged: (focusedDay) {
         // No need to call `setState()` here
         _focusedDay = focusedDay;
+
+        // print(focusedDay);
+
+        // setState(() {
+        //   kFirstDay = focusedDay.subtract(Duration(days: 31));
+        //   kLastDay = focusedDay.add(Duration(days: 31));
+        // });
+
         store.alteraDiaAtual(focusedDay);
       },
       calendarBuilders: CalendarBuilders(

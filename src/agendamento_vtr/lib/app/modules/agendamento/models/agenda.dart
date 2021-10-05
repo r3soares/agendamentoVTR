@@ -27,6 +27,9 @@ class Agenda implements JsonSerializable {
         'status': status.index,
         'obs': obs,
       };
+
+  @override
+  int get hashCode => id.hashCode;
 }
 
 enum StatusAgenda { Disponivel, Cheia, Encerrada, Indisponivel }
