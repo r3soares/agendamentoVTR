@@ -20,10 +20,10 @@ class CalendarioStore extends StreamStore<Falha, ModelBase> {
   }
 
   listaAgendasOcupadas(DateTime inicio, DateTime fim) async {
-    agendasOcupadas.execute(() => repoAgenda.findAgendas(inicio, fim));
+    agendasOcupadas.execute(() => repoAgenda.findByPeriodo(inicio, fim));
   }
 
   listaAgendasTanque(List<String> agendas) async {
-    agendasTanque.execute(() => repoAt.findAgendasTanqueByAgendas(agendas));
+    agendasTanque.execute(() => repoAt.findByAgendas(agendas));
   }
 }

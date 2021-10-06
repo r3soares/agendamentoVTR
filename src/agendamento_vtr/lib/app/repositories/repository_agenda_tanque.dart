@@ -10,7 +10,7 @@ class RepositoryAgendaTanque {
 
   RepositoryAgendaTanque(this.db);
 
-  Future<ModelBase> getAgendaTanque(String id) async {
+  Future<ModelBase> get(String id) async {
     try {
       var result = await db.getById(id);
       var agendaTanque = result == false ? throw NaoEncontrado(id) : AgendaTanque.fromJson(result);
@@ -21,7 +21,7 @@ class RepositoryAgendaTanque {
     }
   }
 
-  Future<ModelBase> getAgendasTanque() async {
+  Future<ModelBase> getAll() async {
     try {
       var result = await db.getAll();
       List<AgendaTanque> lista =
@@ -33,19 +33,19 @@ class RepositoryAgendaTanque {
     }
   }
 
-  Future<ModelBase> findAgendasTanqueByAgenda(String agenda) async {
-    try {
-      var result = await db.find('agenda', agenda);
-      var lista =
-          result == false ? List.empty(growable: true) : (result as List).map((n) => AgendaTanque.fromJson(n)).toList();
-      return ModelBase(lista);
-    } on Falha catch (e) {
-      print('Erro ao procurar agendasTanque pela agenda $agenda: $e');
-      throw e;
-    }
-  }
+  // Future<ModelBase> findByAgenda(String agenda) async {
+  //   try {
+  //     var result = await db.find('agenda', agenda);
+  //     var lista =
+  //         result == false ? List.empty(growable: true) : (result as List).map((n) => AgendaTanque.fromJson(n)).toList();
+  //     return ModelBase(lista);
+  //   } on Falha catch (e) {
+  //     print('Erro ao procurar agendasTanque pela agenda $agenda: $e');
+  //     throw e;
+  //   }
+  // }
 
-  Future<ModelBase> findAgendasTanqueByAgendas(List<String> agendas) async {
+  Future<ModelBase> findByAgendas(List<String> agendas) async {
     try {
       ///VERIFICAR
       //var listaFormatada = agendas.fold('', (previousValue, element) => '$previousValue|$element');
@@ -60,7 +60,7 @@ class RepositoryAgendaTanque {
     }
   }
 
-  Future<ModelBase> salvaAgendaTanque(AgendaTanque value) async {
+  Future<ModelBase> save(AgendaTanque value) async {
     try {
       bool salvou = await db.save(jsonEncode(value.toJson()));
       if (!salvou) print('Erro em salvaAgenda em Repository Agenda');

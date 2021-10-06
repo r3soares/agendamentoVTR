@@ -13,7 +13,7 @@ class RepositoryAgenda {
 
   RepositoryAgenda(this.db);
 
-  Future<ModelBase> getAgendas() async {
+  Future<ModelBase> getAll() async {
     try {
       var result = await db.getAll();
       var agendas =
@@ -25,7 +25,7 @@ class RepositoryAgenda {
     }
   }
 
-  Future<ModelBase> getAgenda(String id) async {
+  Future<ModelBase> get(String id) async {
     try {
       var result = await db.getById(id);
       var agenda = result == false ? throw NaoEncontrado(id) : Agenda.fromJson(result);
@@ -36,7 +36,7 @@ class RepositoryAgenda {
     }
   }
 
-  Future<ModelBase> findAgenda(DateTime data) async {
+  Future<ModelBase> findByData(DateTime data) async {
     try {
       var result = await db.find('data', data.anoMesDiaToString());
       var agenda = result == false ? throw NaoEncontrado(data) : Agenda.fromJson(result);
@@ -47,7 +47,7 @@ class RepositoryAgenda {
     }
   }
 
-  Future<ModelBase> findAgendas(DateTime inicio, DateTime fim) async {
+  Future<ModelBase> findByPeriodo(DateTime inicio, DateTime fim) async {
     try {
       var result = await db.find('periodo', '${inicio.anoMesDiaToString()}|${fim.anoMesDiaToString()}');
       var agendas =
@@ -60,7 +60,7 @@ class RepositoryAgenda {
     }
   }
 
-  Future<ModelBase> findCreateAgenda(DateTime data) async {
+  Future<ModelBase> findOrCreate(DateTime data) async {
     try {
       var result = await db.find('data', data.diaMesAno());
       Agenda agenda = result == false ? Agenda(Uuid().v1(), data.diaMesAno()) : Agenda.fromJson(result);
@@ -72,7 +72,7 @@ class RepositoryAgenda {
     return ModelBase(Agenda(Uuid().v1(), data.diaMesAno()));
   }
 
-  Future<ModelBase> salvaAgenda(Agenda value) async {
+  Future<ModelBase> save(Agenda value) async {
     try {
       bool salvou = await db.save(jsonEncode(value.toJson()));
       if (!salvou) print('Erro em salvaAgenda em Repository Agenda');

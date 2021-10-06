@@ -59,7 +59,7 @@ class Api implements IDatabase {
   find(instrucao, termo) async {
     try {
       final uri = Uri.parse('$endereco$controller/$instrucao/$termo');
-      //print(uri);
+      print(uri);
       final req = await _request(tipo: TipoRequest.Get, uri: uri);
       return _resposta(req);
     } catch (e) {
@@ -72,7 +72,7 @@ class Api implements IDatabase {
   find2(instrucao, data) async {
     try {
       final uri = Uri.parse('$endereco$controller/$instrucao');
-      //print(uri);
+      print(uri);
       final req = await _request(tipo: TipoRequest.Get, uri: uri, data: data);
       return _resposta(req);
     } catch (e) {

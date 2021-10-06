@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:agendamento_vtr/app/domain/extensions.dart';
 import 'package:agendamento_vtr/app/models/empresa.dart';
@@ -20,6 +21,8 @@ import 'objetos/tanques.dart';
 
 void main() {
   group('Teste de repositorios', () {
+    bool baseAgendaPopulada = false;
+    bool baseAgendaTanquePopulada = false;
     test('Empresas', () async {
       var repo = RepositoryEmpresa(Api('empresa'));
       Empresas();
@@ -79,12 +82,13 @@ void main() {
       AgendasDoTanque();
       AgendasDoDia();
       for (AgendaTanque at in AgendasDoTanque.agendas) {
-        ModelBase mb = await repo.salvaAgendaTanque(at);
+        ModelBase mb = await repo.save(at);
         expect(mb.model, isTrue);
       }
+      baseAgendaTanquePopulada = true;
       var lista = AgendasDoTanque.agendas;
       for (int i = 0; i < lista.length; i++) {
-        ModelBase mb = await repo.getAgendaTanque(lista[i].id);
+        ModelBase mb = await repo.get(lista[i].id);
         expect(mb, isNotNull);
         AgendaTanque at = mb.model;
         expect(at, isNotNull);
@@ -106,14 +110,15 @@ void main() {
       AgendasDoTanque();
       AgendasDoDia();
       for (Agenda a in AgendasDoDia.agendas) {
-        ModelBase mb = await repo.salvaAgenda(a);
+        ModelBase mb = await repo.save(a);
         expect(mb.model, isTrue);
       }
+      baseAgendaPopulada = true;
       var lista = AgendasDoDia.agendas;
       var menorData = DateTime.now().add(Duration(days: 3000));
       var maiorData = DateTime.now().add(Duration(days: -3000));
       for (int i = 0; i < lista.length; i++) {
-        ModelBase mb = await repo.getAgenda(lista[i].id);
+        ModelBase mb = await repo.get(lista[i].id);
         expect(mb, isNotNull);
         Agenda a = mb.model;
         menorData = a.data.compareTo(menorData) < 0 ? a.data : menorData;
@@ -132,11 +137,11 @@ void main() {
           }
         }
       }
-      ModelBase mb = await repo.getAgendas();
+      ModelBase mb = await repo.getAll();
       List<Agenda> todas = mb.model;
       expect(lista.length, equals(todas.length));
 
-      mb = await repo.findAgendas(menorData.subtract(Duration(hours: 12)), maiorData);
+      mb = await repo.findByPeriodo(menorData.subtract(Duration(hours: 12)), maiorData);
       List<Agenda> periodo = mb.model;
       // lista.removeWhere((x) => periodo.firstWhereOrNull((e) => e.id == x.id) != null);
       // if (lista.isNotEmpty) {
@@ -148,6 +153,44 @@ void main() {
       //   }
       // }
       expect(lista.length, equals(periodo.length));
+    }, timeout: Timeout(Duration(minutes: 2)));
+    test('Agendas Filtros', () async {
+      var repoA = RepositoryAgenda(Api('agenda'));
+      var repoAT = RepositoryAgendaTanque(Api('agendaTanque'));
+      if (!baseAgendaPopulada) {
+        AgendasDoTanque();
+        AgendasDoDia();
+        for (Agenda a in AgendasDoDia.agendas) {
+          ModelBase mb = await repoA.save(a);
+          expect(mb.model, isTrue);
+        }
+      }
+
+      if (!baseAgendaTanquePopulada) {
+        for (AgendaTanque at in AgendasDoTanque.agendas) {
+          ModelBase mb = await repoAT.save(at);
+          expect(mb.model, isTrue);
+        }
+      }
+
+      List<Agenda> lista = (await repoA.getAll()).model;
+      var menorData = DateTime.now().add(Duration(days: 3000));
+      var maiorData = DateTime.now().add(Duration(days: -3000));
+      for (int i = 0; i < lista.length; i++) {
+        Agenda a = lista[i];
+        menorData = a.data.compareTo(menorData) < 0 ? a.data : menorData;
+        maiorData = a.data.compareTo(menorData) > 0 ? a.data : maiorData;
+      }
+      var mb = await repoA.findByPeriodo(menorData.subtract(Duration(hours: 12)), maiorData);
+      List<Agenda> periodo = mb.model;
+      expect(periodo, isNotNull, reason: 'FindByPeriodo não validou');
+
+      Agenda a = lista[Random().nextInt(lista.length)];
+      mb = await repoA.findByData(a.data);
+      expect(a.id, equals(mb.model.id), reason: 'FindByData não validou');
+
+      List<AgendaTanque> listaAt = (await repoAT.findByAgendas(lista.map((e) => e.id).toList())).model;
+      expect(listaAt.length, greaterThan(0));
     }, timeout: Timeout(Duration(minutes: 2)));
   });
 }
