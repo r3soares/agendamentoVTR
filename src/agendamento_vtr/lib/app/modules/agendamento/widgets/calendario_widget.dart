@@ -1,3 +1,4 @@
+import 'package:agendamento_vtr/app/domain/constantes.dart';
 import 'package:agendamento_vtr/app/models/bloc.dart';
 import 'package:agendamento_vtr/app/models/model_base.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/models/agenda.dart';
@@ -23,7 +24,7 @@ class _CalendarioWidgetState extends ModularState<CalendarioWidget, CalendarioSt
   final kToday = DateTime.now();
   late DateTime kFirstDay;
   late DateTime kLastDay;
-  Map<DateTime, Agenda> agendasOcupadas = {};
+  Map<String, Agenda> agendasOcupadas = {};
   Map<String, TanqueAgendado> agendasTanque = {};
   final bolinhaNaoConfirmado = Container(
       margin: EdgeInsets.all(1),
@@ -72,9 +73,9 @@ class _CalendarioWidgetState extends ModularState<CalendarioWidget, CalendarioSt
       for (Agenda a in m.model) {
         agendasOcupadas[a.data] = a;
       }
-      store.listaAgendasTanque(agendasOcupadas.entries.map((e) => e.value.id).toList());
+      store.listaAgendasTanque(agendasOcupadas.entries.map((e) => e.value.data).toList());
     });
-    store.listaAgendasOcupadas(kFirstDay, kLastDay);
+    store.listaAgendasOcupadas(Constants.formatoData.format(kFirstDay), Constants.formatoData.format(kLastDay));
   }
 
   @override

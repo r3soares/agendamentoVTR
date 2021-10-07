@@ -19,7 +19,7 @@ class CalendarioStore extends StreamStore<Falha, ModelBase> {
     blocDiaAtual.update(dia);
   }
 
-  listaAgendasOcupadas(DateTime inicio, DateTime fim) async {
+  listaAgendasOcupadas(String inicio, String fim) async {
     agendasOcupadas.execute(() => repoAgenda.findByPeriodo(inicio, fim));
   }
 
