@@ -13,7 +13,7 @@ class AgendamentoModule extends Module {
   @override
   final List<Bind> binds = [
     Bind.singleton((i) => RepositoryAgenda(Api('agenda'))),
-    Bind.singleton((i) => RepositoryTanqueAgendado(Api('agendaTanque'))),
+    Bind.singleton((i) => RepositoryTanqueAgendado(Api('tanqueAgendado'))),
     Bind.singleton((i) => RepositoryTanque(Api('tanque'))),
     Bind.singleton((i) => RepositoryEmpresa(Api('empresa'))),
     Bind.lazySingleton(

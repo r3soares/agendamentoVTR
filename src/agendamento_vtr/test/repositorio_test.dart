@@ -78,7 +78,7 @@ void main() {
     }, timeout: Timeout(Duration(minutes: 2)));
 
     test('AgendasTanque', () async {
-      var repo = RepositoryTanqueAgendado(Api('agendaTanque'));
+      var repo = RepositoryTanqueAgendado(Api('tanqueAgendado'));
       Agendados();
       Agendas();
       for (TanqueAgendado at in Agendados.agendas) {
@@ -156,7 +156,7 @@ void main() {
     }, timeout: Timeout(Duration(minutes: 2)));
     test('Agendas Filtros', () async {
       var repoA = RepositoryAgenda(Api('agenda'));
-      var repoAT = RepositoryTanqueAgendado(Api('agendaTanque'));
+      var repoAT = RepositoryTanqueAgendado(Api('tanqueAgendado'));
       if (!baseAgendaPopulada) {
         Agendados();
         Agendas();
