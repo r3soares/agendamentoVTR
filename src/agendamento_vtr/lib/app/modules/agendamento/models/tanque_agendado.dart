@@ -1,6 +1,6 @@
 import 'package:agendamento_vtr/app/models/json_serializable.dart';
 
-class AgendaTanque implements JsonSerializable {
+class TanqueAgendado implements JsonSerializable {
   final String id;
   final String tanque;
   final String agenda;
@@ -16,12 +16,12 @@ class AgendaTanque implements JsonSerializable {
   int tempoVerificacao = 0;
   String? obs;
 
-  AgendaTanque({required this.id, required this.tanque, required this.agenda});
+  TanqueAgendado({required this.id, required this.tanque, required this.agenda});
 
   @override
-  fromJson(Map<String, dynamic> json) => AgendaTanque.fromJson(json);
+  fromJson(Map<String, dynamic> json) => TanqueAgendado.fromJson(json);
 
-  AgendaTanque.fromJson(Map<String, dynamic> json)
+  TanqueAgendado.fromJson(Map<String, dynamic> json)
       : id = json['id'],
         tanque = json['tanque'],
         responsavel = json['responsavel'],

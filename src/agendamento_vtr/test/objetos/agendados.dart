@@ -1,24 +1,22 @@
 import 'dart:math';
 
-import 'package:agendamento_vtr/app/modules/agendamento/models/agenda_tanque.dart';
+import 'package:agendamento_vtr/app/modules/agendamento/models/tanque_agendado.dart';
 import 'package:uuid/uuid.dart';
 
-import 'agendas_do_dia.dart';
+import 'agendas.dart';
 import 'empresas.dart';
 import 'tanques.dart';
 
-class AgendasDoTanque {
-  static List<AgendaTanque> agendas = List.empty(growable: true);
+class Agendados {
+  static List<TanqueAgendado> agendas = List.empty(growable: true);
   Random r = Random();
-  AgendasDoTanque() {
+  Agendados() {
     if (agendas.isNotEmpty) return;
     Tanques();
     Empresas();
     for (int i = 0; i < Tanques.tanques.length; i++) {
-      AgendaTanque a = AgendaTanque(
-          id: Uuid().v1(),
-          tanque: Tanques.tanques[i].placa,
-          agenda: AgendasDoDia.uuids[r.nextInt(AgendasDoDia.QUANTIDADE)]);
+      TanqueAgendado a = TanqueAgendado(
+          id: Uuid().v1(), tanque: Tanques.tanques[i].placa, agenda: Agendas.uuids[r.nextInt(Agendas.QUANTIDADE)]);
       a.agendaAnterior = r.nextInt(10) > 9
           ? agendas.isNotEmpty
               ? agendas[r.nextInt(agendas.length)].id

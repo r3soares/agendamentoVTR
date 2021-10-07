@@ -1,11 +1,11 @@
 import 'package:agendamento_vtr/app/models/empresa.dart';
 import 'package:agendamento_vtr/app/models/tanque.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/models/agenda.dart';
-import 'package:agendamento_vtr/app/modules/agendamento/models/agenda_tanque.dart';
+import 'package:agendamento_vtr/app/modules/agendamento/models/tanque_agendado.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'objetos/agendas_do_dia.dart';
-import 'objetos/agendas_do_tanque.dart';
+import 'objetos/agendas.dart';
+import 'objetos/agendados.dart';
 import 'objetos/empresas.dart';
 import 'objetos/tanques.dart';
 
@@ -56,11 +56,11 @@ void main() {
       }
     });
     test('AgendasDoTanque', () {
-      AgendasDoTanque();
-      for (int i = 0; i < AgendasDoTanque.agendas.length; i++) {
-        AgendaTanque a1 = AgendasDoTanque.agendas[i];
+      Agendados();
+      for (int i = 0; i < Agendados.agendas.length; i++) {
+        TanqueAgendado a1 = Agendados.agendas[i];
         Map<String, dynamic> json = a1.toJson();
-        AgendaTanque a2 = a1.fromJson(json);
+        TanqueAgendado a2 = a1.fromJson(json);
         expect(a1.agenda, equals(a2.agenda), reason: 'Agenda não validou');
         expect(a1.agendaAnterior, equals(a2.agendaAnterior), reason: 'agendaAnterior não validou');
         expect(a1.bitremAgenda, equals(a2.bitremAgenda), reason: 'bitremAgenda não validou');
@@ -76,9 +76,9 @@ void main() {
     });
 
     test('AgendasDoDia', () {
-      AgendasDoDia();
-      for (int i = 0; i < AgendasDoDia.agendas.length; i++) {
-        Agenda a1 = AgendasDoDia.agendas[i];
+      Agendas();
+      for (int i = 0; i < Agendas.agendas.length; i++) {
+        Agenda a1 = Agendas.agendas[i];
         Map<String, dynamic> json = a1.toJson();
         Agenda a2 = a1.fromJson(json);
         expect(a1.data, equals(a2.data), reason: 'data não validou');

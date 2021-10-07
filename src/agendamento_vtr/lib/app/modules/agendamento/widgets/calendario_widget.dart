@@ -1,7 +1,7 @@
 import 'package:agendamento_vtr/app/models/bloc.dart';
 import 'package:agendamento_vtr/app/models/model_base.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/models/agenda.dart';
-import 'package:agendamento_vtr/app/modules/agendamento/models/agenda_tanque.dart';
+import 'package:agendamento_vtr/app/modules/agendamento/models/tanque_agendado.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/stores/calendario_store.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
@@ -24,7 +24,7 @@ class _CalendarioWidgetState extends ModularState<CalendarioWidget, CalendarioSt
   late DateTime kFirstDay;
   late DateTime kLastDay;
   Map<DateTime, Agenda> agendasOcupadas = {};
-  Map<String, AgendaTanque> agendasTanque = {};
+  Map<String, TanqueAgendado> agendasTanque = {};
   final bolinhaNaoConfirmado = Container(
       margin: EdgeInsets.all(1),
       width: 5.0,
@@ -61,7 +61,7 @@ class _CalendarioWidgetState extends ModularState<CalendarioWidget, CalendarioSt
 
     store.agendasTanque.observer(onState: (e) {
       ModelBase m = e as ModelBase;
-      for (AgendaTanque at in m.model) {
+      for (TanqueAgendado at in m.model) {
         agendasTanque[at.id] = at;
       }
     });

@@ -4,7 +4,7 @@ import 'package:agendamento_vtr/app/modules/agendamento/stores/calendario_store.
 import 'package:agendamento_vtr/app/pesquisa_controller.dart';
 import 'package:agendamento_vtr/app/repositories/infra/api.dart';
 import 'package:agendamento_vtr/app/repositories/repository_agenda.dart';
-import 'package:agendamento_vtr/app/repositories/repository_agenda_tanque.dart';
+import 'package:agendamento_vtr/app/repositories/repository_tanque_agendado.dart';
 import 'package:agendamento_vtr/app/repositories/repository_empresa.dart';
 import 'package:agendamento_vtr/app/repositories/repository_tanque.dart';
 import 'package:flutter_modular/flutter_modular.dart';
@@ -13,10 +13,11 @@ class AgendamentoModule extends Module {
   @override
   final List<Bind> binds = [
     Bind.singleton((i) => RepositoryAgenda(Api('agenda'))),
-    Bind.singleton((i) => RepositoryAgendaTanque(Api('agendaTanque'))),
+    Bind.singleton((i) => RepositoryTanqueAgendado(Api('agendaTanque'))),
     Bind.singleton((i) => RepositoryTanque(Api('tanque'))),
     Bind.singleton((i) => RepositoryEmpresa(Api('empresa'))),
-    Bind.lazySingleton((i) => CalendarioStore(Modular.get<RepositoryAgenda>(), Modular.get<RepositoryAgendaTanque>())),
+    Bind.lazySingleton(
+        (i) => CalendarioStore(Modular.get<RepositoryAgenda>(), Modular.get<RepositoryTanqueAgendado>())),
     Bind.singleton((i) => PesquisaController()),
     Bind.singleton((i) => AgendaAntigaStore()),
   ];
