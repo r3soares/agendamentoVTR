@@ -1,4 +1,5 @@
 import 'package:agendamento_vtr/app/domain/constantes.dart';
+import 'package:agendamento_vtr/app/domain/extensions.dart';
 import 'package:agendamento_vtr/app/models/bloc.dart';
 import 'package:agendamento_vtr/app/models/model_base.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/models/agenda.dart';
@@ -25,7 +26,7 @@ class _CalendarioWidgetState extends ModularState<CalendarioWidget, CalendarioSt
   late DateTime kFirstDay;
   late DateTime kLastDay;
   Map<String, Agenda> agendasOcupadas = {};
-  Map<String, TanqueAgendado> agendasTanque = {};
+  Map<String, TanqueAgendado> tanquesAgendados = {};
   final bolinhaNaoConfirmado = Container(
       margin: EdgeInsets.all(1),
       width: 5.0,
@@ -54,28 +55,33 @@ class _CalendarioWidgetState extends ModularState<CalendarioWidget, CalendarioSt
   void initState() {
     super.initState();
 
-    // store.blocDiaAtual.observer(onState: (e) {
-    //   ModelBase m = e as ModelBase;
-    //   widget.diaAtual.update(m.model);
-    // });
-    // store.alteraDiaAtual(kToday);
-
-    store.agendasTanque.observer(onState: (e) {
+    store.tanquesAgendados.observer(onState: (e) {
       ModelBase m = e as ModelBase;
-      for (TanqueAgendado at in m.model) {
-        agendasTanque[at.id] = at;
-      }
+
+      setState(() {
+        for (TanqueAgendado at in m.model) {
+          tanquesAgendados[at.id] = at;
+        }
+      });
+      print('Encontrado ${tanquesAgendados.length} tanques agendados');
     });
 
     store.agendasOcupadas.observer(onState: (e) {
       ModelBase m = e as ModelBase;
+      List<String> tanquesAgendados = List.empty(growable: true);
       agendasOcupadas.clear();
-      for (Agenda a in m.model) {
-        agendasOcupadas[a.data] = a;
-      }
-      store.listaAgendasTanque(agendasOcupadas.entries.map((e) => e.value.data).toList());
+      setState(() {
+        for (Agenda a in m.model) {
+          if (a.tanquesAgendados.isNotEmpty) {
+            agendasOcupadas[a.data] = a;
+            tanquesAgendados.addAll(a.tanquesAgendados);
+          }
+        }
+      });
+      print('Encontrado ${agendasOcupadas.length} agendas ocupadas');
+      store.getTanquesAgendados(tanquesAgendados.toSet().toList());
     });
-    store.listaAgendasOcupadas(Constants.formatoData.format(kFirstDay), Constants.formatoData.format(kLastDay));
+    store.getAgendasOcupadas(Constants.formatoData.format(kFirstDay), Constants.formatoData.format(kLastDay));
   }
 
   @override
@@ -153,8 +159,9 @@ class _CalendarioWidgetState extends ModularState<CalendarioWidget, CalendarioSt
   }
 
   Widget diaWidget(DateTime dia) {
-    if (agendasOcupadas.containsKey(dia)) {
-      var agenda = agendasOcupadas[dia];
+    print(dia.diaMesAnoToString());
+    if (agendasOcupadas.containsKey(dia.diaMesAnoToString())) {
+      var agenda = agendasOcupadas[dia.diaMesAnoToString()];
       if (agenda != null) {
         return Center(
           child: Column(
@@ -165,10 +172,10 @@ class _CalendarioWidgetState extends ModularState<CalendarioWidget, CalendarioSt
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: List.generate(
                     agenda.tanquesAgendados.length,
-                    (index) =>
-                        agendasTanque[agenda.tanquesAgendados[index]]!.statusConfirmacao == StatusConfirmacao.Confirmado
-                            ? bolinhaConfirmado
-                            : bolinhaNaoConfirmado),
+                    (index) => tanquesAgendados[agenda.tanquesAgendados[index]]!.statusConfirmacao ==
+                            StatusConfirmacao.Confirmado
+                        ? bolinhaConfirmado
+                        : bolinhaNaoConfirmado),
               )
             ],
           ),

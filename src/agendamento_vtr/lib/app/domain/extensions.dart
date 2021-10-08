@@ -1,3 +1,5 @@
+import 'package:agendamento_vtr/app/domain/constantes.dart';
+
 extension Ex on double {
   double toPrecision(int n) => double.parse(toStringAsFixed(n));
 }
@@ -8,7 +10,7 @@ extension DatetimeEx on DateTime {
   }
 
   String diaMesAnoToString() {
-    return '${this.day}/${this.month}/${this.year}';
+    return Constants.formatoData.format(this);
   }
 
   String anoMesDiaToString() {

@@ -24,8 +24,10 @@ class RepositoryTanqueAgendado {
   Future<ModelBase> getMany(List<String> ids) async {
     try {
       var result = await db.find2('lista', jsonEncode(ids));
-      var agendaTanque = result == false ? throw NaoEncontrado(ids) : TanqueAgendado.fromJson(result);
-      return ModelBase(agendaTanque);
+      List<TanqueAgendado> lista = result == false
+          ? List.empty(growable: true)
+          : (result as List).map((n) => TanqueAgendado.fromJson(n)).toList();
+      return ModelBase(lista);
     } on Falha catch (e) {
       print('Erro ao procurar Tanques agendados $ids: $e');
       throw e;
@@ -44,18 +46,6 @@ class RepositoryTanqueAgendado {
       throw e;
     }
   }
-
-  // Future<ModelBase> findByAgenda(String agenda) async {
-  //   try {
-  //     var result = await db.find('agenda', agenda);
-  //     var lista =
-  //         result == false ? List.empty(growable: true) : (result as List).map((n) => AgendaTanque.fromJson(n)).toList();
-  //     return ModelBase(lista);
-  //   } on Falha catch (e) {
-  //     print('Erro ao procurar agendasTanque pela agenda $agenda: $e');
-  //     throw e;
-  //   }
-  // }
 
   //Busca todas as agendasTanque que possuem a agenda na lista
   Future<ModelBase> findByAgendas(List<String> agendas) async {
