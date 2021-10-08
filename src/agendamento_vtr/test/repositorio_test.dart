@@ -143,17 +143,6 @@ void main() {
       expect(lista.length, equals(todas.length));
 
       mb = await repo.findByPeriodo(Constants.formatoData.format(menorData), Constants.formatoData.format(maiorData));
-      List<Agenda> periodo = mb.model;
-      // lista.removeWhere((x) => periodo.firstWhereOrNull((e) => e.id == x.id) != null);
-      // if (lista.isNotEmpty) {
-      //   print('Inconsistencia no periodo (${lista.length})');
-      //   print('Menor data: $menorData');
-      //   print('Maior data: $maiorData');
-      //   for (var item in lista) {
-      //     print('${item.id} => ${item.data}');
-      //   }
-      // }
-      //expect(lista.length, moreOrLessEquals(periodo.length as double, epsilon: 2));
     }, timeout: Timeout(Duration(minutes: 2)));
     test('Agendas Filtros', () async {
       var repoA = RepositoryAgenda(Api('agenda'));

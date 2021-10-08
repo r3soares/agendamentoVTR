@@ -1,10 +1,7 @@
-import 'dart:ui';
-
 import 'package:agendamento_vtr/app/domain/constantes.dart';
 import 'package:agendamento_vtr/app/domain/extensions.dart';
 import 'package:agendamento_vtr/app/models/bloc.dart';
-import 'package:agendamento_vtr/app/models/model_base.dart';
-import 'package:agendamento_vtr/app/modules/agendamento/models/agenda.dart';
+import 'package:agendamento_vtr/app/modules/agendamento/models/agenda_model.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/models/tanque_agendado.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/stores/calendario_store.dart';
 import 'package:agendamento_vtr/app/widgets/base_widgets.dart';
@@ -28,8 +25,9 @@ class _CalendarioWidgetState extends ModularState<CalendarioWidget, CalendarioSt
   final kToday = DateTime.now();
   late DateTime kFirstDay;
   late DateTime kLastDay;
-  Map<String, Agenda> agendasOcupadas = {};
-  Map<String, TanqueAgendado> tanquesAgendados = {};
+  Map<String, AgendaModel> agendas = {};
+  // Map<String, Agenda> agendasOcupadas = {};
+  // Map<String, TanqueAgendado> tanquesAgendados = {};
   final bolinhaNaoConfirmado = Container(
       margin: EdgeInsets.all(1),
       width: 5.0,
@@ -57,35 +55,14 @@ class _CalendarioWidgetState extends ModularState<CalendarioWidget, CalendarioSt
   @override
   void initState() {
     super.initState();
-
-    store.tanquesAgendados.observer(
-        onState: (e) {
-          ModelBase m = e as ModelBase;
-
-          for (TanqueAgendado at in m.model) {
-            tanquesAgendados[at.id] = at;
-          }
-          print('Encontrado ${tanquesAgendados.length} tanques agendados');
-          setState(() {});
-        },
-        onLoading: loading);
-
-    store.agendasOcupadas.observer(
-        onState: (e) {
-          ModelBase m = e as ModelBase;
-          List<String> tanquesAgendados = List.empty(growable: true);
-          agendasOcupadas.clear();
-          for (Agenda a in m.model) {
-            if (a.tanquesAgendados.isNotEmpty) {
-              agendasOcupadas[a.data] = a;
-              tanquesAgendados.addAll(a.tanquesAgendados);
-            }
-          }
-          print('Encontrado ${agendasOcupadas.length} agendas ocupadas');
-          store.getTanquesAgendados(tanquesAgendados.toSet().toList());
-        },
-        onLoading: loading);
-    store.getAgendasOcupadas(Constants.formatoData.format(kFirstDay), Constants.formatoData.format(kLastDay));
+    store.observer(
+      onState: (e) => setState(() {
+        agendas = e.model;
+        print('Encontrado ${agendas.length} agendas');
+      }),
+      onLoading: loading,
+    );
+    store.getAgendasOcupadasNova(Constants.formatoData.format(kFirstDay), Constants.formatoData.format(kLastDay));
   }
 
   loading(bool isLoading) {
@@ -167,9 +144,9 @@ class _CalendarioWidgetState extends ModularState<CalendarioWidget, CalendarioSt
   }
 
   Widget diaWidget(DateTime dia) {
-    if (agendasOcupadas.containsKey(dia.diaMesAnoToString())) {
-      var agenda = agendasOcupadas[dia.diaMesAnoToString()];
-      if (agenda != null) {
+    if (agendas.containsKey(dia.diaMesAnoToString())) {
+      var agendaModel = agendas[dia.diaMesAnoToString()];
+      if (agendaModel != null) {
         return Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -178,9 +155,8 @@ class _CalendarioWidgetState extends ModularState<CalendarioWidget, CalendarioSt
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: List.generate(
-                    agenda.tanquesAgendados.length,
-                    (index) => tanquesAgendados[agenda.tanquesAgendados[index]]!.statusConfirmacao ==
-                            StatusConfirmacao.Confirmado
+                    agendaModel.agendados.length,
+                    (index) => agendaModel.agendados[index].statusConfirmacao == StatusConfirmacao.Confirmado
                         ? bolinhaConfirmado
                         : bolinhaNaoConfirmado),
               )

@@ -71,4 +71,18 @@ class RepositoryTanqueAgendado {
       throw e;
     }
   }
+
+  Future<ModelBase> saveMany(List<TanqueAgendado> lista) async {
+    try {
+      bool salvou = true;
+      for (var item in lista) {
+        salvou = await db.save(jsonEncode(item.toJson())) && salvou;
+      }
+      if (!salvou) print('Erro em saveMany em Repository de Tanques Agendados');
+      return ModelBase(salvou);
+    } on Falha catch (e) {
+      print('Erro ao salvar lista de tanques agendados: $e');
+      throw e;
+    }
+  }
 }
