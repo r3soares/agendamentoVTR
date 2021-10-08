@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:agendamento_vtr/app/domain/constantes.dart';
 import 'package:agendamento_vtr/app/domain/extensions.dart';
 import 'package:agendamento_vtr/app/models/bloc.dart';
@@ -190,15 +192,11 @@ class _CalendarioWidgetState extends ModularState<CalendarioWidget, CalendarioSt
   Widget hojeWidget(DateTime dia) {
     return Container(
       alignment: Alignment.center,
-      decoration: new BoxDecoration(
-        color: Colors.deepPurple,
-        shape: BoxShape.circle,
-      ),
       child: Text(
-        'Hoje',
+        '${dia.day}',
         style: TextStyle(
-          color: Colors.white,
-          fontSize: 16,
+          color: Theme.of(context).primaryColor,
+          fontSize: 25,
         ),
       ),
     );
