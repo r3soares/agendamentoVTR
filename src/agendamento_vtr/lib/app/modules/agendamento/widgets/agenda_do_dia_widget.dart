@@ -16,13 +16,19 @@ class AgendaDoDiaWidget extends StatefulWidget {
 }
 
 class _AgendaDoDiaWidgetState extends ModularState<AgendaDoDiaWidget, AgendaDoDiaStore> {
-  late List<TanqueAgendado> agendados;
-  late Agenda agenda;
+  List<TanqueAgendado> agendados = List.empty();
+  Agenda agenda = Agenda('');
   @override
   void initState() {
     super.initState();
     agenda = widget.blocAgendaModel.state.agenda;
     agendados = widget.blocAgendaModel.state.agendados;
+    print('Agenda do dia ${agenda.data} com ${agendados.length} veículos agendados');
+    widget.blocAgendaModel.observer(
+        onState: (e) => setState(() {
+              agenda = e.agenda;
+              agendados = e.agendados;
+            }));
   }
 
   Widget build(BuildContext context) {
