@@ -31,14 +31,6 @@ class _TanquePageState extends ModularState<TanquePage, TanqueStore> {
 
   //late Disposer _disposer;
 
-  late OverlayEntry loadingOverlay = OverlayEntry(builder: (_) {
-    return Container(
-      alignment: Alignment.center,
-      color: Colors.black38,
-      child: CircularProgressIndicator(),
-    );
-  });
-
   @override
   void initState() {
     super.initState();

@@ -33,14 +33,6 @@ class _CadastroPageState extends ModularState<CadastroPage, TanqueStore> {
     callback: _getTanque,
   );
 
-  late OverlayEntry loadingOverlay = OverlayEntry(builder: (_) {
-    return Container(
-      alignment: Alignment.center,
-      color: Colors.black38,
-      child: CircularProgressIndicator(),
-    );
-  });
-
   @override
   void initState() {
     super.initState();

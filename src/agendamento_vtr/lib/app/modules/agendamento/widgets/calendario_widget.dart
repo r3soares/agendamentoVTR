@@ -7,14 +7,15 @@ import 'package:agendamento_vtr/app/models/model_base.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/models/agenda.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/models/tanque_agendado.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/stores/calendario_store.dart';
+import 'package:agendamento_vtr/app/widgets/base_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-class CalendarioWidget extends StatefulWidget {
+class CalendarioWidget extends BaseWidgets {
   final Bloc diaAtual;
-  const CalendarioWidget({Key? key, required this.diaAtual}) : super(key: key);
+  CalendarioWidget({Key? key, required this.diaAtual});
 
   @override
   _CalendarioWidgetState createState() => _CalendarioWidgetState();
@@ -57,33 +58,38 @@ class _CalendarioWidgetState extends ModularState<CalendarioWidget, CalendarioSt
   void initState() {
     super.initState();
 
-    store.tanquesAgendados.observer(onState: (e) {
-      ModelBase m = e as ModelBase;
+    store.tanquesAgendados.observer(
+        onState: (e) {
+          ModelBase m = e as ModelBase;
 
-      setState(() {
-        for (TanqueAgendado at in m.model) {
-          tanquesAgendados[at.id] = at;
-        }
-      });
-      print('Encontrado ${tanquesAgendados.length} tanques agendados');
-    });
-
-    store.agendasOcupadas.observer(onState: (e) {
-      ModelBase m = e as ModelBase;
-      List<String> tanquesAgendados = List.empty(growable: true);
-      agendasOcupadas.clear();
-      setState(() {
-        for (Agenda a in m.model) {
-          if (a.tanquesAgendados.isNotEmpty) {
-            agendasOcupadas[a.data] = a;
-            tanquesAgendados.addAll(a.tanquesAgendados);
+          for (TanqueAgendado at in m.model) {
+            tanquesAgendados[at.id] = at;
           }
-        }
-      });
-      print('Encontrado ${agendasOcupadas.length} agendas ocupadas');
-      store.getTanquesAgendados(tanquesAgendados.toSet().toList());
-    });
+          print('Encontrado ${tanquesAgendados.length} tanques agendados');
+          setState(() {});
+        },
+        onLoading: loading);
+
+    store.agendasOcupadas.observer(
+        onState: (e) {
+          ModelBase m = e as ModelBase;
+          List<String> tanquesAgendados = List.empty(growable: true);
+          agendasOcupadas.clear();
+          for (Agenda a in m.model) {
+            if (a.tanquesAgendados.isNotEmpty) {
+              agendasOcupadas[a.data] = a;
+              tanquesAgendados.addAll(a.tanquesAgendados);
+            }
+          }
+          print('Encontrado ${agendasOcupadas.length} agendas ocupadas');
+          store.getTanquesAgendados(tanquesAgendados.toSet().toList());
+        },
+        onLoading: loading);
     store.getAgendasOcupadas(Constants.formatoData.format(kFirstDay), Constants.formatoData.format(kLastDay));
+  }
+
+  loading(bool isLoading) {
+    widget.loading(isLoading, context);
   }
 
   @override
@@ -161,7 +167,6 @@ class _CalendarioWidgetState extends ModularState<CalendarioWidget, CalendarioSt
   }
 
   Widget diaWidget(DateTime dia) {
-    print(dia.diaMesAnoToString());
     if (agendasOcupadas.containsKey(dia.diaMesAnoToString())) {
       var agenda = agendasOcupadas[dia.diaMesAnoToString()];
       if (agenda != null) {
