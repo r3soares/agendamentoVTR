@@ -15,13 +15,10 @@ class CalendarioStore extends StreamStore<Falha, ModelBase> {
 
   CalendarioStore(this.repoAgenda, this.repoAt) : super(ModelBase(null));
 
-  alteraDiaAtual(DateTime dia) async {
-    //blocDiaAtual.execute(() => repoAgenda.findCreateAgenda(dia));
-    blocDiaAtual.update(dia);
-  }
-
-  getAgendaDoDia(String dia) {
-    blocDiaAtual.execute(() => repoAgenda.getOrCreate(dia));
+  getAgendaDoDia(String dia, Map<String, AgendaModel> agendas) async {
+    agendas.containsKey(dia)
+        ? blocDiaAtual.update((ModelBase(agendas[dia]!.agenda)))
+        : blocDiaAtual.execute(() => repoAgenda.getOrCreate(dia));
   }
 
   getAgendasOcupadasNova(String inicio, String fim) async {
@@ -49,6 +46,4 @@ class CalendarioStore extends StreamStore<Falha, ModelBase> {
       setLoading(false);
     }
   }
-
-  void getAgendasTanque(List<String> agendasTanque) {}
 }

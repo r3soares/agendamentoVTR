@@ -66,7 +66,7 @@ class RepositoryAgenda {
       print('GetOrCreateAgenda => Erro ao procurar agenda pela data $data: $e');
     }
     print('Agenda criada');
-    return ModelBase(data);
+    return ModelBase(Agenda(data));
   }
 
   Future<ModelBase> save(Agenda value) async {

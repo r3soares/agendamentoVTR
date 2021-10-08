@@ -2,7 +2,9 @@ import 'package:agendamento_vtr/app/domain/constantes.dart';
 import 'package:agendamento_vtr/app/domain/extensions.dart';
 import 'package:agendamento_vtr/app/models/bloc.dart';
 import 'package:agendamento_vtr/app/models/model_base.dart';
+import 'package:agendamento_vtr/app/modules/agendamento/models/agenda.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/models/agenda_model.dart';
+import 'package:agendamento_vtr/app/modules/agendamento/models/blocAgendaModel.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/models/tanque_agendado.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/stores/calendario_store.dart';
 import 'package:agendamento_vtr/app/widgets/base_widgets.dart';
@@ -12,7 +14,7 @@ import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class CalendarioWidget extends BaseWidgets {
-  final Bloc diaAtual;
+  final BlocAgendaModel diaAtual;
   CalendarioWidget({Key? key, required this.diaAtual});
 
   @override
@@ -56,6 +58,10 @@ class _CalendarioWidgetState extends ModularState<CalendarioWidget, CalendarioSt
   @override
   void initState() {
     super.initState();
+    widget.diaAtual.observer(
+        onState: (agendaModel) => setState(() {
+              agendas[agendaModel.agenda.data] = agendaModel;
+            }));
     store.observer(
       onState: (e) => setState(() {
         agendas = e.model;
@@ -65,11 +71,17 @@ class _CalendarioWidgetState extends ModularState<CalendarioWidget, CalendarioSt
     );
     store.getAgendasOcupadasNova(Constants.formatoData.format(kFirstDay), Constants.formatoData.format(kLastDay));
 
-    store.blocDiaAtual.observer(onState: (e) => widget.diaAtual.update((e as ModelBase).model));
+    store.blocDiaAtual.observer(onState: (e) => _notificaAgendaSelecionada((e as ModelBase).model));
+    store.getAgendaDoDia(kToday.diaMesAnoToString(), agendas);
   }
 
   loading(bool isLoading) {
     widget.loading(isLoading, context);
+  }
+
+  void _notificaAgendaSelecionada(Agenda a) {
+    AgendaModel am = agendas.containsKey(a.data) ? agendas[a.data]! : AgendaModel(a, List.empty(growable: true));
+    widget.diaAtual.update(am);
   }
 
   @override
@@ -103,7 +115,7 @@ class _CalendarioWidgetState extends ModularState<CalendarioWidget, CalendarioSt
             _selectedDay = selectedDay;
             _focusedDay = focusedDay;
           });
-          store.getAgendaDoDia(selectedDay.diaMesAnoToString());
+          store.getAgendaDoDia(selectedDay.diaMesAnoToString(), agendas);
         }
       },
       onFormatChanged: (format) {
