@@ -57,13 +57,13 @@ class RepositoryAgenda {
     }
   }
 
-  Future<ModelBase> findOrCreate(String data) async {
+  Future<ModelBase> getOrCreate(String data) async {
     try {
-      var result = await db.find('data', data);
+      var result = await db.getById(data);
       Agenda agenda = result == false ? Agenda(data) : Agenda.fromJson(result);
       return ModelBase(agenda);
     } on Falha catch (e) {
-      print('FindCreateAgenda => Erro ao procurar agenda pela data $data: $e');
+      print('GetOrCreateAgenda => Erro ao procurar agenda pela data $data: $e');
     }
     print('Agenda criada');
     return ModelBase(data);

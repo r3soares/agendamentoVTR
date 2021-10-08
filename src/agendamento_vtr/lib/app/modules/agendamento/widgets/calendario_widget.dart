@@ -1,6 +1,7 @@
 import 'package:agendamento_vtr/app/domain/constantes.dart';
 import 'package:agendamento_vtr/app/domain/extensions.dart';
 import 'package:agendamento_vtr/app/models/bloc.dart';
+import 'package:agendamento_vtr/app/models/model_base.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/models/agenda_model.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/models/tanque_agendado.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/stores/calendario_store.dart';
@@ -63,6 +64,8 @@ class _CalendarioWidgetState extends ModularState<CalendarioWidget, CalendarioSt
       onLoading: loading,
     );
     store.getAgendasOcupadasNova(Constants.formatoData.format(kFirstDay), Constants.formatoData.format(kLastDay));
+
+    store.blocDiaAtual.observer(onState: (e) => widget.diaAtual.update((e as ModelBase).model));
   }
 
   loading(bool isLoading) {
@@ -100,7 +103,7 @@ class _CalendarioWidgetState extends ModularState<CalendarioWidget, CalendarioSt
             _selectedDay = selectedDay;
             _focusedDay = focusedDay;
           });
-          widget.diaAtual.update(selectedDay);
+          store.getAgendaDoDia(selectedDay.diaMesAnoToString());
         }
       },
       onFormatChanged: (format) {
@@ -114,15 +117,6 @@ class _CalendarioWidgetState extends ModularState<CalendarioWidget, CalendarioSt
       onPageChanged: (focusedDay) {
         // No need to call `setState()` here
         _focusedDay = focusedDay;
-
-        // print(focusedDay);
-
-        // setState(() {
-        //   kFirstDay = focusedDay.subtract(Duration(days: 31));
-        //   kLastDay = focusedDay.add(Duration(days: 31));
-        // });
-
-        store.alteraDiaAtual(focusedDay);
       },
       calendarBuilders: CalendarBuilders(
         dowBuilder: (context, day) {

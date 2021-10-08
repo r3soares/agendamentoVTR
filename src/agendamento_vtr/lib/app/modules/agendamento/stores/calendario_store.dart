@@ -12,8 +12,6 @@ class CalendarioStore extends StreamStore<Falha, ModelBase> {
   final RepositoryAgenda repoAgenda;
   final RepositoryTanqueAgendado repoAt;
   final blocDiaAtual = Bloc(ModelBase(null));
-  final agendasOcupadas = Bloc(ModelBase(null));
-  final tanquesAgendados = Bloc(ModelBase(null));
 
   CalendarioStore(this.repoAgenda, this.repoAt) : super(ModelBase(null));
 
@@ -22,16 +20,12 @@ class CalendarioStore extends StreamStore<Falha, ModelBase> {
     blocDiaAtual.update(dia);
   }
 
-  getAgendasOcupadasAntiga(String inicio, String fim) async {
-    agendasOcupadas.execute(() => repoAgenda.findByPeriodo(inicio, fim));
-  }
-
-  getTanquesAgendados(List<String> ids) async {
-    tanquesAgendados.execute(() => repoAt.getMany(ids));
+  getAgendaDoDia(String dia) {
+    blocDiaAtual.execute(() => repoAgenda.getOrCreate(dia));
   }
 
   getAgendasOcupadasNova(String inicio, String fim) async {
-    await Future.delayed(Duration(seconds: 2));
+    await Future.delayed(Duration(seconds: 1));
     setLoading(true);
     try {
       List<Agenda> agendas = (await repoAgenda.findByPeriodo(inicio, fim)).model;
