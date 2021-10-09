@@ -29,6 +29,9 @@ class Tanque implements JsonSerializable {
   int get capacidadeTotal => compartimentos.fold(0, (previousValue, element) => previousValue + element.capacidade);
 
   Tanque();
+
+  get placaFormatada => placa.replaceRange(3, 3, '-');
+
   @override
   fromJson(Map<String, dynamic> json) => Tanque.fromJson(json);
 

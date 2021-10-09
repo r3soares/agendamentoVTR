@@ -30,7 +30,7 @@ class CalendarioStore extends StreamStore<Falha, ModelBase> {
       for (var item in agendas) {
         idsTanquesAgendados.addAll(item.tanquesAgendados);
       }
-      List<TanqueAgendado> tanquesAgendados = (await repoAt.getMany(idsTanquesAgendados.toSet().toList())).model;
+      List<TanqueAgendado> tanquesAgendados = (await repoAt.getFromList(idsTanquesAgendados.toSet().toList())).model;
       Map<String, AgendaModel> agendasModel = Map();
       for (var a in agendas) {
         AgendaModel aModel = AgendaModel(

@@ -2,6 +2,7 @@ import 'package:agendamento_vtr/app/modules/agendamento/agenda_antiga_store.dart
 import 'package:agendamento_vtr/app/modules/agendamento/pages/main_page.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/stores/agenda_do_dia_store.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/stores/calendario_store.dart';
+import 'package:agendamento_vtr/app/modules/agendamento/stores/reagenda_store.dart';
 import 'package:agendamento_vtr/app/pesquisa_controller.dart';
 import 'package:agendamento_vtr/app/repositories/infra/api.dart';
 import 'package:agendamento_vtr/app/repositories/repository_agenda.dart';
@@ -19,8 +20,9 @@ class AgendamentoModule extends Module {
     Bind.singleton((i) => RepositoryEmpresa(Api('empresa'))),
     Bind.lazySingleton(
         (i) => CalendarioStore(Modular.get<RepositoryAgenda>(), Modular.get<RepositoryTanqueAgendado>())),
-    Bind.lazySingleton(
-        (i) => AgendaDoDiaStore(Modular.get<RepositoryAgenda>(), Modular.get<RepositoryTanqueAgendado>())),
+    Bind.lazySingleton((i) => AgendaDoDiaStore(
+        Modular.get<RepositoryAgenda>(), Modular.get<RepositoryTanqueAgendado>(), Modular.get<RepositoryTanque>())),
+    Bind.lazySingleton((i) => ReagendaStore(Modular.get<RepositoryAgenda>(), Modular.get<RepositoryTanqueAgendado>())),
     Bind.singleton((i) => PesquisaController()),
     Bind.singleton((i) => AgendaAntigaStore()),
   ];

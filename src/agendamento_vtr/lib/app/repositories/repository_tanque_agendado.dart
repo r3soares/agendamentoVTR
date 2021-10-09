@@ -21,7 +21,7 @@ class RepositoryTanqueAgendado {
     }
   }
 
-  Future<ModelBase> getMany(List<String> ids) async {
+  Future<ModelBase> getFromList(List<String> ids) async {
     try {
       var result = await db.find2('lista', jsonEncode(ids));
       List<TanqueAgendado> lista = result == false

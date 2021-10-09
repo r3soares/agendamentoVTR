@@ -17,7 +17,9 @@ class Agendados {
     Datas.geraDatas();
     for (int i = 0; i < Tanques.tanques.length; i++) {
       TanqueAgendado a = TanqueAgendado(
-          id: Uuid().v1(), tanque: Tanques.tanques[i].placa, agenda: Datas.datas[r.nextInt(Datas.datas.length - 1)]);
+          id: Uuid().v1(),
+          tanque: Tanques.tanques[i].codInmetro,
+          agenda: Datas.datas[r.nextInt(Datas.datas.length - 1)]);
       a.agendaAnterior = r.nextInt(10) > 9
           ? agendados.isNotEmpty
               ? agendados[r.nextInt(agendados.length)].id

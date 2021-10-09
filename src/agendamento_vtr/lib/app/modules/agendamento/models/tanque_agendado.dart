@@ -50,5 +50,5 @@ class TanqueAgendado implements JsonSerializable {
       };
 }
 
-enum StatusConfirmacao { NaoConfirmado, Confirmado, Cancelado }
+enum StatusConfirmacao { NaoConfirmado, Confirmado, Reagendado, Cancelado }
 enum StatusPagamento { Pendente, Confirmado, Atrasado }
