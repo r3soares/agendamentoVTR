@@ -75,6 +75,7 @@ class _AgendaDoDiaWidgetState extends ModularState<AgendaDoDiaWidget, AgendaDoDi
                         itemCount: agendados.length,
                         itemBuilder: (BuildContext ctx, int index) {
                           TanqueAgendado tAgendado = agendados.elementAt(index);
+                          final status = _getCorConfirmacao(tAgendado.statusConfirmacao);
                           Tanque tanque = tanques[tAgendado.tanque]!;
                           return Card(
                             elevation: 12,
@@ -110,12 +111,12 @@ class _AgendaDoDiaWidgetState extends ModularState<AgendaDoDiaWidget, AgendaDoDi
                                       TextButton(
                                           onPressed: () => _confirmaTanqueAgendado(tAgendado),
                                           child: Icon(
-                                            Icons.check_circle_outline,
-                                            color: _getCorConfirmacao(tAgendado.statusConfirmacao),
+                                            status.value,
+                                            color: status.key,
                                           )),
-                                      TextButton(
-                                          onPressed: () => _reagendaTanque(tAgendado),
-                                          child: Icon(Icons.calendar_today_outlined)),
+                                      // TextButton(
+                                      //     onPressed: () => _reagendaTanque(tAgendado),
+                                      //     child: Icon(Icons.calendar_today_outlined)),
                                       TextButton(
                                           onPressed: () => _excluiTanqueAgendado(tAgendado), child: Icon(Icons.close)),
                                     ],
@@ -143,7 +144,10 @@ class _AgendaDoDiaWidgetState extends ModularState<AgendaDoDiaWidget, AgendaDoDi
             ),
             actions: <Widget>[
               TextButton(
-                child: const Text('Sim'),
+                child: const Text(
+                  'Sim',
+                  style: TextStyle(color: Colors.green),
+                ),
                 onPressed: () {
                   setState(() {
                     ta.statusConfirmacao = StatusConfirmacao.Confirmado;
@@ -153,12 +157,25 @@ class _AgendaDoDiaWidgetState extends ModularState<AgendaDoDiaWidget, AgendaDoDi
                 },
               ),
               TextButton(
-                child: const Text('Não'),
+                child: const Text(
+                  'Não',
+                  style: TextStyle(color: Colors.orange),
+                ),
                 onPressed: () {
                   setState(() {
                     ta.statusConfirmacao = StatusConfirmacao.NaoConfirmado;
                   });
                   Navigator.of(context).pop();
+                },
+              ),
+              TextButton(
+                child: const Text(
+                  'Reagendar',
+                  style: TextStyle(color: Colors.blue),
+                ),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  _reagendaTanque(ta);
                 },
               ),
               TextButton(
@@ -188,16 +205,16 @@ class _AgendaDoDiaWidgetState extends ModularState<AgendaDoDiaWidget, AgendaDoDi
 
   void _excluiTanqueAgendado(TanqueAgendado ta) {}
 
-  Color _getCorConfirmacao(StatusConfirmacao status) {
+  MapEntry<Color, IconData> _getCorConfirmacao(StatusConfirmacao status) {
     switch (status) {
       case StatusConfirmacao.NaoConfirmado:
-        return Colors.orange;
+        return MapEntry(Colors.orange, Icons.info_outline);
       case StatusConfirmacao.Confirmado:
-        return Colors.green;
+        return MapEntry(Colors.green, Icons.check_circle_outline);
       case StatusConfirmacao.Reagendado:
-        return Colors.blue.shade900;
+        return MapEntry(Colors.blue.shade900, Icons.outbond_outlined);
       case StatusConfirmacao.Cancelado:
-        return Colors.red;
+        return MapEntry(Colors.red, Icons.cancel_outlined);
     }
   }
 }

@@ -1,15 +1,17 @@
+import 'package:agendamento_vtr/app/domain/constantes.dart';
 import 'package:agendamento_vtr/app/models/model_base.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/models/agenda.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/models/tanque_agendado.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/stores/reagenda_store.dart';
+import 'package:agendamento_vtr/app/widgets/base_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:uuid/uuid.dart';
 
-class ReagendaDialog extends StatefulWidget {
+class ReagendaDialog extends BaseWidgets {
   final TanqueAgendado tAgendado;
-  const ReagendaDialog(this.tAgendado);
+  ReagendaDialog(this.tAgendado);
 
   @override
   State<ReagendaDialog> createState() => _ReagendaDialogState();
@@ -41,11 +43,10 @@ class _ReagendaDialogState extends ModularState<ReagendaDialog, ReagendaStore> {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
     return Dialog(
       child: Container(
-        width: size.width * .5,
-        height: size.height * .6,
+        width: 350,
+        height: 200,
         child: Column(
           children: [
             Container(
@@ -55,9 +56,17 @@ class _ReagendaDialogState extends ModularState<ReagendaDialog, ReagendaStore> {
                 child: TextFormField(
                   focusNode: focusNode,
                   decoration: InputDecoration(
+                    suffixIcon: IconButton(
+                        icon: Icon(Icons.close),
+                        onPressed: () => {
+                              _cCampo.clear(),
+                              setState(() {
+                                aNova = null;
+                              }),
+                            }),
                     //icon: Image.asset('assets/images/inmetro.png'),
                     icon: Icon(Icons.calendar_today_outlined),
-                    hintText: 'Informe a nova data',
+                    hintText: 'Informe a nova data (somente números)',
                     hintStyle: TextStyle(fontSize: 10),
                     labelText: 'Reagendamento',
                   ),
@@ -68,13 +77,29 @@ class _ReagendaDialogState extends ModularState<ReagendaDialog, ReagendaStore> {
               ),
             ),
             Container(
-              padding: const EdgeInsets.all(8),
-              child: ElevatedButton(
-                onPressed:
-                    aNova == null || aVelha == null || aNova!.status != StatusAgenda.Disponivel ? null : reagendaTanque,
-                child: Text('Reagendar'),
-              ),
-            )
+                padding: const EdgeInsets.all(8),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ElevatedButton(
+                      onPressed: aNova == null || aVelha == null || aNova!.status != StatusAgenda.Disponivel
+                          ? null
+                          : reagendaTanque,
+                      child: Text('Reagendar'),
+                    ),
+                    widget.btnVoltar()
+                  ],
+                )),
+            aNova == null
+                ? SizedBox.shrink()
+                : Center(
+                    child: Text(
+                        aNova!.status == StatusAgenda.Disponivel
+                            ? 'Disponível\n${Constants.formatoDiaDaSemana.format(aNova!.d)}'
+                            : 'Indisponível',
+                        style: TextStyle(fontSize: 18),
+                        textAlign: TextAlign.center),
+                  )
           ],
         ),
       ),
@@ -83,7 +108,9 @@ class _ReagendaDialogState extends ModularState<ReagendaDialog, ReagendaStore> {
 
   String? validaInput(String? value) {
     if (value == null || value.isEmpty) return 'Informe uma data';
-    if (_mascara.getUnmaskedText().length < 8) return 'Informe a data no formato dd/mm/aaaa';
+    if (_mascara.getUnmaskedText().length < 8) {
+      return 'Informe a data no formato dd/mm/aaaa';
+    }
     if (_ultimaDataValida != value) {
       store.getAgendaNova(value);
     }
