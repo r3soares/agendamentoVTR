@@ -7,6 +7,7 @@ class MainPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print('Reconstruindo Main Page');
     return Scaffold(
       appBar: AppBar(
         title: Text('Agendamentos'),
@@ -19,7 +20,7 @@ class MainPage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               //Card(elevation: 12, child: TanquesPendentesWidget()),
-              const AgendaDoDiaWidget()
+              AgendaDoDiaWidget()
               //Card(elevation: 12, child: AgendaDoDiaWidget()),
               //Card(elevation: 12, child: TanquesAgendadosWidget()),
             ],

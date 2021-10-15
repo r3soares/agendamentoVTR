@@ -2,7 +2,6 @@ import 'dart:math';
 
 import 'package:agendamento_vtr/app/domain/constantes.dart';
 import 'package:agendamento_vtr/app/domain/extensions.dart';
-import 'package:agendamento_vtr/app/models/model_base.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/models/agenda.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/models/agenda_model.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/models/tanque_agendado.dart';
@@ -28,25 +27,6 @@ class _CalendarioWidgetState extends ModularState<CalendarioWidget, CalendarioSt
   late DateTime kFirstDay;
   late DateTime kLastDay;
   Map<String, AgendaModel> agendas = {};
-  // Map<String, Agenda> agendasOcupadas = {};
-  // Map<String, TanqueAgendado> tanquesAgendados = {};
-  final bolinhaNaoConfirmado = Container(
-      margin: EdgeInsets.all(1),
-      width: 5.0,
-      height: 5.0,
-      decoration: new BoxDecoration(
-        color: Colors.orange,
-        shape: BoxShape.circle,
-      ));
-
-  final bolinhaConfirmado = Container(
-      margin: EdgeInsets.all(1),
-      width: 5.0,
-      height: 5.0,
-      decoration: new BoxDecoration(
-        color: Colors.green,
-        shape: BoxShape.circle,
-      ));
 
   _CalendarioWidgetState() {
     kFirstDay = DateTime(kToday.year - 1, kToday.month, kToday.day);
@@ -57,6 +37,7 @@ class _CalendarioWidgetState extends ModularState<CalendarioWidget, CalendarioSt
   @override
   void initState() {
     super.initState();
+    print('CalendarioWidget: initState');
     store.blocDiaAtualizado.observer(
         onState: (aModel) => {
               print('Dia Atualizado ${aModel.agenda.data}: ${aModel.agendados.length} agendados'),

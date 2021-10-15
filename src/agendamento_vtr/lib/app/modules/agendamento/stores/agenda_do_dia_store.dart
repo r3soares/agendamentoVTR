@@ -22,13 +22,16 @@ class AgendaDoDiaStore extends StreamStore<Falha, ModelBase> {
   final Bloc blocTanques = Bloc('');
   final BlocAgendaModel blocDiaSelecionado =
       BlocAgendaModel(AgendaModel(Agenda(Constants.formatoData.format(DateTime.now())), List.empty()));
+  final List<Disposer> disposers = List.empty(growable: true);
 
   AgendaDoDiaStore(this.repoAgenda, this.repoAt, this.repoTanque) : super(ModelBase(null)) {
-    _controller.diaSelecionado.observer(
+    print('AgendaDoDiaStore: controller ${_controller.hashCode}');
+    final d1 = _controller.diaSelecionado.observer(
         onState: (aModel) => {
-              print('AgendaDoDiaStore (Construtor): Dia Selecionado ${aModel.agenda.data}'),
+              print('AgendaDoDiaStore: Dia Selecionado ${aModel.agenda.data}'),
               blocDiaSelecionado.update(aModel),
             });
+    disposers.add(d1);
   }
 
   @override
@@ -36,6 +39,9 @@ class AgendaDoDiaStore extends StreamStore<Falha, ModelBase> {
     print('AgendaDoDiaStore: Destruindo');
     blocDiaSelecionado.destroy();
     blocTanques.destroy();
+    disposers.forEach((d) {
+      d();
+    });
     return super.destroy();
   }
 
@@ -43,8 +49,8 @@ class AgendaDoDiaStore extends StreamStore<Falha, ModelBase> {
     execute(() => repoAt.saveMany(lista));
   }
 
-  Agenda get agendaDoDia => _controller.diaSelecionado.state.agenda;
-  List<TanqueAgendado> get agendados => _controller.diaSelecionado.state.agendados;
+  Agenda get agendaDoDia => _controller.diaSelecionado.lastState.state.agenda;
+  List<TanqueAgendado> get agendados => _controller.diaSelecionado.lastState.state.agendados;
 
   void getTanques(List<String> lista) async {
     Map<String, Tanque> tanques = Map();

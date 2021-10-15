@@ -14,6 +14,7 @@ import 'package:agendamento_vtr/app/repositories/repository_tanque_agendado.dart
 import 'package:agendamento_vtr/app/repositories/repository_empresa.dart';
 import 'package:agendamento_vtr/app/repositories/repository_tanque.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:flutter_triple/flutter_triple.dart';
 
 class AgendamentoModule extends Module {
   @override
@@ -30,8 +31,10 @@ class AgendamentoModule extends Module {
         Modular.get<RepositoryAgenda>(), Modular.get<RepositoryTanqueAgendado>(), Modular.get<RepositoryTanque>())),
     Bind.lazySingleton((i) => ReagendaStore(Modular.get<RepositoryAgenda>(), Modular.get<RepositoryTanqueAgendado>())),
     Bind.singleton((i) => PesquisaController()),
-    Bind.singleton((i) => AgendaAntigaStore()),
   ];
+
+  @override
+  callDispose() {}
 
   @override
   final List<ModularRoute> routes = [

@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:agendamento_vtr/app/domain/constantes.dart';
 import 'package:agendamento_vtr/app/models/tanque.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/models/agenda.dart';
@@ -27,17 +25,12 @@ class _AgendaDoDiaWidgetState extends ModularState<AgendaDoDiaWidget, AgendaDoDi
   @override
   void initState() {
     super.initState();
+    print('AgendaDoDiaWidget: initState');
     agenda = store.agendaDoDia;
     agendados.addAll(store.agendados);
     print('Agenda do dia ${agenda.data} com ${agendados.length} veículos agendados');
     store.blocDiaSelecionado.observer(onState: _updateAgenda);
     store.blocTanques.observer(onState: (e) => _updateTanques(e as Map<String, Tanque>));
-  }
-
-  @override
-  dispose() {
-    super.dispose();
-    store.destroy();
   }
 
   _updateAgenda(AgendaModel a) {
