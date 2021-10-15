@@ -22,6 +22,7 @@ class RepositoryTanqueAgendado {
   }
 
   Future<ModelBase> getFromList(List<String> ids) async {
+    if (ids.isEmpty) return ModelBase(List<TanqueAgendado>.empty());
     try {
       var result = await db.find2('lista', jsonEncode(ids));
       List<TanqueAgendado> lista = result == false

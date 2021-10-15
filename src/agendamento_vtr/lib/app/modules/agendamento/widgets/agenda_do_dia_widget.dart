@@ -1,18 +1,19 @@
+import 'dart:io';
+
 import 'package:agendamento_vtr/app/domain/constantes.dart';
 import 'package:agendamento_vtr/app/models/tanque.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/models/agenda.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/models/agenda_model.dart';
-import 'package:agendamento_vtr/app/modules/agendamento/models/blocAgendaModel.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/models/tanque_agendado.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/pages/reagenda_dialog.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/pages/visualiza_tanque_dialog.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/stores/agenda_do_dia_store.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
 class AgendaDoDiaWidget extends StatefulWidget {
-  final BlocAgendaModel blocAgendaModel;
-  const AgendaDoDiaWidget({Key? key, required this.blocAgendaModel});
+  const AgendaDoDiaWidget({Key? key});
 
   @override
   _AgendaDoDiaWidgetState createState() => _AgendaDoDiaWidgetState();
@@ -22,18 +23,22 @@ class _AgendaDoDiaWidgetState extends ModularState<AgendaDoDiaWidget, AgendaDoDi
   final List<TanqueAgendado> agendados = List.empty(growable: true);
   final Map<String, Tanque> tanques = Map();
   Agenda agenda = Agenda('');
+  final ScrollController _scrollController = ScrollController();
   @override
   void initState() {
     super.initState();
-    agenda = widget.blocAgendaModel.state.agenda;
-    agendados.addAll(widget.blocAgendaModel.state.agendados);
+    agenda = store.agendaDoDia;
+    agendados.addAll(store.agendados);
     print('Agenda do dia ${agenda.data} com ${agendados.length} veículos agendados');
-    widget.blocAgendaModel.observer(onState: _updateAgenda);
+    store.blocDiaSelecionado.observer(onState: _updateAgenda);
     store.blocTanques.observer(onState: (e) => _updateTanques(e as Map<String, Tanque>));
   }
 
   _updateAgenda(AgendaModel a) {
+    print('Atualizando agenda do dia para ${a.agenda.data}');
+    print('Esta agenda possui ${a.agendados.length} tanques agendados');
     agendados.clear();
+    tanques.clear();
     setState(() {
       agenda = a.agenda;
       agendados.addAll(a.agendados);
@@ -42,21 +47,19 @@ class _AgendaDoDiaWidgetState extends ModularState<AgendaDoDiaWidget, AgendaDoDi
   }
 
   _updateTanques(Map<String, Tanque> t) {
-    tanques.clear();
     setState(() {
       tanques.addAll(t);
     });
   }
 
   Widget build(BuildContext context) {
-    print('Build Agenda do dia');
     final size = MediaQuery.of(context).size;
     return Column(
       children: [
         Padding(
           padding: const EdgeInsets.all(12.0),
           child: Text(
-            'Agenda do dia ${widget.blocAgendaModel.state.agenda.data}',
+            'Agenda do dia ${agenda.data}',
             style: TextStyle(fontSize: 18),
           ),
         ),
@@ -69,8 +72,13 @@ class _AgendaDoDiaWidgetState extends ModularState<AgendaDoDiaWidget, AgendaDoDi
                     child: Text('Sem veículos para este dia'),
                   )
                 : Container(
-                    width: size.width * .35,
+                    alignment: Alignment.topCenter,
+                    constraints: BoxConstraints(
+                        minHeight: 200, minWidth: 400, maxWidth: size.width * .5, maxHeight: size.height * .4),
                     child: ListView.builder(
+                        shrinkWrap: true,
+                        dragStartBehavior: DragStartBehavior.start,
+                        controller: _scrollController,
                         scrollDirection: Axis.vertical,
                         itemCount: agendados.length,
                         itemBuilder: (BuildContext ctx, int index) {
@@ -103,8 +111,8 @@ class _AgendaDoDiaWidgetState extends ModularState<AgendaDoDiaWidget, AgendaDoDi
                                   ),
                                 ]),
                                 subtitle: Text('Registrado em ${Constants.formatoData.format(tanque.dataRegistro)}'),
-                                trailing: SizedBox(
-                                  width: size.width * .15,
+                                trailing: ConstrainedBox(
+                                  constraints: BoxConstraints.loose(Size(120, double.infinity)),
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.end,
                                     children: [

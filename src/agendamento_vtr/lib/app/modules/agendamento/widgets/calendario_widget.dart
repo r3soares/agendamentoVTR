@@ -1,9 +1,9 @@
+import 'dart:math';
+
 import 'package:agendamento_vtr/app/domain/constantes.dart';
 import 'package:agendamento_vtr/app/domain/extensions.dart';
-import 'package:agendamento_vtr/app/models/model_base.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/models/agenda.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/models/agenda_model.dart';
-import 'package:agendamento_vtr/app/modules/agendamento/models/blocAgendaModel.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/models/tanque_agendado.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/stores/calendario_store.dart';
 import 'package:agendamento_vtr/app/widgets/base_widgets.dart';
@@ -13,8 +13,7 @@ import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class CalendarioWidget extends BaseWidgets {
-  final BlocAgendaModel diaAtual;
-  CalendarioWidget({Key? key, required this.diaAtual});
+  CalendarioWidget({Key? key});
 
   @override
   _CalendarioWidgetState createState() => _CalendarioWidgetState();
@@ -57,7 +56,7 @@ class _CalendarioWidgetState extends ModularState<CalendarioWidget, CalendarioSt
   @override
   void initState() {
     super.initState();
-    widget.diaAtual.observer(
+    store.blocDiaAtualizado.observer(
         onState: (agendaModel) => setState(() {
               agendas[agendaModel.agenda.data] = agendaModel;
             }));
@@ -68,19 +67,12 @@ class _CalendarioWidgetState extends ModularState<CalendarioWidget, CalendarioSt
       }),
       onLoading: loading,
     );
-    store.getAgendasOcupadasNova(Constants.formatoData.format(kFirstDay), Constants.formatoData.format(kLastDay));
-
-    store.blocDiaAtual.observer(onState: (e) => _notificaAgendaSelecionada((e as ModelBase).model));
+    store.getAgendasOcupadas(Constants.formatoData.format(kFirstDay), Constants.formatoData.format(kLastDay));
     store.getAgendaDoDia(kToday.diaMesAnoToString(), agendas);
   }
 
   loading(bool isLoading) {
     widget.loading(isLoading, context);
-  }
-
-  void _notificaAgendaSelecionada(Agenda a) {
-    AgendaModel am = agendas.containsKey(a.data) ? agendas[a.data]! : AgendaModel(a, List.empty(growable: true));
-    widget.diaAtual.update(am);
   }
 
   @override
@@ -153,25 +145,44 @@ class _CalendarioWidgetState extends ModularState<CalendarioWidget, CalendarioSt
       var agendaModel = agendas[dia.diaMesAnoToString()];
       if (agendaModel != null) {
         return Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text('${dia.day}'),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: List.generate(
-                    agendaModel.agendados.length,
-                    (index) => agendaModel.agendados[index].statusConfirmacao == StatusConfirmacao.Confirmado
-                        ? bolinhaConfirmado
-                        : bolinhaNaoConfirmado),
-              )
-            ],
+          child: Container(
+            margin: const EdgeInsets.all(6),
+            alignment: Alignment.center,
+            decoration: new BoxDecoration(
+              color: _getColorAgenda(agendaModel.agenda.status),
+              shape: BoxShape.circle,
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text('${dia.day}'),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: List.generate(
+                      agendaModel.agendados.length,
+                      (index) => agendaModel.agendados[index].statusConfirmacao == StatusConfirmacao.Confirmado
+                          ? bolinhaConfirmado
+                          : bolinhaNaoConfirmado),
+                )
+              ],
+            ),
           ),
         );
       }
     }
+    if (_isFeriado(dia)) return _feriado(dia);
+    if (_isPassado(dia)) return _diaPassado(dia);
+    if (_isFimDeSemana(dia)) return _fimDeSemana(dia);
     return Center(
-      child: Text('${dia.day}'),
+      child: Container(
+        margin: const EdgeInsets.all(6),
+        alignment: Alignment.center,
+        decoration: new BoxDecoration(
+          color: _getColorByDiaSemana(dia.weekday),
+          shape: BoxShape.circle,
+        ),
+        child: Text('${dia.day}'),
+      ),
     );
   }
 
@@ -190,6 +201,7 @@ class _CalendarioWidgetState extends ModularState<CalendarioWidget, CalendarioSt
 
   Widget diaSelecionadoWidget(DateTime dia) {
     return Container(
+      margin: const EdgeInsets.all(2),
       alignment: Alignment.center,
       decoration: new BoxDecoration(
         color: Colors.blueAccent,
@@ -204,4 +216,74 @@ class _CalendarioWidgetState extends ModularState<CalendarioWidget, CalendarioSt
       ),
     );
   }
+
+  Widget _diaPassado(DateTime dia) {
+    return Center(
+      child: Text(
+        '${dia.day}',
+        style: TextStyle(color: Colors.grey[500]),
+      ),
+    );
+  }
+
+  Widget _fimDeSemana(DateTime dia) {
+    return Center(
+      child: Text(
+        '${dia.day}',
+        style: TextStyle(color: Colors.grey[500]),
+      ),
+    );
+  }
+
+  Widget _feriado(DateTime dia) {
+    return Center(
+        child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          'Feriado',
+          style: TextStyle(color: Colors.brown[500]),
+        ),
+        Text(
+          '${dia.day}',
+          style: TextStyle(color: Colors.brown[500]),
+        ),
+      ],
+    ));
+  }
+
+  Color _getColorAgenda(StatusAgenda status) {
+    switch (status) {
+      case StatusAgenda.Disponivel:
+        return Colors.green;
+      case StatusAgenda.Cheia:
+        return Colors.red.shade300;
+      case StatusAgenda.Encerrada:
+        return Colors.grey.shade500;
+      case StatusAgenda.Indisponivel:
+        return Colors.grey.shade500;
+    }
+  }
+
+  Color _getColorByDiaSemana(int diaSemana) {
+    switch (diaSemana) {
+      case 6:
+        return Colors.grey.shade500;
+      case 7:
+        return Colors.grey.shade500;
+      default:
+        return Colors.green;
+    }
+  }
+
+  bool _isPassado(DateTime dia) {
+    return kToday.compareTo(dia) > 1;
+  }
+
+  bool _isFimDeSemana(DateTime dia) {
+    return dia.weekday > 5;
+  }
+
+  //Implementar
+  bool _isFeriado(DateTime dia) => Random().nextInt(100) > 95;
 }

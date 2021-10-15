@@ -1,9 +1,5 @@
-import 'package:agendamento_vtr/app/modules/agendamento/models/agenda.dart';
-import 'package:agendamento_vtr/app/modules/agendamento/models/agenda_model.dart';
-import 'package:agendamento_vtr/app/modules/agendamento/models/blocAgendaModel.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/widgets/agenda_do_dia_widget.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/widgets/calendario_widget.dart';
-import 'package:agendamento_vtr/app/modules/agendamento/widgets/pesquisa_widget.dart';
 import 'package:flutter/material.dart';
 
 class MainPage extends StatelessWidget {
@@ -11,25 +7,19 @@ class MainPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final BlocAgendaModel blocDiaAtual = BlocAgendaModel(AgendaModel(Agenda(""), List.empty()));
-
     return Scaffold(
       appBar: AppBar(
         title: Text('Agendamentos'),
       ),
       body: SingleChildScrollView(
         child: Column(children: [
-          CalendarioWidget(
-            diaAtual: blocDiaAtual,
-          ),
-          PesquisaWidget(),
+          CalendarioWidget(),
+          //PesquisaWidget(),
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               //Card(elevation: 12, child: TanquesPendentesWidget()),
-              AgendaDoDiaWidget(
-                blocAgendaModel: blocDiaAtual,
-              )
+              AgendaDoDiaWidget()
               //Card(elevation: 12, child: AgendaDoDiaWidget()),
               //Card(elevation: 12, child: TanquesAgendadosWidget()),
             ],
