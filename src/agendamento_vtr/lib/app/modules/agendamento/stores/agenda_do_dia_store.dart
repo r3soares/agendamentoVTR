@@ -24,7 +24,19 @@ class AgendaDoDiaStore extends StreamStore<Falha, ModelBase> {
       BlocAgendaModel(AgendaModel(Agenda(Constants.formatoData.format(DateTime.now())), List.empty()));
 
   AgendaDoDiaStore(this.repoAgenda, this.repoAt, this.repoTanque) : super(ModelBase(null)) {
-    _controller.diaSelecionado.observer(onState: (aModel) => blocDiaSelecionado.update(aModel));
+    _controller.diaSelecionado.observer(
+        onState: (aModel) => {
+              print('AgendaDoDiaStore (Construtor): Dia Selecionado ${aModel.agenda.data}'),
+              blocDiaSelecionado.update(aModel),
+            });
+  }
+
+  @override
+  Future destroy() {
+    print('AgendaDoDiaStore: Destruindo');
+    blocDiaSelecionado.destroy();
+    blocTanques.destroy();
+    return super.destroy();
   }
 
   void salva(List<TanqueAgendado> lista) async {

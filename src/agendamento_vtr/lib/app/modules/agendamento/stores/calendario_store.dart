@@ -26,7 +26,17 @@ class CalendarioStore extends StreamStore<Falha, ModelBase> {
     _controller.diaAtualizado.observer(onState: (aModel) => blocDiaAtualizado.update(aModel));
   }
 
+  @override
+  Future destroy() {
+    print('CalendarioStore: Destruindo');
+    blocDiaSelecionado.destroy();
+    blocDiaAtualizado.destroy();
+    _controller.destroy();
+    return super.destroy();
+  }
+
   getAgendaDoDia(String dia, Map<String, AgendaModel> agendas) async {
+    print('CalendarioStore: Dia Selecionado');
     try {
       agendas.containsKey(dia) ? blocDiaSelecionado.update(agendas[dia]!) : _getNovaAgenda(dia);
     } on Falha catch (e) {

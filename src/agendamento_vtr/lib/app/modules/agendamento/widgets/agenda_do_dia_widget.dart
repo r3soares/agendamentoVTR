@@ -34,16 +34,24 @@ class _AgendaDoDiaWidgetState extends ModularState<AgendaDoDiaWidget, AgendaDoDi
     store.blocTanques.observer(onState: (e) => _updateTanques(e as Map<String, Tanque>));
   }
 
+  @override
+  dispose() {
+    super.dispose();
+    store.destroy();
+  }
+
   _updateAgenda(AgendaModel a) {
-    print('Atualizando agenda do dia para ${a.agenda.data}');
-    print('Esta agenda possui ${a.agendados.length} tanques agendados');
+    print('AgendaDoDiaWidget: Atualizando agenda do dia para ${a.agenda.data}');
+    print('AgendaDoDiaWidget: Esta agenda possui ${a.agendados.length} tanques agendados');
     agendados.clear();
     tanques.clear();
-    setState(() {
-      agenda = a.agenda;
-      agendados.addAll(a.agendados);
-    });
-    store.getTanques(agendados.map((e) => e.tanque).toList());
+    if (mounted) {
+      setState(() {
+        agenda = a.agenda;
+        agendados.addAll(a.agendados);
+      });
+      store.getTanques(agendados.map((e) => e.tanque).toList());
+    }
   }
 
   _updateTanques(Map<String, Tanque> t) {

@@ -19,7 +19,7 @@ class MainPage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               //Card(elevation: 12, child: TanquesPendentesWidget()),
-              AgendaDoDiaWidget()
+              const AgendaDoDiaWidget()
               //Card(elevation: 12, child: AgendaDoDiaWidget()),
               //Card(elevation: 12, child: TanquesAgendadosWidget()),
             ],

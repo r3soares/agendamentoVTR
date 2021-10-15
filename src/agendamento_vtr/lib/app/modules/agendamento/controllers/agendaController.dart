@@ -13,13 +13,21 @@ class AgendaController extends StreamStore<Falha, AgendaModel> {
 
   AgendaController(AgendaModel initialState) : super(initialState);
 
+  @override
+  Future destroy() {
+    print('AgendaController: Destruindo');
+    diaSelecionado.destroy();
+    diaAtualizado.destroy();
+    return super.destroy();
+  }
+
   void notificaDiaSelecionado(AgendaModel dia) {
-    print('Dia Selecionado ${dia.agenda.data}');
+    print('AgendaController: Dia Selecionado ${dia.agenda.data}');
     diaSelecionado.update(dia);
   }
 
   void notificaDiaAtualizado(AgendaModel dia) {
-    print('Dia Atualizado ${dia.agenda.data}');
+    print('AgendaController: Dia Atualizado ${dia.agenda.data}');
     diaAtualizado.update(dia);
   }
 }

@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:agendamento_vtr/app/domain/constantes.dart';
 import 'package:agendamento_vtr/app/domain/extensions.dart';
+import 'package:agendamento_vtr/app/models/model_base.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/models/agenda.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/models/agenda_model.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/models/tanque_agendado.dart';
@@ -57,17 +58,20 @@ class _CalendarioWidgetState extends ModularState<CalendarioWidget, CalendarioSt
   void initState() {
     super.initState();
     store.blocDiaAtualizado.observer(
-        onState: (agendaModel) => setState(() {
-              agendas[agendaModel.agenda.data] = agendaModel;
-            }));
+        onState: (aModel) => {
+              print('Dia Atualizado ${aModel.agenda.data}: ${aModel.agendados.length} agendados'),
+              agendas[aModel.agenda.data] = aModel,
+              if (mounted) setState(() {}),
+            });
     store.observer(
-      onState: (e) => setState(() {
-        agendas = e.model;
-        print('Encontrado ${agendas.length} agendas');
-      }),
+      onState: (e) => {
+        agendas = e.model,
+        //print('Encontrado ${agendas.length} agendas'),
+        if (mounted) setState(() {}),
+      },
       onLoading: loading,
     );
-    store.getAgendasOcupadas(Constants.formatoData.format(kFirstDay), Constants.formatoData.format(kLastDay));
+    store.getAgendasOcupadas(Constants.formatoData.format(kToday), Constants.formatoData.format(kLastDay));
     store.getAgendaDoDia(kToday.diaMesAnoToString(), agendas);
   }
 
@@ -133,6 +137,7 @@ class _CalendarioWidgetState extends ModularState<CalendarioWidget, CalendarioSt
             );
           }
         },
+        //holidayBuilder: (context, day, focusedDay) => _feriado(day),
         defaultBuilder: (context, day, focusedDay) => diaWidget(day),
         selectedBuilder: (context, day, focusedDay) => diaSelecionadoWidget(day),
         todayBuilder: (context, day, focusedDay) => hojeWidget(day),
@@ -141,6 +146,7 @@ class _CalendarioWidgetState extends ModularState<CalendarioWidget, CalendarioSt
   }
 
   Widget diaWidget(DateTime dia) {
+    if (_isPassado(dia)) return _diaPassado(dia);
     if (agendas.containsKey(dia.diaMesAnoToString())) {
       var agendaModel = agendas[dia.diaMesAnoToString()];
       if (agendaModel != null) {
@@ -148,21 +154,17 @@ class _CalendarioWidgetState extends ModularState<CalendarioWidget, CalendarioSt
           child: Container(
             margin: const EdgeInsets.all(6),
             alignment: Alignment.center,
-            decoration: new BoxDecoration(
-              color: _getColorAgenda(agendaModel.agenda.status),
-              shape: BoxShape.circle,
-            ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text('${dia.day}'),
+                Text(
+                  '${dia.day}',
+                  style: TextStyle(color: _getColorAgenda(agendaModel.agenda.status)),
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: List.generate(
-                      agendaModel.agendados.length,
-                      (index) => agendaModel.agendados[index].statusConfirmacao == StatusConfirmacao.Confirmado
-                          ? bolinhaConfirmado
-                          : bolinhaNaoConfirmado),
+                  children: List.generate(agendaModel.agendados.length,
+                      (index) => _bolinhaWidget(agendaModel.agendados[index].statusConfirmacao)),
                 )
               ],
             ),
@@ -171,17 +173,15 @@ class _CalendarioWidgetState extends ModularState<CalendarioWidget, CalendarioSt
       }
     }
     if (_isFeriado(dia)) return _feriado(dia);
-    if (_isPassado(dia)) return _diaPassado(dia);
     if (_isFimDeSemana(dia)) return _fimDeSemana(dia);
     return Center(
       child: Container(
         margin: const EdgeInsets.all(6),
         alignment: Alignment.center,
-        decoration: new BoxDecoration(
-          color: _getColorByDiaSemana(dia.weekday),
-          shape: BoxShape.circle,
+        child: Text(
+          '${dia.day}',
+          style: TextStyle(color: _getColorByDiaSemana(dia.weekday)),
         ),
-        child: Text('${dia.day}'),
       ),
     );
   }
@@ -255,7 +255,7 @@ class _CalendarioWidgetState extends ModularState<CalendarioWidget, CalendarioSt
   Color _getColorAgenda(StatusAgenda status) {
     switch (status) {
       case StatusAgenda.Disponivel:
-        return Colors.green;
+        return Colors.green.shade700;
       case StatusAgenda.Cheia:
         return Colors.red.shade300;
       case StatusAgenda.Encerrada:
@@ -272,7 +272,7 @@ class _CalendarioWidgetState extends ModularState<CalendarioWidget, CalendarioSt
       case 7:
         return Colors.grey.shade500;
       default:
-        return Colors.green;
+        return Colors.green.shade700;
     }
   }
 
@@ -286,4 +286,26 @@ class _CalendarioWidgetState extends ModularState<CalendarioWidget, CalendarioSt
 
   //Implementar
   bool _isFeriado(DateTime dia) => Random().nextInt(100) > 95;
+
+  Widget _bolinhaWidget(StatusConfirmacao status) => Container(
+      margin: EdgeInsets.all(1),
+      width: 5.0,
+      height: 5.0,
+      decoration: new BoxDecoration(
+        color: _getCorConfirmacao(status),
+        shape: BoxShape.circle,
+      ));
+
+  Color _getCorConfirmacao(StatusConfirmacao status) {
+    switch (status) {
+      case StatusConfirmacao.NaoConfirmado:
+        return Colors.orange;
+      case StatusConfirmacao.Confirmado:
+        return Colors.green;
+      case StatusConfirmacao.Reagendado:
+        return Colors.blue.shade900;
+      case StatusConfirmacao.Cancelado:
+        return Colors.red;
+    }
+  }
 }

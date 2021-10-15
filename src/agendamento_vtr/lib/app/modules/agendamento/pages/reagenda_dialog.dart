@@ -39,6 +39,12 @@ class _ReagendaDialogState extends ModularState<ReagendaDialog, ReagendaStore> {
               aNova = (e as ModelBase).model;
               _ultimaDataValida = aNova!.data;
             }));
+    store.blocReagenda.observer(
+        onState: (e) => {
+              Modular.to.pop(),
+              ScaffoldMessenger.of(context)
+                  .showSnackBar(const SnackBar(content: Text('Veículo reagendado com sucesso.')))
+            });
   }
 
   @override
