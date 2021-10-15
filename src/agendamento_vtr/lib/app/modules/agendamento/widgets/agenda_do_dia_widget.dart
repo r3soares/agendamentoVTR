@@ -25,7 +25,7 @@ class _AgendaDoDiaWidgetState extends ModularState<AgendaDoDiaWidget, AgendaDoDi
   @override
   void initState() {
     super.initState();
-    print('AgendaDoDiaWidget: initState');
+    //print('AgendaDoDiaWidget: initState');
     agenda = store.agendaDoDia;
     agendados.addAll(store.agendados);
     print('Agenda do dia ${agenda.data} com ${agendados.length} veículos agendados');
@@ -34,8 +34,8 @@ class _AgendaDoDiaWidgetState extends ModularState<AgendaDoDiaWidget, AgendaDoDi
   }
 
   _updateAgenda(AgendaModel a) {
-    print('AgendaDoDiaWidget: Atualizando agenda do dia para ${a.agenda.data}');
-    print('AgendaDoDiaWidget: Esta agenda possui ${a.agendados.length} tanques agendados');
+    //print('AgendaDoDiaWidget: Atualizando agenda do dia para ${a.agenda.data}');
+    //print('AgendaDoDiaWidget: Esta agenda possui ${a.agendados.length} tanques agendados');
     agendados.clear();
     tanques.clear();
     if (mounted) {

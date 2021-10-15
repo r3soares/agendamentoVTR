@@ -25,7 +25,7 @@ class AgendaDoDiaStore extends StreamStore<Falha, ModelBase> {
   final List<Disposer> disposers = List.empty(growable: true);
 
   AgendaDoDiaStore(this.repoAgenda, this.repoAt, this.repoTanque) : super(ModelBase(null)) {
-    print('AgendaDoDiaStore: controller ${_controller.hashCode}');
+    //print('AgendaDoDiaStore: controller ${_controller.hashCode}');
     final d1 = _controller.diaSelecionado.observer(
         onState: (aModel) => {
               print('AgendaDoDiaStore: Dia Selecionado ${aModel.agenda.data}'),
@@ -36,7 +36,7 @@ class AgendaDoDiaStore extends StreamStore<Falha, ModelBase> {
 
   @override
   Future destroy() {
-    print('AgendaDoDiaStore: Destruindo');
+    //print('AgendaDoDiaStore: Destruindo');
     blocDiaSelecionado.destroy();
     blocTanques.destroy();
     disposers.forEach((d) {
@@ -60,7 +60,6 @@ class AgendaDoDiaStore extends StreamStore<Falha, ModelBase> {
         ModelBase mb = await repoTanque.getTanque(t);
         tanques[t] = mb.model;
       }
-      print(tanques.length);
       blocTanques.update(tanques);
     } on Falha catch (e) {
       setError(e);

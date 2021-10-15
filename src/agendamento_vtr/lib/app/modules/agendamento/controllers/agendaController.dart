@@ -12,12 +12,12 @@ class AgendaController extends StreamStore<Falha, AgendaModel> {
       BlocAgendaModel(AgendaModel(Agenda(Constants.formatoData.format(DateTime.now())), List.empty()));
 
   AgendaController(AgendaModel initialState) : super(initialState) {
-    print('AgendaController: hashcode ${this.hashCode}');
+    //print('AgendaController: hashcode ${this.hashCode}');
   }
 
   @override
   Future destroy() {
-    print('AgendaController: Destruindo');
+    //print('AgendaController: Destruindo');
     diaSelecionado.destroy();
     diaAtualizado.destroy();
     return super.destroy();

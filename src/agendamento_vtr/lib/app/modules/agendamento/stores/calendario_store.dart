@@ -22,7 +22,7 @@ class CalendarioStore extends StreamStore<Falha, ModelBase> {
   final List<Disposer> disposers = List.empty(growable: true);
 
   CalendarioStore(this.repoAgenda, this.repoAt) : super(ModelBase(null)) {
-    print('AgendaDodiaStore: controller ${_controller.hashCode}');
+    //print('AgendaDodiaStore: controller ${_controller.hashCode}');
     final d1 = blocDiaSelecionado.observer(onState: _controller.notificaDiaSelecionado);
     final d2 = _controller.diaAtualizado.observer(onState: (aModel) => blocDiaAtualizado.update(aModel));
     disposers.add(d1);
@@ -31,7 +31,7 @@ class CalendarioStore extends StreamStore<Falha, ModelBase> {
 
   @override
   Future destroy() {
-    print('CalendarioStore: Destruindo');
+    //print('CalendarioStore: Destruindo');
     blocDiaSelecionado.destroy();
     blocDiaAtualizado.destroy();
     disposers.forEach((d) {
