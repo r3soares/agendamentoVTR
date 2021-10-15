@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:agendamento_vtr/app/domain/erros.dart';
+import 'package:agendamento_vtr/app/domain/log.dart';
 import 'package:agendamento_vtr/app/models/model_base.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/models/agenda.dart';
 
@@ -18,7 +19,7 @@ class RepositoryAgenda {
           result == false ? List.empty(growable: true) : (result as List).map((n) => Agenda.fromJson(n)).toList();
       return ModelBase(agendas);
     } on Falha catch (e) {
-      print('GetAgendas => Erro ao buscar todas as agendas: $e');
+      Log.message(this, 'GetAgendas => Erro ao buscar todas as agendas: $e');
       throw e;
     }
   }
@@ -29,21 +30,10 @@ class RepositoryAgenda {
       var agenda = result == false ? throw NaoEncontrado(id) : Agenda.fromJson(result);
       return ModelBase(agenda);
     } on Falha catch (e) {
-      print('Erro ao procurar agenda $id: $e');
+      Log.message(this, 'Erro ao procurar agenda $id: $e');
       throw e;
     }
   }
-
-  // Future<ModelBase> findByData(String data) async {
-  //   try {
-  //     var result = await db.find('data', data);
-  //     var agenda = result == false ? throw NaoEncontrado(data) : Agenda.fromJson(result);
-  //     return ModelBase(agenda);
-  //   } on Falha catch (e) {
-  //     print('FindAgenda => Erro ao procurar agenda pela data $data: $e');
-  //     throw e;
-  //   }
-  // }
 
   Future<ModelBase> findByPeriodo(String dInicio, String dFim) async {
     try {
@@ -52,7 +42,7 @@ class RepositoryAgenda {
           result == false ? List.empty(growable: true) : (result as List).map((n) => Agenda.fromJson(n)).toList();
       return ModelBase(agendas);
     } on Falha catch (e) {
-      print('FindAgendas => Erro ao procurar agendas pela data entre: $dInicio e $dFim: $e');
+      Log.message(this, 'Erro ao procurar agendas pela data entre: $dInicio e $dFim: $e');
       throw e;
     }
   }
@@ -63,19 +53,19 @@ class RepositoryAgenda {
       Agenda agenda = result == false ? Agenda(data) : Agenda.fromJson(result);
       return ModelBase(agenda);
     } on Falha catch (e) {
-      print('GetOrCreateAgenda => Erro ao procurar agenda pela data $data: $e');
+      Log.message(this, 'Erro ao procurar agenda pela data $data: $e');
     }
-    print('Agenda criada');
+    Log.message(this, 'Agenda criada');
     return ModelBase(Agenda(data));
   }
 
   Future<ModelBase> save(Agenda value) async {
     try {
       bool salvou = await db.save(jsonEncode(value.toJson()));
-      if (!salvou) print('Erro em salvaAgenda em Repository Agenda');
+      if (!salvou) Log.message(this, 'Erro em salvaAgenda em Repository Agenda');
       return ModelBase(salvou);
     } on Falha catch (e) {
-      print('Erro ao salvar agenda do dia ${value.data}: $e');
+      Log.message(this, 'Erro ao salvar agenda do dia ${value.data}: $e');
       throw e;
     }
   }

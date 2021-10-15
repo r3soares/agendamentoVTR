@@ -1,5 +1,4 @@
 import 'package:agendamento_vtr/app/domain/constantes.dart';
-import 'package:agendamento_vtr/app/modules/agendamento/agenda_antiga_store.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/controllers/agendaController.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/models/agenda.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/models/agenda_model.dart';
@@ -14,7 +13,6 @@ import 'package:agendamento_vtr/app/repositories/repository_tanque_agendado.dart
 import 'package:agendamento_vtr/app/repositories/repository_empresa.dart';
 import 'package:agendamento_vtr/app/repositories/repository_tanque.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:flutter_triple/flutter_triple.dart';
 
 class AgendamentoModule extends Module {
   @override
@@ -32,9 +30,6 @@ class AgendamentoModule extends Module {
     Bind.lazySingleton((i) => ReagendaStore(Modular.get<RepositoryAgenda>(), Modular.get<RepositoryTanqueAgendado>())),
     Bind.singleton((i) => PesquisaController()),
   ];
-
-  @override
-  callDispose() {}
 
   @override
   final List<ModularRoute> routes = [

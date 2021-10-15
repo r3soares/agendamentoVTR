@@ -7,7 +7,7 @@ class MainPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('Reconstruindo Main Page');
+    //print('Reconstruindo Main Page');
     return Scaffold(
       appBar: AppBar(
         title: Text('Agendamentos'),
