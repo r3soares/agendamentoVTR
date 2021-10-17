@@ -52,7 +52,7 @@ void main() {
         expect(t1.placa, equals(t2.placa), reason: 'Placa diferentes');
         expect(t1.proprietario, equals(t2.proprietario), reason: 'Proprietario não validou');
         expect(t1.status, equals(t2.status), reason: 'Status não validou');
-        expect(t1.tanqueAgendado, equals(t2.tanqueAgendado), reason: 'TanqueAgendado não validou');
+        expect(t1.ultimoAgendamento, equals(t2.ultimoAgendamento), reason: 'TanqueAgendado não validou');
       }
     });
     test('AgendasDoTanque', () {

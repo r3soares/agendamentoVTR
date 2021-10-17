@@ -99,12 +99,13 @@ class _TanquesPendentesWidgetState extends ModularState<TanquesPendentesWidget, 
 
   _getTanques() async {
     tanques.clear();
-    tanques.addAll((await Modular.get<RepositoryTanque>().getTanques()).where((t) => t.agenda == null).toList());
+    tanques.addAll(
+        (await Modular.get<RepositoryTanque>().getTanques()).where((t) => t.ultimoAgendamento == null).toList());
   }
 
   agendaTanque(Tanque t) {
     setState(() {
-      t.agenda = store.agenda.data;
+      //t.agenda = store.agenda.data;
       store.addTanque(t.placa);
       _getTanques();
     });

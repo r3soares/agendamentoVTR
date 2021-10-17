@@ -5,7 +5,6 @@ import 'package:agendamento_vtr/app/modules/tanque/models/arquivo.dart';
 import 'package:agendamento_vtr/app/modules/tanque/stores/tanque_store.dart';
 import 'package:agendamento_vtr/app/modules/tanque/widgets/compartimento_form.dart';
 import 'package:agendamento_vtr/app/modules/tanque/widgets/tanque_page_widgets/doc_widget.dart';
-import 'package:agendamento_vtr/app/modules/tanque/widgets/tanque_page_widgets/tanque_zero_widget.dart';
 import 'package:agendamento_vtr/app/widgets/base_widgets.dart';
 import 'package:agendamento_vtr/app/widgets/input_numero_widget.dart';
 import 'package:agendamento_vtr/app/widgets/placa_widget.dart';
@@ -49,10 +48,10 @@ class _TanquePageState extends ModularState<TanquePage, TanqueStore> {
       arquivosPrevio: _tanque.docs,
       callback: _setDocs,
     );
-    tanqueZeroWidget = TanqueZeroWidget(
-      isZeroPrevio: _tanque.isZero,
-      callback: _setTanqueZero,
-    );
+    // tanqueZeroWidget = TanqueZeroWidget(
+    //   isZeroPrevio: _tanque.isZero,
+    //   callback: _setTanqueZero,
+    // );
     compartimentoForm = CompartimentoForm(
       compartimentosPrevio: _tanque.compartimentos,
       callback: _setCompartimentos,
@@ -267,9 +266,9 @@ class _TanquePageState extends ModularState<TanquePage, TanqueStore> {
     _tanque.docs.addAll(arquivos);
   }
 
-  void _setTanqueZero(bool isZero) {
-    _tanque.isZero = isZero;
-  }
+  // void _setTanqueZero(bool isZero) {
+  //   _tanque.isZero = isZero;
+  // }
 
   void _setCompartimentos(List<Compartimento> compartimentos) {
     _tanque.compartimentos.clear();

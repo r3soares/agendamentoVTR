@@ -13,16 +13,11 @@ class Tanque implements JsonSerializable {
   DateTime dataRegistro = DateTime.now();
   DateTime dataUltimaAlteracao = DateTime.now();
 
-  String? tanqueAgendado;
+  String? ultimoAgendamento;
 
   StatusTanque status = StatusTanque.Ativo;
 
   List<Compartimento> compartimentos = List.empty(growable: true);
-  //Tem que remover
-  DateTime? agenda; //Tem que remover
-  String? responsavelAgendamento; //Tem que remover
-  //remover daqui
-  bool isZero = false;
 
   final List<Arquivo> docs = List.empty(growable: true);
 
@@ -41,7 +36,7 @@ class Tanque implements JsonSerializable {
         proprietario = json['proprietario'],
         dataRegistro = DateTime.parse(json['dataRegistro']),
         dataUltimaAlteracao = DateTime.parse(json['dataUltimaAlteracao']),
-        tanqueAgendado = json['tanqueAgendado'],
+        ultimoAgendamento = json['ultimoAgendamento'],
         status = StatusTanque.values[json['status']],
         compartimentos = json['compartimentos'],
         custo = json['custo'];
@@ -53,7 +48,7 @@ class Tanque implements JsonSerializable {
         'proprietario': proprietario,
         'dataRegistro': dataRegistro.toIso8601String(),
         'dataUltimaAlteracao': dataUltimaAlteracao.toIso8601String(),
-        'tanqueAgendado': tanqueAgendado,
+        'ultimoAgendamento': ultimoAgendamento,
         'status': status.index,
         'compartimentos': compartimentos,
         'custo': custo,
