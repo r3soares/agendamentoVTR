@@ -1,7 +1,6 @@
 import 'package:agendamento_vtr/app/domain/constantes.dart';
 import 'package:agendamento_vtr/app/models/tanque.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/models/agenda.dart';
-import 'package:agendamento_vtr/app/modules/agendamento/models/agenda_model.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/models/tanque_agendado.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/pages/reagenda_dialog.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/pages/visualiza_tanque_dialog.dart';
@@ -18,8 +17,8 @@ class AgendaDoDiaWidget extends StatefulWidget {
 }
 
 class _AgendaDoDiaWidgetState extends ModularState<AgendaDoDiaWidget, AgendaDoDiaStore> {
-  final List<TanqueAgendado> agendados = List.empty(growable: true);
-  final Map<String, Tanque> tanques = Map();
+  //final List<TanqueAgendado> agendados = List.empty(growable: true);
+  //final Map<String, Tanque> tanques = Map();
   Agenda agenda = Agenda('');
   final ScrollController _scrollController = ScrollController();
   @override
@@ -27,31 +26,29 @@ class _AgendaDoDiaWidgetState extends ModularState<AgendaDoDiaWidget, AgendaDoDi
     super.initState();
     //print('AgendaDoDiaWidget: initState');
     agenda = store.agendaDoDia;
-    agendados.addAll(store.agendados);
-    print('Agenda do dia ${agenda.data} com ${agendados.length} veículos agendados');
+    //agendados.addAll(store.agendados);
+    print('Agenda do dia ${agenda.data} com ${agenda.tanquesAgendados.length} veículos agendados');
     store.blocDiaSelecionado.observer(onState: _updateAgenda);
-    store.blocTanques.observer(onState: (e) => _updateTanques(e as Map<String, Tanque>));
+    //store.blocTanques.observer(onState: (e) => _updateTanques(e as Map<String, Tanque>));
   }
 
-  _updateAgenda(AgendaModel a) {
+  _updateAgenda(Agenda a) {
     //print('AgendaDoDiaWidget: Atualizando agenda do dia para ${a.agenda.data}');
     //print('AgendaDoDiaWidget: Esta agenda possui ${a.agendados.length} tanques agendados');
-    agendados.clear();
-    tanques.clear();
+    //tanques.clear();
     if (mounted) {
       setState(() {
-        agenda = a.agenda;
-        agendados.addAll(a.agendados);
+        agenda = a;
       });
-      store.getTanques(agendados.map((e) => e.tanque).toList());
+      //store.getTanques(agendados.map((e) => e.tanque).toList());
     }
   }
 
-  _updateTanques(Map<String, Tanque> t) {
-    setState(() {
-      tanques.addAll(t);
-    });
-  }
+  // _updateTanques(Map<String, Tanque> t) {
+  //   setState(() {
+  //     tanques.addAll(t);
+  //   });
+  // }
 
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -68,7 +65,7 @@ class _AgendaDoDiaWidgetState extends ModularState<AgendaDoDiaWidget, AgendaDoDi
             alignment: Alignment.center,
             width: size.width * .36,
             height: size.height * .4,
-            child: tanques.isEmpty
+            child: agenda.tanquesAgendados.isEmpty
                 ? Center(
                     child: Text('Sem veículos para este dia'),
                   )
@@ -81,11 +78,11 @@ class _AgendaDoDiaWidgetState extends ModularState<AgendaDoDiaWidget, AgendaDoDi
                         dragStartBehavior: DragStartBehavior.start,
                         controller: _scrollController,
                         scrollDirection: Axis.vertical,
-                        itemCount: agendados.length,
+                        itemCount: agenda.tanquesAgendados.length,
                         itemBuilder: (BuildContext ctx, int index) {
-                          TanqueAgendado tAgendado = agendados.elementAt(index);
+                          TanqueAgendado tAgendado = agenda.tanquesAgendados.elementAt(index);
                           final status = _getCorConfirmacao(tAgendado.statusConfirmacao);
-                          Tanque tanque = tanques[tAgendado.tanque]!;
+                          Tanque tanque = tAgendado.tanque;
                           return Card(
                             elevation: 12,
                             child: ListTile(
@@ -138,7 +135,7 @@ class _AgendaDoDiaWidgetState extends ModularState<AgendaDoDiaWidget, AgendaDoDi
   }
 
   void _confirmaTanqueAgendado(TanqueAgendado ta) {
-    Tanque t = tanques[ta.tanque]!;
+    Tanque t = ta.tanque;
     showDialog(
         context: context,
         builder: (BuildContext context) {

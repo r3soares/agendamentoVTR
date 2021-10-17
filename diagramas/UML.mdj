@@ -18776,6 +18776,14 @@
 												"$ref": "AAAAAAF7gxxYR2nlL8Y="
 											},
 											"name": "Cancelado"
+										},
+										{
+											"_type": "UMLEnumerationLiteral",
+											"_id": "AAAAAAF8hVxN+bL9ecw=",
+											"_parent": {
+												"$ref": "AAAAAAF7gxxYR2nlL8Y="
+											},
+											"name": "Reagendado"
 										}
 									]
 								},
@@ -21736,13 +21744,30 @@
 															"height": 13,
 															"text": "Cancelado",
 															"horizontalAlignment": 0
+														},
+														{
+															"_type": "UMLEnumerationLiteralView",
+															"_id": "AAAAAAF8hVxOFLMJjlk=",
+															"_parent": {
+																"$ref": "AAAAAAF7gxxYSGnxLps="
+															},
+															"model": {
+																"$ref": "AAAAAAF8hVxN+bL9ecw="
+															},
+															"font": "Arial;13;0",
+															"left": 781,
+															"top": 488,
+															"width": 124.30615234375,
+															"height": 13,
+															"text": "Reagendado",
+															"horizontalAlignment": 0
 														}
 													],
 													"font": "Arial;13;0",
 													"left": 776,
 													"top": 438,
 													"width": 134.30615234375,
-													"height": 53
+													"height": 68
 												}
 											],
 											"font": "Arial;13;0",
@@ -21750,7 +21775,7 @@
 											"left": 776,
 											"top": 400,
 											"width": 134.30615234375,
-											"height": 91,
+											"height": 106,
 											"nameCompartment": {
 												"$ref": "AAAAAAF7gxxYSGnoxhE="
 											},
@@ -28907,7 +28932,7 @@
 															"top": 163,
 															"width": 194.09228515625,
 															"height": 13,
-															"text": "+tanqueAgenda[]: AgendaTanque",
+															"text": "+tanqueAgenda[]: TanqueAgendado",
 															"horizontalAlignment": 0
 														},
 														{
@@ -29082,7 +29107,7 @@
 															"top": 351,
 															"width": 233.74609375,
 															"height": 13,
-															"text": "AgendaTanque"
+															"text": "TanqueAgendado"
 														},
 														{
 															"_type": "LabelView",
@@ -29238,7 +29263,7 @@
 															"top": 464,
 															"width": 233.74609375,
 															"height": 13,
-															"text": "+agendaAnterior: AgendaTanque",
+															"text": "+agendaAnterior: TanqueAgendado",
 															"horizontalAlignment": 0
 														},
 														{

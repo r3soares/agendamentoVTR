@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:agendamento_vtr/app/modules/agendamento/models/agenda.dart';
+import 'package:agendamento_vtr/app/modules/agendamento/models/tanque_agendado.dart';
 
 import 'agendados.dart';
 import 'datas.dart';
@@ -21,10 +22,10 @@ class Agendas {
     }
   }
 
-  getTanquesAgendados(String data) {
-    List<String> agendados = List.empty(growable: true);
+  List<TanqueAgendado> getTanquesAgendados(String data) {
+    List<TanqueAgendado> agendados = List.empty(growable: true);
     for (var item in Agendados.agendados) {
-      if (item.agenda == data) agendados.add(item.id);
+      if (item.agenda == data) agendados.add(item);
     }
     return agendados;
   }

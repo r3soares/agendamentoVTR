@@ -3,7 +3,6 @@ import 'dart:math';
 import 'package:agendamento_vtr/app/domain/constantes.dart';
 import 'package:agendamento_vtr/app/domain/extensions.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/models/agenda.dart';
-import 'package:agendamento_vtr/app/modules/agendamento/models/agenda_model.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/models/tanque_agendado.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/stores/calendario_store.dart';
 import 'package:agendamento_vtr/app/widgets/base_widgets.dart';
@@ -26,7 +25,7 @@ class _CalendarioWidgetState extends ModularState<CalendarioWidget, CalendarioSt
   final kToday = DateTime.now();
   late DateTime kFirstDay;
   late DateTime kLastDay;
-  Map<String, AgendaModel> agendas = {};
+  Map<String, Agenda> agendas = {};
 
   _CalendarioWidgetState() {
     kFirstDay = DateTime(kToday.year - 1, kToday.month, kToday.day);
@@ -39,9 +38,9 @@ class _CalendarioWidgetState extends ModularState<CalendarioWidget, CalendarioSt
     super.initState();
     //print('CalendarioWidget: initState');
     store.blocDiaAtualizado.observer(
-        onState: (aModel) => {
-              print('Dia Atualizado ${aModel.agenda.data}: ${aModel.agendados.length} agendados'),
-              agendas[aModel.agenda.data] = aModel,
+        onState: (agenda) => {
+              print('Dia Atualizado ${agenda.data}: ${agenda.tanquesAgendados.length} agendados'),
+              agendas[agenda.data] = agenda,
               if (mounted) setState(() {}),
             });
     store.observer(
@@ -140,12 +139,12 @@ class _CalendarioWidgetState extends ModularState<CalendarioWidget, CalendarioSt
               children: [
                 Text(
                   '${dia.day}',
-                  style: TextStyle(color: _getColorAgenda(agendaModel.agenda.status)),
+                  style: TextStyle(color: _getColorAgenda(agendaModel.status)),
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: List.generate(agendaModel.agendados.length,
-                      (index) => _bolinhaWidget(agendaModel.agendados[index].statusConfirmacao)),
+                  children: List.generate(agendaModel.tanquesAgendados.length,
+                      (index) => _bolinhaWidget(agendaModel.tanquesAgendados[index].statusConfirmacao)),
                 )
               ],
             ),

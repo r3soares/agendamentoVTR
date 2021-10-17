@@ -71,6 +71,8 @@ void main() {
         expect(a1.statusConfirmacao, equals(a2.statusConfirmacao), reason: 'statusConfirmacao diferentes');
         expect(a1.statusPagamento, equals(a2.statusPagamento), reason: 'statusPagamento não validou');
         expect(a1.tanque, equals(a2.tanque), reason: 'tanque não validou');
+        expect(a1.tanque.codInmetro, equals(a2.tanque.codInmetro), reason: 'tanque não validou');
+        expect(a1.tanque.placa, equals(a2.tanque.placa), reason: 'tanque não validou');
         expect(a1.tempoVerificacao, equals(a2.tempoVerificacao), reason: 'tempoVerificacao não validou');
       }
     });

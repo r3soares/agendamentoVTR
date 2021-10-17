@@ -3,7 +3,6 @@ import 'package:agendamento_vtr/app/models/bloc.dart';
 import 'package:agendamento_vtr/app/models/model_base.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/controllers/agendaController.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/models/agenda.dart';
-import 'package:agendamento_vtr/app/modules/agendamento/models/agenda_model.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/models/tanque_agendado.dart';
 import 'package:agendamento_vtr/app/repositories/repository_agenda.dart';
 import 'package:agendamento_vtr/app/repositories/repository_tanque_agendado.dart';
@@ -32,16 +31,16 @@ class ReagendaStore extends StreamStore<Falha, ModelBase> {
   reagenda(TanqueAgendado taVelho, TanqueAgendado taNovo, Agenda aVelha, Agenda aNova) async {
     taVelho.statusConfirmacao = StatusConfirmacao.Reagendado;
     taNovo.agendaAnterior = taVelho.agenda;
-    aVelha.tanquesAgendados.remove(taVelho.id);
-    aNova.tanquesAgendados.add(taNovo.id);
+    aVelha.tanquesAgendados.removeWhere((ta) => ta.id == taVelho.id);
+    aNova.tanquesAgendados.add(taNovo);
     setLoading(true);
     try {
       await _repoAt.save(taVelho);
       await _repoAt.save(taNovo);
       await _repoAgenda.save(aVelha);
       await _repoAgenda.save(aNova);
-      _controller.notificaDiaAtualizado(AgendaModel(aVelha, List.empty()));
-      _controller.notificaDiaAtualizado(AgendaModel(aNova, List.empty()));
+      _controller.notificaDiaAtualizado(aVelha);
+      _controller.notificaDiaAtualizado(aNova);
       blocReagenda.update(true);
     } on Falha catch (e) {
       setError(e);

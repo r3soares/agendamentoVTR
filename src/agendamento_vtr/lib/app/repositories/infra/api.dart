@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:agendamento_vtr/app/domain/erros.dart';
 import 'package:agendamento_vtr/app/models/compartimento.dart';
+import 'package:agendamento_vtr/app/modules/agendamento/models/tanque_agendado.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:agendamento_vtr/app/repositories/infra/IDatabase.dart';
@@ -141,6 +142,10 @@ class Api implements IDatabase {
               case "compartimentos":
                 {
                   return (value as List).map((e) => Compartimento.fromJson(e)).toList();
+                }
+              case "tanquesAgendados":
+                {
+                  return (value as List).map((e) => TanqueAgendado.fromJson(e)).toList();
                 }
             }
             return value;

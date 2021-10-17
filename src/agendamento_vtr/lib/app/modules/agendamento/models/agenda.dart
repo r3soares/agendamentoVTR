@@ -1,10 +1,11 @@
 import 'package:agendamento_vtr/app/models/json_serializable.dart';
+import 'package:agendamento_vtr/app/modules/agendamento/models/tanque_agendado.dart';
 import 'package:intl/intl.dart';
 
 class Agenda implements JsonSerializable {
   //final String id;
   final String data;
-  List<String> tanquesAgendados = List.empty(growable: true);
+  List<TanqueAgendado> tanquesAgendados = List.empty(growable: true);
   StatusAgenda status = StatusAgenda.Disponivel;
   String? obs;
 

@@ -102,7 +102,7 @@ void main() {
         expect(at.responsavel, equals(lista[i].responsavel));
         expect(at.statusConfirmacao, equals(lista[i].statusConfirmacao));
         expect(at.statusPagamento, equals(lista[i].statusPagamento));
-        expect(at.tanque, equals(lista[i].tanque));
+        expect(at.tanque.codInmetro, equals(lista[i].tanque.codInmetro));
         expect(at.tempoVerificacao, equals(lista[i].tempoVerificacao));
       }
     }, timeout: Timeout(Duration(minutes: 2)));
@@ -134,7 +134,7 @@ void main() {
         expect(a.status, equals(lista[i].status));
         if (lista[i].tanquesAgendados.isNotEmpty) {
           for (int j = 0; j < lista[i].tanquesAgendados.length; j++) {
-            expect(a.tanquesAgendados[j], equals(lista[i].tanquesAgendados[j]));
+            expect(a.tanquesAgendados[j].id, equals(lista[i].tanquesAgendados[j].id));
           }
         }
       }
