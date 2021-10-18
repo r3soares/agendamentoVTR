@@ -1,4 +1,4 @@
-import 'package:agendamento_vtr/app/modules/agendamento/pages/visualiza_tanque_dialog.dart';
+import 'package:agendamento_vtr/app/modules/agendamento/dialogs/visualiza_tanque_dialog.dart';
 import 'package:agendamento_vtr/app/pesquisa_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

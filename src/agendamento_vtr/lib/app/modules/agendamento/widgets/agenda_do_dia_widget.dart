@@ -1,9 +1,9 @@
 import 'package:agendamento_vtr/app/domain/constantes.dart';
 import 'package:agendamento_vtr/app/models/tanque.dart';
+import 'package:agendamento_vtr/app/modules/agendamento/dialogs/reagenda_dialog.dart';
+import 'package:agendamento_vtr/app/modules/agendamento/dialogs/visualiza_tanque_dialog.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/models/agenda.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/models/tanque_agendado.dart';
-import 'package:agendamento_vtr/app/modules/agendamento/pages/reagenda_dialog.dart';
-import 'package:agendamento_vtr/app/modules/agendamento/pages/visualiza_tanque_dialog.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/stores/agenda_do_dia_store.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -44,12 +44,6 @@ class _AgendaDoDiaWidgetState extends ModularState<AgendaDoDiaWidget, AgendaDoDi
     }
   }
 
-  // _updateTanques(Map<String, Tanque> t) {
-  //   setState(() {
-  //     tanques.addAll(t);
-  //   });
-  // }
-
   Widget build(BuildContext context) {
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -62,7 +56,7 @@ class _AgendaDoDiaWidgetState extends ModularState<AgendaDoDiaWidget, AgendaDoDi
           ),
         ),
         agenda.tanquesAgendados.isEmpty
-            ? Center(
+            ? Expanded(
                 child: Text('Sem veículos para este dia'),
               )
             : Expanded(

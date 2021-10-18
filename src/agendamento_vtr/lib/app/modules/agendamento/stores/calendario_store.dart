@@ -38,7 +38,7 @@ class CalendarioStore extends StreamStore<Falha, ModelBase> {
   }
 
   getAgendaDoDia(String dia, Map<String, Agenda> agendas) async {
-    print('CalendarioStore: Dia Selecionado');
+    //print('CalendarioStore: Dia Selecionado');
     try {
       agendas.containsKey(dia) ? blocDiaSelecionado.update(agendas[dia]!) : _getNovaAgenda(dia);
     } on Falha catch (e) {
@@ -48,7 +48,6 @@ class CalendarioStore extends StreamStore<Falha, ModelBase> {
 
   _getNovaAgenda(String dia) async {
     Agenda a = (await repoAgenda.getOrCreate(dia)).model;
-    //List<TanqueAgendado> tanquesAgendados = (await repoAt.getFromList(a.tanquesAgendados)).model;
     blocDiaSelecionado.update(a);
   }
 

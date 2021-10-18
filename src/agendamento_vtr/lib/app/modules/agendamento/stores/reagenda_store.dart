@@ -19,8 +19,16 @@ class ReagendaStore extends StreamStore<Falha, ModelBase> {
 
   ReagendaStore(this._repoAgenda, this._repoAt) : super(ModelBase(null));
 
+  @override
+  destroy() {
+    blocAgendaAntiga.destroy();
+    blocAgendaNova.destroy();
+    blocReagenda.destroy();
+    return super.destroy();
+  }
+
   getAgendaNova(String dia) async {
-    print('Agenda nova $dia');
+    //print('Agenda nova $dia');
     blocAgendaNova.execute(() => _repoAgenda.getOrCreate(dia));
   }
 
@@ -30,6 +38,7 @@ class ReagendaStore extends StreamStore<Falha, ModelBase> {
 
   reagenda(TanqueAgendado taVelho, TanqueAgendado taNovo, Agenda aVelha, Agenda aNova) async {
     taVelho.statusConfirmacao = StatusConfirmacao.Reagendado;
+    taNovo.statusConfirmacao = StatusConfirmacao.NaoConfirmado;
     taNovo.agendaAnterior = taVelho.agenda;
     aVelha.tanquesAgendados.removeWhere((ta) => ta.id == taVelho.id);
     aNova.tanquesAgendados.add(taNovo);

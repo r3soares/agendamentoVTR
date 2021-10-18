@@ -1,7 +1,7 @@
 import 'package:agendamento_vtr/app/models/model_base.dart';
 import 'package:agendamento_vtr/app/models/tanque.dart';
+import 'package:agendamento_vtr/app/modules/agendamento/dialogs/visualiza_tanque_dialog.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/models/tanque_agendado.dart';
-import 'package:agendamento_vtr/app/modules/agendamento/pages/visualiza_tanque_dialog.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/stores/tanques_pendentes_store.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
@@ -28,7 +28,6 @@ class _TanquesPendentesWidgetState extends ModularState<TanquesPendentesWidget, 
 
   @override
   Widget build(BuildContext context) {
-    tanquesPendentes.sort((a, b) => a.tanque.dataRegistro.compareTo(b.tanque.dataRegistro));
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -94,7 +93,11 @@ class _TanquesPendentesWidgetState extends ModularState<TanquesPendentesWidget, 
 
   _getTanques(ModelBase mb) async {
     tanquesPendentes.clear();
-    if (mounted) tanquesPendentes.addAll(mb.model);
+    if (mounted) {
+      tanquesPendentes.addAll(mb.model);
+      tanquesPendentes.sort((a, b) => a.tanque.dataRegistro.compareTo(b.tanque.dataRegistro));
+      setState(() {});
+    }
   }
 
   agendaTanque(TanqueAgendado ta) {}

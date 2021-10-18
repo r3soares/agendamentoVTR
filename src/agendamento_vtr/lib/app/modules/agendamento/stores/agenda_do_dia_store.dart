@@ -14,7 +14,6 @@ class AgendaDoDiaStore extends StreamStore<Falha, ModelBase> {
   final RepositoryAgenda repoAgenda;
   final RepositoryTanqueAgendado repoAt;
   final AgendaController _controller = Modular.get<AgendaController>();
-  //final Bloc blocTanques = Bloc('');
   final BlocAgendaModel blocDiaSelecionado = BlocAgendaModel(Agenda(Constants.formatoData.format(DateTime.now())));
   final List<Disposer> disposers = List.empty(growable: true);
 
@@ -22,7 +21,7 @@ class AgendaDoDiaStore extends StreamStore<Falha, ModelBase> {
     //print('AgendaDoDiaStore: controller ${_controller.hashCode}');
     final d1 = _controller.diaSelecionado.observer(
         onState: (aModel) => {
-              print('AgendaDoDiaStore: Dia Selecionado ${aModel.data}'),
+              //print('AgendaDoDiaStore: Dia Selecionado ${aModel.data}'),
               blocDiaSelecionado.update(aModel),
             });
     disposers.add(d1);
@@ -32,7 +31,6 @@ class AgendaDoDiaStore extends StreamStore<Falha, ModelBase> {
   Future destroy() {
     //print('AgendaDoDiaStore: Destruindo');
     blocDiaSelecionado.destroy();
-    //blocTanques.destroy();
     disposers.forEach((d) {
       d();
     });
@@ -44,21 +42,4 @@ class AgendaDoDiaStore extends StreamStore<Falha, ModelBase> {
   }
 
   Agenda get agendaDoDia => _controller.diaSelecionado.lastState.state;
-  //List<TanqueAgendado> get agendados => _controller.diaSelecionado.lastState.state.tanquesAgendados;
-
-  // void getTanques(List<String> lista) async {
-  //   Map<String, Tanque> tanques = Map();
-  //   setLoading(true);
-  //   try {
-  //     for (var t in lista) {
-  //       ModelBase mb = await repoTanque.getTanque(t);
-  //       tanques[t] = mb.model;
-  //     }
-  //     blocTanques.update(tanques);
-  //   } on Falha catch (e) {
-  //     setError(e);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // }
 }

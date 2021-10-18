@@ -21,12 +21,12 @@ class AgendaController extends StreamStore<Falha, Agenda> {
   }
 
   void notificaDiaSelecionado(Agenda dia) {
-    print('AgendaController: Dia Selecionado ${dia.data}');
+    //print('AgendaController: Dia Selecionado ${dia.data}');
     diaSelecionado.update(dia);
   }
 
   void notificaDiaAtualizado(Agenda dia) {
-    print('AgendaController: Dia Atualizado ${dia.data}');
+    //print('AgendaController: Dia Atualizado ${dia.data}');
     diaAtualizado.update(dia);
   }
 }

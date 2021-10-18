@@ -10,7 +10,6 @@ class AvisosWidget extends StatefulWidget {
 class _AvisosWidgetState extends State<AvisosWidget> {
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
