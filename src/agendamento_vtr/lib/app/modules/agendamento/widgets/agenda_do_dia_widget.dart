@@ -213,6 +213,8 @@ class _AgendaDoDiaWidgetState extends ModularState<AgendaDoDiaWidget, AgendaDoDi
 
   MapEntry<Color, IconData> _getCorConfirmacao(StatusConfirmacao status) {
     switch (status) {
+      case StatusConfirmacao.PreAgendado:
+        return MapEntry(Colors.deepPurple, Icons.help_outline);
       case StatusConfirmacao.NaoConfirmado:
         return MapEntry(Colors.orange, Icons.info_outline);
       case StatusConfirmacao.Confirmado:

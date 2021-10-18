@@ -278,6 +278,8 @@ class _CalendarioWidgetState extends ModularState<CalendarioWidget, CalendarioSt
 
   Color _getCorConfirmacao(StatusConfirmacao status) {
     switch (status) {
+      case StatusConfirmacao.PreAgendado:
+        return Colors.deepPurple;
       case StatusConfirmacao.NaoConfirmado:
         return Colors.orange;
       case StatusConfirmacao.Confirmado:

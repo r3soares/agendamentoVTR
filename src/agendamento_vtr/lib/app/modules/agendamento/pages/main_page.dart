@@ -1,5 +1,6 @@
 import 'package:agendamento_vtr/app/modules/agendamento/widgets/agenda_do_dia_widget.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/widgets/calendario_widget.dart';
+import 'package:agendamento_vtr/app/modules/agendamento/widgets/tanques_pendentes_widget.dart';
 import 'package:flutter/material.dart';
 
 class MainPage extends StatelessWidget {
@@ -19,8 +20,8 @@ class MainPage extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              //Card(elevation: 12, child: TanquesPendentesWidget()),
-              AgendaDoDiaWidget()
+              Card(elevation: 12, child: Card(elevation: 12, child: TanquesPendentesWidget())),
+              Card(elevation: 12, child: AgendaDoDiaWidget()),
               //Card(elevation: 12, child: AgendaDoDiaWidget()),
               //Card(elevation: 12, child: TanquesAgendadosWidget()),
             ],

@@ -33,7 +33,7 @@ class _ReagendaDialogState extends ModularState<ReagendaDialog, ReagendaStore> {
         onState: (e) => setState(() {
               aVelha = (e as ModelBase).model;
             }));
-    store.getAgendaAntiga(widget.tAgendado.agenda);
+    store.getAgendaAntiga(widget.tAgendado.agenda!);
     store.blocAgendaNova.observer(
         onState: (e) => setState(() {
               aNova = (e as ModelBase).model;

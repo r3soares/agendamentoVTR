@@ -18739,6 +18739,14 @@
 									"literals": [
 										{
 											"_type": "UMLEnumerationLiteral",
+											"_id": "AAAAAAF8jwgzgdhG+Q4=",
+											"_parent": {
+												"$ref": "AAAAAAF7gxxYR2nlL8Y="
+											},
+											"name": "PreAgendado"
+										},
+										{
+											"_type": "UMLEnumerationLiteral",
 											"_id": "AAAAAAF7gxzj+mvNUU4=",
 											"_parent": {
 												"$ref": "AAAAAAF7gxxYR2nlL8Y="
@@ -19387,6 +19395,7 @@
 															"model": {
 																"$ref": "AAAAAAF7g+lhMHkpFr0="
 															},
+															"visible": false,
 															"font": "Arial;13;0",
 															"left": 525,
 															"top": 207,
@@ -19406,7 +19415,7 @@
 															},
 															"font": "Arial;13;0",
 															"left": 525,
-															"top": 222,
+															"top": 207,
 															"width": 223.73583984375,
 															"height": 13,
 															"text": "+status: StatusTanque",
@@ -19441,7 +19450,7 @@
 															},
 															"font": "Arial;13;0",
 															"left": 525,
-															"top": 237,
+															"top": 222,
 															"width": 223.73583984375,
 															"height": 13,
 															"text": "+linkDocs[]",
@@ -19452,7 +19461,7 @@
 													"left": 520,
 													"top": 97,
 													"width": 233.73583984375,
-													"height": 158
+													"height": 143
 												},
 												{
 													"_type": "UMLOperationCompartmentView",
@@ -19465,7 +19474,7 @@
 													},
 													"font": "Arial;13;0",
 													"left": 520,
-													"top": 255,
+													"top": 240,
 													"width": 233.73583984375,
 													"height": 10
 												},
@@ -21660,6 +21669,23 @@
 													"subViews": [
 														{
 															"_type": "UMLEnumerationLiteralView",
+															"_id": "AAAAAAF8jwgzpthSz3w=",
+															"_parent": {
+																"$ref": "AAAAAAF7gxxYSGnxLps="
+															},
+															"model": {
+																"$ref": "AAAAAAF8jwgzgdhG+Q4="
+															},
+															"font": "Arial;13;0",
+															"left": 781,
+															"top": 443,
+															"width": 124.30615234375,
+															"height": 13,
+															"text": "PreAgendado",
+															"horizontalAlignment": 0
+														},
+														{
+															"_type": "UMLEnumerationLiteralView",
 															"_id": "AAAAAAF7gxzkAmvceck=",
 															"_parent": {
 																"$ref": "AAAAAAF7gxxYSGnxLps="
@@ -21669,7 +21695,7 @@
 															},
 															"font": "Arial;13;0",
 															"left": 781,
-															"top": 443,
+															"top": 458,
 															"width": 124.30615234375,
 															"height": 13,
 															"text": "NaoConfirmado",
@@ -21686,7 +21712,7 @@
 															},
 															"font": "Arial;13;0",
 															"left": 781,
-															"top": 458,
+															"top": 473,
 															"width": 124.30615234375,
 															"height": 13,
 															"text": "Confirmado",
@@ -21739,7 +21765,7 @@
 															},
 															"font": "Arial;13;0",
 															"left": 781,
-															"top": 473,
+															"top": 488,
 															"width": 124.30615234375,
 															"height": 13,
 															"text": "Cancelado",
@@ -21756,7 +21782,7 @@
 															},
 															"font": "Arial;13;0",
 															"left": 781,
-															"top": 488,
+															"top": 503,
 															"width": 124.30615234375,
 															"height": 13,
 															"text": "Reagendado",
@@ -21767,7 +21793,7 @@
 													"left": 776,
 													"top": 438,
 													"width": 134.30615234375,
-													"height": 68
+													"height": 83
 												}
 											],
 											"font": "Arial;13;0",
@@ -21775,7 +21801,7 @@
 											"left": 776,
 											"top": 400,
 											"width": 134.30615234375,
-											"height": 106,
+											"height": 121,
 											"nameCompartment": {
 												"$ref": "AAAAAAF7gxxYSGnoxhE="
 											},

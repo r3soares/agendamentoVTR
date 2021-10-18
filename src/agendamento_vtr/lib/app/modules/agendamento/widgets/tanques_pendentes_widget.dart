@@ -1,7 +1,8 @@
+import 'package:agendamento_vtr/app/models/model_base.dart';
 import 'package:agendamento_vtr/app/models/tanque.dart';
-import 'package:agendamento_vtr/app/modules/agendamento/agenda_antiga_store.dart';
+import 'package:agendamento_vtr/app/modules/agendamento/models/tanque_agendado.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/pages/visualiza_tanque_dialog.dart';
-import 'package:agendamento_vtr/app/repositories/repository_tanque.dart';
+import 'package:agendamento_vtr/app/modules/agendamento/stores/tanques_pendentes_store.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:intl/intl.dart';
@@ -13,33 +14,27 @@ class TanquesPendentesWidget extends StatefulWidget {
   _TanquesPendentesWidgetState createState() => _TanquesPendentesWidgetState();
 }
 
-class _TanquesPendentesWidgetState extends ModularState<TanquesPendentesWidget, AgendaAntigaStore> {
-  final List<Tanque?> tanques = List.empty(growable: true);
+class _TanquesPendentesWidgetState extends ModularState<TanquesPendentesWidget, TanquesPendentesStore> {
+  final List<TanqueAgendado> tanquesPendentes = List.empty(growable: true);
 
   final formatoData = 'dd/MM/yy HH:mm';
 
   @override
   void initState() {
     super.initState();
-    _getTanques();
-    store.addListener(() {
-      if (store.statusTanque == 2)
-        setState(() {
-          _getTanques();
-        });
-    });
+    store.blocTanquesPendentes.observer(onState: (mb) => _getTanques(mb as ModelBase));
   }
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    tanques.sort((a, b) => a!.dataRegistro.compareTo(b!.dataRegistro));
+    tanquesPendentes.sort((a, b) => a.tanque.dataRegistro.compareTo(b.tanque.dataRegistro));
     return Column(
       children: [
         Padding(
           padding: const EdgeInsets.all(12.0),
           child: Text(
-            '${tanques.length} Tanques não agendados',
+            '${tanquesPendentes.length} Tanques não agendados',
             style: TextStyle(fontSize: 18),
           ),
         ),
@@ -48,12 +43,12 @@ class _TanquesPendentesWidgetState extends ModularState<TanquesPendentesWidget, 
             padding: EdgeInsets.all(12),
             width: size.width * .30,
             height: size.height * .4,
-            child: tanques.isNotEmpty
+            child: tanquesPendentes.isNotEmpty
                 ? ListView.builder(
                     scrollDirection: Axis.vertical,
-                    itemCount: tanques.length,
+                    itemCount: tanquesPendentes.length,
                     itemBuilder: (BuildContext context, int index) {
-                      Tanque t = tanques.elementAt(index)!;
+                      Tanque t = tanquesPendentes.elementAt(index).tanque;
                       final data = DateFormat(formatoData).format(t.dataRegistro);
                       return Padding(
                         padding: const EdgeInsets.all(8.0),
@@ -85,7 +80,7 @@ class _TanquesPendentesWidgetState extends ModularState<TanquesPendentesWidget, 
                             subtitle: Text('$data'),
                             trailing: TextButton(
                               child: Text('Agendar'),
-                              onPressed: () => {agendaTanque(t)},
+                              onPressed: () => {tanquesPendentes.elementAt(index)},
                             ),
                           ),
                         ),
@@ -97,19 +92,12 @@ class _TanquesPendentesWidgetState extends ModularState<TanquesPendentesWidget, 
     );
   }
 
-  _getTanques() async {
-    tanques.clear();
-    tanques.addAll(
-        (await Modular.get<RepositoryTanque>().getTanques()).where((t) => t.ultimoAgendamento == null).toList());
+  _getTanques(ModelBase mb) async {
+    tanquesPendentes.clear();
+    if (mounted) tanquesPendentes.addAll(mb.model);
   }
 
-  agendaTanque(Tanque t) {
-    setState(() {
-      //t.agenda = store.agenda.data;
-      store.addTanque(t.placa);
-      _getTanques();
-    });
-  }
+  agendaTanque(TanqueAgendado ta) {}
 
   _somaSetas(Tanque t) {
     return t.compartimentos.fold(0, (int previousValue, element) => previousValue + element.setas);

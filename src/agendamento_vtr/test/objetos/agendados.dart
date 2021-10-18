@@ -16,13 +16,16 @@ class Agendados {
     Empresas();
     Datas.geraDatas();
     for (int i = 0; i < Tanques.tanques.length; i++) {
-      TanqueAgendado a = TanqueAgendado(
-          id: Uuid().v1(), tanque: Tanques.tanques[i], agenda: Datas.datas[r.nextInt(Datas.datas.length - 1)]);
-      a.agendaAnterior = r.nextInt(10) > 9
-          ? agendados.isNotEmpty
-              ? agendados[r.nextInt(agendados.length)].id
-              : null
-          : null;
+      TanqueAgendado a = TanqueAgendado(id: Uuid().v1(), tanque: Tanques.tanques[i]);
+      a.statusConfirmacao = StatusConfirmacao.values[r.nextInt(StatusConfirmacao.values.length)];
+      a.agenda = a.statusConfirmacao.index == 0 ? null : Datas.datas[r.nextInt(Datas.datas.length - 1)];
+      a.agendaAnterior = a.agenda == null
+          ? null
+          : r.nextInt(10) > 9
+              ? agendados.isNotEmpty
+                  ? agendados[r.nextInt(agendados.length)].id
+                  : null
+              : null;
       a.bitremAgenda = r.nextInt(10) > 9
           ? agendados.isNotEmpty
               ? agendados[r.nextInt(agendados.length)].id
@@ -31,7 +34,6 @@ class Agendados {
       a.custoVerificacao = Tanques.tanques[i].custo;
       a.obs = r.nextInt(10) > 7 ? 'Observação' : null;
       a.responsavel = Empresas.empresas[r.nextInt(Empresas.empresas.length)].cnpjCpf;
-      a.statusConfirmacao = StatusConfirmacao.values[r.nextInt(StatusConfirmacao.values.length)];
       a.statusPagamento = StatusPagamento.values[r.nextInt(StatusPagamento.values.length)];
       a.tempoVerificacao = r.nextInt(5 * 60) + 30;
       agendados.add(a);

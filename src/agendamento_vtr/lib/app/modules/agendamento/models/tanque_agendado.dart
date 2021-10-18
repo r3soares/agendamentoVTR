@@ -4,20 +4,20 @@ import 'package:agendamento_vtr/app/models/tanque.dart';
 class TanqueAgendado implements JsonSerializable {
   final String id;
   final Tanque tanque;
-  final String agenda;
+  String? agenda;
   String responsavel = '';
   String? bitremAgenda;
 
   String? agendaAnterior;
 
-  StatusConfirmacao statusConfirmacao = StatusConfirmacao.NaoConfirmado;
+  StatusConfirmacao statusConfirmacao = StatusConfirmacao.PreAgendado;
   StatusPagamento statusPagamento = StatusPagamento.Pendente;
 
   double custoVerificacao = 0;
   int tempoVerificacao = 0;
   String? obs;
 
-  TanqueAgendado({required this.id, required this.tanque, required this.agenda});
+  TanqueAgendado({required this.id, required this.tanque, this.agenda});
 
   @override
   fromJson(Map<String, dynamic> json) => TanqueAgendado.fromJson(json);
@@ -51,5 +51,5 @@ class TanqueAgendado implements JsonSerializable {
       };
 }
 
-enum StatusConfirmacao { NaoConfirmado, Confirmado, Reagendado, Cancelado }
+enum StatusConfirmacao { PreAgendado, NaoConfirmado, Confirmado, Reagendado, Cancelado }
 enum StatusPagamento { Pendente, Confirmado, Atrasado }

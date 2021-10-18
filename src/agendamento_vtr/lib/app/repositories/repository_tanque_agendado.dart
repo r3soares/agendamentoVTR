@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:agendamento_vtr/app/domain/erros.dart';
+import 'package:agendamento_vtr/app/domain/log.dart';
 import 'package:agendamento_vtr/app/models/model_base.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/models/tanque_agendado.dart';
 
@@ -31,6 +32,19 @@ class RepositoryTanqueAgendado {
       return ModelBase(lista);
     } on Falha catch (e) {
       print('Erro ao procurar Tanques agendados $ids: $e');
+      throw e;
+    }
+  }
+
+  Future<ModelBase> findPendentes() async {
+    try {
+      var result = await db.find('pendentes', '');
+      var pendentes = result == false
+          ? List.empty(growable: true)
+          : (result as List).map((n) => TanqueAgendado.fromJson(n)).toList();
+      return ModelBase(pendentes);
+    } on Falha catch (e) {
+      Log.message(this, 'Erro ao procurar tanques pendentes');
       throw e;
     }
   }
