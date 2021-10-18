@@ -51,8 +51,8 @@ class _AgendaDoDiaWidgetState extends ModularState<AgendaDoDiaWidget, AgendaDoDi
   // }
 
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
         Padding(
           padding: const EdgeInsets.all(12.0),
@@ -61,75 +61,69 @@ class _AgendaDoDiaWidgetState extends ModularState<AgendaDoDiaWidget, AgendaDoDi
             style: TextStyle(fontSize: 18),
           ),
         ),
-        Container(
-            alignment: Alignment.center,
-            width: size.width * .36,
-            height: size.height * .4,
-            child: agenda.tanquesAgendados.isEmpty
-                ? Center(
-                    child: Text('Sem veículos para este dia'),
-                  )
-                : Container(
-                    alignment: Alignment.topCenter,
-                    constraints: BoxConstraints(
-                        minHeight: 200, minWidth: 400, maxWidth: size.width * .5, maxHeight: size.height * .4),
-                    child: ListView.builder(
-                        shrinkWrap: true,
-                        dragStartBehavior: DragStartBehavior.start,
-                        controller: _scrollController,
-                        scrollDirection: Axis.vertical,
-                        itemCount: agenda.tanquesAgendados.length,
-                        itemBuilder: (BuildContext ctx, int index) {
-                          TanqueAgendado tAgendado = agenda.tanquesAgendados.elementAt(index);
-                          final status = _getCorConfirmacao(tAgendado.statusConfirmacao);
-                          Tanque tanque = tAgendado.tanque;
-                          return Card(
-                            elevation: 12,
-                            child: ListTile(
-                                leading: TextButton(
-                                    onPressed: () => {
-                                          showDialog(
-                                              barrierDismissible: true,
-                                              barrierColor: Color.fromRGBO(0, 0, 0, .5),
-                                              useSafeArea: true,
-                                              context: context,
-                                              builder: (_) => VisualizaTanqueDialog(tanque)),
-                                        },
-                                    child: Icon(Icons.remove_red_eye)),
-                                title: Row(children: [
-                                  Text(
-                                    '${tanque.placaFormatada}',
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                                    child: Text(
-                                      '${tanque.capacidadeTotal} L',
-                                      style: TextStyle(fontSize: 12),
-                                    ),
-                                  ),
-                                ]),
-                                subtitle: Text('Registrado em ${Constants.formatoData.format(tanque.dataRegistro)}'),
-                                trailing: ConstrainedBox(
-                                  constraints: BoxConstraints.loose(Size(120, double.infinity)),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    children: [
-                                      TextButton(
-                                          onPressed: () => _confirmaTanqueAgendado(tAgendado),
-                                          child: Icon(
-                                            status.value,
-                                            color: status.key,
-                                          )),
-                                      // TextButton(
-                                      //     onPressed: () => _reagendaTanque(tAgendado),
-                                      //     child: Icon(Icons.calendar_today_outlined)),
-                                      TextButton(
-                                          onPressed: () => _excluiTanqueAgendado(tAgendado), child: Icon(Icons.close)),
-                                    ],
-                                  ),
-                                )),
-                          );
-                        }))),
+        agenda.tanquesAgendados.isEmpty
+            ? Center(
+                child: Text('Sem veículos para este dia'),
+              )
+            : Expanded(
+                child: ListView.builder(
+                    physics: ClampingScrollPhysics(),
+                    shrinkWrap: true,
+                    dragStartBehavior: DragStartBehavior.start,
+                    controller: _scrollController,
+                    scrollDirection: Axis.vertical,
+                    itemCount: agenda.tanquesAgendados.length,
+                    itemBuilder: (BuildContext ctx, int index) {
+                      TanqueAgendado tAgendado = agenda.tanquesAgendados.elementAt(index);
+                      final status = _getCorConfirmacao(tAgendado.statusConfirmacao);
+                      Tanque tanque = tAgendado.tanque;
+                      return Card(
+                        elevation: 12,
+                        child: ListTile(
+                            leading: TextButton(
+                                onPressed: () => {
+                                      showDialog(
+                                          barrierDismissible: true,
+                                          barrierColor: Color.fromRGBO(0, 0, 0, .5),
+                                          useSafeArea: true,
+                                          context: context,
+                                          builder: (_) => VisualizaTanqueDialog(tanque)),
+                                    },
+                                child: Icon(Icons.remove_red_eye)),
+                            title: Row(children: [
+                              Text(
+                                '${tanque.placaFormatada}',
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 20),
+                                child: Text(
+                                  '${tanque.capacidadeTotal} L',
+                                  style: TextStyle(fontSize: 12),
+                                ),
+                              ),
+                            ]),
+                            subtitle: Text('Registrado em ${Constants.formatoData.format(tanque.dataRegistro)}'),
+                            trailing: ConstrainedBox(
+                              constraints: BoxConstraints.loose(Size(120, double.infinity)),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  TextButton(
+                                      onPressed: () => _confirmaTanqueAgendado(tAgendado),
+                                      child: Icon(
+                                        status.value,
+                                        color: status.key,
+                                      )),
+                                  // TextButton(
+                                  //     onPressed: () => _reagendaTanque(tAgendado),
+                                  //     child: Icon(Icons.calendar_today_outlined)),
+                                  TextButton(
+                                      onPressed: () => _excluiTanqueAgendado(tAgendado), child: Icon(Icons.close)),
+                                ],
+                              ),
+                            )),
+                      );
+                    })),
       ],
     );
   }

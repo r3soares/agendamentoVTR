@@ -12,6 +12,12 @@ class TanquesPendentesStore extends StreamStore<Falha, ModelBase> {
 
   TanquesPendentesStore(this.repoAt, this.repoTanque) : super(ModelBase(null));
 
+  @override
+  Future destroy() {
+    blocTanquesPendentes.destroy();
+    return super.destroy();
+  }
+
   void getTanquesPendentes() async {
     blocTanquesPendentes.execute(() => repoAt.findPendentes());
   }
