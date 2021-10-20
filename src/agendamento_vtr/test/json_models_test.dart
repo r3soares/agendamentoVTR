@@ -55,7 +55,7 @@ void main() {
         //expect(t1.ultimoAgendamento, equals(t2.ultimoAgendamento), reason: 'TanqueAgendado não validou');
       }
     });
-    test('AgendasDoTanque', () {
+    test('Tanque Agendado', () {
       Agendados();
       for (int i = 0; i < Agendados.agendados.length; i++) {
         TanqueAgendado a1 = Agendados.agendados[i];
@@ -67,7 +67,7 @@ void main() {
         expect(a1.custoVerificacao, equals(a2.custoVerificacao), reason: 'custoVerificacao não validou');
         expect(a1.id, equals(a2.id), reason: 'id diferente');
         expect(a1.obs, equals(a2.obs), reason: 'obs não validou');
-        expect(a1.responsavel, equals(a2.responsavel), reason: 'responsavel não validou');
+        expect(a1.responsavel?.cnpjCpf, equals(a2.responsavel?.cnpjCpf), reason: 'responsavel não validou');
         expect(a1.statusConfirmacao, equals(a2.statusConfirmacao), reason: 'statusConfirmacao diferentes');
         expect(a1.statusPagamento, equals(a2.statusPagamento), reason: 'statusPagamento não validou');
         //expect(a1.tanque, equals(a2.tanque), reason: 'tanque não validou');

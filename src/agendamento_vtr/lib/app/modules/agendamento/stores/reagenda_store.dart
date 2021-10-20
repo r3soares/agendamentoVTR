@@ -50,7 +50,7 @@ class ReagendaStore extends StreamStore<Falha, ModelBase> {
       await _repoAgenda.save(aNova);
       _controller.notificaDiaAtualizado(aVelha);
       _controller.notificaDiaAtualizado(aNova);
-      blocReagenda.update(true);
+      blocReagenda.update(true, force: true);
     } on Falha catch (e) {
       setError(e);
     } finally {

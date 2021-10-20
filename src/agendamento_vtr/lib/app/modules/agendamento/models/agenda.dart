@@ -1,7 +1,9 @@
 import 'package:agendamento_vtr/app/models/json_serializable.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/models/tanque_agendado.dart';
+import 'package:equatable/equatable.dart';
 import 'package:intl/intl.dart';
 
+// ignore: must_be_immutable
 class Agenda implements JsonSerializable {
   //final String id;
   final String data;
@@ -31,6 +33,9 @@ class Agenda implements JsonSerializable {
         'status': status.index,
         'obs': obs,
       };
+
+  // @override
+  // List<Object?> get props => [data.hashCode];
 }
 
 enum StatusAgenda { Disponivel, Cheia, Encerrada, Indisponivel }

@@ -23,7 +23,7 @@ class TanquesPendentesStore extends StreamStore<Falha, ModelBase> {
     final d1 = _controller.diaAtualizado.observer(
         onState: (aModel) => {
               //Log.message(this, 'Atualizou ${aModel.data}'),
-              blocDiaAtualizado.update(aModel),
+              blocDiaAtualizado.update(aModel, force: true),
             });
     //Log.message(this, 'Hash Controller: ${_controller.hashCode}');
     disposers.add(d1);
@@ -41,7 +41,7 @@ class TanquesPendentesStore extends StreamStore<Falha, ModelBase> {
   }
 
   void getTanquesPendentes() async {
-    Log.message(this, 'Obtendo tanques pendentes...');
+    //Log.message(this, 'Obtendo tanques pendentes...');
     blocTanquesPendentes.execute(() => repoAt.findPendentes());
   }
 }

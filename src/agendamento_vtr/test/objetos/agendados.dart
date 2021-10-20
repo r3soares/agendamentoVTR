@@ -33,7 +33,7 @@ class Agendados {
           : null;
       a.custoVerificacao = Tanques.tanques[i].custo;
       a.obs = r.nextInt(10) > 7 ? 'Observação' : null;
-      a.responsavel = Empresas.empresas[r.nextInt(Empresas.empresas.length)].cnpjCpf;
+      a.responsavel = Empresas.empresas[r.nextInt(Empresas.empresas.length)];
       a.statusPagamento = StatusPagamento.values[r.nextInt(StatusPagamento.values.length)];
       a.tempoVerificacao = r.nextInt(5 * 60) + 30;
       agendados.add(a);

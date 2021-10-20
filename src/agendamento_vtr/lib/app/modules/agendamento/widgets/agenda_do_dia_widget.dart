@@ -26,12 +26,9 @@ class _AgendaDoDiaWidgetState extends ModularState<AgendaDoDiaWidget, AgendaDoDi
   void initState() {
     super.initState();
     agenda = store.agendaDoDia;
-    print('Agenda do dia ${agenda.data} com ${agenda.tanquesAgendados.length} veículos agendados');
+    //print('Agenda do dia ${agenda.data} com ${agenda.tanquesAgendados.length} veículos agendados');
     var d1 = store.blocDiaSelecionado.observer(onState: _updateAgenda);
-    var d2 = store.blocDiaAtualizado.observer(
-        onState: (a) => setState(() {
-              agenda = a;
-            }));
+    var d2 = store.blocDiaAtualizado.observer(onState: _updateAgenda);
     disposers.addAll([d1, d2]);
   }
 

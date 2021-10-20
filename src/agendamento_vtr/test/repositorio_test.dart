@@ -21,20 +21,42 @@ import 'objetos/tanques.dart';
 
 void main() {
   group('Teste de repositorios', () {
-    bool baseAgendaPopulada = false;
-    bool baseAgendaTanquePopulada = false;
-    test('Empresas', () async {
-      var repo = RepositoryEmpresa(Api('empresa'));
+    var repoEmpresa = RepositoryEmpresa(Api('empresa'));
+    var repoTanque = RepositoryTanque(Api('tanque'));
+    var repoTa = RepositoryTanqueAgendado(Api('tanqueAgendado'));
+    var repoAgenda = RepositoryAgenda(Api('agenda'));
+    test('Popula Base', () async {
       Empresas();
       for (int i = 0; i < Empresas.empresas.length; i++) {
         Empresa e = Empresas.empresas[i];
-        ModelBase mb = await repo.salvaEmpresa(e);
+        ModelBase mb = await repoEmpresa.salvaEmpresa(e);
         expect(mb.model, isTrue, reason: '$i Não salvou -> ${e.cnpjCpf}');
       }
+
+      Tanques();
+      for (int i = 0; i < Tanques.tanques.length; i++) {
+        Tanque t1 = Tanques.tanques[i];
+        ModelBase mb = await repoTanque.salvaTanque(t1);
+        expect(mb.model, isTrue, reason: '$i Não salvou -> ${t1.placa}');
+      }
+
+      Agendados();
+      Agendas();
+      for (TanqueAgendado at in Agendados.agendados) {
+        ModelBase mb = await repoTa.save(at);
+        expect(mb.model, isTrue);
+      }
+
+      for (Agenda a in Agendas.agendas) {
+        ModelBase mb = await repoAgenda.save(a);
+        expect(mb.model, isTrue);
+      }
+    }, timeout: Timeout(Duration(minutes: 2)));
+    test('Empresas', () async {
       sleep(Duration(seconds: 1));
       for (int i = 0; i < Empresas.empresas.length; i++) {
         Empresa e = Empresas.empresas[i];
-        Empresa e2 = (await repo.getEmpresa(e.cnpjCpf)).model;
+        Empresa e2 = (await repoEmpresa.getEmpresa(e.cnpjCpf)).model;
         expect(e2, isNotNull);
         expect(e2.email, equals(e.email));
         if (e.proprietario != null) {
@@ -50,17 +72,10 @@ void main() {
     }, timeout: Timeout(Duration(minutes: 2)));
 
     test('Tanques', () async {
-      var repo = RepositoryTanque(Api('tanque'));
-      Tanques();
-      for (int i = 0; i < Tanques.tanques.length; i++) {
-        Tanque t1 = Tanques.tanques[i];
-        ModelBase mb = await repo.salvaTanque(t1);
-        expect(mb.model, isTrue, reason: '$i Não salvou -> ${t1.placa}');
-      }
       sleep(Duration(seconds: 1));
       for (int i = 0; i < Tanques.tanques.length; i++) {
         Tanque t1 = Tanques.tanques[i];
-        Tanque t2 = (await repo.findTanqueByPlaca(t1.placa)).model;
+        Tanque t2 = (await repoTanque.findTanqueByPlaca(t1.placa)).model;
         expect(t2, isNotNull);
         expect(t2.codInmetro, t1.codInmetro);
         expect(t2.placa, t1.placa);
@@ -78,18 +93,10 @@ void main() {
     }, timeout: Timeout(Duration(minutes: 2)));
 
     test('Tanques Agendados', () async {
-      var repo = RepositoryTanqueAgendado(Api('tanqueAgendado'));
-      Agendados();
-      Agendas();
-      for (TanqueAgendado at in Agendados.agendados) {
-        ModelBase mb = await repo.save(at);
-        expect(mb.model, isTrue);
-      }
       sleep(Duration(seconds: 1));
-      baseAgendaTanquePopulada = true;
       var lista = Agendados.agendados;
       for (int i = 0; i < lista.length; i++) {
-        ModelBase mb = await repo.get(lista[i].id);
+        ModelBase mb = await repoTa.get(lista[i].id);
         expect(mb, isNotNull);
         TanqueAgendado at = mb.model;
         expect(at, isNotNull);
@@ -99,64 +106,26 @@ void main() {
         expect(at.custoVerificacao, equals(lista[i].custoVerificacao));
         expect(at.id, equals(lista[i].id));
         expect(at.obs, equals(lista[i].obs));
-        expect(at.responsavel, equals(lista[i].responsavel));
+        expect(at.responsavel?.cnpjCpf, equals(lista[i].responsavel?.cnpjCpf));
         expect(at.statusConfirmacao, equals(lista[i].statusConfirmacao));
         expect(at.statusPagamento, equals(lista[i].statusPagamento));
         expect(at.tanque.codInmetro, equals(lista[i].tanque.codInmetro));
         expect(at.tempoVerificacao, equals(lista[i].tempoVerificacao));
       }
     }, timeout: Timeout(Duration(minutes: 2)));
-
     test('Agendados Filtros', () async {
-      var repo = RepositoryTanqueAgendado(Api('tanqueAgendado'));
-      // if (!baseAgendaTanquePopulada) {
-      //   Agendados();
-      //   Agendas();
-      //   for (TanqueAgendado at in Agendados.agendados) {
-      //     ModelBase mb = await repo.save(at);
-      //     expect(mb.model, isTrue);
-      //   }
-      // }
-      // sleep(Duration(seconds: 1));
-      // baseAgendaTanquePopulada = true;
-      // var lista = Agendados.agendados;
-      // for (int i = 0; i < lista.length; i++) {
-      //   ModelBase mb = await repo.get(lista[i].id);
-      //   expect(mb, isNotNull);
-      //   TanqueAgendado at = mb.model;
-      //   expect(at, isNotNull);
-      //   expect(at.agenda, equals(lista[i].agenda));
-      //   expect(at.agendaAnterior, equals(lista[i].agendaAnterior));
-      //   expect(at.bitremAgenda, equals(lista[i].bitremAgenda));
-      //   expect(at.custoVerificacao, equals(lista[i].custoVerificacao));
-      //   expect(at.id, equals(lista[i].id));
-      //   expect(at.obs, equals(lista[i].obs));
-      //   expect(at.responsavel, equals(lista[i].responsavel));
-      //   expect(at.statusConfirmacao, equals(lista[i].statusConfirmacao));
-      //   expect(at.statusPagamento, equals(lista[i].statusPagamento));
-      //   expect(at.tanque.codInmetro, equals(lista[i].tanque.codInmetro));
-      //   expect(at.tempoVerificacao, equals(lista[i].tempoVerificacao));
-      // }
-      List<TanqueAgendado> pendentes = (await repo.findPendentes()).model;
+      List<TanqueAgendado> pendentes = (await repoTa.findPendentes()).model;
       expect(pendentes, isNotNull);
       for (var item in pendentes) {
         expect(item.statusConfirmacao, equals(StatusConfirmacao.PreAgendado));
       }
     }, timeout: Timeout(Duration(minutes: 2)));
     test('Agendas', () async {
-      var repo = RepositoryAgenda(Api('agenda'));
-      Agendados();
-      Agendas();
-      for (Agenda a in Agendas.agendas) {
-        ModelBase mb = await repo.save(a);
-        expect(mb.model, isTrue);
-      }
-      baseAgendaPopulada = true;
       var lista = Agendas.agendas;
       var menorData = DateTime.now().add(Duration(days: 3000));
       var maiorData = DateTime.now().add(Duration(days: -3000));
       for (int i = 0; i < lista.length; i++) {
-        ModelBase mb = await repo.get(lista[i].data);
+        ModelBase mb = await repoAgenda.get(lista[i].data);
         expect(mb, isNotNull);
         Agenda a = mb.model;
         menorData = a.d.compareTo(menorData) < 0 ? a.d : menorData;
@@ -175,32 +144,15 @@ void main() {
           }
         }
       }
-      ModelBase mb = await repo.getAll();
+      ModelBase mb = await repoTa.getAll();
       List<Agenda> todas = mb.model;
       expect(lista.length, equals(todas.length));
 
-      mb = await repo.findByPeriodo(Constants.formatoData.format(menorData), Constants.formatoData.format(maiorData));
+      mb = await repoAgenda.findByPeriodo(
+          Constants.formatoData.format(menorData), Constants.formatoData.format(maiorData));
     }, timeout: Timeout(Duration(minutes: 2)));
     test('Agendas Filtros', () async {
-      var repoA = RepositoryAgenda(Api('agenda'));
-      var repoAT = RepositoryTanqueAgendado(Api('tanqueAgendado'));
-      if (!baseAgendaPopulada) {
-        Agendados();
-        Agendas();
-        for (Agenda a in Agendas.agendas) {
-          ModelBase mb = await repoA.save(a);
-          expect(mb.model, isTrue);
-        }
-      }
-
-      if (!baseAgendaTanquePopulada) {
-        for (TanqueAgendado at in Agendados.agendados) {
-          ModelBase mb = await repoAT.save(at);
-          expect(mb.model, isTrue);
-        }
-      }
-
-      List<Agenda> lista = (await repoA.getAll()).model;
+      List<Agenda> lista = (await repoAgenda.getAll()).model;
       var menorData = DateTime.now().add(Duration(days: 3000));
       var maiorData = DateTime.now().add(Duration(days: -3000));
       for (int i = 0; i < lista.length; i++) {
@@ -208,13 +160,13 @@ void main() {
         menorData = a.d.compareTo(menorData) < 0 ? a.d : menorData;
         maiorData = a.d.compareTo(menorData) > 0 ? a.d : maiorData;
       }
-      var mb =
-          await repoA.findByPeriodo(Constants.formatoData.format(menorData), Constants.formatoData.format(maiorData));
+      var mb = await repoAgenda.findByPeriodo(
+          Constants.formatoData.format(menorData), Constants.formatoData.format(maiorData));
       List<Agenda> periodo = mb.model;
       expect(periodo, isNotNull, reason: 'FindByPeriodo não validou');
 
       Agenda a = lista[Random().nextInt(lista.length)];
-      mb = await repoA.get(a.data);
+      mb = await repoAgenda.get(a.data);
       expect(a.data, equals(mb.model.data), reason: 'Get não validou');
     }, timeout: Timeout(Duration(minutes: 2)));
   });

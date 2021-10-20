@@ -1,7 +1,6 @@
 // ignore_for_file: unnecessary_statements
 
 import 'package:agendamento_vtr/app/domain/erros.dart';
-import 'package:agendamento_vtr/app/models/model_base.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/models/tanque_agendado.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/stores/pesquisa_agenda_do_dia_store.dart';
 import 'package:flutter/material.dart';
@@ -16,33 +15,18 @@ class PesquisaWidget extends StatefulWidget {
   _PesquisaWidgetState createState() => _PesquisaWidgetState();
 }
 
-class _PesquisaWidgetState extends ModularState<PesquisaWidget, PesquisaAgendaDoDiaStore>
-    with SingleTickerProviderStateMixin {
+class _PesquisaWidgetState extends ModularState<PesquisaWidget, PesquisaAgendaDoDiaStore> {
   final TextEditingController _cPesquisa = TextEditingController();
   final List<Disposer> disposers = List.empty(growable: true);
-  TanqueAgendado? _tanqueResultadoPesquisa;
-
-  var controllerAnim;
-  late Animation animation;
-  Color? color;
+  //TanqueAgendado? _tanqueResultadoPesquisa;
+  //Color? color = Colors.grey;
 
   @override
   void initState() {
     super.initState();
-    _cPesquisa.addListener(limpaResultado);
-    var d1 = store.observer(
-        onState: setResultado,
-        onError: (error) => {error is NaoEncontrado ? setState(() => _tanqueResultadoPesquisa = null) : ''});
-    disposers.add(d1);
-
-    controllerAnim = AnimationController(vsync: this, duration: Duration(seconds: 1));
-    animation = ColorTween(begin: Colors.grey, end: Colors.green[700]).animate(controllerAnim);
-
-    animation.addListener(() {
-      setState(() {
-        color = animation.value;
-      });
-    });
+    var d1 = store.blocPesquisa.observer(onState: setResultado, onError: naoEncontrou);
+    var d2 = store.blocAgenda.observer(onState: agendou, onError: naoAgendou);
+    disposers.addAll([d1, d2]);
   }
 
   @override
@@ -51,11 +35,24 @@ class _PesquisaWidgetState extends ModularState<PesquisaWidget, PesquisaAgendaDo
     super.dispose();
   }
 
-  void setResultado(TanqueAgendado ta) {
+  void setResultado(Object mb) {
+    agendaVeiculo(mb as TanqueAgendado);
+  }
+
+  void naoEncontrou(Falha erro) {
+    erro is NaoEncontrado
+        ? ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Veículo não encontrado')))
+        : '';
+  }
+
+  void naoAgendou(Falha erro) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Erro ao agendar: ${erro.msg}')));
+  }
+
+  void agendou(Object mb) {
     setState(() {
-      _tanqueResultadoPesquisa = ta;
+      _cPesquisa.text = '';
     });
-    controllerAnim.forward();
   }
 
   @override
@@ -73,34 +70,17 @@ class _PesquisaWidgetState extends ModularState<PesquisaWidget, PesquisaAgendaDo
           labelText: 'Incluir tanque',
           hintText: 'Informe a placa ou n° inmetro',
           suffixIcon: TextButton(
-            child: Text('Pesquisar'),
+            child: Text('Incluir'),
             onPressed: pesquisaTermo,
           ),
         ),
       ),
-      trailing: TextButton(
-        child: Text(
-          'Incluir',
-          style: TextStyle(color: color, fontSize: 18),
-        ),
-        onPressed: _tanqueResultadoPesquisa == null ? null : _adicionaVeiculo,
-      ),
     );
   }
 
-  void limpaResultado() {
-    if (_tanqueResultadoPesquisa != null)
-      setState(() => {
-            _tanqueResultadoPesquisa = null,
-            controllerAnim.reset(),
-          });
-  }
-
   void pesquisaTermo() {
-    store.getVeiculo(_cPesquisa.text);
+    if (_cPesquisa.text.isNotEmpty) store.getVeiculo(_cPesquisa.text);
   }
 
-  void _adicionaVeiculo() {
-    store.agendaVeiculo(_tanqueResultadoPesquisa!);
-  }
+  agendaVeiculo(TanqueAgendado ta) => store.agendaVeiculo(ta);
 }

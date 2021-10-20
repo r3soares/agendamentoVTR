@@ -113,7 +113,7 @@ class _TanquesPendentesWidgetState extends ModularState<TanquesPendentesWidget, 
   }
 
   _remoTanquesDaAgenda(Agenda a) {
-    print('Removendo pendentes...');
+    //print('Removendo pendentes...');
     for (var item in a.tanquesAgendados) {
       var ta = tanquesPendentes.firstWhereOrNull((e) => e.id == item.id);
       if (ta != null) {

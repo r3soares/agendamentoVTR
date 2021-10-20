@@ -23,12 +23,12 @@ class AgendaDoDiaStore extends StreamStore<Falha, ModelBase> {
     final d1 = _controller.diaSelecionado.observer(
         onState: (aModel) => {
               //print('AgendaDoDiaStore: Dia Selecionado ${aModel.data}'),
-              blocDiaSelecionado.update(aModel),
+              blocDiaSelecionado.update(aModel, force: true),
             });
     final d2 = _controller.diaAtualizado.observer(
         onState: (aModel) => {
               //print('AgendaDoDiaStore: Dia Selecionado ${aModel.data}'),
-              blocDiaAtualizado.update(aModel),
+              blocDiaAtualizado.update(aModel, force: true),
             });
     disposers.addAll([d1, d2]);
   }

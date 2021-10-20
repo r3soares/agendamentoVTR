@@ -10,7 +10,7 @@ class AgendaController extends StreamStore<Falha, Agenda> {
   final BlocAgendaModel diaAtualizado = BlocAgendaModel(Agenda(Constants.formatoData.format(DateTime.now())));
 
   AgendaController(initialState) : super(initialState) {
-    print('AgendaController: hashcode ${this.hashCode}');
+    //print('AgendaController: hashcode ${this.hashCode}');
   }
 
   @override
@@ -23,11 +23,11 @@ class AgendaController extends StreamStore<Falha, Agenda> {
 
   void notificaDiaSelecionado(Agenda dia) {
     //print('AgendaController: Dia Selecionado ${dia.data}');
-    diaSelecionado.update(dia);
+    diaSelecionado.update(dia, force: true);
   }
 
   void notificaDiaAtualizado(Agenda dia) {
     Log.message(this, 'Dia Atualizado ${dia.data}');
-    diaAtualizado.update(dia);
+    diaAtualizado.update(dia, force: true);
   }
 }
