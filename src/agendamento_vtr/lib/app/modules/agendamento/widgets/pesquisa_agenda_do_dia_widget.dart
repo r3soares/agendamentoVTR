@@ -18,6 +18,7 @@ class PesquisaWidget extends StatefulWidget {
 class _PesquisaWidgetState extends ModularState<PesquisaWidget, PesquisaAgendaDoDiaStore> {
   final TextEditingController _cPesquisa = TextEditingController();
   final List<Disposer> disposers = List.empty(growable: true);
+  bool pesquisando = false;
   //TanqueAgendado? _tanqueResultadoPesquisa;
   //Color? color = Colors.grey;
 
@@ -52,6 +53,7 @@ class _PesquisaWidgetState extends ModularState<PesquisaWidget, PesquisaAgendaDo
   void agendou(Object mb) {
     setState(() {
       _cPesquisa.text = '';
+      pesquisando = false;
     });
   }
 
@@ -71,7 +73,7 @@ class _PesquisaWidgetState extends ModularState<PesquisaWidget, PesquisaAgendaDo
           hintText: 'Informe a placa ou n° inmetro',
           suffixIcon: TextButton(
             child: Text('Incluir'),
-            onPressed: pesquisaTermo,
+            onPressed: pesquisando ? null : pesquisaTermo,
           ),
         ),
       ),
@@ -79,7 +81,12 @@ class _PesquisaWidgetState extends ModularState<PesquisaWidget, PesquisaAgendaDo
   }
 
   void pesquisaTermo() {
-    if (_cPesquisa.text.isNotEmpty) store.getVeiculo(_cPesquisa.text);
+    if (_cPesquisa.text.isNotEmpty) {
+      setState(() {
+        pesquisando = true;
+      });
+      store.getVeiculo(_cPesquisa.text);
+    }
   }
 
   agendaVeiculo(TanqueAgendado ta) => store.agendaVeiculo(ta);
