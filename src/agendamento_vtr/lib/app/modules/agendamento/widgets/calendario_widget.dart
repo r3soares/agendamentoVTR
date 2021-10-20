@@ -8,6 +8,7 @@ import 'package:agendamento_vtr/app/modules/agendamento/stores/calendario_store.
 import 'package:agendamento_vtr/app/widgets/base_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:flutter_triple/flutter_triple.dart';
 import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 
@@ -26,6 +27,7 @@ class _CalendarioWidgetState extends ModularState<CalendarioWidget, CalendarioSt
   late DateTime kFirstDay;
   late DateTime kLastDay;
   Map<String, Agenda> agendas = {};
+  final List<Disposer> disposers = List.empty(growable: true);
 
   _CalendarioWidgetState() {
     kFirstDay = DateTime(kToday.year - 1, kToday.month, kToday.day);
@@ -37,13 +39,13 @@ class _CalendarioWidgetState extends ModularState<CalendarioWidget, CalendarioSt
   void initState() {
     super.initState();
     //print('CalendarioWidget: initState');
-    store.blocDiaAtualizado.observer(
+    var d1 = store.blocDiaAtualizado.observer(
         onState: (agenda) => {
               print('Dia Atualizado ${agenda.data}: ${agenda.tanquesAgendados.length} agendados'),
               agendas[agenda.data] = agenda,
               if (mounted) setState(() {}),
             });
-    store.observer(
+    var d2 = store.observer(
       onState: (e) => {
         agendas = e.model,
         //print('Encontrado ${agendas.length} agendas'),
@@ -53,6 +55,13 @@ class _CalendarioWidgetState extends ModularState<CalendarioWidget, CalendarioSt
     );
     store.getAgendasOcupadas(Constants.formatoData.format(kToday), Constants.formatoData.format(kLastDay));
     store.getAgendaDoDia(kToday.diaMesAnoToString(), agendas);
+    disposers.addAll([d1, d2]);
+  }
+
+  @override
+  dispose() {
+    disposers.forEach((d) => d());
+    super.dispose();
   }
 
   loading(bool isLoading) {

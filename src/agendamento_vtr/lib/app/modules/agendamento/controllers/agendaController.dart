@@ -1,5 +1,6 @@
 import 'package:agendamento_vtr/app/domain/constantes.dart';
 import 'package:agendamento_vtr/app/domain/erros.dart';
+import 'package:agendamento_vtr/app/domain/log.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/models/agenda.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/models/blocAgendaModel.dart';
 import 'package:flutter_triple/flutter_triple.dart';
@@ -9,7 +10,7 @@ class AgendaController extends StreamStore<Falha, Agenda> {
   final BlocAgendaModel diaAtualizado = BlocAgendaModel(Agenda(Constants.formatoData.format(DateTime.now())));
 
   AgendaController(initialState) : super(initialState) {
-    //print('AgendaController: hashcode ${this.hashCode}');
+    print('AgendaController: hashcode ${this.hashCode}');
   }
 
   @override
@@ -26,7 +27,7 @@ class AgendaController extends StreamStore<Falha, Agenda> {
   }
 
   void notificaDiaAtualizado(Agenda dia) {
-    //print('AgendaController: Dia Atualizado ${dia.data}');
+    Log.message(this, 'Dia Atualizado ${dia.data}');
     diaAtualizado.update(dia);
   }
 }

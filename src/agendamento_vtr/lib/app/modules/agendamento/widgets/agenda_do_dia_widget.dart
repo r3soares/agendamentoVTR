@@ -5,9 +5,11 @@ import 'package:agendamento_vtr/app/modules/agendamento/dialogs/visualiza_tanque
 import 'package:agendamento_vtr/app/modules/agendamento/models/agenda.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/models/tanque_agendado.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/stores/agenda_do_dia_store.dart';
+import 'package:agendamento_vtr/app/modules/agendamento/widgets/pesquisa_agenda_do_dia_widget.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:flutter_triple/flutter_triple.dart';
 
 class AgendaDoDiaWidget extends StatefulWidget {
   const AgendaDoDiaWidget({Key? key});
@@ -17,35 +19,39 @@ class AgendaDoDiaWidget extends StatefulWidget {
 }
 
 class _AgendaDoDiaWidgetState extends ModularState<AgendaDoDiaWidget, AgendaDoDiaStore> {
-  //final List<TanqueAgendado> agendados = List.empty(growable: true);
-  //final Map<String, Tanque> tanques = Map();
   Agenda agenda = Agenda('');
+  final List<Disposer> disposers = List.empty(growable: true);
   final ScrollController _scrollController = ScrollController();
   @override
   void initState() {
     super.initState();
-    //print('AgendaDoDiaWidget: initState');
     agenda = store.agendaDoDia;
-    //agendados.addAll(store.agendados);
     print('Agenda do dia ${agenda.data} com ${agenda.tanquesAgendados.length} veículos agendados');
-    store.blocDiaSelecionado.observer(onState: _updateAgenda);
-    //store.blocTanques.observer(onState: (e) => _updateTanques(e as Map<String, Tanque>));
+    var d1 = store.blocDiaSelecionado.observer(onState: _updateAgenda);
+    var d2 = store.blocDiaAtualizado.observer(
+        onState: (a) => setState(() {
+              agenda = a;
+            }));
+    disposers.addAll([d1, d2]);
+  }
+
+  @override
+  dispose() {
+    disposers.forEach((d) => d());
+    super.dispose();
   }
 
   _updateAgenda(Agenda a) {
-    //print('AgendaDoDiaWidget: Atualizando agenda do dia para ${a.agenda.data}');
-    //print('AgendaDoDiaWidget: Esta agenda possui ${a.agendados.length} tanques agendados');
-    //tanques.clear();
     if (mounted) {
       setState(() {
         agenda = a;
       });
-      //store.getTanques(agendados.map((e) => e.tanque).toList());
     }
   }
 
   Widget build(BuildContext context) {
     return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
         Padding(
@@ -55,11 +61,17 @@ class _AgendaDoDiaWidgetState extends ModularState<AgendaDoDiaWidget, AgendaDoDi
             style: TextStyle(fontSize: 18),
           ),
         ),
+        Expanded(
+          flex: 1,
+          child: PesquisaWidget(),
+        ),
         agenda.tanquesAgendados.isEmpty
             ? Expanded(
+                flex: 4,
                 child: Text('Sem veículos para este dia'),
               )
             : Expanded(
+                flex: 4,
                 child: ListView.builder(
                     physics: ClampingScrollPhysics(),
                     shrinkWrap: true,

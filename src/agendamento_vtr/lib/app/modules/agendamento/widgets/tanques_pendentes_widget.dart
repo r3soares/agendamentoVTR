@@ -1,11 +1,14 @@
 import 'package:agendamento_vtr/app/models/model_base.dart';
 import 'package:agendamento_vtr/app/models/tanque.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/dialogs/visualiza_tanque_dialog.dart';
+import 'package:agendamento_vtr/app/modules/agendamento/models/agenda.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/models/tanque_agendado.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/stores/tanques_pendentes_store.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:flutter_triple/flutter_triple.dart';
 import 'package:intl/intl.dart';
+import 'package:collection/collection.dart';
 
 class TanquesPendentesWidget extends StatefulWidget {
   const TanquesPendentesWidget({Key? key}) : super(key: key);
@@ -16,14 +19,23 @@ class TanquesPendentesWidget extends StatefulWidget {
 
 class _TanquesPendentesWidgetState extends ModularState<TanquesPendentesWidget, TanquesPendentesStore> {
   final List<TanqueAgendado> tanquesPendentes = List.empty(growable: true);
-
+  final List<Disposer> disposers = List.empty(growable: true);
   final formatoData = 'dd/MM/yy HH:mm';
 
   @override
   void initState() {
     super.initState();
-    store.blocTanquesPendentes.observer(onState: (mb) => _getTanques(mb as ModelBase));
+    var d1 = store.blocTanquesPendentes.observer(onState: _getTanques);
+    var d2 = store.blocDiaAtualizado.observer(onState: _remoTanquesDaAgenda);
     store.getTanquesPendentes();
+
+    disposers.addAll([d1, d2]);
+  }
+
+  @override
+  void dispose() {
+    disposers.forEach((d) => d());
+    super.dispose();
   }
 
   @override
@@ -91,13 +103,24 @@ class _TanquesPendentesWidgetState extends ModularState<TanquesPendentesWidget, 
     );
   }
 
-  _getTanques(ModelBase mb) async {
+  _getTanques(mb) async {
     tanquesPendentes.clear();
     if (mounted) {
-      tanquesPendentes.addAll(mb.model);
+      tanquesPendentes.addAll((mb as ModelBase).model);
       tanquesPendentes.sort((a, b) => a.tanque.dataRegistro.compareTo(b.tanque.dataRegistro));
       setState(() {});
     }
+  }
+
+  _remoTanquesDaAgenda(Agenda a) {
+    print('Removendo pendentes...');
+    for (var item in a.tanquesAgendados) {
+      var ta = tanquesPendentes.firstWhereOrNull((e) => e.id == item.id);
+      if (ta != null) {
+        tanquesPendentes.remove(ta);
+      }
+    }
+    setState(() {});
   }
 
   agendaTanque(TanqueAgendado ta) {}

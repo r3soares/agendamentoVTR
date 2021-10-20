@@ -15,6 +15,7 @@ class AgendaDoDiaStore extends StreamStore<Falha, ModelBase> {
   final RepositoryTanqueAgendado repoAt;
   final AgendaController _controller = Modular.get<AgendaController>();
   final BlocAgendaModel blocDiaSelecionado = BlocAgendaModel(Agenda(Constants.formatoData.format(DateTime.now())));
+  final BlocAgendaModel blocDiaAtualizado = BlocAgendaModel(Agenda(Constants.formatoData.format(DateTime.now())));
   final List<Disposer> disposers = List.empty(growable: true);
 
   AgendaDoDiaStore(this.repoAgenda, this.repoAt) : super(ModelBase(null)) {
@@ -24,7 +25,12 @@ class AgendaDoDiaStore extends StreamStore<Falha, ModelBase> {
               //print('AgendaDoDiaStore: Dia Selecionado ${aModel.data}'),
               blocDiaSelecionado.update(aModel),
             });
-    disposers.add(d1);
+    final d2 = _controller.diaAtualizado.observer(
+        onState: (aModel) => {
+              //print('AgendaDoDiaStore: Dia Selecionado ${aModel.data}'),
+              blocDiaAtualizado.update(aModel),
+            });
+    disposers.addAll([d1, d2]);
   }
 
   @override
