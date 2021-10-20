@@ -1,6 +1,5 @@
 import 'package:agendamento_vtr/app/models/json_serializable.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/models/tanque_agendado.dart';
-import 'package:equatable/equatable.dart';
 import 'package:intl/intl.dart';
 
 // ignore: must_be_immutable

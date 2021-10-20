@@ -1,4 +1,3 @@
-import 'package:agendamento_vtr/app/domain/constantes.dart';
 import 'package:agendamento_vtr/app/domain/erros.dart';
 import 'package:agendamento_vtr/app/domain/log.dart';
 import 'package:agendamento_vtr/app/models/bloc.dart';
@@ -6,7 +5,6 @@ import 'package:agendamento_vtr/app/models/model_base.dart';
 import 'package:agendamento_vtr/app/models/tanque.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/controllers/agendaController.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/models/agenda.dart';
-import 'package:agendamento_vtr/app/modules/agendamento/models/blocAgendaModel.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/models/tanque_agendado.dart';
 import 'package:agendamento_vtr/app/repositories/repository_agenda.dart';
 import 'package:agendamento_vtr/app/repositories/repository_tanque_agendado.dart';

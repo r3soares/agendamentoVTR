@@ -1,7 +1,6 @@
 import 'package:agendamento_vtr/app/models/empresa.dart';
 import 'package:agendamento_vtr/app/models/json_serializable.dart';
 import 'package:agendamento_vtr/app/models/tanque.dart';
-import 'package:equatable/equatable.dart';
 
 // ignore: must_be_immutable
 class TanqueAgendado implements JsonSerializable {
