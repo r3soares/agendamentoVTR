@@ -1,11 +1,33 @@
+import 'package:agendamento_vtr/app/modules/agendamento/models/agenda.dart';
+import 'package:agendamento_vtr/app/modules/agendamento/models/tanque_agendado.dart';
+import 'package:agendamento_vtr/app/modules/agendamento/stores/main_store.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/widgets/agenda_do_dia_widget.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/widgets/avisos_widget.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/widgets/calendario_widget.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/widgets/tanques_pendentes_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_modular/flutter_modular.dart';
+import 'package:flutter_triple/flutter_triple.dart';
 
-class MainPage extends StatelessWidget {
+class MainPage extends StatefulWidget {
   const MainPage({Key? key}) : super(key: key);
+
+  @override
+  State<MainPage> createState() => _MainPageState();
+}
+
+class _MainPageState extends ModularState<MainPage, MainStore> {
+  @override
+  void initState() {
+    store.getPendentes();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    store.destroy();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,10 +50,17 @@ class MainPage extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  Expanded(child: Card(elevation: 12, child: TanquesPendentesWidget())),
-                  Expanded(child: Card(elevation: 12, child: AgendaDoDiaWidget())),
+                  ScopedBuilder(
+                    store: store.storePendentes,
+                    onState: (context, state) => Expanded(
+                        child: Card(elevation: 12, child: TanquesPendentesWidget(state as List<TanqueAgendado>))),
+                  ),
+                  ScopedBuilder(
+                    store: store.diaAtualizado,
+                    onState: (context, state) =>
+                        Expanded(child: Card(elevation: 12, child: AgendaDoDiaWidget(state as Agenda))),
+                  ),
                   Expanded(child: Card(elevation: 12, child: AvisosWidget())),
-                  //Card(elevation: 12, child: TanquesAgendadosWidget()),
                 ],
               ),
             )

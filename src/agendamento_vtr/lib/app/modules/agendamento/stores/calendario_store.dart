@@ -19,7 +19,7 @@ class CalendarioStore extends StreamStore<Falha, ModelBase> {
 
   CalendarioStore(this.repoAgenda, this.repoAt) : super(ModelBase(null)) {
     //print('AgendaDodiaStore: controller ${_controller.hashCode}');
-    final d1 = blocDiaSelecionado.observer(onState: _controller.notificaDiaSelecionado);
+    final d1 = blocDiaSelecionado.observer(onState: _controller.notificaDiaAtualizado);
     final d2 = _controller.diaAtualizado.observer(onState: (aModel) => blocDiaAtualizado.update(aModel));
     disposers.add(d1);
     disposers.add(d2);

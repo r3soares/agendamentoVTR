@@ -31,7 +31,7 @@ class PesquisaAgendaDoDiaStore extends StreamStore<Falha, TanqueAgendado> {
   void getVeiculo(String termo) async {
     setLoading(true);
     try {
-      List<TanqueAgendado> tAgendados = (await repoAt.findPendentes()).model;
+      List<TanqueAgendado> tAgendados = _controller.storePendentes.lastState.state;
       TanqueAgendado? tEcontrado =
           tAgendados.firstWhereOrNull((e) => e.tanque.codInmetro == termo || e.tanque.placa == termo);
       if (tEcontrado == null) {
@@ -51,7 +51,7 @@ class PesquisaAgendaDoDiaStore extends StreamStore<Falha, TanqueAgendado> {
     setLoading(true);
     try {
       tAgendado.statusConfirmacao = StatusConfirmacao.NaoConfirmado;
-      Agenda a = _controller.diaSelecionado.lastState.state;
+      Agenda a = _controller.diaAtualizado.lastState.state;
       a.tanquesAgendados.add(tAgendado);
       await repoAt.save(tAgendado);
       await repoAgenda.save(a);

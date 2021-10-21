@@ -36,13 +36,13 @@ class RepositoryTanqueAgendado {
     }
   }
 
-  Future<ModelBase> findPendentes() async {
+  Future<List<TanqueAgendado>> findPendentes() async {
     try {
       var result = await db.find('pendentes', '');
       var pendentes = result == false
           ? List.empty(growable: true)
           : (result as List).map((n) => TanqueAgendado.fromJson(n)).toList();
-      return ModelBase(pendentes);
+      return pendentes as List<TanqueAgendado>;
     } on Falha catch (e) {
       Log.message(this, 'Erro ao procurar tanques pendentes');
       throw e;

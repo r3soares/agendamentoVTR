@@ -114,7 +114,7 @@ void main() {
       }
     }, timeout: Timeout(Duration(minutes: 2)));
     test('Agendados Filtros', () async {
-      List<TanqueAgendado> pendentes = (await repoTa.findPendentes()).model;
+      List<TanqueAgendado> pendentes = await repoTa.findPendentes();
       expect(pendentes, isNotNull);
       for (var item in pendentes) {
         expect(item.statusConfirmacao, equals(StatusConfirmacao.PreAgendado));
