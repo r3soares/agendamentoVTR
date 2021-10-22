@@ -1,16 +1,23 @@
 import 'package:agendamento_vtr/app/domain/constantes.dart';
 import 'package:agendamento_vtr/app/models/tanque.dart';
+import 'package:agendamento_vtr/app/modules/agendamento/controllers/agendaController.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/dialogs/altera_status_dialog.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/dialogs/visualiza_tanque_dialog.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/models/agenda.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/models/tanque_agendado.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/widgets/pesquisa_agenda_do_dia_widget.dart';
+import 'package:agendamento_vtr/app/repositories/repository_agenda.dart';
+import 'package:agendamento_vtr/app/repositories/repository_tanque_agendado.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 
 class AgendaDoDiaWidget extends StatelessWidget {
   final Agenda agenda;
-  const AgendaDoDiaWidget(this.agenda);
+  final repoAgenda = Modular.get<RepositoryAgenda>();
+  final repoTa = Modular.get<RepositoryTanqueAgendado>();
+  final controller = Modular.get<AgendaController>();
+  AgendaDoDiaWidget(this.agenda);
 
   Widget build(BuildContext context) {
     return Column(
@@ -80,7 +87,7 @@ class AgendaDoDiaWidget extends StatelessWidget {
                                           context: context,
                                           builder: (BuildContext context) {
                                             return AlteraStatusDialog(tAgendado);
-                                          }),
+                                          }).then((_) async => await _salvaAlteracoes(context, tAgendado)),
                                       child: Icon(
                                         status.value,
                                         color: status.key,
@@ -111,6 +118,16 @@ class AgendaDoDiaWidget extends StatelessWidget {
         return MapEntry(Colors.blue.shade900, Icons.outbond_outlined);
       case StatusConfirmacao.Cancelado:
         return MapEntry(Colors.red, Icons.cancel_outlined);
+    }
+  }
+
+  Future _salvaAlteracoes(BuildContext context, TanqueAgendado tAgendado) async {
+    try {
+      await repoTa.save(tAgendado);
+      await repoAgenda.save(agenda);
+      controller.notificaDiaAtualizado(agenda);
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Não foi possível salvar os dados')));
     }
   }
 

@@ -19,13 +19,14 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends ModularState<MainPage, MainStore> {
   @override
   void initState() {
+    store.getAgendasOcupadas();
     store.getPendentes();
     super.initState();
   }
 
   @override
   void dispose() {
-    store.destroy();
+    //store.destroy();
     super.dispose();
   }
 
@@ -42,23 +43,29 @@ class _MainPageState extends ModularState<MainPage, MainStore> {
           children: [
             Flexible(
               flex: 1,
-              child: CalendarioWidget(),
+              child: ScopedBuilder(
+                store: store.storeAgendas,
+                onState: (context, state) => Card(elevation: 12, child: CalendarioWidget(state as Map<String, Agenda>)),
+                onLoading: (context) => Center(child: CircularProgressIndicator()),
+              ),
             ),
             //PesquisaWidget(),
             Flexible(
               flex: 1,
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   ScopedBuilder(
                     store: store.storePendentes,
                     onState: (context, state) => Expanded(
                         child: Card(elevation: 12, child: TanquesPendentesWidget(state as List<TanqueAgendado>))),
+                    onLoading: (context) => Expanded(child: Center(child: CircularProgressIndicator())),
                   ),
                   ScopedBuilder(
                     store: store.storeDiaAtualizado,
                     onState: (context, state) =>
                         Expanded(child: Card(elevation: 12, child: AgendaDoDiaWidget(state as Agenda))),
+                    onLoading: (context) => Expanded(child: Center(child: CircularProgressIndicator())),
                   ),
                   Expanded(child: Card(elevation: 12, child: AvisosWidget())),
                 ],

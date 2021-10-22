@@ -1,19 +1,17 @@
 import 'dart:math';
-
-import 'package:agendamento_vtr/app/domain/constantes.dart';
 import 'package:agendamento_vtr/app/domain/extensions.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/models/agenda.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/models/tanque_agendado.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/stores/calendario_store.dart';
-import 'package:agendamento_vtr/app/widgets/base_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_triple/flutter_triple.dart';
 import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-class CalendarioWidget extends BaseWidgets {
-  CalendarioWidget({Key? key});
+class CalendarioWidget extends StatefulWidget {
+  final Map<String, Agenda> agendas;
+  CalendarioWidget(this.agendas);
 
   @override
   _CalendarioWidgetState createState() => _CalendarioWidgetState();
@@ -26,7 +24,7 @@ class _CalendarioWidgetState extends ModularState<CalendarioWidget, CalendarioSt
   final kToday = DateTime.now();
   late DateTime kFirstDay;
   late DateTime kLastDay;
-  Map<String, Agenda> agendas = {};
+
   final List<Disposer> disposers = List.empty(growable: true);
 
   _CalendarioWidgetState() {
@@ -41,31 +39,19 @@ class _CalendarioWidgetState extends ModularState<CalendarioWidget, CalendarioSt
     //print('CalendarioWidget: initState');
     var d1 = store.storeDiaAtualizado.observer(
         onState: (agenda) => {
-              print('Dia Atualizado ${agenda.data}: ${agenda.tanquesAgendados.length} agendados'),
-              agendas[agenda.data] = agenda,
+              //print('Dia Atualizado ${agenda.data}: ${agenda.tanquesAgendados.length} agendados'),
+              widget.agendas[agenda.data] = agenda,
               if (mounted) setState(() {}),
             });
-    var d2 = store.observer(
-      onState: (e) => {
-        agendas = e.model,
-        //print('Encontrado ${agendas.length} agendas'),
-        if (mounted) setState(() {}),
-      },
-      onLoading: loading,
-    );
-    store.getAgendasOcupadas(Constants.formatoData.format(kToday), Constants.formatoData.format(kLastDay));
-    store.getAgendaDoDia(kToday.diaMesAnoToString(), agendas);
-    disposers.addAll([d1, d2]);
+    store.getAgendaDoDia(kToday.diaMesAnoToString(), widget.agendas);
+    disposers.add(d1);
   }
 
   @override
   dispose() {
     disposers.forEach((d) => d());
+    store.destroy();
     super.dispose();
-  }
-
-  loading(bool isLoading) {
-    widget.loading(isLoading, context);
   }
 
   @override
@@ -99,7 +85,7 @@ class _CalendarioWidgetState extends ModularState<CalendarioWidget, CalendarioSt
             _selectedDay = selectedDay;
             _focusedDay = focusedDay;
           });
-          store.getAgendaDoDia(selectedDay.diaMesAnoToString(), agendas);
+          store.getAgendaDoDia(selectedDay.diaMesAnoToString(), widget.agendas);
         }
       },
       onFormatChanged: (format) {
@@ -136,8 +122,8 @@ class _CalendarioWidgetState extends ModularState<CalendarioWidget, CalendarioSt
 
   Widget diaWidget(DateTime dia) {
     if (_isPassado(dia)) return _diaPassado(dia);
-    if (agendas.containsKey(dia.diaMesAnoToString())) {
-      var agendaModel = agendas[dia.diaMesAnoToString()];
+    if (widget.agendas.containsKey(dia.diaMesAnoToString())) {
+      var agendaModel = widget.agendas[dia.diaMesAnoToString()];
       if (agendaModel != null) {
         return Center(
           child: Container(
