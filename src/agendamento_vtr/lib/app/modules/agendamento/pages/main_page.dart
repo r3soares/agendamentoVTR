@@ -56,7 +56,7 @@ class _MainPageState extends ModularState<MainPage, MainStore> {
                         child: Card(elevation: 12, child: TanquesPendentesWidget(state as List<TanqueAgendado>))),
                   ),
                   ScopedBuilder(
-                    store: store.diaAtualizado,
+                    store: store.storeDiaAtualizado,
                     onState: (context, state) =>
                         Expanded(child: Card(elevation: 12, child: AgendaDoDiaWidget(state as Agenda))),
                   ),
