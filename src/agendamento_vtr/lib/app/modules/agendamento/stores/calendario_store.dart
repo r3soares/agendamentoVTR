@@ -4,6 +4,7 @@ import 'package:agendamento_vtr/app/models/model_base.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/controllers/agendaController.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/models/agenda.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/models/blocAgendaModel.dart';
+import 'package:agendamento_vtr/app/modules/agendamento/stores/store_data.dart';
 import 'package:agendamento_vtr/app/repositories/repository_agenda.dart';
 import 'package:agendamento_vtr/app/repositories/repository_tanque_agendado.dart';
 import 'package:flutter_modular/flutter_modular.dart';
@@ -13,23 +14,21 @@ class CalendarioStore extends StreamStore<Falha, ModelBase> {
   final RepositoryAgenda repoAgenda;
   final RepositoryTanqueAgendado repoAt;
   final AgendaController _controller = Modular.get<AgendaController>();
+
   final blocDiaSelecionado = BlocAgendaModel(Agenda(Constants.formatoData.format(DateTime.now())));
-  final blocDiaAtualizado = BlocAgendaModel(Agenda(Constants.formatoData.format(DateTime.now())));
+  StoreData<Agenda> get storeDiaAtualizado => _controller.storeDiaAtualizado;
   final List<Disposer> disposers = List.empty(growable: true);
 
   CalendarioStore(this.repoAgenda, this.repoAt) : super(ModelBase(null)) {
     //print('AgendaDodiaStore: controller ${_controller.hashCode}');
     final d1 = blocDiaSelecionado.observer(onState: _controller.notificaDiaAtualizado);
-    final d2 = _controller.diaAtualizado.observer(onState: (aModel) => blocDiaAtualizado.update(aModel));
     disposers.add(d1);
-    disposers.add(d2);
   }
 
   @override
   Future destroy() {
     //print('CalendarioStore: Destruindo');
     blocDiaSelecionado.destroy();
-    blocDiaAtualizado.destroy();
     disposers.forEach((d) {
       d();
     });

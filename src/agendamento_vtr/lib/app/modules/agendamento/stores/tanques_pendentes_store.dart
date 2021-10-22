@@ -19,7 +19,7 @@ class TanquesPendentesStore extends StreamStore<Falha, ModelBase> {
   final List<Disposer> disposers = List.empty(growable: true);
 
   TanquesPendentesStore(this.repoAt, this.repoTanque) : super(ModelBase(null)) {
-    final d1 = _controller.diaAtualizado.observer(
+    final d1 = _controller.storeDiaAtualizado.observer(
         onState: (aModel) => {
               //Log.message(this, 'Atualizou ${aModel.data}'),
               blocDiaAtualizado.update(aModel, force: true),

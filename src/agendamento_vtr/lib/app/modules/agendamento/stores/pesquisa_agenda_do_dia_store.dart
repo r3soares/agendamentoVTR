@@ -51,12 +51,16 @@ class PesquisaAgendaDoDiaStore extends StreamStore<Falha, TanqueAgendado> {
     setLoading(true);
     try {
       tAgendado.statusConfirmacao = StatusConfirmacao.NaoConfirmado;
-      Agenda a = _controller.diaAtualizado.lastState.state;
+      Agenda a = _controller.storeDiaAtualizado.lastState.state;
       a.tanquesAgendados.add(tAgendado);
       await repoAt.save(tAgendado);
       await repoAgenda.save(a);
       blocAgenda.update(ModelBase(tAgendado), force: true);
       _controller.notificaDiaAtualizado(a);
+
+      var pendentes = _controller.storePendentes.lastState.state;
+      pendentes.remove(tAgendado);
+      _controller.notificaPendentes(pendentes);
     } on Falha catch (e) {
       blocAgenda.setError(e);
     } finally {

@@ -6,7 +6,7 @@ import 'package:agendamento_vtr/app/modules/agendamento/stores/store_data.dart';
 
 class AgendaController {
   final StoreData<List<TanqueAgendado>> storePendentes = StoreData(List.empty());
-  final StoreData<Agenda> diaAtualizado = StoreData<Agenda>(Agenda(Constants.formatoData.format(DateTime.now())));
+  final StoreData<Agenda> storeDiaAtualizado = StoreData<Agenda>(Agenda(Constants.formatoData.format(DateTime.now())));
 
   AgendaController() {
     //print('AgendaController: hashcode ${this.hashCode}');
@@ -15,16 +15,16 @@ class AgendaController {
   Future destroy() async {
     //print('AgendaController: Destruindo');
     //await diaSelecionado.destroy();
-    await diaAtualizado.destroy();
+    await storeDiaAtualizado.destroy();
   }
 
-  // void notificaDiaSelecionado(Agenda dia) {
-  //   //print('AgendaController: Dia Selecionado ${dia.data}');
-  //   //diaSelecionado.update(dia, force: true);
-  // }
+  void notificaPendentes(List<TanqueAgendado> pendentes) {
+    Log.message(this, 'Lista de Pendentes Atualizada');
+    storePendentes.update(pendentes, force: true);
+  }
 
   void notificaDiaAtualizado(Agenda dia) {
     Log.message(this, 'Dia Atualizado ${dia.data}');
-    diaAtualizado.update(dia, force: true);
+    storeDiaAtualizado.update(dia, force: true);
   }
 }

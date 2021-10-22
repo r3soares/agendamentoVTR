@@ -19,8 +19,6 @@ class _PesquisaWidgetState extends ModularState<PesquisaWidget, PesquisaAgendaDo
   final TextEditingController _cPesquisa = TextEditingController();
   final List<Disposer> disposers = List.empty(growable: true);
   bool pesquisando = false;
-  //TanqueAgendado? _tanqueResultadoPesquisa;
-  //Color? color = Colors.grey;
 
   @override
   void initState() {

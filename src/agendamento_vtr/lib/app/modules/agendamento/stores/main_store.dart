@@ -9,7 +9,7 @@ class MainStore {
   final AgendaController _controller = Modular.get<AgendaController>();
 
   StoreData<List<TanqueAgendado>> get storePendentes => _controller.storePendentes;
-  StoreData<Agenda> get diaAtualizado => _controller.diaAtualizado;
+  StoreData<Agenda> get storeDiaAtualizado => _controller.storeDiaAtualizado;
   //StoreData<Agenda> get diaSelecionado => _controller.diaSelecionado;
 
   final RepositoryTanqueAgendado _repoTa = Modular.get<RepositoryTanqueAgendado>();

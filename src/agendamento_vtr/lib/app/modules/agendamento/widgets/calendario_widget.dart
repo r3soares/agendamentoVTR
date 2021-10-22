@@ -39,7 +39,7 @@ class _CalendarioWidgetState extends ModularState<CalendarioWidget, CalendarioSt
   void initState() {
     super.initState();
     //print('CalendarioWidget: initState');
-    var d1 = store.blocDiaAtualizado.observer(
+    var d1 = store.storeDiaAtualizado.observer(
         onState: (agenda) => {
               print('Dia Atualizado ${agenda.data}: ${agenda.tanquesAgendados.length} agendados'),
               agendas[agenda.data] = agenda,
