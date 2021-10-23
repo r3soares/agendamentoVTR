@@ -9,6 +9,7 @@ class TanqueAgendado implements JsonSerializable {
   String? agenda;
   Empresa? responsavel;
   String? bitremAgenda;
+  bool isNovo = false;
 
   String? agendaAnterior;
 
@@ -29,6 +30,7 @@ class TanqueAgendado implements JsonSerializable {
         tanque = Tanque.fromJson(json['tanque']),
         responsavel = json['responsavel'] == null ? null : Empresa.fromJson(json['responsavel']),
         bitremAgenda = json['bitremAgenda'],
+        isNovo = json['isNovo'],
         agendaAnterior = json['agendaAnterior'],
         agenda = json['agenda'],
         statusConfirmacao = StatusConfirmacao.values[json['statusConfirmacao']],
@@ -43,6 +45,7 @@ class TanqueAgendado implements JsonSerializable {
         'tanque': tanque.toJson(),
         'responsavel': responsavel?.toJson(),
         'bitremAgenda': bitremAgenda,
+        'isNovo': isNovo,
         'agendaAnterior': agendaAnterior,
         'agenda': agenda,
         'statusConfirmacao': statusConfirmacao.index,

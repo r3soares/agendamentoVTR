@@ -50,6 +50,7 @@ class AgendaDoDiaWidget extends StatelessWidget {
                     itemBuilder: (BuildContext ctx, int index) {
                       TanqueAgendado tAgendado = agenda.tanquesAgendados.elementAt(index);
                       final status = _getCorConfirmacao(tAgendado.statusConfirmacao);
+                      final isNovo = _isNovo(tAgendado.isNovo);
                       Tanque tanque = tAgendado.tanque;
                       return Card(
                         elevation: 12,
@@ -78,7 +79,7 @@ class AgendaDoDiaWidget extends StatelessWidget {
                             ]),
                             subtitle: Text('Registrado em ${Constants.formatoData.format(tanque.dataRegistro)}'),
                             trailing: ConstrainedBox(
-                              constraints: BoxConstraints.loose(Size(120, double.infinity)),
+                              constraints: BoxConstraints.loose(Size(200, double.infinity)),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
@@ -92,11 +93,22 @@ class AgendaDoDiaWidget extends StatelessWidget {
                                         status.value,
                                         color: status.key,
                                       )),
-                                  // TextButton(
-                                  //     onPressed: () => _reagendaTanque(tAgendado),
-                                  //     child: Icon(Icons.calendar_today_outlined)),
                                   TextButton(
-                                      onPressed: () => _excluiTanqueAgendado(tAgendado), child: Icon(Icons.close)),
+                                      onPressed: () => {
+                                            tAgendado.isNovo = !tAgendado.isNovo,
+                                            _salvaAlteracoes(context, tAgendado),
+                                          },
+                                      child: Text(
+                                        'Zero',
+                                        style: TextStyle(color: isNovo),
+                                      )),
+                                  TextButton(
+                                      onPressed: () => {
+                                            _excluiTanqueAgendado(tAgendado),
+                                            _salvaAlteracoes(context, tAgendado),
+                                            _notificaPendentes(tAgendado),
+                                          },
+                                      child: Icon(Icons.close)),
                                 ],
                               ),
                             )),
@@ -121,15 +133,29 @@ class AgendaDoDiaWidget extends StatelessWidget {
     }
   }
 
+  Color _isNovo(bool value) {
+    return value ? Colors.yellow.shade800 : Colors.grey;
+  }
+
   Future _salvaAlteracoes(BuildContext context, TanqueAgendado tAgendado) async {
     try {
       await repoTa.save(tAgendado);
       await repoAgenda.save(agenda);
       controller.notificaDiaAtualizado(agenda);
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Não foi possível salvar os dados')));
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text('Não foi possível salvar as alterações')));
     }
   }
 
-  void _excluiTanqueAgendado(TanqueAgendado ta) {}
+  void _notificaPendentes(TanqueAgendado ta) {
+    var lista = controller.storePendentes.lastState.state;
+    lista.add(ta);
+    controller.notificaPendentes(lista);
+  }
+
+  void _excluiTanqueAgendado(TanqueAgendado ta) {
+    ta.statusConfirmacao = StatusConfirmacao.PreAgendado;
+    agenda.tanquesAgendados.remove(ta);
+  }
 }

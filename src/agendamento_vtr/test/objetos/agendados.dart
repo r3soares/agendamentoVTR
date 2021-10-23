@@ -31,6 +31,7 @@ class Agendados {
               ? agendados[r.nextInt(agendados.length)].id
               : null
           : null;
+      a.isNovo = r.nextInt(10) > 9;
       a.custoVerificacao = Tanques.tanques[i].custo;
       a.obs = r.nextInt(10) > 7 ? 'Observação' : null;
       a.responsavel = Empresas.empresas[r.nextInt(Empresas.empresas.length)];

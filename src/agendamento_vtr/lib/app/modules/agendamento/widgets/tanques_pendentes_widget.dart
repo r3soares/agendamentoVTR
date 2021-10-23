@@ -22,6 +22,12 @@ class TanquesPendentesWidget extends StatelessWidget {
             style: TextStyle(fontSize: 18),
           ),
         ),
+        Expanded(
+          flex: 1,
+          child: SizedBox.shrink(),
+
+          ///Para incluir tanque
+        ),
         pendentes.isNotEmpty
             ? Expanded(
                 flex: 4,

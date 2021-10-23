@@ -46,6 +46,10 @@ class _PesquisaWidgetState extends ModularState<PesquisaWidget, PesquisaAgendaDo
 
   void naoAgendou(Falha erro) {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Erro ao agendar: ${erro.msg}')));
+    setState(() {
+      _cPesquisa.text = '';
+      pesquisando = false;
+    });
   }
 
   void agendou(Object mb) {
