@@ -1,3 +1,4 @@
+import 'package:agendamento_vtr/app/behaviors/custom_scroll_behavior.dart';
 import 'package:agendamento_vtr/app/domain/constantes.dart';
 import 'package:agendamento_vtr/app/models/tanque.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/controllers/agendaController.dart';
@@ -42,78 +43,81 @@ class AgendaDoDiaWidget extends StatelessWidget {
               )
             : Expanded(
                 flex: 4,
-                child: ListView.builder(
-                    shrinkWrap: true,
-                    dragStartBehavior: DragStartBehavior.start,
-                    scrollDirection: Axis.vertical,
-                    itemCount: agenda.tanquesAgendados.length,
-                    itemBuilder: (BuildContext ctx, int index) {
-                      TanqueAgendado tAgendado = agenda.tanquesAgendados.elementAt(index);
-                      final status = _getCorConfirmacao(tAgendado.statusConfirmacao);
-                      final isNovo = _isNovo(tAgendado.isNovo);
-                      Tanque tanque = tAgendado.tanque;
-                      return Card(
-                        elevation: 12,
-                        child: ListTile(
-                            leading: TextButton(
-                                onPressed: () => {
-                                      showDialog(
-                                          barrierDismissible: true,
-                                          barrierColor: Color.fromRGBO(0, 0, 0, .5),
-                                          useSafeArea: true,
-                                          context: context,
-                                          builder: (_) => VisualizaTanqueDialog(tanque)),
-                                    },
-                                child: Icon(Icons.remove_red_eye)),
-                            title: Row(children: [
-                              Text(
-                                '${tanque.placaFormatada}',
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 20),
-                                child: Text(
-                                  '${tanque.capacidadeTotal} L',
-                                  style: TextStyle(fontSize: 12),
+                child: ScrollConfiguration(
+                  behavior: CustomScrollBehavior(),
+                  child: ListView.builder(
+                      shrinkWrap: true,
+                      dragStartBehavior: DragStartBehavior.start,
+                      scrollDirection: Axis.vertical,
+                      itemCount: agenda.tanquesAgendados.length,
+                      itemBuilder: (BuildContext ctx, int index) {
+                        TanqueAgendado tAgendado = agenda.tanquesAgendados.elementAt(index);
+                        final status = _getCorConfirmacao(tAgendado.statusConfirmacao);
+                        final isNovo = _isNovo(tAgendado.isNovo);
+                        Tanque tanque = tAgendado.tanque;
+                        return Card(
+                          elevation: 12,
+                          child: ListTile(
+                              leading: TextButton(
+                                  onPressed: () => {
+                                        showDialog(
+                                            barrierDismissible: true,
+                                            barrierColor: Color.fromRGBO(0, 0, 0, .5),
+                                            useSafeArea: true,
+                                            context: context,
+                                            builder: (_) => VisualizaTanqueDialog(tanque)),
+                                      },
+                                  child: Icon(Icons.remove_red_eye)),
+                              title: Row(children: [
+                                Text(
+                                  '${tanque.placaFormatada}',
                                 ),
-                              ),
-                            ]),
-                            subtitle: Text('Registrado em ${Constants.formatoData.format(tanque.dataRegistro)}'),
-                            trailing: ConstrainedBox(
-                              constraints: BoxConstraints.loose(Size(200, double.infinity)),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  TextButton(
-                                      onPressed: () => showDialog(
-                                          context: context,
-                                          builder: (BuildContext context) {
-                                            return AlteraStatusDialog(tAgendado);
-                                          }).then((_) async => await _salvaAlteracoes(context, tAgendado)),
-                                      child: Icon(
-                                        status.value,
-                                        color: status.key,
-                                      )),
-                                  TextButton(
-                                      onPressed: () => {
-                                            tAgendado.isNovo = !tAgendado.isNovo,
-                                            _salvaAlteracoes(context, tAgendado),
-                                          },
-                                      child: Text(
-                                        'Zero',
-                                        style: TextStyle(color: isNovo),
-                                      )),
-                                  TextButton(
-                                      onPressed: () => {
-                                            _excluiTanqueAgendado(tAgendado),
-                                            _salvaAlteracoes(context, tAgendado),
-                                            _notificaPendentes(tAgendado),
-                                          },
-                                      child: Icon(Icons.close)),
-                                ],
-                              ),
-                            )),
-                      );
-                    })),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                                  child: Text(
+                                    '${tanque.capacidadeTotal} L',
+                                    style: TextStyle(fontSize: 12),
+                                  ),
+                                ),
+                              ]),
+                              subtitle: Text('Registrado em ${Constants.formatoData.format(tanque.dataRegistro)}'),
+                              trailing: ConstrainedBox(
+                                constraints: BoxConstraints.loose(Size(200, double.infinity)),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    TextButton(
+                                        onPressed: () => showDialog(
+                                            context: context,
+                                            builder: (BuildContext context) {
+                                              return AlteraStatusDialog(tAgendado);
+                                            }).then((_) async => await _salvaAlteracoes(context, tAgendado)),
+                                        child: Icon(
+                                          status.value,
+                                          color: status.key,
+                                        )),
+                                    TextButton(
+                                        onPressed: () => {
+                                              tAgendado.isNovo = !tAgendado.isNovo,
+                                              _salvaAlteracoes(context, tAgendado),
+                                            },
+                                        child: Text(
+                                          'Zero',
+                                          style: TextStyle(color: isNovo),
+                                        )),
+                                    TextButton(
+                                        onPressed: () => {
+                                              _excluiTanqueAgendado(tAgendado),
+                                              _salvaAlteracoes(context, tAgendado),
+                                              _notificaPendentes(tAgendado),
+                                            },
+                                        child: Icon(Icons.close)),
+                                  ],
+                                ),
+                              )),
+                        );
+                      }),
+                )),
       ],
     );
   }

@@ -1,3 +1,4 @@
+import 'package:agendamento_vtr/app/behaviors/custom_scroll_behavior.dart';
 import 'package:agendamento_vtr/app/models/tanque.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/dialogs/visualiza_tanque_dialog.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/models/tanque_agendado.dart';
@@ -12,7 +13,7 @@ class TanquesPendentesWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    pendentes.sort((a, b) => a.dataRegistro.compareTo(b.dataRegistro));
+    pendentes.sort((b, a) => a.dataRegistro.compareTo(b.dataRegistro));
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -32,50 +33,56 @@ class TanquesPendentesWidget extends StatelessWidget {
         pendentes.isNotEmpty
             ? Expanded(
                 flex: 4,
-                child: ListView.builder(
-                  controller: scrollController,
-                  shrinkWrap: true,
-                  scrollDirection: Axis.vertical,
-                  itemCount: pendentes.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    Tanque t = pendentes.elementAt(index).tanque;
-                    final data = DateFormat(formatoData).format(t.dataRegistro);
-                    return Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Card(
-                        elevation: 12,
-                        child: ListTile(
-                          leading: TextButton(
-                              onPressed: () => {
-                                    showDialog(
-                                        barrierDismissible: true,
-                                        barrierColor: Color.fromRGBO(0, 0, 0, .5),
-                                        useSafeArea: true,
-                                        context: context,
-                                        builder: (_) => VisualizaTanqueDialog(t)),
-                                  },
-                              child: Icon(Icons.remove_red_eye)),
-                          title: Row(children: [
-                            Text(
-                              t.placa.replaceRange(3, 3, '-'),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 20),
-                              child: Text(
-                                '${t.capacidadeTotal.toString()}L (${t.compartimentos.length}C ${t.totalSetas}S)',
-                                style: TextStyle(fontSize: 12),
+                child: ScrollConfiguration(
+                  behavior: CustomScrollBehavior(),
+                  child: ListView.builder(
+                    itemExtent: 90,
+                    cacheExtent: 900,
+                    physics: const ClampingScrollPhysics(),
+                    controller: scrollController,
+                    shrinkWrap: true,
+                    scrollDirection: Axis.vertical,
+                    itemCount: pendentes.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      Tanque t = pendentes.elementAt(index).tanque;
+                      final data = DateFormat(formatoData).format(t.dataRegistro);
+                      return Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Card(
+                          elevation: 12,
+                          child: ListTile(
+                            leading: TextButton(
+                                onPressed: () => {
+                                      showDialog(
+                                          barrierDismissible: true,
+                                          barrierColor: Color.fromRGBO(0, 0, 0, .5),
+                                          useSafeArea: true,
+                                          context: context,
+                                          builder: (_) => VisualizaTanqueDialog(t)),
+                                    },
+                                child: const Icon(Icons.remove_red_eye)),
+                            title: Row(children: [
+                              Text(
+                                t.placa.replaceRange(3, 3, '-'),
                               ),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 20),
+                                child: Text(
+                                  '${t.capacidadeTotal.toString()}L (${t.compartimentos.length}C ${t.totalSetas}S)',
+                                  style: TextStyle(fontSize: 12),
+                                ),
+                              ),
+                            ]),
+                            subtitle: Text('$data'),
+                            trailing: TextButton(
+                              child: const Text('Agendar'),
+                              onPressed: () => {pendentes.elementAt(index)},
                             ),
-                          ]),
-                          subtitle: Text('$data'),
-                          trailing: TextButton(
-                            child: Text('Agendar'),
-                            onPressed: () => {pendentes.elementAt(index)},
                           ),
                         ),
-                      ),
-                    );
-                  },
+                      );
+                    },
+                  ),
                 ),
               )
             : Expanded(flex: 4, child: Text('Não há tanques pendentes de agendamento'))

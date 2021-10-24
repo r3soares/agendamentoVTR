@@ -9,7 +9,7 @@ import 'package:intl/intl.dart';
 class VisualizaTanqueDialog extends StatefulWidget {
   final Tanque tanque;
 
-  VisualizaTanqueDialog(this.tanque);
+  const VisualizaTanqueDialog(this.tanque);
 
   @override
   State<VisualizaTanqueDialog> createState() => _VisualizaTanqueDialogState();
