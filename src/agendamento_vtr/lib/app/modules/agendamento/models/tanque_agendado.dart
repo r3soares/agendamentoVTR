@@ -2,10 +2,10 @@ import 'package:agendamento_vtr/app/models/empresa.dart';
 import 'package:agendamento_vtr/app/models/json_serializable.dart';
 import 'package:agendamento_vtr/app/models/tanque.dart';
 
-// ignore: must_be_immutable
 class TanqueAgendado implements JsonSerializable {
   final String id;
   final Tanque tanque;
+  DateTime dataRegistro = DateTime.now();
   String? agenda;
   Empresa? responsavel;
   String? bitremAgenda;
@@ -28,6 +28,7 @@ class TanqueAgendado implements JsonSerializable {
   TanqueAgendado.fromJson(Map<String, dynamic> json)
       : id = json['id'],
         tanque = Tanque.fromJson(json['tanque']),
+        dataRegistro = DateTime.parse(json['dataRegistro']),
         responsavel = json['responsavel'] == null ? null : Empresa.fromJson(json['responsavel']),
         bitremAgenda = json['bitremAgenda'],
         isNovo = json['isNovo'],
@@ -43,6 +44,7 @@ class TanqueAgendado implements JsonSerializable {
   Map<String, dynamic> toJson() => {
         'id': id,
         'tanque': tanque.toJson(),
+        'dataRegistro': dataRegistro.toIso8601String(),
         'responsavel': responsavel?.toJson(),
         'bitremAgenda': bitremAgenda,
         'isNovo': isNovo,

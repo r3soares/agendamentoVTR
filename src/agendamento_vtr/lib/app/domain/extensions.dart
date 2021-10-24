@@ -13,6 +13,10 @@ extension DatetimeEx on DateTime {
     return Constants.formatoData.format(this);
   }
 
+  String diaHoraToString() {
+    return Constants.formatoDataHora.format(this);
+  }
+
   String anoMesDiaToString() {
     return '${this.year}-${this.month}-${this.day}';
   }

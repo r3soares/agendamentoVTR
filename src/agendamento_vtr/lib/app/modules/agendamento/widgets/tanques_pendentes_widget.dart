@@ -12,6 +12,7 @@ class TanquesPendentesWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    pendentes.sort((a, b) => a.dataRegistro.compareTo(b.dataRegistro));
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
