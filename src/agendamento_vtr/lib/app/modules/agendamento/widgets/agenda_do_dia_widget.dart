@@ -2,6 +2,7 @@ import 'package:agendamento_vtr/app/behaviors/custom_scroll_behavior.dart';
 import 'package:agendamento_vtr/app/domain/constantes.dart';
 import 'package:agendamento_vtr/app/models/tanque.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/controllers/agendaController.dart';
+import 'package:agendamento_vtr/app/modules/agendamento/dialogs/altera_status_agenda_dialog.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/dialogs/altera_status_dialog.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/dialogs/visualiza_tanque_dialog.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/models/agenda.dart';
@@ -21,6 +22,7 @@ class AgendaDoDiaWidget extends StatelessWidget {
   AgendaDoDiaWidget(this.agenda);
 
   Widget build(BuildContext context) {
+    var statusAgenda = _getCorStatusAgenda(agenda.status);
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
@@ -34,15 +36,34 @@ class AgendaDoDiaWidget extends StatelessWidget {
         ),
         Expanded(
           flex: 1,
-          child: PesquisaWidget(),
+          child: TextButton(
+            child: Text(
+              statusAgenda.key,
+              style: TextStyle(
+                color: statusAgenda.value,
+                fontSize: 20,
+              ),
+            ),
+            onPressed: () => showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlteraStatusAgendaDialog(agenda);
+                }).then((_) async => await _salvaAgenda(context)),
+          ),
         ),
+        agenda.status != StatusAgenda.Disponivel
+            ? SizedBox.shrink()
+            : Expanded(
+                flex: 3,
+                child: PesquisaWidget(),
+              ),
         agenda.tanquesAgendados.isEmpty
             ? Expanded(
-                flex: 4,
+                flex: 6,
                 child: Text('Sem veículos para este dia'),
               )
             : Expanded(
-                flex: 4,
+                flex: 6,
                 child: ScrollConfiguration(
                   behavior: CustomScrollBehavior(),
                   child: ListView.builder(
@@ -122,6 +143,19 @@ class AgendaDoDiaWidget extends StatelessWidget {
     );
   }
 
+  MapEntry<String, Color> _getCorStatusAgenda(StatusAgenda status) {
+    switch (status) {
+      case StatusAgenda.Cheia:
+        return MapEntry('Cheia', Colors.red);
+      case StatusAgenda.Disponivel:
+        return MapEntry('Disponível', Colors.green);
+      case StatusAgenda.Encerrada:
+        return MapEntry('Encerrada', Colors.black);
+      case StatusAgenda.Indisponivel:
+        return MapEntry('Indisponível', Colors.black);
+    }
+  }
+
   MapEntry<Color, IconData> _getCorConfirmacao(StatusConfirmacao status) {
     switch (status) {
       case StatusConfirmacao.PreAgendado:
@@ -144,6 +178,16 @@ class AgendaDoDiaWidget extends StatelessWidget {
   Future _salvaAlteracoes(BuildContext context, TanqueAgendado tAgendado) async {
     try {
       await repoTa.save(tAgendado);
+      await repoAgenda.save(agenda);
+      controller.notificaDiaAtualizado(agenda);
+    } catch (e) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text('Não foi possível salvar as alterações')));
+    }
+  }
+
+  Future _salvaAgenda(BuildContext context) async {
+    try {
       await repoAgenda.save(agenda);
       controller.notificaDiaAtualizado(agenda);
     } catch (e) {

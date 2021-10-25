@@ -43,7 +43,6 @@ class _CalendarioWidgetState extends ModularState<CalendarioWidget, CalendarioSt
               widget.agendas[agenda.data] = agenda,
               if (mounted) setState(() {}),
             });
-    store.getAgendaDoDia(kToday.diaMesAnoToString(), widget.agendas);
     disposers.add(d1);
   }
 
@@ -122,6 +121,8 @@ class _CalendarioWidgetState extends ModularState<CalendarioWidget, CalendarioSt
 
   Widget diaWidget(DateTime dia) {
     if (_isPassado(dia)) return _diaPassado(dia);
+    if (_isFimDeSemana(dia)) return _fimDeSemana(dia);
+    if (_isFeriado(dia)) return _feriado(dia);
     if (widget.agendas.containsKey(dia.diaMesAnoToString())) {
       var agendaModel = widget.agendas[dia.diaMesAnoToString()];
       if (agendaModel != null) {
@@ -134,7 +135,7 @@ class _CalendarioWidgetState extends ModularState<CalendarioWidget, CalendarioSt
               children: [
                 Text(
                   '${dia.day}',
-                  style: TextStyle(color: _getColorAgenda(agendaModel.status)),
+                  style: TextStyle(color: _getColorAgenda(agendaModel.status), fontSize: 18),
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -147,8 +148,6 @@ class _CalendarioWidgetState extends ModularState<CalendarioWidget, CalendarioSt
         );
       }
     }
-    if (_isFeriado(dia)) return _feriado(dia);
-    if (_isFimDeSemana(dia)) return _fimDeSemana(dia);
     return Center(
       child: Container(
         margin: const EdgeInsets.all(6),
@@ -260,7 +259,7 @@ class _CalendarioWidgetState extends ModularState<CalendarioWidget, CalendarioSt
   }
 
   //Implementar
-  bool _isFeriado(DateTime dia) => Random().nextInt(100) > 95;
+  bool _isFeriado(DateTime dia) => false;
 
   Widget _bolinhaWidget(StatusConfirmacao status) => Container(
       margin: EdgeInsets.all(1),

@@ -42,7 +42,7 @@ class _MainPageState extends ModularState<MainPage, MainStore> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Flexible(
-              flex: 1,
+              flex: 4,
               child: ScopedBuilder(
                 store: store.storeAgendas,
                 onState: (context, state) => Card(elevation: 12, child: CalendarioWidget(state as Map<String, Agenda>)),
@@ -51,7 +51,7 @@ class _MainPageState extends ModularState<MainPage, MainStore> {
             ),
             //PesquisaWidget(),
             Flexible(
-              flex: 1,
+              flex: 5,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
