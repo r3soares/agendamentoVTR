@@ -13,6 +13,8 @@ class Tanque implements JsonSerializable {
   DateTime dataRegistro = DateTime.now();
   DateTime dataUltimaAlteracao = DateTime.now();
 
+  String? obs;
+
   StatusTanque status = StatusTanque.Ativo;
 
   List<Compartimento> compartimentos = List.empty(growable: true);
@@ -37,7 +39,8 @@ class Tanque implements JsonSerializable {
         dataUltimaAlteracao = DateTime.parse(json['dataUltimaAlteracao']),
         status = StatusTanque.values[json['status']],
         compartimentos = json['compartimentos'],
-        custo = json['custo'];
+        custo = json['custo'],
+        obs = json['obs'] == null ? null : json['obs'];
 
   @override
   Map<String, dynamic> toJson() => {
@@ -49,6 +52,7 @@ class Tanque implements JsonSerializable {
         'status': status.index,
         'compartimentos': compartimentos,
         'custo': custo,
+        'obs': obs
       };
 }
 

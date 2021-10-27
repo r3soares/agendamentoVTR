@@ -9,6 +9,7 @@ class Empresa extends ChangeNotifier implements JsonSerializable {
   String email = '';
   List<String> telefones = List.empty(growable: true);
   StatusEmpresa status = StatusEmpresa.PreCadastro;
+  String? obs;
 
   Empresa();
 //tEM QUE REMOVER
@@ -36,7 +37,8 @@ class Empresa extends ChangeNotifier implements JsonSerializable {
         email = json['email'],
         telefones = List.from(json['telefones']),
         proprietario = json['proprietario'] == null ? null : Proprietario.fromJson(json['proprietario']),
-        status = StatusEmpresa.values[json['status']];
+        status = StatusEmpresa.values[json['status']],
+        obs = json['obs'] == null ? null : json['obs'];
 
   @override
   Map<String, dynamic> toJson() => {
@@ -46,6 +48,7 @@ class Empresa extends ChangeNotifier implements JsonSerializable {
         'telefones': telefones,
         'status': status.index,
         'proprietario': proprietario == null ? null : proprietario!.toJson(),
+        'obs': obs
       };
 }
 

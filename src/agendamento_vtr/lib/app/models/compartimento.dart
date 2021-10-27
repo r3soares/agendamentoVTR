@@ -5,6 +5,7 @@ class Compartimento extends ChangeNotifier implements JsonSerializable {
   final int pos;
   int _capacidade = 0;
   int _setas = 0;
+  String? obs;
 
   Compartimento(this.pos);
 
@@ -22,12 +23,14 @@ class Compartimento extends ChangeNotifier implements JsonSerializable {
   Compartimento.fromJson(Map<String, dynamic> json)
       : pos = json['pos'],
         _capacidade = json['cap'],
-        _setas = json['setas'];
+        _setas = json['setas'],
+        obs = json['obs'] == null ? null : json['obs'];
 
   @override
   Map<String, dynamic> toJson() => {
         'pos': pos,
         'cap': capacidade,
         'setas': setas,
+        'obs': obs,
       };
 }
