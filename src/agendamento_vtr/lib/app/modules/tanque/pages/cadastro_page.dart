@@ -1,4 +1,3 @@
-import 'package:agendamento_vtr/app/models/model_base.dart';
 import 'package:agendamento_vtr/app/models/tanque.dart';
 import 'package:agendamento_vtr/app/modules/tanque/stores/tanque_store.dart';
 import 'package:agendamento_vtr/app/widgets/base_widgets.dart';
@@ -41,19 +40,13 @@ class _CadastroPageState extends ModularState<CadastroPage, TanqueStore> {
 
   void _configStream() {
     store.cPlaca.observer(
-        onState: (t) => {
-              t = t as ModelBase,
-              _incluiTanque(t.model),
-              limpaTermo(),
-              _msgTemporaria('${(t.model as Tanque).placa} adicionado.')
-            },
+        onState: (t) => {_incluiTanque(t), limpaTermo(), _msgTemporaria('${t.placa} adicionado.')},
         onLoading: loading,
         onError: (_) => ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Não localizado.'))));
 
     store.cProprietario.observer(
-        onState: (t) => {
-              t = t as ModelBase,
-              for (var t in (t.model as List<Tanque>))
+        onState: (lista) => {
+              for (var t in lista)
                 {
                   _incluiTanque(t),
                 },

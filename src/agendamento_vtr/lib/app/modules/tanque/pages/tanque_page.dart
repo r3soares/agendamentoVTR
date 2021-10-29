@@ -1,5 +1,4 @@
 import 'package:agendamento_vtr/app/models/compartimento.dart';
-import 'package:agendamento_vtr/app/models/model_base.dart';
 import 'package:agendamento_vtr/app/models/tanque.dart';
 import 'package:agendamento_vtr/app/modules/tanque/models/arquivo.dart';
 import 'package:agendamento_vtr/app/modules/tanque/stores/tanque_store.dart';
@@ -25,7 +24,6 @@ class _TanquePageState extends ModularState<TanquePage, TanqueStore> {
   late Widget placaWidget;
   late Widget inmetroWidget;
   late Widget docWidget;
-  late Widget tanqueZeroWidget;
   late Widget compartimentoForm;
 
   //late Disposer _disposer;
@@ -74,11 +72,11 @@ class _TanquePageState extends ModularState<TanquePage, TanqueStore> {
 
     if (widget.tanquePrevio == null) {
       store.cPlaca.observer(
-        onState: (t) => {t = t as ModelBase, _avisaTanqueExistente(t.model)},
+        onState: _avisaTanqueExistente,
         onLoading: loading,
       );
       store.cInmetro.observer(
-        onState: (t) => {t = t as ModelBase, _avisaTanqueExistente(t.model)},
+        onState: _avisaTanqueExistente,
         onLoading: loading,
       );
     }
@@ -192,12 +190,7 @@ class _TanquePageState extends ModularState<TanquePage, TanqueStore> {
               style: TextStyle(fontSize: 20),
             ),
           ),
-          Row(
-            children: [
-              _tanqueZeroWidget(),
-              _docWidget(),
-            ],
-          ),
+          _docWidget(),
         ],
       ),
     ));
@@ -233,13 +226,6 @@ class _TanquePageState extends ModularState<TanquePage, TanqueStore> {
     );
   }
 
-  Widget _tanqueZeroWidget() {
-    return Container(
-      padding: const EdgeInsets.all(8),
-      child: tanqueZeroWidget,
-    );
-  }
-
   Widget _compartimentoForm() {
     return Container(
       child: compartimentoForm,
@@ -255,7 +241,7 @@ class _TanquePageState extends ModularState<TanquePage, TanqueStore> {
     store.consultaPlaca(placa);
   }
 
-  void _setInmetro(campo) {
+  void _setInmetro(String campo) {
     if (campo.isEmpty) return;
     _tanque.codInmetro = campo;
     store.consultaInmetro(campo);

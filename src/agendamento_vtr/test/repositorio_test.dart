@@ -36,15 +36,15 @@ void main() {
       Tanques();
       for (int i = 0; i < Tanques.tanques.length; i++) {
         Tanque t1 = Tanques.tanques[i];
-        ModelBase mb = await repoTanque.salvaTanque(t1);
-        expect(mb.model, isTrue, reason: '$i Não salvou -> ${t1.placa}');
+        bool salvou = await repoTanque.salvaTanque(t1);
+        expect(salvou, isTrue, reason: '$i Não salvou -> ${t1.placa}');
       }
 
       Agendados();
       Agendas();
       for (TanqueAgendado at in Agendados.agendados) {
-        ModelBase mb = await repoTa.save(at);
-        expect(mb.model, isTrue);
+        bool salvou = await repoTa.save(at);
+        expect(salvou, isTrue);
       }
 
       for (Agenda a in Agendas.agendas) {
@@ -75,7 +75,7 @@ void main() {
       sleep(Duration(seconds: 1));
       for (int i = 0; i < Tanques.tanques.length; i++) {
         Tanque t1 = Tanques.tanques[i];
-        Tanque t2 = (await repoTanque.findTanqueByPlaca(t1.placa)).model;
+        Tanque t2 = await repoTanque.findTanqueByPlaca(t1.placa);
         expect(t2, isNotNull);
         expect(t2.codInmetro, t1.codInmetro);
         expect(t2.placa, t1.placa);

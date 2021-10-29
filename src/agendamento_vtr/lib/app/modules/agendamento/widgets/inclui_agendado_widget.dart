@@ -2,20 +2,20 @@
 
 import 'package:agendamento_vtr/app/domain/erros.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/models/tanque_agendado.dart';
-import 'package:agendamento_vtr/app/modules/agendamento/stores/pesquisa_agenda_do_dia_store.dart';
+import 'package:agendamento_vtr/app/modules/agendamento/stores/inclui_agendado_store.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_triple/flutter_triple.dart';
 
-class PesquisaWidget extends StatefulWidget {
-  const PesquisaWidget({Key? key}) : super(key: key);
+class IncluiAgendadoWidget extends StatefulWidget {
+  const IncluiAgendadoWidget({Key? key}) : super(key: key);
 
   @override
-  _PesquisaWidgetState createState() => _PesquisaWidgetState();
+  _IncluiAgendadoWidgetState createState() => _IncluiAgendadoWidgetState();
 }
 
-class _PesquisaWidgetState extends ModularState<PesquisaWidget, PesquisaAgendaDoDiaStore> {
+class _IncluiAgendadoWidgetState extends ModularState<IncluiAgendadoWidget, IncluiAgendadoStore> {
   final TextEditingController _cPesquisa = TextEditingController();
   final List<Disposer> disposers = List.empty(growable: true);
   bool pesquisando = false;

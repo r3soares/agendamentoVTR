@@ -76,11 +76,11 @@ class RepositoryTanqueAgendado {
     }
   }
 
-  Future<ModelBase> save(TanqueAgendado value) async {
+  Future<bool> save(TanqueAgendado value) async {
     try {
       bool salvou = await db.save(jsonEncode(value.toJson()));
       if (!salvou) print('Erro em salvaAgenda em Repository Agenda');
-      return ModelBase(salvou);
+      return salvou;
     } on Falha catch (e) {
       print('Erro ao salvar agendaTanque ${value.id}: $e');
       throw e;

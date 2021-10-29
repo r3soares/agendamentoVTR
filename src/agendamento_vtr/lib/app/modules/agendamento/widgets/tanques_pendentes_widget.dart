@@ -2,6 +2,7 @@ import 'package:agendamento_vtr/app/behaviors/custom_scroll_behavior.dart';
 import 'package:agendamento_vtr/app/models/tanque.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/dialogs/visualiza_tanque_dialog.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/models/tanque_agendado.dart';
+import 'package:agendamento_vtr/app/modules/agendamento/widgets/inclui_pendente_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -13,7 +14,7 @@ class TanquesPendentesWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    pendentes.sort((b, a) => a.dataRegistro.compareTo(b.dataRegistro));
+    pendentes.sort((a, b) => a.dataRegistro.compareTo(b.dataRegistro));
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -26,7 +27,7 @@ class TanquesPendentesWidget extends StatelessWidget {
         ),
         Expanded(
           flex: 1,
-          child: SizedBox.shrink(),
+          child: IncluiPendenteWidget(),
 
           ///Para incluir tanque
         ),

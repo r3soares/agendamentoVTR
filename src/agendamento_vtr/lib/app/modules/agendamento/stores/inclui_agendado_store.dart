@@ -12,14 +12,14 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_triple/flutter_triple.dart';
 import 'package:collection/collection.dart';
 
-class PesquisaAgendaDoDiaStore extends StreamStore<Falha, TanqueAgendado> {
+class IncluiAgendadoStore extends StreamStore<Falha, TanqueAgendado> {
   final RepositoryAgenda repoAgenda;
   final RepositoryTanqueAgendado repoAt;
   final AgendaController _controller = Modular.get<AgendaController>();
   final Bloc blocPesquisa = Bloc('');
   final Bloc blocAgenda = Bloc('');
 
-  PesquisaAgendaDoDiaStore(this.repoAgenda, this.repoAt) : super(TanqueAgendado(id: '', tanque: Tanque()));
+  IncluiAgendadoStore(this.repoAgenda, this.repoAt) : super(TanqueAgendado(id: '', tanque: Tanque()));
 
   @override
   Future destroy() {

@@ -1,10 +1,10 @@
 import 'package:agendamento_vtr/app/domain/custo_compartimento.dart';
 import 'package:agendamento_vtr/app/domain/erros.dart';
 import 'package:agendamento_vtr/app/domain/validacoes.dart';
-import 'package:agendamento_vtr/app/models/bloc.dart';
 import 'package:agendamento_vtr/app/models/compartimento.dart';
 import 'package:agendamento_vtr/app/models/model_base.dart';
 import 'package:agendamento_vtr/app/models/tanque.dart';
+import 'package:agendamento_vtr/app/modules/agendamento/stores/store_data.dart';
 import 'package:agendamento_vtr/app/modules/tanque/models/tanque_model.dart';
 import 'package:agendamento_vtr/app/repositories/repository_tanque.dart';
 import 'package:flutter_modular/flutter_modular.dart';
@@ -12,11 +12,11 @@ import 'package:flutter_triple/flutter_triple.dart';
 import 'package:intl/intl.dart';
 
 class TanqueStore extends StreamStore<Falha, ModelBase> {
-  final Bloc cPlaca = Bloc(ModelBase(null));
-  final Bloc cInmetro = Bloc(ModelBase(null));
-  final Bloc cProprietario = Bloc(ModelBase(null));
-  final Bloc sTanque = Bloc(ModelBase(null));
-  final Bloc sTanques = Bloc(ModelBase(null));
+  final cPlaca = StoreData<Tanque>(Tanque());
+  final cInmetro = StoreData<Tanque>(Tanque());
+  final cProprietario = StoreData<List<Tanque>>([]);
+  final sTanque = StoreData<bool>(false);
+  final sTanques = StoreData<bool>(false);
   final valida = Validacoes();
   final RepositoryTanque repo = Modular.get<RepositoryTanque>();
   final NumberFormat formato = NumberFormat.currency(locale: 'pt_BR', symbol: 'R\$');

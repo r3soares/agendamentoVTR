@@ -7,7 +7,7 @@ import 'package:agendamento_vtr/app/modules/agendamento/dialogs/altera_status_di
 import 'package:agendamento_vtr/app/modules/agendamento/dialogs/visualiza_tanque_dialog.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/models/agenda.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/models/tanque_agendado.dart';
-import 'package:agendamento_vtr/app/modules/agendamento/widgets/pesquisa_agenda_do_dia_widget.dart';
+import 'package:agendamento_vtr/app/modules/agendamento/widgets/inclui_agendado_widget.dart';
 import 'package:agendamento_vtr/app/repositories/repository_agenda.dart';
 import 'package:agendamento_vtr/app/repositories/repository_tanque_agendado.dart';
 import 'package:flutter/gestures.dart';
@@ -55,7 +55,7 @@ class AgendaDoDiaWidget extends StatelessWidget {
             ? SizedBox.shrink()
             : Expanded(
                 flex: 3,
-                child: PesquisaWidget(),
+                child: IncluiAgendadoWidget(),
               ),
         agenda.tanquesAgendados.isEmpty
             ? Expanded(
