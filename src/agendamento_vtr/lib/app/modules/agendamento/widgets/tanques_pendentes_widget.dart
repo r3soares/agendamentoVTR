@@ -1,6 +1,6 @@
 import 'package:agendamento_vtr/app/behaviors/custom_scroll_behavior.dart';
 import 'package:agendamento_vtr/app/models/tanque.dart';
-import 'package:agendamento_vtr/app/modules/agendamento/dialogs/visualiza_tanque_dialog.dart';
+import 'package:agendamento_vtr/app/modules/agendamento/dialogs/visualiza_tanque_agendado_dialog.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/models/tanque_agendado.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/widgets/inclui_pendente_widget.dart';
 import 'package:flutter/material.dart';
@@ -59,7 +59,7 @@ class TanquesPendentesWidget extends StatelessWidget {
                                           barrierColor: Color.fromRGBO(0, 0, 0, .5),
                                           useSafeArea: true,
                                           context: context,
-                                          builder: (_) => VisualizaTanqueDialog(t)),
+                                          builder: (_) => VisualizaTanqueAgendadoDialog(pendentes.elementAt(index))),
                                     },
                                 child: const Icon(Icons.remove_red_eye)),
                             title: Row(children: [

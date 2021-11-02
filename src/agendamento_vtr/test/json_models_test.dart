@@ -11,6 +11,10 @@ import 'objetos/tanques.dart';
 
 void main() {
   group('Teste de conversao Json <-> Model', () {
+    Empresas();
+    Tanques();
+    Agendados();
+    Agendas();
     test('Empresa', () {
       for (int i = 0; i < Empresas.empresas.length; i++) {
         Empresa e = Empresas.empresas[i];
@@ -50,13 +54,15 @@ void main() {
         expect(t1.dataRegistro, equals(t2.dataRegistro), reason: 'DataRegistro não validou');
         expect(t1.dataUltimaAlteracao, equals(t2.dataUltimaAlteracao), reason: 'DataAlteracao não validou');
         expect(t1.placa, equals(t2.placa), reason: 'Placa diferentes');
-        expect(t1.proprietario, equals(t2.proprietario), reason: 'Proprietario não validou');
+        if (t1.proprietario != null) {
+          expect(t1.proprietario!.cnpjCpf, equals(t2.proprietario!.cnpjCpf), reason: 'Proprietario não validou');
+        }
+
         expect(t1.status, equals(t2.status), reason: 'Status não validou');
         //expect(t1.ultimoAgendamento, equals(t2.ultimoAgendamento), reason: 'TanqueAgendado não validou');
       }
     });
     test('Tanque Agendado', () {
-      Agendados();
       for (int i = 0; i < Agendados.agendados.length; i++) {
         TanqueAgendado a1 = Agendados.agendados[i];
         Map<String, dynamic> json = a1.toJson();
@@ -78,7 +84,6 @@ void main() {
     });
 
     test('AgendasDoDia', () {
-      Agendas();
       for (int i = 0; i < Agendas.agendas.length; i++) {
         Agenda a1 = Agendas.agendas[i];
         Map<String, dynamic> json = a1.toJson();

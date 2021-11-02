@@ -30,11 +30,11 @@ class RepositoryEmpresa {
     }
   }
 
-  Future<ModelBase> getEmpresa(String cnpjCpf) async {
+  Future<Empresa> getEmpresa(String cnpjCpf) async {
     try {
       var result = await db.getById(cnpjCpf);
       var empresa = result == false ? throw NaoEncontrado(cnpjCpf) : Empresa.fromJson(result);
-      return ModelBase(empresa);
+      return empresa;
     } on Falha catch (e) {
       print('Erro ao buscar empresa $cnpjCpf: ${e.msg}');
       throw e;

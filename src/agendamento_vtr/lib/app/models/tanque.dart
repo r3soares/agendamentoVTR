@@ -1,3 +1,4 @@
+import 'package:agendamento_vtr/app/models/empresa.dart';
 import 'package:agendamento_vtr/app/models/json_serializable.dart';
 import 'package:agendamento_vtr/app/modules/tanque/models/arquivo.dart';
 import 'package:agendamento_vtr/app/models/compartimento.dart';
@@ -6,8 +7,8 @@ class Tanque implements JsonSerializable {
   String placa = '';
   String codInmetro = '';
 
-  //CNPJ da empresa que possui o proprietario
-  String? proprietario;
+  //empresa que possui o proprietario
+  Empresa? proprietario;
 
   double custo = 0;
   DateTime dataRegistro = DateTime.now();
@@ -34,7 +35,7 @@ class Tanque implements JsonSerializable {
   Tanque.fromJson(Map<String, dynamic> json)
       : placa = json['placa'],
         codInmetro = json['codInmetro'],
-        proprietario = json['proprietario'],
+        proprietario = json['proprietario'] == null ? null : Empresa.fromJson(json['proprietario']),
         dataRegistro = DateTime.parse(json['dataRegistro']),
         dataUltimaAlteracao = DateTime.parse(json['dataUltimaAlteracao']),
         status = StatusTanque.values[json['status']],
@@ -46,7 +47,7 @@ class Tanque implements JsonSerializable {
   Map<String, dynamic> toJson() => {
         'placa': placa,
         'codInmetro': codInmetro,
-        'proprietario': proprietario,
+        'proprietario': proprietario == null ? null : proprietario!.toJson(),
         'dataRegistro': dataRegistro.toIso8601String(),
         'dataUltimaAlteracao': dataUltimaAlteracao.toIso8601String(),
         'status': status.index,

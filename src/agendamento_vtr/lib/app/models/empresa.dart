@@ -1,8 +1,7 @@
 import 'package:agendamento_vtr/app/models/json_serializable.dart';
 import 'package:agendamento_vtr/app/models/proprietario.dart';
-import 'package:flutter/material.dart';
 
-class Empresa extends ChangeNotifier implements JsonSerializable {
+class Empresa implements JsonSerializable {
   String cnpjCpf = '';
   Proprietario? proprietario;
   String razaoSocial = '';
@@ -12,21 +11,6 @@ class Empresa extends ChangeNotifier implements JsonSerializable {
   String? obs;
 
   Empresa();
-//tEM QUE REMOVER
-  final List<String> _tanques = List.empty(growable: true);
-
-//tEM QUE REMOVER
-  void addTanque(String placa) {
-    if (_tanques.contains(placa)) return;
-    _tanques.add(placa);
-    notifyListeners();
-  }
-
-//tEM QUE REMOVER
-  void removeTanque(String placa) {
-    _tanques.remove(placa);
-    notifyListeners();
-  }
 
   @override
   Empresa fromJson(Map<String, dynamic> json) => Empresa.fromJson(json);

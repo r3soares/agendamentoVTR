@@ -1,6 +1,9 @@
 import 'dart:math';
 import 'package:agendamento_vtr/app/models/compartimento.dart';
+import 'package:agendamento_vtr/app/models/empresa.dart';
 import 'package:agendamento_vtr/app/models/tanque.dart';
+
+import 'empresas.dart';
 
 class Tanques {
   static const QUANTIDADE = 2000;
@@ -38,7 +41,8 @@ class Tanques {
     for (int i = 0; i < QUANTIDADE; i++) {
       Tanque t = Tanque();
       t.codInmetro = "$i";
-      t.proprietario = '00970455941';
+      t.proprietario =
+          Random().nextInt(10) > 7 ? Empresas.empresas.elementAt(Random().nextInt(Empresas.empresas.length - 1)) : null;
       t.placa = geraPlaca();
       for (int j = 0; j < Random().nextInt(10); j++) {
         t.compartimentos.add(Compartimento(j + 1));

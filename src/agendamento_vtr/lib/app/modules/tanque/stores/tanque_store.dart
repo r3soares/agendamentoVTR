@@ -2,10 +2,12 @@ import 'package:agendamento_vtr/app/domain/custo_compartimento.dart';
 import 'package:agendamento_vtr/app/domain/erros.dart';
 import 'package:agendamento_vtr/app/domain/validacoes.dart';
 import 'package:agendamento_vtr/app/models/compartimento.dart';
+import 'package:agendamento_vtr/app/models/empresa.dart';
 import 'package:agendamento_vtr/app/models/model_base.dart';
 import 'package:agendamento_vtr/app/models/tanque.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/stores/store_data.dart';
 import 'package:agendamento_vtr/app/modules/tanque/models/tanque_model.dart';
+import 'package:agendamento_vtr/app/repositories/repository_empresa.dart';
 import 'package:agendamento_vtr/app/repositories/repository_tanque.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_triple/flutter_triple.dart';
@@ -15,9 +17,11 @@ class TanqueStore extends StreamStore<Falha, ModelBase> {
   final cPlaca = StoreData<Tanque>(Tanque());
   final cInmetro = StoreData<Tanque>(Tanque());
   final cProprietario = StoreData<List<Tanque>>([]);
+  final cEmpresa = StoreData<Empresa>(Empresa());
   final sTanque = StoreData<bool>(false);
   final sTanques = StoreData<bool>(false);
   final valida = Validacoes();
+  final RepositoryEmpresa repoEmpresa = Modular.get<RepositoryEmpresa>();
   final RepositoryTanque repo = Modular.get<RepositoryTanque>();
   final NumberFormat formato = NumberFormat.currency(locale: 'pt_BR', symbol: 'R\$');
   TanqueStore() : super(TanqueModel(Tanque()));
@@ -55,10 +59,14 @@ class TanqueStore extends StreamStore<Falha, ModelBase> {
     cPlaca.execute(() => repo.findTanqueByPlaca(placa));
   }
 
-  consultaProprietario(String proprietario) async {
-    //status = TanqueStoreState.ConsultandoProprietario;
-    //execute(() => repo.findTanquesByProprietario(proprietario));
-    cProprietario.execute(() => repo.findTanquesByProprietario(proprietario));
+  // consultaProprietario(String proprietario) async {
+  //   //status = TanqueStoreState.ConsultandoProprietario;
+  //   //execute(() => repo.findTanquesByProprietario(proprietario));
+  //   cProprietario.execute(() => repo.findTanquesByProprietario(proprietario));
+  // }
+
+  consultaEmpresa(String cnpj) {
+    cEmpresa.execute(() => repoEmpresa.getEmpresa(cnpj));
   }
 
   double getCusto(List<Compartimento> compartimentos) {

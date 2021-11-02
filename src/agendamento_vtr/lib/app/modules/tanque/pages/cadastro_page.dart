@@ -1,3 +1,4 @@
+import 'package:agendamento_vtr/app/models/empresa.dart';
 import 'package:agendamento_vtr/app/models/tanque.dart';
 import 'package:agendamento_vtr/app/modules/tanque/stores/tanque_store.dart';
 import 'package:agendamento_vtr/app/widgets/base_widgets.dart';
@@ -21,6 +22,7 @@ class _CadastroPageState extends ModularState<CadastroPage, TanqueStore> {
   final List<Tanque> tanques = List.empty(growable: true);
   Size? _size;
   String cnpjProprietario = '';
+  Empresa? proprietario;
   //late Disposer _disposer;
 
   late Widget proprietarioWidget = CnpjWidget(
@@ -53,6 +55,8 @@ class _CadastroPageState extends ModularState<CadastroPage, TanqueStore> {
               _msgTemporaria('Encontrado veículo(s) associados a este proprietário.'),
             },
         onLoading: loading);
+
+    store.cEmpresa.observer(onState: (t) => proprietario = t, onLoading: loading);
 
     store.sTanques.observer(
       onState: (t) => _showDialogTanquesSalvos(),
@@ -284,9 +288,9 @@ class _CadastroPageState extends ModularState<CadastroPage, TanqueStore> {
 
   void _setProprietario(String cnpj, bool valido) {
     cnpjProprietario = valido ? cnpj : '';
-    // if (valido) {
-    //   store.consultaProprietario(cnpj);
-    // }
+    if (valido) {
+      store.consultaEmpresa(cnpj);
+    }
   }
 
   int _somaSetas(Tanque t) {
@@ -308,7 +312,7 @@ class _CadastroPageState extends ModularState<CadastroPage, TanqueStore> {
 
   void _associaPropAosTanques() {
     for (var t in tanques) {
-      t.proprietario = cnpjProprietario;
+      t.proprietario = proprietario;
     }
     store.salvaMuitos(tanques);
   }

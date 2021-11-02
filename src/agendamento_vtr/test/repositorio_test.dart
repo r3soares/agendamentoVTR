@@ -56,7 +56,7 @@ void main() {
       sleep(Duration(seconds: 1));
       for (int i = 0; i < Empresas.empresas.length; i++) {
         Empresa e = Empresas.empresas[i];
-        Empresa e2 = (await repoEmpresa.getEmpresa(e.cnpjCpf)).model;
+        Empresa e2 = await repoEmpresa.getEmpresa(e.cnpjCpf);
         expect(e2, isNotNull);
         expect(e2.email, equals(e.email));
         if (e.proprietario != null) {

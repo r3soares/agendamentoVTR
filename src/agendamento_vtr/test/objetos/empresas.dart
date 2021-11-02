@@ -86,7 +86,7 @@ class Empresas {
       Empresa e = new Empresa()
         ..cnpjCpf = cpfs[i]
         ..email = cpfs[r.nextInt(emails.length - 1)]
-        ..proprietario = r.nextBool() == true
+        ..proprietario = r.nextInt(10) > 7
             ? (Proprietario()
               ..cod = i
               ..codMun = r.nextInt(1000))
