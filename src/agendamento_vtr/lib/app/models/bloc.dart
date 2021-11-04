@@ -3,4 +3,9 @@ import 'package:flutter_triple/flutter_triple.dart';
 
 class Bloc extends StreamStore<Falha, Object> {
   Bloc(initialState) : super(initialState as Object);
+
+  @override
+  update(Object data, {bool force = false}) {
+    update(data, force: force);
+  }
 }

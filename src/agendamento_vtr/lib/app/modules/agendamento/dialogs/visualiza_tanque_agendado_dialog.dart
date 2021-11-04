@@ -1,12 +1,9 @@
-import 'dart:math';
-
 import 'package:agendamento_vtr/app/behaviors/custom_scroll_behavior.dart';
 import 'package:agendamento_vtr/app/domain/constantes.dart';
 import 'package:agendamento_vtr/app/models/compartimento.dart';
 import 'package:agendamento_vtr/app/models/empresa.dart';
 import 'package:agendamento_vtr/app/models/tanque.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/models/tanque_agendado.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 class VisualizaTanqueAgendadoDialog extends StatelessWidget {

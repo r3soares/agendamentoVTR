@@ -1,6 +1,5 @@
 import 'dart:math';
 import 'package:agendamento_vtr/app/models/compartimento.dart';
-import 'package:agendamento_vtr/app/models/empresa.dart';
 import 'package:agendamento_vtr/app/models/tanque.dart';
 
 import 'empresas.dart';
