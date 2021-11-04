@@ -8,16 +8,16 @@ class StoreData<T extends Object> extends StreamStore<Falha, T> {
 
   @override
   update(T data, {bool force = false}) {
-    update(data, force: force);
+    super.update(data, force: force);
   }
 
   @override
   setLoading(bool loading, {bool force = false}) {
-    setLoading(loading, force: force);
+    super.setLoading(loading, force: force);
   }
 
   @override
   setError(Falha erro, {bool force = false}) {
-    setError(erro, force: force);
+    super.setError(erro, force: force);
   }
 }

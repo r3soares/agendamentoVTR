@@ -6,6 +6,6 @@ class Bloc extends StreamStore<Falha, Object> {
 
   @override
   update(Object data, {bool force = false}) {
-    update(data, force: force);
+    super.update(data, force: force);
   }
 }

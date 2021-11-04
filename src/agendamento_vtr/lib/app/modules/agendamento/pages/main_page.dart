@@ -42,11 +42,14 @@ class _MainPageState extends ModularState<MainPage, MainStore> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Flexible(
-              flex: 4,
-              child: ScopedBuilder(
-                store: store.storeAgendas,
-                onState: (context, state) => Card(elevation: 12, child: CalendarioWidget(state as Map<String, Agenda>)),
-                onLoading: (context) => Center(child: CircularProgressIndicator()),
+              flex: 5,
+              child: SingleChildScrollView(
+                child: ScopedBuilder(
+                  store: store.storeAgendas,
+                  onState: (context, state) =>
+                      Card(elevation: 12, child: CalendarioWidget(state as Map<String, Agenda>)),
+                  onLoading: (context) => Center(child: CircularProgressIndicator()),
+                ),
               ),
             ),
             //PesquisaWidget(),
