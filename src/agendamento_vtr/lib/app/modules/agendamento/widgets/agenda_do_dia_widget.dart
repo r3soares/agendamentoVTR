@@ -20,6 +20,7 @@ class AgendaDoDiaWidget extends StatelessWidget {
   final repoAgenda = Modular.get<RepositoryAgenda>();
   final repoTa = Modular.get<RepositoryTanqueAgendado>();
   final controller = Modular.get<AgendaController>();
+  final ScrollController scrollController = ScrollController();
   AgendaDoDiaWidget(this.agenda);
 
   Widget build(BuildContext context) {
@@ -94,6 +95,7 @@ class AgendaDoDiaWidget extends StatelessWidget {
       shrinkWrap: true,
       dragStartBehavior: DragStartBehavior.start,
       scrollDirection: Axis.vertical,
+      controller: scrollController,
       children: lista,
     );
   }
@@ -107,8 +109,8 @@ class AgendaDoDiaWidget extends StatelessWidget {
   Widget cardWidget(BuildContext context, int index) {
     TanqueAgendado tAgendado = agenda.tanquesAgendados.elementAt(index);
     final status = _getCorConfirmacao(tAgendado.statusConfirmacao);
-    final isNovo = _isNovo(tAgendado.isNovo);
-    final isBitrem = _isNovo(tAgendado.bitremAgenda != null);
+    final isInicial = _isInicial(tAgendado.isNovo);
+    final isBitrem = _isInicial(tAgendado.bitremAgenda != null);
     Tanque tanque = tAgendado.tanque;
     return ListTile(
         leading: TextButton(
@@ -145,9 +147,9 @@ class AgendaDoDiaWidget extends StatelessWidget {
                       builder: (BuildContext context) {
                         return AlteraStatusDialog(tAgendado);
                       }).then((_) async => await _salvaAlteracoes(context, tAgendado)),
-                  child: Icon(
-                    status.value,
-                    color: status.key,
+                  child: Text(
+                    '${status.key}',
+                    style: TextStyle(color: status.value),
                   )),
               TextButton(
                   onPressed: () => {
@@ -155,8 +157,8 @@ class AgendaDoDiaWidget extends StatelessWidget {
                         _salvaAlteracoes(context, tAgendado),
                       },
                   child: Text(
-                    'Zero',
-                    style: TextStyle(color: isNovo),
+                    'Inicial',
+                    style: TextStyle(color: isInicial),
                   )),
               TextButton(
                   onPressed: () => showDialog(
@@ -193,22 +195,22 @@ class AgendaDoDiaWidget extends StatelessWidget {
     }
   }
 
-  MapEntry<Color, IconData> _getCorConfirmacao(StatusConfirmacao status) {
+  MapEntry<String, Color> _getCorConfirmacao(StatusConfirmacao status) {
     switch (status) {
       case StatusConfirmacao.PreAgendado:
-        return MapEntry(Colors.deepPurple, Icons.help_outline);
+        return MapEntry('Pré Agendado', Colors.deepPurple);
       case StatusConfirmacao.NaoConfirmado:
-        return MapEntry(Colors.orange, Icons.info_outline);
+        return MapEntry('Não Confirmado', Colors.orange);
       case StatusConfirmacao.Confirmado:
-        return MapEntry(Colors.green, Icons.check_circle_outline);
+        return MapEntry('Confirmado', Colors.green);
       case StatusConfirmacao.Reagendado:
-        return MapEntry(Colors.blue.shade900, Icons.outbond_outlined);
+        return MapEntry('Reagendado', Colors.blue.shade900);
       case StatusConfirmacao.Cancelado:
-        return MapEntry(Colors.red, Icons.cancel_outlined);
+        return MapEntry('Cancelado', Colors.red);
     }
   }
 
-  Color _isNovo(bool value) {
+  Color _isInicial(bool value) {
     return value ? Colors.yellow.shade800 : Colors.grey;
   }
 

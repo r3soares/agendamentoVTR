@@ -35,7 +35,25 @@ class _MainPageState extends ModularState<MainPage, MainStore> {
     //print('Reconstruindo Main Page');
     return Scaffold(
       appBar: AppBar(
-        title: Text('Agendamentos'),
+        actions: [
+          Expanded(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                IconButton(
+                  onPressed: () => {Modular.to.pushNamed('/tanque/cadastro')},
+                  icon: Icon(Icons.add_road),
+                  splashRadius: 5,
+                ),
+                IconButton(
+                  onPressed: () => {Modular.to.pushNamed('/empresa/cadastro')},
+                  icon: Icon(Icons.add_business),
+                  splashRadius: 5,
+                ),
+              ],
+            ),
+          )
+        ],
       ),
       body: Center(
         child: Column(
@@ -61,16 +79,17 @@ class _MainPageState extends ModularState<MainPage, MainStore> {
                   ScopedBuilder(
                     store: store.storePendentes,
                     onState: (context, state) => Expanded(
+                        flex: 2,
                         child: Card(elevation: 12, child: TanquesPendentesWidget(state as List<TanqueAgendado>))),
                     onLoading: (context) => Expanded(child: Center(child: CircularProgressIndicator())),
                   ),
                   ScopedBuilder(
                     store: store.storeDiaAtualizado,
                     onState: (context, state) =>
-                        Expanded(child: Card(elevation: 12, child: AgendaDoDiaWidget(state as Agenda))),
+                        Expanded(flex: 3, child: Card(elevation: 12, child: AgendaDoDiaWidget(state as Agenda))),
                     onLoading: (context) => Expanded(child: Center(child: CircularProgressIndicator())),
                   ),
-                  Expanded(child: Card(elevation: 12, child: AvisosWidget())),
+                  Expanded(flex: 2, child: Card(elevation: 12, child: AvisosWidget())),
                 ],
               ),
             )

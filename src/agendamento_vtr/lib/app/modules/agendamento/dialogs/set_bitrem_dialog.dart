@@ -29,7 +29,7 @@ class SetBitremDialog extends StatelessWidget {
       if (i == agendado) continue;
       var widget = TextButton(
         child: Text(
-          '${i.tanque.placa}',
+          '${i.tanque.placaFormatada}',
           style: TextStyle(color: Colors.green),
         ),
         onPressed: () {
