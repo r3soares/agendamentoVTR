@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:agendamento_vtr/app/domain/erros.dart';
 import 'package:agendamento_vtr/app/models/empresa.dart';
-import 'package:agendamento_vtr/app/models/model_base.dart';
 import 'package:agendamento_vtr/app/repositories/infra/IDatabase.dart';
 
 class RepositoryEmpresa {
@@ -10,11 +9,11 @@ class RepositoryEmpresa {
 
   RepositoryEmpresa(this.db);
 
-  Future<ModelBase> salvaEmpresa(Empresa value) async {
+  Future<bool> salvaEmpresa(Empresa value) async {
     try {
       bool salvou = await db.save(jsonEncode(value.toJson()));
       if (!salvou) print('Erro em salvaEmpresa em Repository Empresa');
-      return ModelBase(salvou);
+      return salvou;
     } on Falha catch (e) {
       print('Erro ao salvar empresa ${value.cnpjCpf}: $e');
       throw e;
@@ -41,12 +40,12 @@ class RepositoryEmpresa {
     }
   }
 
-  Future<ModelBase> getEmpresas() async {
+  Future<List<Empresa>> getEmpresas() async {
     try {
       var result = await db.getAll();
       List<Empresa> lista =
           result == false ? List.empty(growable: true) : (result as List).map((n) => Empresa.fromJson(n)).toList();
-      return ModelBase(lista);
+      return lista;
     } on Falha catch (e) {
       print('Erro ao buscar empresas: $e');
       throw e;

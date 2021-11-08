@@ -1,4 +1,3 @@
-import 'package:agendamento_vtr/app/modules/empresa/pages/anexa_prop_page.dart';
 import 'package:agendamento_vtr/app/modules/empresa/pages/cadastro_page.dart';
 import 'package:agendamento_vtr/app/modules/empresa/pages/main_page.dart';
 import 'package:agendamento_vtr/app/modules/empresa/stores/empresa_store.dart';
@@ -17,6 +16,5 @@ class EmpresaModule extends Module {
   final List<ModularRoute> routes = [
     ChildRoute(Modular.initialRoute, child: (_, args) => MainPage()),
     ChildRoute('/cadastro', child: (_, args) => CadastroPage(preCadastro: args.data)),
-    ChildRoute('/anexa_proprietario', child: (_, args) => AnexaPropPage(empresa: args.data)),
   ];
 }

@@ -3,11 +3,12 @@ import 'dart:async';
 import 'package:agendamento_vtr/app/domain/erros.dart';
 import 'package:agendamento_vtr/app/models/bloc.dart';
 import 'package:agendamento_vtr/app/models/empresa.dart';
-import 'package:agendamento_vtr/app/models/model_base.dart';
+import 'package:agendamento_vtr/app/models/proprietario.dart';
 import 'package:agendamento_vtr/app/modules/empresa/stores/empresa_store.dart';
 import 'package:agendamento_vtr/app/modules/empresa/widgets/telefone_widget.dart';
 import 'package:agendamento_vtr/app/widgets/base_widgets.dart';
 import 'package:agendamento_vtr/app/widgets/cnpj_widget.dart';
+import 'package:agendamento_vtr/app/widgets/input_numero_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_modular/flutter_modular.dart';
@@ -23,6 +24,8 @@ class CadastroPage extends BaseWidgets {
 
 class _CadastroPageState extends ModularState<CadastroPage, EmpresaStore> {
   final _formKey = GlobalKey<FormState>();
+  final _formKeyCodInmetro = GlobalKey<FormState>();
+  final _formKeyCodMun = GlobalKey<FormState>();
 
   late Empresa _empresa;
 
@@ -34,10 +37,14 @@ class _CadastroPageState extends ModularState<CadastroPage, EmpresaStore> {
   late Widget cnpjProprietarioWidget;
   late Widget _telefoneWidget;
 
+  late Widget _inmetroWidget;
+  late Widget _codMunWidget;
+
   @override
   void initState() {
     super.initState();
     _empresa = widget.preCadastro ?? Empresa();
+    _empresa.proprietario = _empresa.proprietario ?? Proprietario();
     _cEmail.text = _empresa.email;
     _cRazaSocialProp.text = _empresa.razaoSocial;
 
@@ -47,17 +54,33 @@ class _CadastroPageState extends ModularState<CadastroPage, EmpresaStore> {
     );
 
     _telefoneWidget = TelefoneWidget(bloc: blocTelefone);
+
+    _inmetroWidget = InputNumeroWidget(
+      titulo: 'Número Inmetro',
+      input: TipoInput.Numeros,
+      callback: (codInmetro) => _empresa.proprietario!.cod = int.tryParse(codInmetro) ?? 0,
+      campoPrevio: _empresa.proprietario!.cod == 0 ? '' : _empresa.proprietario!.cod.toString(),
+      formKey: _formKeyCodInmetro,
+    );
+    _codMunWidget = InputNumeroWidget(
+      titulo: 'Código do Município',
+      input: TipoInput.Numeros,
+      callback: (codMun) => _empresa.proprietario!.codMun = int.tryParse(codMun) ?? 0,
+      campoPrevio: _empresa.proprietario!.codMun == 0 ? '' : _empresa.proprietario!.codMun.toString(),
+      formKey: _formKeyCodMun,
+    );
+
     _configStream();
   }
 
   void _configStream() {
     store.cEmpresa.observer(
-      onState: (e) => Modular.to.popAndPushNamed('cadastro', arguments: (e as ModelBase).model),
+      onState: (e) => Modular.to.popAndPushNamed('cadastro', arguments: e),
       onLoading: loading,
       onError: _showErro,
     );
     store.sEmpresa.observer(
-      onState: (e) => _showDialogAnexaProprietario(),
+      onState: (e) => _showDialogContinuar(),
       onLoading: loading,
       onError: _showErro,
     );
@@ -92,10 +115,12 @@ class _CadastroPageState extends ModularState<CadastroPage, EmpresaStore> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   buildTitulo(),
-                  _buildCNPJWidget(),
+                  buildCNPJWidget(),
                   buildRazaoSocial(),
                   buildTelefone(),
                   buildEmail(),
+                  buildInmetro(),
+                  buildCodMun(),
                   Container(
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -111,7 +136,7 @@ class _CadastroPageState extends ModularState<CadastroPage, EmpresaStore> {
     );
   }
 
-  Widget _buildCNPJWidget() {
+  Widget buildCNPJWidget() {
     return Container(
       padding: const EdgeInsets.all(8),
       child: cnpjProprietarioWidget,
@@ -166,33 +191,50 @@ class _CadastroPageState extends ModularState<CadastroPage, EmpresaStore> {
     );
   }
 
+  Widget buildInmetro() {
+    return Padding(
+      padding: const EdgeInsets.all(8),
+      child: _inmetroWidget,
+    );
+  }
+
+  Widget buildCodMun() {
+    return Padding(
+      padding: const EdgeInsets.all(8),
+      child: _codMunWidget,
+    );
+  }
+
   String? validateEmail(String? value) {
     if (value == null || value.isEmpty) return 'Informe um e-mail';
     return store.validaEmail(value) ? null : 'E-mail inválido';
   }
 
   bool verificaDadosPreenchidos() {
-    if (_formKey.currentState == null) return false;
-    return _formKey.currentState!.validate();
+    if (_formKey.currentState == null || _formKeyCodInmetro.currentState == null || _formKeyCodMun.currentState == null)
+      return false;
+    return _formKey.currentState!.validate() &&
+        _formKeyCodInmetro.currentState!.validate() &&
+        _formKeyCodMun.currentState!.validate();
   }
 
-  Future<void> _showDialogAnexaProprietario() async {
+  Future<void> _showDialogContinuar() async {
     return showDialog<void>(
       context: context,
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Proprietário'),
+          title: Text('Empresa salva com sucesso'),
           content: SingleChildScrollView(
               child: Container(
-            child: Text('Deseja incluir código do proprietário?'),
+            child: Text('Deseja incluir mais empresas?'),
           )),
           actions: <Widget>[
             TextButton(
               child: const Text('Sim'),
               onPressed: () {
                 Navigator.of(context).pop();
-                _goAnexaProprietarioPage();
+                Modular.to.popAndPushNamed('/empresa/cadastro');
               },
             ),
             TextButton(
@@ -212,10 +254,6 @@ class _CadastroPageState extends ModularState<CadastroPage, EmpresaStore> {
     if (!valido) return;
     _empresa.cnpjCpf = cnpj;
     store.consulta(cnpj);
-  }
-
-  _goAnexaProprietarioPage() {
-    Modular.to.popAndPushNamed('anexa_proprietario', arguments: _empresa);
   }
 
   _showErro(Falha erro) {

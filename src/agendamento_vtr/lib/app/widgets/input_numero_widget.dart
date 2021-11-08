@@ -5,9 +5,11 @@ class InputNumeroWidget extends StatefulWidget {
   final String campoPrevio;
   final String titulo;
   final TipoInput input;
+  final formKey;
   //Termo buscado e Resultado
   final Function(String) callback;
-  InputNumeroWidget({this.campoPrevio = '', this.titulo = '', required this.input, required this.callback});
+  const InputNumeroWidget(
+      {this.campoPrevio = '', this.titulo = '', required this.input, required this.callback, required this.formKey});
 
   @override
   _InputNumeroWidgetWidgetState createState() => _InputNumeroWidgetWidgetState();
@@ -63,28 +65,29 @@ class _InputNumeroWidgetWidgetState extends State<InputNumeroWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final larguraTotal = MediaQuery.of(context).size.width;
-    return Container(
-        padding: EdgeInsets.all(8),
-        width: larguraTotal * .2,
-        child: TextFormField(
-          focusNode: focusNode,
-          decoration: InputDecoration(
-            //icon: Image.asset('assets/images/inmetro.png'),
-            icon: Icon(Icons.drive_eta),
-            hintText: dicaTexto,
-            hintStyle: TextStyle(fontSize: 10),
-            labelText: widget.titulo,
-          ),
-          inputFormatters: inputFormater,
-          controller: _cCampo,
-          validator: validaInput,
-        ));
+    return Form(
+      autovalidateMode: AutovalidateMode.onUserInteraction,
+      key: widget.formKey,
+      child: TextFormField(
+        focusNode: focusNode,
+        decoration: InputDecoration(
+          //icon: Image.asset('assets/images/inmetro.png'),
+          icon: Icon(Icons.looks_one),
+          hintText: dicaTexto,
+          hintStyle: TextStyle(fontSize: 10),
+          labelText: widget.titulo,
+        ),
+        inputFormatters: inputFormater,
+        controller: _cCampo,
+        validator: validaInput,
+      ),
+    );
   }
 
   String? validaNumero(String? num) {
     if (num == null || num.isEmpty) return 'Insira um número válido';
-    if (int.tryParse(num) == null) return 'Insira um número válido';
+    var n = int.tryParse(num);
+    if (n == null || n <= 0) return 'Insira um número válido';
     return null;
   }
 

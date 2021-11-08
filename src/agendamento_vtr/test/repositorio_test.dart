@@ -29,8 +29,8 @@ void main() {
       Empresas();
       for (int i = 0; i < Empresas.empresas.length; i++) {
         Empresa e = Empresas.empresas[i];
-        ModelBase mb = await repoEmpresa.salvaEmpresa(e);
-        expect(mb.model, isTrue, reason: '$i Não salvou -> ${e.cnpjCpf}');
+        bool salvou = await repoEmpresa.salvaEmpresa(e);
+        expect(salvou, isTrue, reason: '$i Não salvou -> ${e.cnpjCpf}');
       }
 
       Tanques();

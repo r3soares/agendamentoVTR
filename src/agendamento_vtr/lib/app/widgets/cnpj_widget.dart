@@ -49,8 +49,10 @@ class _CnpjWidgetState extends State<CnpjWidget> {
 
   String? validaCNPJCPF(String? value) {
     if (value == null || value.isEmpty) return 'Informe o CNPJ ou CPF';
-    if (value.length != 14 && value.length != 11) return 'CNPJ ou CPF inválido';
-    if (!_valida.validaCPF(value) && !_valida.validaCNPJ(value)) return 'CNPJ ou CPF inválido';
+    if (_maskInicial.getUnmaskedText().length != 14 && _maskInicial.getUnmaskedText().length != 11)
+      return 'CNPJ ou CPF inválido';
+    if (!_valida.validaCPF(_maskInicial.getUnmaskedText()) && !_valida.validaCNPJ(_maskInicial.getUnmaskedText()))
+      return 'CNPJ ou CPF inválido';
     return null;
   }
 

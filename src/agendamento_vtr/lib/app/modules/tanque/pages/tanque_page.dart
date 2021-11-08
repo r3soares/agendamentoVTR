@@ -20,6 +20,7 @@ class TanquePage extends BaseWidgets {
 
 class _TanquePageState extends ModularState<TanquePage, TanqueStore> {
   final _formKey = GlobalKey<FormState>();
+  final _formKeyCodInmetro = GlobalKey<FormState>();
   late Tanque _tanque;
   late Widget placaWidget;
   late Widget inmetroWidget;
@@ -41,6 +42,7 @@ class _TanquePageState extends ModularState<TanquePage, TanqueStore> {
       campoPrevio: _tanque.codInmetro,
       input: TipoInput.NumLetras,
       callback: _setInmetro,
+      formKey: _formKeyCodInmetro,
     );
     docWidget = DocWidget(
       arquivosPrevio: _tanque.docs,
@@ -267,8 +269,8 @@ class _TanquePageState extends ModularState<TanquePage, TanqueStore> {
   // #region Altera Formulario
   _salvaDados() {
     print('Salvando em TanquePage...');
-    if (_formKey.currentState == null) return;
-    if (!_formKey.currentState!.validate()) {
+    if (_formKey.currentState == null || _formKeyCodInmetro.currentState == null) return;
+    if (!_formKey.currentState!.validate() && !_formKeyCodInmetro.currentState!.validate()) {
       _msgTemporaria('Verifique os campos pendentes');
       return;
     }
