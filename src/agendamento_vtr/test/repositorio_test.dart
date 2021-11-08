@@ -9,6 +9,7 @@ import 'package:agendamento_vtr/app/modules/agendamento/models/agenda.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/models/tanque_agendado.dart';
 import 'package:agendamento_vtr/app/repositories/infra/api.dart';
 import 'package:agendamento_vtr/app/repositories/repository_agenda.dart';
+import 'package:agendamento_vtr/app/repositories/repository_municipio.dart';
 import 'package:agendamento_vtr/app/repositories/repository_tanque_agendado.dart';
 import 'package:agendamento_vtr/app/repositories/repository_empresa.dart';
 import 'package:agendamento_vtr/app/repositories/repository_tanque.dart';
@@ -21,10 +22,11 @@ import 'objetos/tanques.dart';
 
 void main() {
   group('Teste de repositorios', () {
-    var repoEmpresa = RepositoryEmpresa(Api('empresa'));
-    var repoTanque = RepositoryTanque(Api('tanque'));
-    var repoTa = RepositoryTanqueAgendado(Api('tanqueAgendado'));
-    var repoAgenda = RepositoryAgenda(Api('agenda'));
+    var repoEmpresa = RepositoryEmpresa(Api('vtr/empresa'));
+    var repoTanque = RepositoryTanque(Api('vtr/tanque'));
+    var repoTa = RepositoryTanqueAgendado(Api('vtr/tanqueAgendado'));
+    var repoAgenda = RepositoryAgenda(Api('vtr/agenda'));
+    var repoMuncipio = RepositoryMunicipio(Api('sgi/municipio'));
     test('Popula Base', () async {
       Empresas();
       for (int i = 0; i < Empresas.empresas.length; i++) {
@@ -169,5 +171,14 @@ void main() {
       mb = await repoAgenda.get(a.data);
       expect(a.data, equals(mb.model.data), reason: 'Get não validou');
     }, timeout: Timeout(Duration(minutes: 2)));
+
+    test('Municipios', () async {
+      var municipios = await repoMuncipio.getMunicipios();
+      expect(municipios.length > 5000, isTrue);
+      var listaFiltrada = await repoMuncipio.findMunicipiosByNome(('ita'));
+      var m = listaFiltrada.firstWhere((e) => e.noMunicipio == 'ITAJAÍ');
+      expect(m, isNotNull);
+      expect(m.noMunicipio, equals('ITAJAÍ'));
+    });
   });
 }

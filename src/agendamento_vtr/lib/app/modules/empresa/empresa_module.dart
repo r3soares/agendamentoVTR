@@ -8,7 +8,7 @@ import 'package:flutter_modular/flutter_modular.dart';
 class EmpresaModule extends Module {
   @override
   final List<Bind> binds = [
-    Bind.singleton((i) => RepositoryEmpresa(Api('empresa'))),
+    Bind.singleton((i) => RepositoryEmpresa(Api('vtr/empresa'))),
     Bind.factory((i) => EmpresaStore()),
   ];
 

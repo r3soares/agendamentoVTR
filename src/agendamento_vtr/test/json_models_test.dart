@@ -1,6 +1,10 @@
+import 'dart:math';
+
 import 'package:agendamento_vtr/app/models/empresa.dart';
 import 'package:agendamento_vtr/app/models/tanque.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/models/agenda.dart';
+import 'package:agendamento_vtr/app/modules/agendamento/models/estado.dart';
+import 'package:agendamento_vtr/app/modules/agendamento/models/municipio.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/models/tanque_agendado.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -97,6 +101,18 @@ void main() {
           expect(a1.tanquesAgendados[0].id, equals(a2.tanquesAgendados[0].id), reason: 'tanquesAgendados[0] diferente');
         }
       }
+    });
+    test('Municipios', () {
+      Estado e = Estado(Random().nextInt(1000), 'SC', 'Santa Catarina');
+      Municipio m = Municipio(e, Random().nextInt(1000), Random().nextInt(1000), 'Itajaí');
+      Map<String, dynamic> json = m.toJson();
+      Municipio m2 = Municipio.fromJson(json);
+      expect(m.cdMunicipio, equals(m2.cdMunicipio));
+      expect(m.munId, equals(m2.munId));
+      expect(m.noMunicipio, equals(m2.noMunicipio));
+      expect(m.unfId.noUf, equals(m2.unfId.noUf));
+      expect(m.unfId.sgUf, equals(m2.unfId.sgUf));
+      expect(m.unfId.unfId, equals(m2.unfId.unfId));
     });
   });
 }
