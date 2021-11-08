@@ -25,4 +25,9 @@ class Municipio implements JsonSerializable {
         'cdMunicipio': cdMunicipio,
         'noMunicipio': noMunicipio,
       };
+
+  @override
+  String toString() {
+    return '[$cdMunicipio] $noMunicipio (${unfId.sgUf})';
+  }
 }

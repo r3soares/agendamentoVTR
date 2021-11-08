@@ -5,6 +5,7 @@ import 'package:agendamento_vtr/app/models/bloc.dart';
 import 'package:agendamento_vtr/app/models/empresa.dart';
 import 'package:agendamento_vtr/app/models/proprietario.dart';
 import 'package:agendamento_vtr/app/modules/empresa/stores/empresa_store.dart';
+import 'package:agendamento_vtr/app/modules/empresa/widgets/municipios_ac_widget.dart';
 import 'package:agendamento_vtr/app/modules/empresa/widgets/telefone_widget.dart';
 import 'package:agendamento_vtr/app/widgets/base_widgets.dart';
 import 'package:agendamento_vtr/app/widgets/cnpj_widget.dart';
@@ -62,13 +63,11 @@ class _CadastroPageState extends ModularState<CadastroPage, EmpresaStore> {
       campoPrevio: _empresa.proprietario!.cod == 0 ? '' : _empresa.proprietario!.cod.toString(),
       formKey: _formKeyCodInmetro,
     );
-    _codMunWidget = InputNumeroWidget(
-      titulo: 'Código do Município',
-      input: TipoInput.Numeros,
-      callback: (codMun) => _empresa.proprietario!.codMun = int.tryParse(codMun) ?? 0,
-      campoPrevio: _empresa.proprietario!.codMun == 0 ? '' : _empresa.proprietario!.codMun.toString(),
-      formKey: _formKeyCodMun,
-    );
+    _codMunWidget = MunicipiosACWidget(
+        titulo: 'Município',
+        callback: (municipio) => _empresa.proprietario!.codMun = municipio.cdMunicipio,
+        campoPrevio: _empresa.proprietario!.codMun,
+        formKey: _formKeyCodMun);
 
     _configStream();
   }
