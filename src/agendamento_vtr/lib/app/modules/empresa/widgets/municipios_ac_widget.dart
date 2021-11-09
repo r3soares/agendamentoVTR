@@ -3,6 +3,7 @@ import 'package:agendamento_vtr/app/modules/empresa/stores/municipios_ac_store.d
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_triple/flutter_triple.dart';
+import 'dart:io' show Platform;
 
 class MunicipiosACWidget extends StatefulWidget {
   final int campoPrevio;
@@ -46,8 +47,11 @@ class _MunicipiosACWidgetState extends ModularState<MunicipiosACWidget, Municipi
   }
 
   atualizaResultado(List<Municipio> lista) {
-    _kOptions.clear();
-    _kOptions.addAll(lista);
+    setState(() {
+      _kOptions.clear();
+      lista.sort((a, b) => a.noMunicipio.compareTo(b.noMunicipio));
+      _kOptions.addAll(lista);
+    });
   }
 
   @override
@@ -55,7 +59,7 @@ class _MunicipiosACWidgetState extends ModularState<MunicipiosACWidget, Municipi
     return Autocomplete<Municipio>(
       initialValue: previo,
       optionsBuilder: (TextEditingValue textEditingValue) {
-        if (textEditingValue.text == '') {
+        if (textEditingValue.text == '' || textEditingValue.text.length < 3) {
           return const Iterable<Municipio>.empty();
         }
         store.consultaNome(textEditingValue.text);
@@ -70,7 +74,9 @@ class _MunicipiosACWidgetState extends ModularState<MunicipiosACWidget, Municipi
             autovalidateMode: AutovalidateMode.onUserInteraction,
             key: widget.formKey,
             child: TextFormField(
+              validator: validaLetras,
               controller: textEditingController,
+              onChanged: (text) => fixAcentos(textEditingController, text),
               focusNode: focusNode,
               decoration: InputDecoration(
                 //icon: Image.asset('assets/images/inmetro.png'),
@@ -82,5 +88,61 @@ class _MunicipiosACWidgetState extends ModularState<MunicipiosACWidget, Municipi
             ));
       },
     );
+  }
+
+  String? validaLetras(String? num) {
+    if (num == null || num.isEmpty) return 'Insira um nome válido';
+    return null;
+  }
+
+  fixAcentos(TextEditingController controller, String value) {
+    if (Platform.isWindows) {
+      String newValue = value
+          // A
+          .replaceAll('´´a', 'á')
+          .replaceAll('``a', 'à')
+          .replaceAll('^^a', 'â')
+          .replaceAll('~~a', 'ã')
+          .replaceAll('´´A', 'Á')
+          .replaceAll('``A', 'À')
+          .replaceAll('^^A', 'Â')
+          .replaceAll('~~A', 'Ã')
+          // E
+          .replaceAll('´´e', 'é')
+          .replaceAll('``e', 'è')
+          .replaceAll('^^e', 'ê')
+          .replaceAll('´´E', 'É')
+          .replaceAll('``E', 'È')
+          .replaceAll('^^E', 'Ê')
+          // I
+          .replaceAll('´´i', 'í')
+          .replaceAll('``i', 'ì')
+          .replaceAll('^^i', 'î')
+          .replaceAll('´´I', 'Í')
+          .replaceAll('``I', 'Ì')
+          .replaceAll('^^I', 'î')
+          // O
+          .replaceAll('´´o', 'ó')
+          .replaceAll('``o', 'ò')
+          .replaceAll('^^o', 'ô')
+          .replaceAll('~~o', 'õ')
+          .replaceAll('´´O', 'Ó')
+          .replaceAll('``O', 'Ò')
+          .replaceAll('^^O', 'Ô')
+          .replaceAll('~~O', 'Õ')
+          // U
+          .replaceAll('´´u', 'ú')
+          .replaceAll('``u', 'ù')
+          .replaceAll('^^u', 'û')
+          .replaceAll('´´U', 'Ú')
+          .replaceAll('``U', 'Ù')
+          .replaceAll('^^U', 'Û');
+
+      if (controller.text != newValue) {
+        controller.text = newValue;
+        int pos = newValue.length;
+        controller.selection = TextSelection.fromPosition(TextPosition(offset: pos));
+      }
+    }
   }
 }

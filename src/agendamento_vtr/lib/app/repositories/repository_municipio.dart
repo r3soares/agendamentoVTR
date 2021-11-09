@@ -22,7 +22,7 @@ class RepositoryMunicipio {
 
   Future<List<Municipio>> findMunicipiosByNome(String nome) async {
     try {
-      var result = await db.find('nome', nome.replaceAll(' ', '_'));
+      var result = await db.find('nome', '|$nome|');
       return result == false ? List.empty(growable: true) : (result as List).map((n) => Municipio.fromJson(n)).toList();
     } on Falha catch (e) {
       print('Erro ao procurar tanques pelo proprietário $nome: $e');
