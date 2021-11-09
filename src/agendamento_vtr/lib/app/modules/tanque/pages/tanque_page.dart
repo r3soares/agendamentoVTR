@@ -95,54 +95,47 @@ class _TanquePageState extends ModularState<TanquePage, TanqueStore> {
       appBar: AppBar(
         title: Text('Cadastro de Veículo Tanque'),
       ),
-      body: Padding(
+      body: Container(
         padding: EdgeInsets.symmetric(horizontal: larguraTotal / 4),
-        child: Form(
-          autovalidateMode: AutovalidateMode.onUserInteraction,
-          key: _formKey,
-          child: SingleChildScrollView(
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(10),
-                    topRight: Radius.circular(10),
-                    bottomLeft: Radius.circular(10),
-                    bottomRight: Radius.circular(10)),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.5),
-                    spreadRadius: 5,
-                    blurRadius: 7,
-                    offset: Offset(0, 3), // changes position of shadow
-                  ),
+        // decoration: BoxDecoration(
+        //   color: Colors.white,
+        //   borderRadius: BorderRadius.only(
+        //       topLeft: Radius.circular(10),
+        //       topRight: Radius.circular(10),
+        //       bottomLeft: Radius.circular(10),
+        //       bottomRight: Radius.circular(10)),
+        //   boxShadow: [
+        //     BoxShadow(
+        //       color: Colors.grey.withOpacity(0.5),
+        //       spreadRadius: 5,
+        //       blurRadius: 7,
+        //       offset: Offset(0, 3), // changes position of shadow
+        //     ),
+        //   ],
+        // ),
+        // margin: EdgeInsets.all(12),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Flexible(flex: 1, child: _titulo()),
+            Flexible(flex: 3, child: _camposIdentificacao()),
+            Flexible(flex: 2, child: _camposDocumentacao()),
+            Expanded(flex: 5, child: _compartimentoForm()),
+            Flexible(
+              flex: 1,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  widget.btnsalvar(onPressed: _salvaDados),
+                  widget.btnVoltar(),
+                  //exibeBotoes()
                 ],
               ),
-              margin: EdgeInsets.all(12),
-              width: larguraTotal * .6,
-              child: Container(
-                padding: EdgeInsets.all(12),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    _titulo(),
-                    _camposIdentificacao(),
-                    _camposDocumentacao(),
-                    _compartimentoForm(),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        widget.btnsalvar(onPressed: _salvaDados),
-                        widget.btnVoltar(),
-                        //exibeBotoes()
-                      ],
-                    )
-                  ],
-                ),
-              ),
-            ),
-          ),
+            )
+          ],
         ),
       ),
     );
@@ -150,39 +143,38 @@ class _TanquePageState extends ModularState<TanquePage, TanqueStore> {
 
   // #region Widgets
   Widget _camposIdentificacao() {
-    return Container(
-      //width: larguraTotal * .4,
-      child: Card(
-        elevation: 4,
-        shadowColor: Colors.black,
-        child: Column(
-          children: [
-            Container(
-              alignment: Alignment.centerLeft,
-              padding: EdgeInsets.all(12),
-              child: Text(
-                'Identificação',
-                style: TextStyle(fontSize: 20),
-              ),
+    return Card(
+      elevation: 4,
+      shadowColor: Colors.black,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            alignment: Alignment.centerLeft,
+            padding: EdgeInsets.all(12),
+            child: Text(
+              'Identificação',
+              style: TextStyle(fontSize: 20),
             ),
-            Row(
-              children: [
-                _placaWidget(),
-                _numInmetroWidget(),
-              ],
-            ),
-          ],
-        ),
+          ),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Flexible(child: _placaWidget()),
+              Flexible(child: _numInmetroWidget()),
+            ],
+          ),
+        ],
       ),
     );
   }
 
   Widget _camposDocumentacao() {
-    return Container(
-        child: Card(
+    return Card(
       elevation: 4,
       shadowColor: Colors.black,
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           Container(
             padding: const EdgeInsets.all(8),
@@ -192,19 +184,17 @@ class _TanquePageState extends ModularState<TanquePage, TanqueStore> {
               style: TextStyle(fontSize: 20),
             ),
           ),
-          _docWidget(),
+          Flexible(child: _docWidget()),
         ],
       ),
-    ));
+    );
   }
 
   Widget _titulo() {
-    return Container(
-        padding: EdgeInsets.all(8),
-        child: Text(
-          "Tanque",
-          style: TextStyle(fontSize: 20),
-        ));
+    return Text(
+      "Tanque",
+      style: TextStyle(fontSize: 20),
+    );
   }
 
   Widget _placaWidget() {
@@ -222,16 +212,11 @@ class _TanquePageState extends ModularState<TanquePage, TanqueStore> {
   }
 
   Widget _docWidget() {
-    return Container(
-      padding: const EdgeInsets.all(8),
-      child: docWidget,
-    );
+    return docWidget;
   }
 
   Widget _compartimentoForm() {
-    return Container(
-      child: compartimentoForm,
-    );
+    return compartimentoForm;
   }
 
   // #endregion

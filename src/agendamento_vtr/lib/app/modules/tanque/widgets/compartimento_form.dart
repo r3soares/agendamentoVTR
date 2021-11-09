@@ -14,6 +14,7 @@ class CompartimentoForm extends StatefulWidget {
 }
 
 class _CompartimentoFormState extends ModularState<CompartimentoForm, TanqueStore> {
+  final ScrollController scrollController = ScrollController();
   late List<Compartimento> compartimentos;
   int _capacidadeTotal = 0;
   double _custoTotal = 0;
@@ -42,6 +43,7 @@ class _CompartimentoFormState extends ModularState<CompartimentoForm, TanqueStor
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return SingleChildScrollView(
+      controller: scrollController,
       child: Card(
         elevation: 4,
         shadowColor: Colors.black,
