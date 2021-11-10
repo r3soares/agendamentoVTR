@@ -74,7 +74,7 @@ class _TanquePageState extends ModularState<TanquePage, TanqueStore> {
     var d1 = store.sTanque.observer(
       onState: (_) => _showDialogTanqueSalvo(),
       onLoading: loading,
-      onError: (erro) => _exibeErro,
+      onError: _exibeErro,
     );
     disposers.add(d1);
     if (widget.tanquePrevio == null) {
@@ -296,6 +296,11 @@ class _TanquePageState extends ModularState<TanquePage, TanqueStore> {
       case TempoExcedido:
         {
           _msgTemporaria('Tempo de conexão excedido', Colors.red.shade900);
+          break;
+        }
+      default:
+        {
+          _msgTemporaria('Erro desconhecido: ${erro.msg}', Colors.red.shade900);
           break;
         }
     }
