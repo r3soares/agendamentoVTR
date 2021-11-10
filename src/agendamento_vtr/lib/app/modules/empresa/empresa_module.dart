@@ -1,4 +1,3 @@
-import 'package:agendamento_vtr/app/modules/agendamento/models/municipio.dart';
 import 'package:agendamento_vtr/app/modules/empresa/pages/cadastro_page.dart';
 import 'package:agendamento_vtr/app/modules/empresa/pages/main_page.dart';
 import 'package:agendamento_vtr/app/modules/empresa/stores/empresa_store.dart';
@@ -12,7 +11,7 @@ class EmpresaModule extends Module {
   final List<Bind> binds = [
     Bind.singleton((i) => RepositoryEmpresa(Api('vtr/empresa'))),
     Bind.factory((i) => EmpresaStore()),
-    Bind.lazySingleton((i) => MunicipiosACStore(List<Municipio>.empty(growable: true))),
+    Bind.lazySingleton((i) => MunicipiosACStore()),
   ];
 
   @override

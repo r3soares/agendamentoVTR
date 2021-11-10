@@ -13,6 +13,7 @@ import 'package:agendamento_vtr/app/widgets/input_numero_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:flutter_triple/flutter_triple.dart';
 
 class CadastroPage extends BaseWidgets {
   final Empresa? preCadastro;
@@ -25,6 +26,7 @@ class CadastroPage extends BaseWidgets {
 
 class _CadastroPageState extends ModularState<CadastroPage, EmpresaStore> {
   final _formKey = GlobalKey<FormState>();
+  final List<Disposer> disposers = List.empty(growable: true);
 
   late Empresa _empresa;
 
@@ -69,22 +71,32 @@ class _CadastroPageState extends ModularState<CadastroPage, EmpresaStore> {
   }
 
   void _configStream() {
-    store.cEmpresa.observer(
+    var d1 = store.cEmpresa.observer(
       onState: (e) => Modular.to.popAndPushNamed('cadastro', arguments: e),
       onLoading: loading,
       onError: _showErro,
     );
-    store.sEmpresa.observer(
+    var d2 = store.sEmpresa.observer(
       onState: (e) => _showDialogContinuar(),
       onLoading: loading,
       onError: _showErro,
     );
 
-    blocTelefone.observer(
+    var d3 = blocTelefone.observer(
         onState: (telefone) => {
               _empresa.telefones.clear(),
               _empresa.telefones.add(telefone as String),
             });
+    disposers.addAll([d1, d2, d3]);
+  }
+
+  @override
+  dispose() {
+    disposers.forEach((d) {
+      d();
+    });
+    store.destroy();
+    super.dispose();
   }
 
   loading(bool isLoading) {

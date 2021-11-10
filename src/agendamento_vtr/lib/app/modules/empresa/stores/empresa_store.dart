@@ -11,6 +11,11 @@ class EmpresaStore {
   final RepositoryEmpresa repo = Modular.get<RepositoryEmpresa>();
   EmpresaStore();
 
+  destroy() {
+    sEmpresa.destroy();
+    cEmpresa.destroy();
+  }
+
   void salva(Empresa e) async {
     sEmpresa.execute(() => repo.salvaEmpresa(e));
   }

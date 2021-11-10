@@ -1,3 +1,4 @@
+import 'package:agendamento_vtr/app/domain/log.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/models/municipio.dart';
 import 'package:agendamento_vtr/app/modules/empresa/stores/municipios_ac_store.dart';
 import 'package:flutter/material.dart';
@@ -28,7 +29,7 @@ class _MunicipiosACWidgetState extends ModularState<MunicipiosACWidget, Municipi
       store.consultaCod(widget.campoPrevio);
       disposers.add(d1);
     }
-    var d2 = store.observer(onState: atualizaResultado);
+    var d2 = store.storeLista.observer(onState: atualizaResultado);
     disposers.add(d2);
   }
 
@@ -42,6 +43,7 @@ class _MunicipiosACWidgetState extends ModularState<MunicipiosACWidget, Municipi
 
   setCampoPrevio(Municipio m) {
     previo = TextEditingValue(text: m.toString());
+    setState(() {});
   }
 
   atualizaResultado(List<Municipio> lista) {
@@ -54,16 +56,26 @@ class _MunicipiosACWidgetState extends ModularState<MunicipiosACWidget, Municipi
 
   @override
   Widget build(BuildContext context) {
+    return ScopedBuilder(
+      store: store.storeMun,
+      onState: (context, state) => buildAutoComplete(state as Municipio),
+      onLoading: (context) => const CircularProgressIndicator(),
+    );
+  }
+
+  Widget buildAutoComplete(Municipio m) {
     return Autocomplete<Municipio>(
-      initialValue: previo,
+      initialValue: TextEditingValue(text: m.toString()),
       optionsBuilder: (TextEditingValue textEditingValue) {
         if (textEditingValue.text == '' || textEditingValue.text.length < 3) {
           return const Iterable<Municipio>.empty();
         }
+        Log.message(this, '${_kOptions.length}');
         store.consultaNome(textEditingValue.text);
         return _kOptions;
       },
       onSelected: (Municipio selection) {
+        Log.message(this, selection.toString());
         widget.callback(selection);
       },
       fieldViewBuilder: (BuildContext context, TextEditingController textEditingController, FocusNode focusNode,
