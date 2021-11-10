@@ -17,8 +17,7 @@ class CnpjWidget extends StatefulWidget {
 class _CnpjWidgetState extends State<CnpjWidget> {
   final Validacoes _valida = Validacoes();
   final TextEditingController _controller = TextEditingController();
-  final MaskTextInputFormatter _maskInicial =
-      new MaskTextInputFormatter(mask: '###############', filter: {"#": RegExp(r'[0-9]')});
+  late MaskTextInputFormatter _maskInicial;
   final String _maskCPF = '###.###.###-##';
   final String _maskCNPJ = '##.###.###/####-##';
   final _focusNode = FocusNode();
@@ -26,7 +25,14 @@ class _CnpjWidgetState extends State<CnpjWidget> {
   @override
   void initState() {
     super.initState();
-    _controller.text = widget.cnpjPrevio;
+    _maskInicial = new MaskTextInputFormatter(
+        mask: '###############', filter: {"#": RegExp(r'[0-9]')}, initialText: widget.cnpjPrevio);
+    if (widget.cnpjPrevio.isNotEmpty) {
+      widget.cnpjPrevio.length > 11
+          ? _maskInicial.updateMask(mask: _maskCNPJ)
+          : _maskInicial.updateMask(mask: _maskCPF);
+    }
+    _controller.text = _maskInicial.getMaskedText();
     _focusNode.addListener(notificaListeners);
   }
 
@@ -60,22 +66,11 @@ class _CnpjWidgetState extends State<CnpjWidget> {
     if (_focusNode.hasFocus) {
       _controller.value = _maskInicial.updateMask(mask: '###############');
     } else {
-      setState(() {
-        _controller.value = _maskInicial.getUnmaskedText().length > 11
-            ? _maskInicial.updateMask(mask: _maskCNPJ)
-            : _maskInicial.updateMask(mask: _maskCPF);
-      });
+      _controller.value = _maskInicial.getUnmaskedText().length > 11
+          ? _maskInicial.updateMask(mask: _maskCNPJ)
+          : _maskInicial.updateMask(mask: _maskCPF);
+      _controller.text = _maskInicial.getMaskedText();
       widget.callback(_maskInicial.getUnmaskedText(), validaCNPJCPF(_maskInicial.getUnmaskedText()) == null);
     }
   }
-
-  // void buscaEmpresa() {
-  //   if (!focusNode.hasFocus && cnpj != '') {
-  //     final empresa = controller.findEmpresa(cnpj: cnpj);
-  //     widget.callback(cnpj, empresa);
-  //     // controller.empresa = empresa ?? Empresa();
-  //     // controller.empresa.cnpj = cnpj;
-  //     //print(controller.empresa.cnpj);
-  //   }
-  // }
 }
