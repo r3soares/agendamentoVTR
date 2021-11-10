@@ -5,11 +5,9 @@ class InputNumeroWidget extends StatefulWidget {
   final String campoPrevio;
   final String titulo;
   final TipoInput input;
-  final formKey;
   //Termo buscado e Resultado
   final Function(String) callback;
-  const InputNumeroWidget(
-      {this.campoPrevio = '', this.titulo = '', required this.input, required this.callback, required this.formKey});
+  const InputNumeroWidget({this.campoPrevio = '', this.titulo = '', required this.input, required this.callback});
 
   @override
   _InputNumeroWidgetWidgetState createState() => _InputNumeroWidgetWidgetState();
@@ -65,22 +63,18 @@ class _InputNumeroWidgetWidgetState extends State<InputNumeroWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Form(
-      autovalidateMode: AutovalidateMode.onUserInteraction,
-      key: widget.formKey,
-      child: TextFormField(
-        focusNode: focusNode,
-        decoration: InputDecoration(
-          //icon: Image.asset('assets/images/inmetro.png'),
-          icon: Icon(Icons.looks_one),
-          hintText: dicaTexto,
-          hintStyle: TextStyle(fontSize: 10),
-          labelText: widget.titulo,
-        ),
-        inputFormatters: inputFormater,
-        controller: _cCampo,
-        validator: validaInput,
+    return TextFormField(
+      focusNode: focusNode,
+      decoration: InputDecoration(
+        //icon: Image.asset('assets/images/inmetro.png'),
+        icon: Icon(Icons.looks_one),
+        hintText: dicaTexto,
+        hintStyle: TextStyle(fontSize: 10),
+        labelText: widget.titulo,
       ),
+      inputFormatters: inputFormater,
+      controller: _cCampo,
+      validator: validaInput,
     );
   }
 

@@ -1,3 +1,5 @@
+import 'package:agendamento_vtr/app/domain/erros.dart';
+import 'package:agendamento_vtr/app/domain/log.dart';
 import 'package:agendamento_vtr/app/models/compartimento.dart';
 import 'package:agendamento_vtr/app/models/tanque.dart';
 import 'package:agendamento_vtr/app/modules/tanque/models/arquivo.dart';
@@ -9,6 +11,7 @@ import 'package:agendamento_vtr/app/widgets/input_numero_widget.dart';
 import 'package:agendamento_vtr/app/widgets/placa_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:flutter_triple/flutter_triple.dart';
 
 class TanquePage extends BaseWidgets {
   final Tanque? tanquePrevio;
@@ -19,8 +22,9 @@ class TanquePage extends BaseWidgets {
 }
 
 class _TanquePageState extends ModularState<TanquePage, TanqueStore> {
+  final ScrollController scrollController = ScrollController();
   final _formKey = GlobalKey<FormState>();
-  final _formKeyCodInmetro = GlobalKey<FormState>();
+  final List<Disposer> disposers = List.empty(growable: true);
   late Tanque _tanque;
   late Widget placaWidget;
   late Widget inmetroWidget;
@@ -42,7 +46,6 @@ class _TanquePageState extends ModularState<TanquePage, TanqueStore> {
       campoPrevio: _tanque.codInmetro,
       input: TipoInput.NumLetras,
       callback: _setInmetro,
-      formKey: _formKeyCodInmetro,
     );
     docWidget = DocWidget(
       arquivosPrevio: _tanque.docs,
@@ -62,25 +65,28 @@ class _TanquePageState extends ModularState<TanquePage, TanqueStore> {
 
   @override
   void dispose() {
+    disposers.forEach((d) => d());
+    store.destroy();
     super.dispose();
-    //_disposer();
   }
 
   void _configStream() {
-    store.sTanque.observer(
-        onState: (_) => _showDialogTanqueSalvo(),
-        onError: (erro) => ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text('Não foi possível salvar os dados. ${erro.msg}'), backgroundColor: Colors.red[900])));
-
+    var d1 = store.sTanque.observer(
+      onState: (_) => _showDialogTanqueSalvo(),
+      onLoading: loading,
+      onError: (erro) => _exibeErro,
+    );
+    disposers.add(d1);
     if (widget.tanquePrevio == null) {
-      store.cPlaca.observer(
+      var d2 = store.cPlaca.observer(
         onState: _avisaTanqueExistente,
-        onLoading: loading,
+        //onLoading: loading,
       );
-      store.cInmetro.observer(
+      var d3 = store.cInmetro.observer(
         onState: _avisaTanqueExistente,
-        onLoading: loading,
+        //onLoading: loading,
       );
+      disposers.addAll([d2, d3]);
     }
   }
 
@@ -90,59 +96,47 @@ class _TanquePageState extends ModularState<TanquePage, TanqueStore> {
 
   @override
   Widget build(BuildContext context) {
-    final larguraTotal = MediaQuery.of(context).size.width;
+    var size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
         title: Text('Cadastro de Veículo Tanque'),
       ),
-      body: Container(
-        padding: EdgeInsets.symmetric(horizontal: larguraTotal / 4),
-        // decoration: BoxDecoration(
-        //   color: Colors.white,
-        //   borderRadius: BorderRadius.only(
-        //       topLeft: Radius.circular(10),
-        //       topRight: Radius.circular(10),
-        //       bottomLeft: Radius.circular(10),
-        //       bottomRight: Radius.circular(10)),
-        //   boxShadow: [
-        //     BoxShadow(
-        //       color: Colors.grey.withOpacity(0.5),
-        //       spreadRadius: 5,
-        //       blurRadius: 7,
-        //       offset: Offset(0, 3), // changes position of shadow
-        //     ),
-        //   ],
-        // ),
-        // margin: EdgeInsets.all(12),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Flexible(flex: 1, child: _titulo()),
-            Flexible(flex: 3, child: _camposIdentificacao()),
-            Flexible(flex: 2, child: _camposDocumentacao()),
-            Expanded(flex: 5, child: _compartimentoForm()),
-            Flexible(
-              flex: 1,
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  widget.btnsalvar(onPressed: _salvaDados),
-                  widget.btnVoltar(),
-                  //exibeBotoes()
-                ],
-              ),
-            )
-          ],
+      body: Center(
+        child: Container(
+          width: size.width * .5,
+          child: Form(
+            key: _formKey,
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                //Flexible(flex: 1, child: _titulo()),
+                Flexible(flex: 3, child: buildCamposIdentificacao()),
+                //Flexible(flex: 2, child: _camposDocumentacao()),
+                Expanded(flex: 5, child: buildCompartimentoForm()),
+                Flexible(
+                  flex: 1,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      widget.btnsalvar(onPressed: _salvaDados),
+                      widget.btnVoltar(),
+                      //exibeBotoes()
+                    ],
+                  ),
+                )
+              ],
+            ),
+          ),
         ),
       ),
     );
   }
 
   // #region Widgets
-  Widget _camposIdentificacao() {
+  Widget buildCamposIdentificacao() {
     return Card(
       elevation: 4,
       shadowColor: Colors.black,
@@ -160,8 +154,8 @@ class _TanquePageState extends ModularState<TanquePage, TanqueStore> {
           Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Flexible(child: _placaWidget()),
-              Flexible(child: _numInmetroWidget()),
+              Flexible(child: buildPlacaWidget()),
+              Flexible(child: buildNumInmetroWidget()),
             ],
           ),
         ],
@@ -169,7 +163,7 @@ class _TanquePageState extends ModularState<TanquePage, TanqueStore> {
     );
   }
 
-  Widget _camposDocumentacao() {
+  Widget buildCamposDocumentacao() {
     return Card(
       elevation: 4,
       shadowColor: Colors.black,
@@ -184,38 +178,38 @@ class _TanquePageState extends ModularState<TanquePage, TanqueStore> {
               style: TextStyle(fontSize: 20),
             ),
           ),
-          Flexible(child: _docWidget()),
+          Flexible(child: buildDocWidget()),
         ],
       ),
     );
   }
 
-  Widget _titulo() {
+  Widget buildTitulo() {
     return Text(
       "Tanque",
       style: TextStyle(fontSize: 20),
     );
   }
 
-  Widget _placaWidget() {
+  Widget buildPlacaWidget() {
     return Container(
       padding: const EdgeInsets.all(8),
       child: placaWidget,
     );
   }
 
-  Widget _numInmetroWidget() {
+  Widget buildNumInmetroWidget() {
     return Container(
       padding: const EdgeInsets.all(8),
       child: inmetroWidget,
     );
   }
 
-  Widget _docWidget() {
+  Widget buildDocWidget() {
     return docWidget;
   }
 
-  Widget _compartimentoForm() {
+  Widget buildCompartimentoForm() {
     return compartimentoForm;
   }
 
@@ -223,6 +217,7 @@ class _TanquePageState extends ModularState<TanquePage, TanqueStore> {
 
   // #region Sets Tanque
   void _setPlaca(String placa, bool isValida) {
+    print(isValida);
     if (!isValida) return;
     _tanque.placa = placa;
     store.consultaPlaca(placa);
@@ -253,12 +248,7 @@ class _TanquePageState extends ModularState<TanquePage, TanqueStore> {
 
   // #region Altera Formulario
   _salvaDados() {
-    print('Salvando em TanquePage...');
-    if (_formKey.currentState == null || _formKeyCodInmetro.currentState == null) return;
-    if (!_formKey.currentState!.validate() && !_formKeyCodInmetro.currentState!.validate()) {
-      _msgTemporaria('Verifique os campos pendentes');
-      return;
-    }
+    if (!validaDadosPreenchidos()) return;
     store.salva(_tanque);
   }
 
@@ -270,17 +260,51 @@ class _TanquePageState extends ModularState<TanquePage, TanqueStore> {
     Modular.to.popAndPushNamed('cadastroTanque');
   }
 
-  bool verificaDadosPreenchidos() {
-    if (_formKey.currentState == null) return false;
-    return _formKey.currentState!.validate();
+  bool validaDadosPreenchidos() {
+    if (_tanque.placa.isEmpty || _tanque.codInmetro.isEmpty) {
+      _msgTemporaria('Placa e número do inmetro não podem estar vazios', Colors.yellow.shade900);
+      return false;
+    }
+    if (_formKey.currentState == null) {
+      Log.message(this, 'formKey nula');
+      return false;
+    }
+    if (!_formKey.currentState!.validate()) {
+      _msgTemporaria('Verifique os campos pendentes', Colors.yellow.shade900);
+      return false;
+    }
+    return true;
   }
 
   // #endregion
 
   // #region Dialogs Mensagens
-  void _msgTemporaria(String msg) {
+
+  _exibeErro(Falha erro) {
+    Log.message(this, erro.msg);
+    switch (erro.runtimeType) {
+      case ErroConexao:
+        {
+          _msgTemporaria('Erro de conexão', Colors.red.shade900);
+          break;
+        }
+      case ErroServidor:
+        {
+          _msgTemporaria('Erro no servidor', Colors.red.shade900);
+          break;
+        }
+      case TempoExcedido:
+        {
+          _msgTemporaria('Tempo de conexão excedido', Colors.red.shade900);
+          break;
+        }
+    }
+  }
+
+  void _msgTemporaria(String msg, Color cor) {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Text(msg),
+      backgroundColor: cor,
       duration: Duration(seconds: 3),
     ));
   }

@@ -14,10 +14,10 @@ class RepositoryTanque {
   Future<bool> salvaTanque(Tanque value) async {
     try {
       bool salvou = await db.save(jsonEncode(value.toJson()));
-      if (!salvou) print('Erro em salvaTanque em Repository Tanque');
+      if (!salvou) Log.message(this, 'Tanque não foi salvo: ${value.placa}');
       return salvou;
     } on Falha catch (e) {
-      print('Erro ao salvar tanque ${value.placa}: $e');
+      Log.message(this, 'Erro ao salvar tanque ${value.placa}: $e');
       throw e;
     }
   }
@@ -31,7 +31,7 @@ class RepositoryTanque {
       if (!salvou) print('Erro em salvaTanques em Repository Tanque');
       return salvou;
     } on Falha catch (e) {
-      print('Erro ao salvar lista de tanques: $e');
+      Log.message(this, 'Erro ao salvar lista de tanques: $e');
       throw e;
     }
   }
@@ -40,7 +40,7 @@ class RepositoryTanque {
     try {
       return await db.delete(inmetro);
     } on Falha catch (e) {
-      print('Erro ao remover tanque $inmetro: $e');
+      Log.message(this, 'Erro ao remover tanque $inmetro: $e');
       throw e;
     }
   }
@@ -51,7 +51,7 @@ class RepositoryTanque {
       var tanque = result == false ? throw NaoEncontrado(placa) : Tanque.fromJson(result);
       return tanque;
     } on Falha catch (e) {
-      print('Erro ao procurar tanque pela placa $placa: $e');
+      Log.message(this, 'Erro ao procurar tanque pela placa $placa: $e');
       throw e;
     }
   }
@@ -61,7 +61,7 @@ class RepositoryTanque {
       var result = await db.find('proprietario', proprietario);
       return result == false ? List.empty(growable: true) : (result as List).map((n) => Tanque.fromJson(n)).toList();
     } on Falha catch (e) {
-      print('Erro ao procurar tanques pelo proprietário $proprietario: $e');
+      Log.message(this, 'Erro ao procurar tanques pelo proprietário $proprietario: $e');
       throw e;
     }
   }
@@ -82,7 +82,7 @@ class RepositoryTanque {
       var result = await db.getAll();
       return result == false ? List.empty(growable: true) : (result as List).map((n) => Tanque.fromJson(n)).toList();
     } on Falha catch (e) {
-      print('Erro ao buscar tanques: $e');
+      Log.message(this, 'Erro ao buscar tanques: $e');
       throw e;
     }
   }

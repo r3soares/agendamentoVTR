@@ -25,8 +25,6 @@ class CadastroPage extends BaseWidgets {
 
 class _CadastroPageState extends ModularState<CadastroPage, EmpresaStore> {
   final _formKey = GlobalKey<FormState>();
-  final _formKeyCodInmetro = GlobalKey<FormState>();
-  final _formKeyCodMun = GlobalKey<FormState>();
 
   late Empresa _empresa;
 
@@ -61,13 +59,11 @@ class _CadastroPageState extends ModularState<CadastroPage, EmpresaStore> {
       input: TipoInput.Numeros,
       callback: (codInmetro) => _empresa.proprietario!.cod = int.tryParse(codInmetro) ?? 0,
       campoPrevio: _empresa.proprietario!.cod == 0 ? '' : _empresa.proprietario!.cod.toString(),
-      formKey: _formKeyCodInmetro,
     );
     _codMunWidget = MunicipiosACWidget(
         titulo: 'Município',
         callback: (municipio) => _empresa.proprietario!.codMun = municipio.cdMunicipio,
-        campoPrevio: _empresa.proprietario!.codMun,
-        formKey: _formKeyCodMun);
+        campoPrevio: _empresa.proprietario!.codMun);
 
     _configStream();
   }
@@ -210,11 +206,8 @@ class _CadastroPageState extends ModularState<CadastroPage, EmpresaStore> {
   }
 
   bool verificaDadosPreenchidos() {
-    if (_formKey.currentState == null || _formKeyCodInmetro.currentState == null || _formKeyCodMun.currentState == null)
-      return false;
-    return _formKey.currentState!.validate() &&
-        _formKeyCodInmetro.currentState!.validate() &&
-        _formKeyCodMun.currentState!.validate();
+    if (_formKey.currentState == null) return false;
+    return _formKey.currentState!.validate();
   }
 
   Future<void> _showDialogContinuar() async {

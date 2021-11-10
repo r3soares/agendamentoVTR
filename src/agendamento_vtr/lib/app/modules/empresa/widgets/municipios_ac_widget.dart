@@ -8,10 +8,8 @@ import 'dart:io' show Platform;
 class MunicipiosACWidget extends StatefulWidget {
   final int campoPrevio;
   final String titulo;
-  final formKey;
   final Function(Municipio) callback;
-  const MunicipiosACWidget(
-      {Key? key, this.titulo = '', required this.campoPrevio, required this.callback, required this.formKey})
+  const MunicipiosACWidget({Key? key, this.titulo = '', required this.campoPrevio, required this.callback})
       : super(key: key);
   @override
   State<MunicipiosACWidget> createState() => _MunicipiosACWidgetState();
@@ -70,22 +68,19 @@ class _MunicipiosACWidgetState extends ModularState<MunicipiosACWidget, Municipi
       },
       fieldViewBuilder: (BuildContext context, TextEditingController textEditingController, FocusNode focusNode,
           VoidCallback onFieldSubmitted) {
-        return Form(
-            autovalidateMode: AutovalidateMode.onUserInteraction,
-            key: widget.formKey,
-            child: TextFormField(
-              validator: validaLetras,
-              controller: textEditingController,
-              onChanged: (text) => fixAcentos(textEditingController, text),
-              focusNode: focusNode,
-              decoration: InputDecoration(
-                //icon: Image.asset('assets/images/inmetro.png'),
-                icon: Icon(Icons.looks_one),
-                hintText: 'Informe o nome da cidade',
-                hintStyle: TextStyle(fontSize: 10),
-                labelText: widget.titulo,
-              ),
-            ));
+        return TextFormField(
+          validator: validaLetras,
+          controller: textEditingController,
+          onChanged: (text) => fixAcentos(textEditingController, text),
+          focusNode: focusNode,
+          decoration: InputDecoration(
+            //icon: Image.asset('assets/images/inmetro.png'),
+            icon: Icon(Icons.looks_one),
+            hintText: 'Informe o nome da cidade',
+            hintStyle: TextStyle(fontSize: 10),
+            labelText: widget.titulo,
+          ),
+        );
       },
     );
   }

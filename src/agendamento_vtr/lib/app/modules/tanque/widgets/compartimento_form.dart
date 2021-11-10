@@ -1,3 +1,4 @@
+import 'package:agendamento_vtr/app/behaviors/custom_scroll_behavior.dart';
 import 'package:agendamento_vtr/app/models/compartimento.dart';
 import 'package:agendamento_vtr/app/modules/tanque/stores/tanque_store.dart';
 import 'package:agendamento_vtr/app/modules/tanque/widgets/tanque_page_widgets/compartimento_widget.dart';
@@ -42,96 +43,101 @@ class _CompartimentoFormState extends ModularState<CompartimentoForm, TanqueStor
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    return SingleChildScrollView(
-      controller: scrollController,
-      child: Card(
-        elevation: 4,
-        shadowColor: Colors.black,
-        child: Column(
-          children: [
-            Container(
-              alignment: Alignment.centerLeft,
-              padding: const EdgeInsets.all(8),
-              child: Text(
-                'Compartimento',
-                style: TextStyle(fontSize: 20),
+    return ScrollConfiguration(
+      behavior: CustomScrollBehavior(),
+      child: SingleChildScrollView(
+        physics: ClampingScrollPhysics(),
+        controller: scrollController,
+        child: Card(
+          elevation: 4,
+          shadowColor: Colors.black,
+          child: Column(
+            children: [
+              Container(
+                alignment: Alignment.centerLeft,
+                padding: const EdgeInsets.all(8),
+                child: Text(
+                  'Compartimento',
+                  style: TextStyle(fontSize: 20),
+                ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Container(
-                    child: Row(
-                      children: [
-                        Text('Quantidade:'),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20),
-                          child: Text('$qtdCompartimentos'),
-                        ),
-                        Row(
-                          children: [
-                            SizedBox(
-                              width: 30,
-                              child: TextButton(
-                                  onPressed: () => {geraCompartimentos(qtdCompartimentos + 1)}, child: Icon(Icons.add)),
-                            ),
-                            SizedBox(
-                              width: 30,
-                              child: TextButton(
-                                  onPressed: () => {geraCompartimentos(qtdCompartimentos - 1)},
-                                  child: Icon(Icons.remove)),
-                            ),
-                          ],
-                        )
-                      ],
-                    ),
-                  ),
-                  Container(
-                      child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
+              Padding(
+                padding: const EdgeInsets.all(8),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      child: Row(
                         children: [
-                          Text('Capacidade Total:'),
+                          Text('Quantidade:'),
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 20),
-                            child: Text('$_capacidadeTotal litros'),
+                            child: Text('$qtdCompartimentos'),
                           ),
+                          Row(
+                            children: [
+                              SizedBox(
+                                width: 30,
+                                child: TextButton(
+                                    onPressed: () => {geraCompartimentos(qtdCompartimentos + 1)},
+                                    child: Icon(Icons.add)),
+                              ),
+                              SizedBox(
+                                width: 30,
+                                child: TextButton(
+                                    onPressed: () => {geraCompartimentos(qtdCompartimentos - 1)},
+                                    child: Icon(Icons.remove)),
+                              ),
+                            ],
+                          )
                         ],
                       ),
-                      Container(
-                        padding: const EdgeInsets.only(top: 8),
-                        alignment: Alignment.centerRight,
-                        child: Text(
-                          formataCusto(),
-                          style: TextStyle(color: Colors.red[900]),
+                    ),
+                    Container(
+                        child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Text('Capacidade Total:'),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 20),
+                              child: Text('$_capacidadeTotal litros'),
+                            ),
+                          ],
                         ),
-                      )
-                    ],
-                  ))
-                ],
+                        Container(
+                          padding: const EdgeInsets.only(top: 8),
+                          alignment: Alignment.centerRight,
+                          child: Text(
+                            formataCusto(),
+                            style: TextStyle(color: Colors.red[900]),
+                          ),
+                        )
+                      ],
+                    ))
+                  ],
+                ),
               ),
-            ),
-            Container(
-                height: size.height * .25,
-                padding: const EdgeInsets.all(8),
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: qtdCompartimentos,
-                  itemBuilder: (BuildContext context, int index) {
-                    return CompartimentoWidget(
-                      compartimento: compartimentos[index],
-                      callback: (_) => {
-                        _calculaCapacidadeTotal(),
-                        _calculaCustoTotal(),
-                        _notificaListener(),
-                      },
-                    );
-                  },
-                )),
-          ],
+              Container(
+                  height: size.height * .25,
+                  padding: const EdgeInsets.all(8),
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: qtdCompartimentos,
+                    itemBuilder: (BuildContext context, int index) {
+                      return CompartimentoWidget(
+                        compartimento: compartimentos[index],
+                        callback: (_) => {
+                          _calculaCapacidadeTotal(),
+                          _calculaCustoTotal(),
+                          _notificaListener(),
+                        },
+                      );
+                    },
+                  )),
+            ],
+          ),
         ),
       ),
     );

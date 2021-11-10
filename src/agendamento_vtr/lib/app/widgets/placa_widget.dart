@@ -34,6 +34,7 @@ class _PlacaWidgetState extends State<PlacaWidget> {
         padding: EdgeInsets.all(8),
         width: larguraTotal * .2,
         child: TextFormField(
+          autovalidateMode: AutovalidateMode.onUserInteraction,
           textCapitalization: TextCapitalization.characters,
           focusNode: focusNode,
           decoration: InputDecoration(
