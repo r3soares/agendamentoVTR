@@ -25,9 +25,7 @@ class _MunicipiosACWidgetState extends ModularState<MunicipiosACWidget, Municipi
   void initState() {
     super.initState();
     if (widget.campoPrevio != 0) {
-      var d1 = store.storeMun.observer(onState: setCampoPrevio);
       store.consultaCod(widget.campoPrevio);
-      disposers.add(d1);
     }
     var d2 = store.storeLista.observer(onState: atualizaResultado);
     disposers.add(d2);
@@ -39,11 +37,6 @@ class _MunicipiosACWidgetState extends ModularState<MunicipiosACWidget, Municipi
       d();
     }
     super.dispose();
-  }
-
-  setCampoPrevio(Municipio m) {
-    previo = TextEditingValue(text: m.toString());
-    setState(() {});
   }
 
   atualizaResultado(List<Municipio> lista) {
@@ -65,7 +58,7 @@ class _MunicipiosACWidgetState extends ModularState<MunicipiosACWidget, Municipi
 
   Widget buildAutoComplete(Municipio m) {
     return Autocomplete<Municipio>(
-      initialValue: TextEditingValue(text: m.toString()),
+      initialValue: TextEditingValue(text: m.cdMunicipio == 0 ? '' : m.toString()),
       optionsBuilder: (TextEditingValue textEditingValue) {
         if (textEditingValue.text == '' || textEditingValue.text.length < 3) {
           return const Iterable<Municipio>.empty();
@@ -87,7 +80,7 @@ class _MunicipiosACWidgetState extends ModularState<MunicipiosACWidget, Municipi
           focusNode: focusNode,
           decoration: InputDecoration(
             //icon: Image.asset('assets/images/inmetro.png'),
-            icon: Icon(Icons.looks_one),
+            icon: Icon(Icons.maps_home_work),
             hintText: 'Informe o nome da cidade',
             hintStyle: TextStyle(fontSize: 10),
             labelText: widget.titulo,
