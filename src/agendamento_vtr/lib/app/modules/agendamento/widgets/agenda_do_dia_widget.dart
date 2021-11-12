@@ -113,7 +113,8 @@ class AgendaDoDiaWidget extends StatelessWidget {
     final isBitrem = _isInicial(tAgendado.bitremAgenda != null);
     Tanque tanque = tAgendado.tanque;
     return ListTile(
-        leading: TextButton(
+        leading: IconButton(
+            splashRadius: 5,
             onPressed: () => {
                   showDialog(
                       barrierDismissible: true,
@@ -122,13 +123,16 @@ class AgendaDoDiaWidget extends StatelessWidget {
                       context: context,
                       builder: (_) => VisualizaTanqueAgendadoDialog(tAgendado)),
                 },
-            child: Icon(Icons.remove_red_eye)),
-        title: Row(children: [
+            icon: Icon(
+              Icons.remove_red_eye,
+              color: Theme.of(context).primaryColor,
+            )),
+        title: Row(mainAxisSize: MainAxisSize.min, children: [
           Text(
             '${tanque.placaFormatada}',
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
+            padding: const EdgeInsets.only(left: 20),
             child: Text(
               '${tanque.capacidadeTotal} L',
               style: TextStyle(fontSize: 12),
@@ -139,6 +143,7 @@ class AgendaDoDiaWidget extends StatelessWidget {
         trailing: ConstrainedBox(
           constraints: BoxConstraints.loose(Size(300, double.infinity)),
           child: Row(
+            mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               TextButton(
@@ -170,13 +175,17 @@ class AgendaDoDiaWidget extends StatelessWidget {
                     'Bitrem',
                     style: TextStyle(color: isBitrem),
                   )),
-              TextButton(
+              IconButton(
+                  splashRadius: 5,
                   onPressed: () => {
                         _excluiTanqueAgendado(tAgendado),
                         _salvaAlteracoes(context, tAgendado),
                         _notificaPendentes(tAgendado),
                       },
-                  child: Icon(Icons.close)),
+                  icon: Icon(
+                    Icons.close,
+                    color: Colors.red[800],
+                  )),
             ],
           ),
         ));
