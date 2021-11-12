@@ -41,7 +41,7 @@ class _MainPageState extends ModularState<MainPage, MainStore> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 IconButton(
-                  onPressed: () => {Modular.to.pushNamed('/tanque/cadastro')},
+                  onPressed: () => {Modular.to.pushNamed('/tanque/cadastroTanque')},
                   icon: Icon(Icons.add_road),
                   splashRadius: 5,
                 ),

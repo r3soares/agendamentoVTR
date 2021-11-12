@@ -65,7 +65,7 @@ class VisualizaTanqueAgendadoDialog extends StatelessWidget {
                               Container(
                                 padding: const EdgeInsets.all(8),
                                 child: const Text(
-                                  'Responsável ',
+                                  'Responsável (Agendamento)',
                                   style: TextStyle(fontSize: 18),
                                 ),
                               ),

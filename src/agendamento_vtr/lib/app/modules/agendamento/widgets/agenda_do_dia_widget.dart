@@ -178,9 +178,29 @@ class AgendaDoDiaWidget extends StatelessWidget {
               IconButton(
                   splashRadius: 5,
                   onPressed: () => {
-                        _excluiTanqueAgendado(tAgendado),
-                        _salvaAlteracoes(context, tAgendado),
-                        _notificaPendentes(tAgendado),
+                        showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: Text('Deseja remover o agendamento?'),
+                                content: Text(
+                                    'O Veículo ${tAgendado.tanque.placaFormatada} retornará a lista de tanques não agendados'),
+                                actions: <Widget>[
+                                  TextButton(
+                                    onPressed: () async => {
+                                      _excluiTanqueAgendado(tAgendado),
+                                      await _salvaAlteracoes(context, tAgendado),
+                                      _notificaPendentes(tAgendado),
+                                    },
+                                    child: const Text('Sim'),
+                                  ),
+                                  TextButton(
+                                    onPressed: () => Navigator.pop(context, 'Cancel'),
+                                    child: const Text('Não'),
+                                  ),
+                                ],
+                              );
+                            }),
                       },
                   icon: Icon(
                     Icons.close,
