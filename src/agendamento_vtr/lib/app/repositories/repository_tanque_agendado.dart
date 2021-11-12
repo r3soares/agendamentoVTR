@@ -17,7 +17,7 @@ class RepositoryTanqueAgendado {
       var agendaTanque = result == false ? throw NaoEncontrado(id) : TanqueAgendado.fromJson(result);
       return ModelBase(agendaTanque);
     } on Falha catch (e) {
-      print('Erro ao procurar agendaTanque $id: $e');
+      Log.message(this, 'Erro ao procurar agendaTanque $id: $e');
       throw e;
     }
   }
@@ -57,7 +57,7 @@ class RepositoryTanqueAgendado {
           : (result as List).map((n) => TanqueAgendado.fromJson(n)).toList();
       return ModelBase(lista);
     } on Falha catch (e) {
-      print('Erro ao buscar agendasTanque: $e');
+      Log.message(this, 'Erro ao buscar agendasTanque: $e');
       throw e;
     }
   }
@@ -71,7 +71,7 @@ class RepositoryTanqueAgendado {
           : (result as List).map((n) => TanqueAgendado.fromJson(n)).toList();
       return ModelBase(lista);
     } on Falha catch (e) {
-      print('Erro ao procurar agendasTanque pela lista de agendas: $e');
+      Log.message(this, 'Erro ao procurar agendasTanque pela lista de agendas: $e');
       throw e;
     }
   }
@@ -79,10 +79,10 @@ class RepositoryTanqueAgendado {
   Future<bool> save(TanqueAgendado value) async {
     try {
       bool salvou = await db.save(jsonEncode(value.toJson()));
-      if (!salvou) print('Erro em salvaAgenda em Repository Agenda');
+      if (!salvou) Log.message(this, 'Erro em salvaAgenda em Repository Agenda');
       return salvou;
     } on Falha catch (e) {
-      print('Erro ao salvar agendaTanque ${value.id}: $e');
+      Log.message(this, 'Erro ao salvar agendaTanque ${value.id}: $e');
       throw e;
     }
   }
@@ -93,10 +93,21 @@ class RepositoryTanqueAgendado {
       for (var item in lista) {
         salvou = await db.save(jsonEncode(item.toJson())) && salvou;
       }
-      if (!salvou) print('Erro em saveMany em Repository de Tanques Agendados');
+      if (!salvou) Log.message(this, 'Erro em saveMany em Repository de Tanques Agendados');
       return ModelBase(salvou);
     } on Falha catch (e) {
-      print('Erro ao salvar lista de tanques agendados: $e');
+      Log.message(this, 'Erro ao salvar lista de tanques agendados: $e');
+      throw e;
+    }
+  }
+
+  Future<bool> remove(String id) async {
+    try {
+      bool removeu = await db.delete(id);
+      if (!removeu) Log.message(this, 'Erro ao remover tanque agendado');
+      return removeu;
+    } on Falha catch (e) {
+      Log.message(this, 'Erro ao remover tanque agendado $id: $e');
       throw e;
     }
   }

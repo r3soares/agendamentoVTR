@@ -134,7 +134,8 @@ class _CalendarioWidgetState extends ModularState<CalendarioWidget, CalendarioSt
               children: [
                 Text(
                   '${dia.day}',
-                  style: TextStyle(color: _getColorAgenda(agendaModel.status), fontSize: 18),
+                  style:
+                      TextStyle(color: _getColorAgenda(agendaModel.status), fontSize: 16, fontWeight: FontWeight.bold),
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -153,7 +154,7 @@ class _CalendarioWidgetState extends ModularState<CalendarioWidget, CalendarioSt
         alignment: Alignment.center,
         child: Text(
           '${dia.day}',
-          style: TextStyle(color: _getColorByDiaSemana(dia.weekday)),
+          style: TextStyle(color: _getColorByDiaSemana(dia.weekday), fontWeight: FontWeight.bold),
         ),
       ),
     );
@@ -164,10 +165,7 @@ class _CalendarioWidgetState extends ModularState<CalendarioWidget, CalendarioSt
       alignment: Alignment.center,
       child: Text(
         '${dia.day}',
-        style: TextStyle(
-          color: Theme.of(context).primaryColor,
-          fontSize: 25,
-        ),
+        style: TextStyle(color: Theme.of(context).primaryColor, fontSize: 18, fontWeight: FontWeight.bold),
       ),
     );
   }
@@ -194,7 +192,7 @@ class _CalendarioWidgetState extends ModularState<CalendarioWidget, CalendarioSt
     return Center(
       child: Text(
         '${dia.day}',
-        style: TextStyle(color: Colors.grey[500]),
+        style: TextStyle(color: Colors.grey[500], fontWeight: FontWeight.bold),
       ),
     );
   }
@@ -230,7 +228,7 @@ class _CalendarioWidgetState extends ModularState<CalendarioWidget, CalendarioSt
       case StatusAgenda.Disponivel:
         return Colors.green.shade700;
       case StatusAgenda.Cheia:
-        return Colors.red.shade300;
+        return Colors.red.shade500;
       case StatusAgenda.Encerrada:
         return Colors.grey.shade500;
       case StatusAgenda.Indisponivel:
