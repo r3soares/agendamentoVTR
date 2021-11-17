@@ -60,7 +60,7 @@ class VisualizaTanqueAgendadoDialog extends StatelessWidget {
                               ),
                               Container(
                                 padding: const EdgeInsets.all(8),
-                                child: _proprietarioWidget(context, tanque.proprietario, 'proprietário'),
+                                child: _proprietarioWidget(context, tanque.proprietario, 'Proprietário'),
                               )
                             ],
                           ),
@@ -75,7 +75,7 @@ class VisualizaTanqueAgendadoDialog extends StatelessWidget {
                               ),
                               Container(
                                 padding: const EdgeInsets.all(8),
-                                child: _proprietarioWidget(context, tAgendado.responsavel, 'responsável'),
+                                child: _proprietarioWidget(context, tAgendado.responsavel, 'Responsável'),
                               )
                             ],
                           )
@@ -216,18 +216,7 @@ class VisualizaTanqueAgendadoDialog extends StatelessWidget {
   Widget _proprietarioWidget(BuildContext context, Empresa? p, String proOuResp) {
     return p == null
         ? TextButton(
-            onPressed: () => {
-                  showDialog(
-                    barrierDismissible: true,
-                    barrierColor: Color.fromRGBO(0, 0, 0, .5),
-                    useSafeArea: true,
-                    context: context,
-                    builder: (_) => PesquisaEmpresaDialog('Proprietario', tAgendado),
-                  ).then((_) async => {
-                        await _salvaAlteracoes(context, tAgendado),
-                        atualizaDialog(context),
-                      }),
-                },
+            onPressed: () => showDialogPesquisaEmpresa(context, proOuResp),
             child: Text(
               'Nenhum $proOuResp definido',
               style: TextStyle(fontSize: 18, color: Colors.blueAccent),
@@ -247,6 +236,19 @@ class VisualizaTanqueAgendadoDialog extends StatelessWidget {
       ScaffoldMessenger.of(context)
           .showSnackBar(const SnackBar(content: Text('Não foi possível salvar as alterações')));
     }
+  }
+
+  showDialogPesquisaEmpresa(BuildContext context, String propOuResp) {
+    showDialog(
+      barrierDismissible: true,
+      barrierColor: Color.fromRGBO(0, 0, 0, .5),
+      useSafeArea: true,
+      context: context,
+      builder: (_) => PesquisaEmpresaDialog(propOuResp, tAgendado),
+    ).then((_) async => {
+          await _salvaAlteracoes(context, tAgendado),
+          atualizaDialog(context),
+        });
   }
 
   atualizaDialog(BuildContext context) {
