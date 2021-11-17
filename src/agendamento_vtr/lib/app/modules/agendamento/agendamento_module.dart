@@ -4,6 +4,7 @@ import 'package:agendamento_vtr/app/modules/agendamento/stores/calendario_store.
 import 'package:agendamento_vtr/app/modules/agendamento/stores/inclui_pendente_store.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/stores/main_store.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/stores/inclui_agendado_store.dart';
+import 'package:agendamento_vtr/app/modules/agendamento/stores/pesquisa_empresa_store.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/stores/reagenda_store.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/stores/tanques_pendentes_store.dart';
 import 'package:agendamento_vtr/app/modules/empresa/empresa_module.dart';
@@ -37,6 +38,7 @@ class AgendamentoModule extends Module {
     Bind.lazySingleton((i) => ReagendaStore(Modular.get<RepositoryAgenda>(), Modular.get<RepositoryTanqueAgendado>())),
     Bind.lazySingleton(
         (i) => TanquesPendentesStore(Modular.get<RepositoryTanqueAgendado>(), Modular.get<RepositoryTanque>())),
+    Bind.lazySingleton((i) => PesquisaEmpresaStore()),
   ];
 
   @override

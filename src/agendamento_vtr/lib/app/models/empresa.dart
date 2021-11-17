@@ -34,6 +34,11 @@ class Empresa implements JsonSerializable {
         'proprietario': proprietario == null ? null : proprietario!.toJson(),
         'obs': obs
       };
+
+  @override
+  String toString() {
+    return '[$cnpjCpf] $razaoSocial';
+  }
 }
 
 enum StatusEmpresa {

@@ -3,11 +3,15 @@ import 'package:agendamento_vtr/app/domain/constantes.dart';
 import 'package:agendamento_vtr/app/models/compartimento.dart';
 import 'package:agendamento_vtr/app/models/empresa.dart';
 import 'package:agendamento_vtr/app/models/tanque.dart';
+import 'package:agendamento_vtr/app/modules/agendamento/dialogs/pesquisa_empresa_dialog.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/models/tanque_agendado.dart';
+import 'package:agendamento_vtr/app/repositories/repository_tanque_agendado.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 
 class VisualizaTanqueAgendadoDialog extends StatelessWidget {
   final TanqueAgendado tAgendado;
+  final RepositoryTanqueAgendado repoTa = Modular.get<RepositoryTanqueAgendado>();
   final ScrollController scrollControlller = ScrollController();
 
   VisualizaTanqueAgendadoDialog(this.tAgendado);
@@ -56,7 +60,7 @@ class VisualizaTanqueAgendadoDialog extends StatelessWidget {
                               ),
                               Container(
                                 padding: const EdgeInsets.all(8),
-                                child: _proprietarioWidget(tanque.proprietario, 'proprietário'),
+                                child: _proprietarioWidget(context, tanque.proprietario, 'proprietário'),
                               )
                             ],
                           ),
@@ -71,7 +75,7 @@ class VisualizaTanqueAgendadoDialog extends StatelessWidget {
                               ),
                               Container(
                                 padding: const EdgeInsets.all(8),
-                                child: _proprietarioWidget(tAgendado.responsavel, 'responsável'),
+                                child: _proprietarioWidget(context, tAgendado.responsavel, 'responsável'),
                               )
                             ],
                           )
@@ -209,10 +213,21 @@ class VisualizaTanqueAgendadoDialog extends StatelessWidget {
     );
   }
 
-  Widget _proprietarioWidget(Empresa? p, String proOuResp) {
+  Widget _proprietarioWidget(BuildContext context, Empresa? p, String proOuResp) {
     return p == null
         ? TextButton(
-            onPressed: () => {},
+            onPressed: () => {
+                  showDialog(
+                    barrierDismissible: true,
+                    barrierColor: Color.fromRGBO(0, 0, 0, .5),
+                    useSafeArea: true,
+                    context: context,
+                    builder: (_) => PesquisaEmpresaDialog('Proprietario', tAgendado),
+                  ).then((_) async => {
+                        await _salvaAlteracoes(context, tAgendado),
+                        atualizaDialog(context),
+                      }),
+                },
             child: Text(
               'Nenhum $proOuResp definido',
               style: TextStyle(fontSize: 18, color: Colors.blueAccent),
@@ -223,5 +238,24 @@ class VisualizaTanqueAgendadoDialog extends StatelessWidget {
               '${p.razaoSocial}',
               style: TextStyle(fontSize: 18, color: Colors.blueAccent),
             ));
+  }
+
+  Future _salvaAlteracoes(BuildContext context, TanqueAgendado tAgendado) async {
+    try {
+      await repoTa.save(tAgendado);
+    } catch (e) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text('Não foi possível salvar as alterações')));
+    }
+  }
+
+  atualizaDialog(BuildContext context) {
+    Modular.to.pop();
+    showDialog(
+        barrierDismissible: true,
+        barrierColor: Color.fromRGBO(0, 0, 0, .5),
+        useSafeArea: true,
+        context: context,
+        builder: (_) => VisualizaTanqueAgendadoDialog(tAgendado));
   }
 }

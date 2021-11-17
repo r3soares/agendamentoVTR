@@ -51,4 +51,24 @@ class RepositoryEmpresa {
       throw e;
     }
   }
+
+  Future<List<Empresa>> findEmpresasByNome(String nome) async {
+    try {
+      var result = await db.find('nome', '|$nome|');
+      return result == false ? List.empty(growable: true) : (result as List).map((n) => Empresa.fromJson(n)).toList();
+    } on Falha catch (e) {
+      print('Erro ao procurar empresas pelo nome $nome: $e');
+      throw e;
+    }
+  }
+
+  Future<List<Empresa>> findEmpresasByCNPJParcial(String cnpj) async {
+    try {
+      var result = await db.find('cnpjParcial', cnpj);
+      return result == false ? List.empty(growable: true) : (result as List).map((n) => Empresa.fromJson(n)).toList();
+    } on Falha catch (e) {
+      print('Erro ao procurar empresas pelo cnpj parcial $cnpj: $e');
+      throw e;
+    }
+  }
 }
