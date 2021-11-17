@@ -50,17 +50,15 @@ class _IncluiPendenteWidgetState extends ModularState<IncluiPendenteWidget, Incl
       store.getVeiculoByInmetro(_cPesquisa.text);
       return;
     }
-    erro is NaoEncontrado
-        ? ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text('Veículo não encontrado'),
-            action: SnackBarAction(
-                label: 'Novo veículo',
-                onPressed: () => {
-                      Modular.to
-                          .pushNamed('/tanque/cadastroTanque')
-                          .whenComplete(() => store.getVeiculoByPlaca(_cPesquisa.text)),
-                    })))
-        : '';
+    erro is NaoEncontrado ? goCadastroTanque() : '';
+    resetState();
+  }
+
+  goCadastroTanque() {
+    if (_cPesquisa.text.isEmpty) return;
+    Modular.to.pushNamed('/tanque/cadastroTanque').whenComplete(() => {store.getVeiculoByPlaca(_cPesquisa.text)});
+    store.filtraLista('');
+    _cPesquisa.clear();
     resetState();
   }
 
