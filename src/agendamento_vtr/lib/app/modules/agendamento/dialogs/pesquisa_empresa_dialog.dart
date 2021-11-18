@@ -48,7 +48,9 @@ class _PesquisaEmpresaDialogState extends ModularState<PesquisaEmpresaDialog, Pe
                 if (textEditingValue.text == '' || textEditingValue.text.length < 3) {
                   return const Iterable<Empresa>.empty();
                 }
-                store.getEmpresasByNome(textEditingValue.text);
+                textEditingValue.text.startsWith(RegExp(r'^[0-9]'))
+                    ? store.getEmpresasByCNPJ(textEditingValue.text)
+                    : store.getEmpresasByNome(textEditingValue.text);
                 return empresas;
               },
               onSelected: (Empresa selection) {
@@ -66,7 +68,7 @@ class _PesquisaEmpresaDialogState extends ModularState<PesquisaEmpresaDialog, Pe
                   focusNode: focusNode,
                   decoration: InputDecoration(
                     //icon: Image.asset('assets/images/inmetro.png'),
-                    icon: Icon(Icons.maps_home_work),
+                    icon: Icon(Icons.person),
                     hintText: 'Informe o nome ou CNPJ do ${widget.titulo}',
                     hintStyle: TextStyle(fontSize: 10),
                     labelText: 'Pesquisa de ${widget.titulo}',
