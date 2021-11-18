@@ -103,7 +103,7 @@ void main() {
         TanqueAgendado at = mb.model;
         expect(at, isNotNull);
         expect(at.agenda, equals(lista[i].agenda));
-        expect(at.agendaAnterior, equals(lista[i].agendaAnterior));
+        //expect(at.agendaAnterior, equals(lista[i].agendaAnterior));
         expect(at.bitremAgenda, equals(lista[i].bitremAgenda));
         expect(at.custoVerificacao, equals(lista[i].custoVerificacao));
         expect(at.id, equals(lista[i].id));

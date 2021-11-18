@@ -11,8 +11,6 @@ class TanqueAgendado implements JsonSerializable {
   String? bitremAgenda;
   bool isNovo = false;
 
-  String? agendaAnterior;
-
   StatusConfirmacao statusConfirmacao = StatusConfirmacao.PreAgendado;
   StatusPagamento statusPagamento = StatusPagamento.Pendente;
 
@@ -32,7 +30,7 @@ class TanqueAgendado implements JsonSerializable {
         responsavel = json['responsavel'] == null ? null : Empresa.fromJson(json['responsavel']),
         bitremAgenda = json['bitremAgenda'],
         isNovo = json['isNovo'],
-        agendaAnterior = json['agendaAnterior'],
+        //agendaAnterior = json['agendaAnterior'],
         agenda = json['agenda'],
         statusConfirmacao = StatusConfirmacao.values[json['statusConfirmacao']],
         statusPagamento = StatusPagamento.values[json['statusPagamento']],
@@ -48,7 +46,7 @@ class TanqueAgendado implements JsonSerializable {
         'responsavel': responsavel?.toJson(),
         'bitremAgenda': bitremAgenda,
         'isNovo': isNovo,
-        'agendaAnterior': agendaAnterior,
+        //'agendaAnterior': agendaAnterior,
         'agenda': agenda,
         'statusConfirmacao': statusConfirmacao.index,
         'statusPagamento': statusPagamento.index,

@@ -19,13 +19,13 @@ class Agendados {
       TanqueAgendado a = TanqueAgendado(id: Uuid().v1(), tanque: Tanques.tanques[i]);
       a.statusConfirmacao = StatusConfirmacao.values[r.nextInt(StatusConfirmacao.values.length)];
       a.agenda = a.statusConfirmacao.index == 0 ? null : Datas.datas[r.nextInt(Datas.datas.length - 1)];
-      a.agendaAnterior = a.agenda == null || a.statusConfirmacao != StatusConfirmacao.Reagendado
-          ? null
-          : r.nextInt(10) > 9
-              ? agendados.isNotEmpty
-                  ? agendados[r.nextInt(agendados.length)].id
-                  : null
-              : null;
+      // a.agendaAnterior = a.agenda == null || a.statusConfirmacao != StatusConfirmacao.Reagendado
+      //     ? null
+      //     : r.nextInt(10) > 9
+      //         ? agendados.isNotEmpty
+      //             ? agendados[r.nextInt(agendados.length)].id
+      //             : null
+      //         : null;
       a.bitremAgenda = r.nextInt(10) > 9
           ? agendados.isNotEmpty
               ? agendados[r.nextInt(agendados.length)].id

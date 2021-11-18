@@ -39,7 +39,6 @@ class ReagendaStore extends StreamStore<Falha, ModelBase> {
   reagenda(TanqueAgendado taVelho, TanqueAgendado taNovo, Agenda aVelha, Agenda aNova) async {
     taVelho.statusConfirmacao = StatusConfirmacao.Reagendado;
     taNovo.statusConfirmacao = StatusConfirmacao.NaoConfirmado;
-    taNovo.agendaAnterior = taVelho.agenda;
     aVelha.tanquesAgendados.removeWhere((ta) => ta.id == taVelho.id);
     aNova.tanquesAgendados.add(taNovo);
     setLoading(true);

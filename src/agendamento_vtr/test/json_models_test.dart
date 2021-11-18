@@ -72,7 +72,7 @@ void main() {
         Map<String, dynamic> json = a1.toJson();
         TanqueAgendado a2 = a1.fromJson(json);
         expect(a1.agenda, equals(a2.agenda), reason: 'Agenda não validou');
-        expect(a1.agendaAnterior, equals(a2.agendaAnterior), reason: 'agendaAnterior não validou');
+        //expect(a1.agendaAnterior, equals(a2.agendaAnterior), reason: 'agendaAnterior não validou');
         expect(a1.bitremAgenda, equals(a2.bitremAgenda), reason: 'bitremAgenda não validou');
         expect(a1.custoVerificacao, equals(a2.custoVerificacao), reason: 'custoVerificacao não validou');
         expect(a1.id, equals(a2.id), reason: 'id diferente');
