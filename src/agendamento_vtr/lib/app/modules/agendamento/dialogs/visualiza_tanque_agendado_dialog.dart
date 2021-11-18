@@ -22,9 +22,11 @@ class VisualizaTanqueAgendadoDialog extends StatelessWidget {
     final data = Constants.formatoData.format(tanque.dataRegistro);
     return Dialog(
       child: SingleChildScrollView(
+        scrollDirection: Axis.vertical,
+        controller: scrollControlller,
         child: Container(
-          width: 800,
-          height: 500,
+          width: 900,
+          height: 700,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -43,7 +45,7 @@ class VisualizaTanqueAgendadoDialog extends StatelessWidget {
                 flex: 2,
                 child: Column(
                   children: [
-                    _titulo('Empresas associadas ao veículo'),
+                    buildTitulo('Empresas associadas ao veículo'),
                     Card(
                       elevation: 4,
                       shadowColor: Colors.black,
@@ -60,7 +62,7 @@ class VisualizaTanqueAgendadoDialog extends StatelessWidget {
                               ),
                               Container(
                                 padding: const EdgeInsets.all(8),
-                                child: _proprietarioWidget(context, tanque.proprietario, 'Proprietário'),
+                                child: buildProprietarioWidget(context, tanque.proprietario, 'Proprietário'),
                               )
                             ],
                           ),
@@ -75,7 +77,7 @@ class VisualizaTanqueAgendadoDialog extends StatelessWidget {
                               ),
                               Container(
                                 padding: const EdgeInsets.all(8),
-                                child: _proprietarioWidget(context, tAgendado.responsavel, 'Responsável'),
+                                child: buildProprietarioWidget(context, tAgendado.responsavel, 'Responsável'),
                               )
                             ],
                           )
@@ -86,12 +88,12 @@ class VisualizaTanqueAgendadoDialog extends StatelessWidget {
                 ),
               ),
               Flexible(
-                flex: 3,
+                flex: 2,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    _titulo('Dados do tanque'),
+                    buildTitulo('Dados do tanque'),
                     Expanded(
                       child: Card(
                         elevation: 4,
@@ -99,8 +101,7 @@ class VisualizaTanqueAgendadoDialog extends StatelessWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Flexible(child: _compatimentosWidget(tanque.compartimentos)),
-                            Flexible(child: _ultimoAgendamentoWidget())
+                            Flexible(child: buildCompatimentosWidget(tanque.compartimentos)),
                           ],
                         ),
                       ),
@@ -109,12 +110,68 @@ class VisualizaTanqueAgendadoDialog extends StatelessWidget {
                 ),
               ),
               Flexible(
+                flex: 2,
+                child: Column(
+                  children: [
+                    buildTitulo('Status'),
+                    Card(
+                      elevation: 4,
+                      shadowColor: Colors.black,
+                      child: Column(
+                        children: [
+                          Row(
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.all(8),
+                                child: const Text(
+                                  'Confirmação ',
+                                  style: TextStyle(fontSize: 18),
+                                ),
+                              ),
+                              Container(
+                                padding: const EdgeInsets.all(8),
+                                child: buildStatusConfirmacao(),
+                              )
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.all(8),
+                                child: const Text(
+                                  'Pagamento',
+                                  style: TextStyle(fontSize: 18),
+                                ),
+                              ),
+                              Container(
+                                padding: const EdgeInsets.all(8),
+                                child: buildStatusPagamento(),
+                              )
+                            ],
+                          )
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Flexible(
+                flex: 1,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    buildTitulo('Agendamentos'),
+                    buildUltimoAgendamentoWidget(),
+                  ],
+                ),
+              ),
+              Flexible(
                 flex: 1,
                 child: Container(
                   alignment: Alignment.bottomRight,
-                  padding: EdgeInsets.only(top: 12, right: 8),
+                  padding: EdgeInsets.only(top: 12, right: 8, bottom: 8),
                   child: Text(
-                    'Registrado em $data',
+                    'Tanque cadastrado em $data',
                     style: TextStyle(fontSize: 10),
                   ),
                 ),
@@ -126,7 +183,7 @@ class VisualizaTanqueAgendadoDialog extends StatelessWidget {
     );
   }
 
-  Widget _titulo(String texto) {
+  Widget buildTitulo(String texto) {
     return Container(
         alignment: Alignment.centerLeft,
         padding: EdgeInsets.all(8),
@@ -136,7 +193,7 @@ class VisualizaTanqueAgendadoDialog extends StatelessWidget {
         ));
   }
 
-  Widget _compatimentosWidget(List<Compartimento> compartimentos) {
+  Widget buildCompatimentosWidget(List<Compartimento> compartimentos) {
     if (compartimentos.isEmpty) {
       return TextButton(
         onPressed: () => {},
@@ -160,12 +217,12 @@ class VisualizaTanqueAgendadoDialog extends StatelessWidget {
             ),
           ),
         ),
-        Expanded(flex: 4, child: _listaCompartimentos(compartimentos)),
+        Expanded(flex: 4, child: buildListaCompartimentos(compartimentos)),
       ],
     );
   }
 
-  Widget _listaCompartimentos(List<Compartimento> compartimentos) {
+  Widget buildListaCompartimentos(List<Compartimento> compartimentos) {
     return ScrollConfiguration(
       behavior: CustomScrollBehavior(),
       child: ListView.builder(
@@ -196,24 +253,17 @@ class VisualizaTanqueAgendadoDialog extends StatelessWidget {
     );
   }
 
-  Widget _ultimoAgendamentoWidget() {
-    return Padding(
-      padding: const EdgeInsets.all(8),
-      child: tAgendado.isNovo
-          ? Text('Veículo novo')
-          : tAgendado.agendaAnterior == null
-              ? Text('Sem dados do último agendamento')
-              : TextButton(
-                  child: Text(
-                    'Visualizar último agendamento',
-                    style: TextStyle(color: Colors.blueAccent),
-                  ),
-                  onPressed: () => {},
-                ),
+  Widget buildUltimoAgendamentoWidget() {
+    return TextButton(
+      child: Text(
+        'Visualizar histórico de agendamentos',
+        style: TextStyle(color: Colors.blueAccent),
+      ),
+      onPressed: () => {},
     );
   }
 
-  Widget _proprietarioWidget(BuildContext context, Empresa? p, String proOuResp) {
+  Widget buildProprietarioWidget(BuildContext context, Empresa? p, String proOuResp) {
     return p == null
         ? TextButton(
             onPressed: () => showDialogPesquisaEmpresa(context, proOuResp),
@@ -229,12 +279,60 @@ class VisualizaTanqueAgendadoDialog extends StatelessWidget {
             ));
   }
 
+  Widget buildStatusConfirmacao() {
+    var statusC = getStatusConfirmacao();
+
+    return TextButton(
+        onPressed: () => {},
+        child: Text(
+          statusC.key,
+          style: TextStyle(color: statusC.value),
+        ));
+  }
+
+  Widget buildStatusPagamento() {
+    var statusP = getStatusPagamento(tAgendado.statusPagamento);
+    return TextButton(
+        onPressed: () => {},
+        child: Text(
+          statusP.key,
+          style: TextStyle(color: statusP.value),
+        ));
+  }
+
   Future _salvaAlteracoes(BuildContext context, TanqueAgendado tAgendado) async {
     try {
       await repoTa.save(tAgendado);
     } catch (e) {
       ScaffoldMessenger.of(context)
           .showSnackBar(const SnackBar(content: Text('Não foi possível salvar as alterações')));
+    }
+  }
+
+  MapEntry<String, Color> getStatusConfirmacao() {
+    var status = tAgendado.statusConfirmacao;
+    switch (status) {
+      case StatusConfirmacao.PreAgendado:
+        return MapEntry('Fila de Espera', Colors.deepPurple);
+      case StatusConfirmacao.NaoConfirmado:
+        return MapEntry('Aguardando confirmação para o dia ${tAgendado.agenda}', Colors.orange);
+      case StatusConfirmacao.Confirmado:
+        return MapEntry('Confirmado para o dia ${tAgendado.agenda}', Colors.green);
+      case StatusConfirmacao.Reagendado:
+        return MapEntry('Reagendado para o dia ${tAgendado.agenda}', Colors.blue.shade900);
+      case StatusConfirmacao.Cancelado:
+        return MapEntry('Cancelado para o dia ${tAgendado.agenda}', Colors.red);
+    }
+  }
+
+  MapEntry<String, Color> getStatusPagamento(StatusPagamento status) {
+    switch (status) {
+      case StatusPagamento.Atrasado:
+        return MapEntry('Atrasado', Colors.red.shade900);
+      case StatusPagamento.Confirmado:
+        return MapEntry('Confirmado', Colors.green);
+      case StatusPagamento.Pendente:
+        return MapEntry('Pendente', Colors.orange);
     }
   }
 
