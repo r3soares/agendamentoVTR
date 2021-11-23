@@ -5,7 +5,7 @@ import 'package:agendamento_vtr/app/modules/agendamento/controllers/agendaContro
 import 'package:agendamento_vtr/app/modules/agendamento/dialogs/altera_status_agenda_dialog.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/dialogs/altera_status_dialog.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/dialogs/set_bitrem_dialog.dart';
-import 'package:agendamento_vtr/app/modules/agendamento/dialogs/visualiza_tanque_agendado_dialog.dart';
+import 'package:agendamento_vtr/app/modules/agendamento/dialogs/tanque_agendado/visualiza_tanque_agendado_dialog.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/models/agenda.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/models/tanque_agendado.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/widgets/inclui_agendado_widget.dart';

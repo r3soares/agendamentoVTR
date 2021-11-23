@@ -2,7 +2,7 @@ import 'package:agendamento_vtr/app/behaviors/custom_scroll_behavior.dart';
 import 'package:agendamento_vtr/app/domain/erros.dart';
 import 'package:agendamento_vtr/app/models/tanque.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/controllers/agendaController.dart';
-import 'package:agendamento_vtr/app/modules/agendamento/dialogs/visualiza_tanque_agendado_dialog.dart';
+import 'package:agendamento_vtr/app/modules/agendamento/dialogs/tanque_agendado/visualiza_tanque_agendado_dialog.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/models/agenda.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/models/tanque_agendado.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/widgets/inclui_pendente_widget.dart';
