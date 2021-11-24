@@ -301,6 +301,7 @@ class _CadastroPageState extends ModularState<CadastroPage, EmpresaStore> {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Verifique os dados pendentes')));
       return;
     }
+    _empresa.proprietario = isProprietario ? _empresa.proprietario : null;
     store.salva(_empresa);
     print('Salvando empresa: ' + _empresa.cnpjCpf);
   }
