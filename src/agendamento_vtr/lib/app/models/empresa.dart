@@ -35,6 +35,11 @@ class Empresa implements JsonSerializable {
         'obs': obs
       };
 
+  String get cnpjFormatado => cnpjCpf.length > 11
+      ? '${cnpjCpf.substring(0, 2)}.${cnpjCpf.substring(2, 5)}.${cnpjCpf.substring(5, 8)}/${cnpjCpf.substring(8, 12)}-${cnpjCpf.substring(12, 14)}'
+      : '${cnpjCpf.substring(0, 3)}.${cnpjCpf.substring(3, 6)}.${cnpjCpf.substring(6, 9)}-${cnpjCpf.substring(9, 11)}';
+
+  String get cnpjOuCpf => cnpjCpf.length > 11 ? 'CNPJ' : 'CPF';
   @override
   String toString() {
     return '[$cnpjCpf] $razaoSocial';

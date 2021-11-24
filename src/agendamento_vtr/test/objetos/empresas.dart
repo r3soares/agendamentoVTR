@@ -85,7 +85,7 @@ class Empresas {
     for (int i = 0; i < cpfs.length; i++) {
       Empresa e = new Empresa()
         ..cnpjCpf = cpfs[i]
-        ..email = cpfs[r.nextInt(emails.length - 1)]
+        ..email = emails[r.nextInt(emails.length - 1)]
         ..proprietario = r.nextInt(10) > 7
             ? (Proprietario()
               ..cod = i
