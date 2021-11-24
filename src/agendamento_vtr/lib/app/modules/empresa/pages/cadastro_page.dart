@@ -35,6 +35,8 @@ class _CadastroPageState extends ModularState<CadastroPage, EmpresaStore> {
 
   final Bloc blocTelefone = Bloc('');
 
+  bool isProprietario = false;
+
   late Widget cnpjProprietarioWidget;
   late Widget _telefoneWidget;
 
@@ -45,6 +47,7 @@ class _CadastroPageState extends ModularState<CadastroPage, EmpresaStore> {
   void initState() {
     super.initState();
     _empresa = widget.preCadastro ?? Empresa();
+    isProprietario = _empresa.proprietario != null;
     _empresa.proprietario = _empresa.proprietario ?? Proprietario();
     _cEmail.text = _empresa.email;
     _cRazaSocialProp.text = _empresa.razaoSocial;
@@ -122,12 +125,13 @@ class _CadastroPageState extends ModularState<CadastroPage, EmpresaStore> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   buildTitulo(),
+                  buildIsProprietario(),
                   buildCNPJWidget(),
                   buildRazaoSocial(),
                   buildTelefone(),
                   buildEmail(),
-                  buildInmetro(),
-                  buildCodMun(),
+                  isProprietario ? buildInmetro() : SizedBox.shrink(),
+                  isProprietario ? buildCodMun() : SizedBox.shrink(),
                   Container(
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -210,6 +214,18 @@ class _CadastroPageState extends ModularState<CadastroPage, EmpresaStore> {
       padding: const EdgeInsets.all(8),
       child: _codMunWidget,
     );
+  }
+
+  Widget buildIsProprietario() {
+    return Row(
+      children: [Text('Proprietário?'), Checkbox(value: isProprietario, onChanged: (value) => setDeleteProprietario())],
+    );
+  }
+
+  setDeleteProprietario() {
+    setState(() {
+      isProprietario = !isProprietario;
+    });
   }
 
   String? validateEmail(String? value) {
