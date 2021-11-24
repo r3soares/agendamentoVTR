@@ -53,7 +53,7 @@ void main() {
         ModelBase mb = await repoAgenda.save(a);
         expect(mb.model, isTrue);
       }
-    }, timeout: Timeout(Duration(minutes: 2)));
+    }, timeout: Timeout(Duration(minutes: 5)));
     test('Empresas', () async {
       sleep(Duration(seconds: 1));
       for (int i = 0; i < Empresas.empresas.length; i++) {
@@ -71,7 +71,7 @@ void main() {
         expect(e2.status, equals(e.status));
         expect(e2.telefones.length, equals(e.telefones.length));
       }
-    }, timeout: Timeout(Duration(minutes: 2)));
+    }, timeout: Timeout(Duration(minutes: 5)));
 
     test('Tanques', () async {
       sleep(Duration(seconds: 1));

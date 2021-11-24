@@ -34,7 +34,9 @@ class EmpresasAssociadasTab extends StatelessWidget {
                   ),
                 ),
                 Expanded(flex: 3, child: buildProprietarioWidget(context, tanque.proprietario, 'Proprietário')),
-                Flexible(flex: 1, child: buildBotoes(context)),
+                tanque.proprietario == null
+                    ? SizedBox.shrink()
+                    : Flexible(flex: 1, child: buildBotoes(context, 'Proprietário')),
               ],
             ),
           ),
@@ -50,7 +52,9 @@ class EmpresasAssociadasTab extends StatelessWidget {
                   ),
                 ),
                 Expanded(flex: 3, child: buildProprietarioWidget(context, tAgendado.responsavel, 'Responsável')),
-                Flexible(flex: 1, child: buildBotoes(context)),
+                tAgendado.responsavel == null
+                    ? SizedBox.shrink()
+                    : Flexible(flex: 1, child: buildBotoes(context, 'Responsável')),
               ],
             ),
           )
@@ -59,15 +63,16 @@ class EmpresasAssociadasTab extends StatelessWidget {
     );
   }
 
-  Widget buildBotoes(BuildContext context) {
+  Widget buildBotoes(BuildContext context, String propOuResp) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          ElevatedButton(onPressed: () => {}, child: Text('Alterar')),
+          ElevatedButton(onPressed: () => showDialogPesquisaEmpresa(context, propOuResp), child: Text('Alterar')),
           TextButton(
-              onPressed: () => {},
+              onPressed: () async =>
+                  {removePropOuResp(propOuResp), await _salvaAlteracoes(context), atualizaDialog(context)},
               child: Text(
                 'Remover',
                 style: TextStyle(color: Colors.red[800]),
@@ -129,6 +134,21 @@ class EmpresasAssociadasTab extends StatelessWidget {
     );
   }
 
+  removePropOuResp(String propOuResp) {
+    switch (propOuResp[0]) {
+      case 'P':
+        {
+          tAgendado.tanque.proprietario = null;
+          return;
+        }
+      case 'R':
+        {
+          tAgendado.responsavel = null;
+          return;
+        }
+    }
+  }
+
   showDialogPesquisaEmpresa(BuildContext context, String propOuResp) {
     showDialog(
       barrierDismissible: true,
@@ -137,12 +157,12 @@ class EmpresasAssociadasTab extends StatelessWidget {
       context: context,
       builder: (_) => PesquisaEmpresaDialog(propOuResp, tAgendado),
     ).then((_) async => {
-          await _salvaAlteracoes(context, tAgendado),
+          await _salvaAlteracoes(context),
           atualizaDialog(context),
         });
   }
 
-  Future _salvaAlteracoes(BuildContext context, TanqueAgendado tAgendado) async {
+  Future _salvaAlteracoes(BuildContext context) async {
     try {
       await repoTa.save(tAgendado);
     } catch (e) {

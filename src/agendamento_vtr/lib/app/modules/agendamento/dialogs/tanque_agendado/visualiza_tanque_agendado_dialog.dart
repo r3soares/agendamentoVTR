@@ -1,17 +1,9 @@
-import 'package:agendamento_vtr/app/behaviors/custom_scroll_behavior.dart';
-import 'package:agendamento_vtr/app/domain/constantes.dart';
-import 'package:agendamento_vtr/app/models/compartimento.dart';
-import 'package:agendamento_vtr/app/models/empresa.dart';
-import 'package:agendamento_vtr/app/models/tanque.dart';
-import 'package:agendamento_vtr/app/modules/agendamento/dialogs/pesquisa_empresa_dialog.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/dialogs/tanque_agendado/agendamentos_tab.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/dialogs/tanque_agendado/empresas_associadas_tab.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/dialogs/tanque_agendado/status_tab.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/dialogs/tanque_agendado/tanque_tab.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/models/tanque_agendado.dart';
-import 'package:agendamento_vtr/app/repositories/repository_tanque_agendado.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_modular/flutter_modular.dart';
 
 class VisualizaTanqueAgendadoDialog extends StatelessWidget {
   final TanqueAgendado tAgendado;
@@ -26,6 +18,7 @@ class VisualizaTanqueAgendadoDialog extends StatelessWidget {
           length: 4,
           child: Scaffold(
             appBar: AppBar(
+              title: Text('${tAgendado.tanque.placaFormatada} (${tAgendado.tanque.codInmetro})'),
               bottom: TabBar(
                 tabs: [
                   Tab(child: Text('Empresas Associadas')),

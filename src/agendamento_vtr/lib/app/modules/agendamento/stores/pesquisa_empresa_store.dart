@@ -8,10 +8,10 @@ class PesquisaEmpresaStore {
   StoreData<List<Empresa>> empresasStore = StoreData([]);
 
   getEmpresasByNome(String nome) {
-    empresasStore.execute(() => repoEmpresa.findEmpresasByNome(nome));
+    empresasStore.execute(() => repoEmpresa.findEmpresasByNome(nome), delay: Duration(milliseconds: 200));
   }
 
   getEmpresasByCNPJ(String cnpjParcial) {
-    empresasStore.execute(() => repoEmpresa.findEmpresasByCNPJParcial(cnpjParcial));
+    empresasStore.execute(() => repoEmpresa.findEmpresasByCNPJParcial(cnpjParcial), delay: Duration(milliseconds: 200));
   }
 }

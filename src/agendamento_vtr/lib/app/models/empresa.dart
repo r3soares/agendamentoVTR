@@ -42,7 +42,7 @@ class Empresa implements JsonSerializable {
   String get cnpjOuCpf => cnpjCpf.length > 11 ? 'CNPJ' : 'CPF';
   @override
   String toString() {
-    return '[$cnpjCpf] $razaoSocial';
+    return '[$cnpjFormatado] $razaoSocial';
   }
 }
 
