@@ -17,19 +17,26 @@ class _CompartimentoWidgetState extends ModularState<CompartimentoWidget, Tanque
   final TextEditingController _cCapacidade = TextEditingController();
   final focusNode = FocusNode();
   final key = GlobalKey<FormState>();
+  late var listenerCallback;
 
   @override
   initState() {
     super.initState();
-    widget.compartimento.addListener(() {
-      widget.callback(widget.compartimento);
-    });
+    listenerCallback = () => widget.callback(widget.compartimento);
+    widget.compartimento.addListener(listenerCallback);
     focusNode.addListener(() {
       if (focusNode.hasFocus) {
         _cCapacidade.selection = TextSelection(baseOffset: 0, extentOffset: _cCapacidade.text.length);
       }
     });
     _cCapacidade.text = widget.compartimento.capacidade.toString();
+  }
+
+  @override
+  void dispose() {
+    focusNode.dispose();
+    widget.compartimento.removeListener(listenerCallback);
+    super.dispose();
   }
 
   @override

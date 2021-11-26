@@ -7,14 +7,16 @@ import 'package:flutter/material.dart';
 
 class VisualizaTanqueAgendadoDialog extends StatelessWidget {
   final TanqueAgendado tAgendado;
+  final index;
 
-  VisualizaTanqueAgendadoDialog(this.tAgendado);
+  VisualizaTanqueAgendadoDialog(this.tAgendado, {this.index = 0});
 
   @override
   Widget build(BuildContext context) {
     return Dialog(
         insetPadding: const EdgeInsets.symmetric(vertical: 80, horizontal: 250),
         child: DefaultTabController(
+          initialIndex: index,
           length: 4,
           child: Scaffold(
             appBar: AppBar(
