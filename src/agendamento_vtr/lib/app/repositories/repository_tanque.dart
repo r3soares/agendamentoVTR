@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:agendamento_vtr/app/domain/erros.dart';
 import 'package:agendamento_vtr/app/domain/log.dart';
 import 'package:agendamento_vtr/app/models/tanque.dart';
+import 'package:agendamento_vtr/app/modules/agendamento/models/tanque_agendado.dart';
 
 import 'infra/IDatabase.dart';
 
@@ -62,6 +63,19 @@ class RepositoryTanque {
       return result == false ? List.empty(growable: true) : (result as List).map((n) => Tanque.fromJson(n)).toList();
     } on Falha catch (e) {
       Log.message(this, 'Erro ao procurar tanques pelo proprietário $proprietario: $e');
+      throw e;
+    }
+  }
+
+  Future<List<TanqueAgendado>> getHistorico(String inmetro) async {
+    try {
+      var result = await db.find('historico', inmetro);
+      List<TanqueAgendado> lista = result == false
+          ? List.empty(growable: true)
+          : (result as List).map((n) => TanqueAgendado.fromJson(n)).toList();
+      return lista;
+    } on Falha catch (e) {
+      Log.message(this, 'Erro ao buscar historico: $e');
       throw e;
     }
   }
