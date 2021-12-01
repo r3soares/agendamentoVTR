@@ -1,4 +1,4 @@
-import 'package:agendamento_vtr/app/modules/agendamento/dialogs/tanque_agendado/agendamentos_tab.dart';
+import 'package:agendamento_vtr/app/modules/agendamento/dialogs/tanque_agendado/historico_tab.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/dialogs/tanque_agendado/empresas_associadas_tab.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/dialogs/tanque_agendado/status_tab.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/dialogs/tanque_agendado/tanque_tab.dart';
@@ -17,7 +17,7 @@ class VisualizaTanqueAgendadoDialog extends StatelessWidget {
         insetPadding: const EdgeInsets.symmetric(vertical: 80, horizontal: 250),
         child: DefaultTabController(
           initialIndex: index,
-          length: 4,
+          length: 3,
           child: Scaffold(
             appBar: AppBar(
               title: Text('${tAgendado.tanque.placaFormatada} (${tAgendado.tanque.codInmetro})'),
@@ -25,7 +25,6 @@ class VisualizaTanqueAgendadoDialog extends StatelessWidget {
                 tabs: [
                   Tab(child: Text('Empresas Associadas')),
                   Tab(child: Text('Tanque')),
-                  Tab(child: Text('Status')),
                   Tab(child: Text('Histórico'))
                 ],
               ),
@@ -34,8 +33,7 @@ class VisualizaTanqueAgendadoDialog extends StatelessWidget {
               children: [
                 EmpresasAssociadasTab(tAgendado),
                 TanqueTab(tAgendado),
-                StatusTab(tAgendado),
-                AgendamentoTab(tAgendado),
+                HistoricoTab(tAgendado),
               ],
             ),
           ),
