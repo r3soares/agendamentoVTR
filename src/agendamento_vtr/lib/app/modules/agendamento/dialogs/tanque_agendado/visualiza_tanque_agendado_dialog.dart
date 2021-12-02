@@ -1,6 +1,5 @@
 import 'package:agendamento_vtr/app/modules/agendamento/dialogs/tanque_agendado/historico_tab.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/dialogs/tanque_agendado/empresas_associadas_tab.dart';
-import 'package:agendamento_vtr/app/modules/agendamento/dialogs/tanque_agendado/status_tab.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/dialogs/tanque_agendado/tanque_tab.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/models/tanque_agendado.dart';
 import 'package:flutter/material.dart';
