@@ -183,6 +183,14 @@ class TanqueTab extends StatelessWidget {
                     'R\$${getCusto(c.capacidade, c.setas)}',
                     style: TextStyle(color: Colors.red[800]),
                   ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      '${c.obs}',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: Colors.grey, fontSize: 12),
+                    ),
+                  ),
                 ],
               ),
             );

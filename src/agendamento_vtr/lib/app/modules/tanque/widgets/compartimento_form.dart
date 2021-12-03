@@ -120,7 +120,7 @@ class _CompartimentoFormState extends ModularState<CompartimentoForm, TanqueStor
                 ),
               ),
               Container(
-                  height: size.height * .25,
+                  height: size.height * .30,
                   padding: const EdgeInsets.all(8),
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,

@@ -17,13 +17,13 @@ class _CompartimentoWidgetState extends ModularState<CompartimentoWidget, Tanque
   final TextEditingController _cCapacidade = TextEditingController();
   final focusNode = FocusNode();
   final key = GlobalKey<FormState>();
-  late var listenerCallback;
+  late var listenerCallbackComp;
 
   @override
   initState() {
     super.initState();
-    listenerCallback = () => widget.callback(widget.compartimento);
-    widget.compartimento.addListener(listenerCallback);
+    listenerCallbackComp = () => widget.callback(widget.compartimento);
+    widget.compartimento.addListener(listenerCallbackComp);
     focusNode.addListener(() {
       if (focusNode.hasFocus) {
         _cCapacidade.selection = TextSelection(baseOffset: 0, extentOffset: _cCapacidade.text.length);
@@ -35,7 +35,7 @@ class _CompartimentoWidgetState extends ModularState<CompartimentoWidget, Tanque
   @override
   void dispose() {
     focusNode.dispose();
-    widget.compartimento.removeListener(listenerCallback);
+    widget.compartimento.removeListener(listenerCallbackComp);
     super.dispose();
   }
 
@@ -58,6 +58,7 @@ class _CompartimentoWidgetState extends ModularState<CompartimentoWidget, Tanque
                     autofocus: true,
                     autovalidateMode: AutovalidateMode.onUserInteraction,
                     decoration: InputDecoration(
+                      isDense: true,
                       errorStyle: TextStyle(fontSize: 10),
                       hintText: 'Cap. em litros',
                       hintStyle: TextStyle(fontSize: 10),
@@ -98,6 +99,23 @@ class _CompartimentoWidgetState extends ModularState<CompartimentoWidget, Tanque
                     child: Container(
                       alignment: Alignment.centerLeft,
                       child: Text(_custo(), style: TextStyle(color: Colors.red[900])),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    child: TextFormField(
+                      initialValue: widget.compartimento.obs,
+                      onChanged: (obs) => widget.compartimento.obs = obs,
+                      keyboardType: TextInputType.multiline,
+                      maxLines: 2,
+                      style: TextStyle(fontSize: 10),
+                      decoration: InputDecoration(
+                          isDense: true,
+                          hintText: 'Observação',
+                          hintMaxLines: 5,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(5)),
+                          )),
                     ),
                   )
                 ],
