@@ -8,6 +8,7 @@ import 'package:agendamento_vtr/app/modules/agendamento/stores/pesquisa_empresa_
 import 'package:agendamento_vtr/app/modules/agendamento/stores/reagenda_store.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/stores/tanques_pendentes_store.dart';
 import 'package:agendamento_vtr/app/modules/empresa/empresa_module.dart';
+import 'package:agendamento_vtr/app/modules/gru/gru_module.dart';
 import 'package:agendamento_vtr/app/modules/tanque/stores/tanque_store.dart';
 import 'package:agendamento_vtr/app/modules/tanque/tanque_module.dart';
 import 'package:agendamento_vtr/app/repositories/infra/api.dart';
@@ -48,5 +49,6 @@ class AgendamentoModule extends Module {
     ChildRoute(Modular.initialRoute, child: (_, args) => MainPage()),
     ModuleRoute('/tanque', module: TanqueModule()),
     ModuleRoute('/empresa', module: EmpresaModule()),
+    ModuleRoute('/gru', module: GruModule()),
   ];
 }

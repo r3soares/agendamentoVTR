@@ -50,6 +50,13 @@ class _MainPageState extends ModularState<MainPage, MainStore> {
                   icon: Icon(Icons.add_business),
                   splashRadius: 5,
                 ),
+                TextButton(
+                  onPressed: () => {Modular.to.pushNamed('/gru')},
+                  child: Text(
+                    'GRU',
+                    style: TextStyle(color: Theme.of(context).secondaryHeaderColor),
+                  ),
+                ),
               ],
             ),
           )
