@@ -11,7 +11,6 @@ import 'package:agendamento_vtr/app/widgets/base_widgets.dart';
 import 'package:agendamento_vtr/app/widgets/cnpj_widget.dart';
 import 'package:agendamento_vtr/app/widgets/input_numero_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_triple/flutter_triple.dart';
 

@@ -1,7 +1,6 @@
 import 'package:agendamento_vtr/app/domain/validacoes.dart';
 import 'package:agendamento_vtr/app/models/bloc.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 class TelefoneWidget extends StatefulWidget {
