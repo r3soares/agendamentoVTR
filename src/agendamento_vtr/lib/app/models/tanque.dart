@@ -1,3 +1,4 @@
+import 'package:agendamento_vtr/app/domain/custo_compartimento.dart';
 import 'package:agendamento_vtr/app/models/empresa.dart';
 import 'package:agendamento_vtr/app/models/json_serializable.dart';
 import 'package:agendamento_vtr/app/modules/tanque/models/arquivo.dart';
@@ -29,6 +30,13 @@ class Tanque implements JsonSerializable {
   get placaFormatada => placa.replaceRange(3, 3, '-');
   get totalSetas => compartimentos.fold(0, (int previousValue, element) => previousValue + element.setas);
 
+  get custoTotal {
+    final CustoCompartimento custo = CustoCompartimento();
+    var capacidades = compartimentos.map((e) => e.capacidade).toList();
+    int setas = compartimentos.fold(0, (p, e) => p + e.setas);
+    return custo.getCustoTotal(capacidades, setas);
+  }
+
   @override
   fromJson(Map<String, dynamic> json) => Tanque.fromJson(json);
 
@@ -55,6 +63,11 @@ class Tanque implements JsonSerializable {
         'custo': custo,
         'obs': obs
       };
+
+  @override
+  toString() {
+    return '$placaFormatada ($codInmetro)';
+  }
 }
 
 enum StatusTanque {
