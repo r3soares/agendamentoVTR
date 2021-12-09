@@ -57,6 +57,26 @@ class RepositoryTanque {
     }
   }
 
+  Future<List<Tanque>> findTanquesByPlacaParcial(String placa) async {
+    try {
+      var result = await db.find('placaParcial', placa);
+      return result == false ? List.empty(growable: true) : (result as List).map((n) => Tanque.fromJson(n)).toList();
+    } on Falha catch (e) {
+      print('Erro ao procurar tanques pela placa parcial $placa: $e');
+      throw e;
+    }
+  }
+
+  Future<List<Tanque>> findTanquesByInmetroParcial(String inmetro) async {
+    try {
+      var result = await db.find('inmetroParcial', inmetro);
+      return result == false ? List.empty(growable: true) : (result as List).map((n) => Tanque.fromJson(n)).toList();
+    } on Falha catch (e) {
+      print('Erro ao procurar tanques pelo cod inmetro parcial $inmetro: $e');
+      throw e;
+    }
+  }
+
   Future<List<Tanque>> findTanquesByProprietario(String proprietario) async {
     try {
       var result = await db.find('proprietario', proprietario);

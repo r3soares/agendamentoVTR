@@ -1,32 +1,14 @@
-import 'package:agendamento_vtr/app/modules/agendamento/models/agenda.dart';
-import 'package:agendamento_vtr/app/modules/agendamento/models/tanque_agendado.dart';
-import 'package:agendamento_vtr/app/modules/agendamento/stores/main_store.dart';
-import 'package:agendamento_vtr/app/modules/agendamento/widgets/agenda_do_dia_widget.dart';
-import 'package:agendamento_vtr/app/modules/agendamento/widgets/avisos_widget.dart';
-import 'package:agendamento_vtr/app/modules/agendamento/widgets/calendario_widget.dart';
-import 'package:agendamento_vtr/app/modules/agendamento/widgets/tanques_pendentes_widget.dart';
+import 'package:agendamento_vtr/app/models/tanque.dart';
+import 'package:agendamento_vtr/app/modules/agendamento/stores/store_data.dart';
+import 'package:agendamento_vtr/app/modules/gru/widgets/lista_veiculos_widget.dart';
+import 'package:agendamento_vtr/app/modules/gru/widgets/pesquisa_tanque.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_modular/flutter_modular.dart';
-import 'package:flutter_triple/flutter_triple.dart';
 
-class MainPage extends StatefulWidget {
-  const MainPage({Key? key}) : super(key: key);
+class MainPage extends StatelessWidget {
+  final StoreData<Tanque> resultadoPesquisa = StoreData(Tanque());
+  final List<Tanque> lista = List.empty(growable: true);
 
-  @override
-  State<MainPage> createState() => _MainPageState();
-}
-
-class _MainPageState extends ModularState<MainPage, MainStore> {
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    //store.destroy();
-    super.dispose();
-  }
+  MainPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -34,6 +16,42 @@ class _MainPageState extends ModularState<MainPage, MainStore> {
         appBar: AppBar(
           title: Text('GRU'),
         ),
-        body: Center());
+        body: SizedBox.expand(
+            child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  PesquisaTanqueWidget(resultadoPesquisa),
+                  ListaVeiculosWidget(resultadoPesquisa, lista),
+                  Padding(
+                    padding: const EdgeInsets.all(8),
+                    child: ElevatedButton(
+                      child: Text('Gerar Relatório'),
+                      onPressed: () => {},
+                    ),
+                  )
+                ],
+              ),
+            ),
+            Expanded(
+              child: Column(
+                children: [
+                  Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text('Visualizar Relatório'),
+                    ),
+                  )
+                ],
+              ),
+            )
+          ],
+        )));
   }
+
+  addResultadoPesquisa(Tanque t) {}
 }
