@@ -1,5 +1,6 @@
 import 'package:agendamento_vtr/app/models/tanque.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/stores/store_data.dart';
+import 'package:agendamento_vtr/app/modules/gru/widgets/gera_pdf_widget.dart';
 import 'package:agendamento_vtr/app/modules/gru/widgets/lista_veiculos_widget.dart';
 import 'package:agendamento_vtr/app/modules/gru/widgets/pesquisa_tanque.dart';
 import 'package:flutter/material.dart';
@@ -31,7 +32,7 @@ class MainPage extends StatelessWidget {
                     padding: const EdgeInsets.all(8),
                     child: ElevatedButton(
                       child: Text('Gerar Relatório'),
-                      onPressed: () => {},
+                      onPressed: () => geraPdf(),
                     ),
                   )
                 ],
@@ -53,5 +54,8 @@ class MainPage extends StatelessWidget {
         )));
   }
 
-  addResultadoPesquisa(Tanque t) {}
+  geraPdf() {
+    GeraPdfWidget pdf = GeraPdfWidget(lista);
+    pdf.geraPdf();
+  }
 }
