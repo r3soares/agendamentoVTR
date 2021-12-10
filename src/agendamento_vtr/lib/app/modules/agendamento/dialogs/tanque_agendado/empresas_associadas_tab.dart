@@ -69,7 +69,9 @@ class EmpresasAssociadasTab extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          ElevatedButton(onPressed: () => showDialogPesquisaEmpresa(context, propOuResp), child: Text('Alterar')),
+          ElevatedButton(
+              onPressed: () => Modular.to.pushNamed('/empresa/cadastro', arguments: getPropOuResp(propOuResp)),
+              child: Text('Alterar')),
           TextButton(
               onPressed: () async =>
                   {removePropOuResp(propOuResp), await _salvaAlteracoes(context), atualizaDialog(context)},
@@ -96,39 +98,62 @@ class EmpresasAssociadasTab extends StatelessWidget {
   buildCamposEmpresa(Empresa e) {
     return Card(
       elevation: 10,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      child: Row(
         children: [
           Expanded(
-            child: ListTile(
-              title: Text(e.razaoSocial),
-              subtitle: Text('Razão Social'),
-            ),
-          ),
-          Expanded(
-            child: ListTile(
-              title: Text(e.cnpjFormatado),
-              subtitle: Text(e.cnpjOuCpf),
-            ),
-          ),
-          Expanded(
-            child: ListTile(
-              title: Text(e.email),
-              subtitle: Text('E-mail'),
-            ),
-          ),
-          e.telefones.isEmpty
-              ? Expanded(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Expanded(
                   child: ListTile(
-                    title: Text('Nenhum telefone cadastrado'),
-                  ),
-                )
-              : Expanded(
-                  child: ListTile(
-                    title: Text(e.telefones[0]),
-                    subtitle: Text('Telefone'),
+                    title: SelectableText(e.razaoSocial),
+                    subtitle: Text('Razão Social'),
                   ),
                 ),
+                Expanded(
+                  child: ListTile(
+                    title: SelectableText(e.cnpjFormatado),
+                    subtitle: Text(e.cnpjOuCpf),
+                  ),
+                ),
+                Expanded(
+                  child: ListTile(
+                    title: SelectableText(e.email),
+                    subtitle: Text('E-mail'),
+                  ),
+                ),
+                e.telefones.isEmpty
+                    ? Expanded(
+                        child: ListTile(
+                          title: Text('Nenhum telefone cadastrado'),
+                        ),
+                      )
+                    : Expanded(
+                        child: ListTile(
+                          title: SelectableText(e.telefones[0]),
+                          subtitle: Text('Telefone'),
+                        ),
+                      ),
+              ],
+            ),
+          ),
+          e.proprietario == null
+              ? Expanded(child: SizedBox.shrink())
+              : Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      ListTile(
+                        title: SelectableText('${e.proprietario!.cod}'),
+                        subtitle: Text('Código Proprietário'),
+                      ),
+                      ListTile(
+                        title: SelectableText('${e.proprietario!.codMun}'),
+                        subtitle: Text('Código Município'),
+                      ),
+                    ],
+                  ),
+                )
         ],
       ),
     );
@@ -145,6 +170,19 @@ class EmpresasAssociadasTab extends StatelessWidget {
         {
           tAgendado.responsavel = null;
           return;
+        }
+    }
+  }
+
+  getPropOuResp(String propOuResp) {
+    switch (propOuResp[0]) {
+      case 'P':
+        {
+          return tAgendado.tanque.proprietario;
+        }
+      case 'R':
+        {
+          return tAgendado.responsavel;
         }
     }
   }
