@@ -1,11 +1,10 @@
-import 'dart:js';
-
 import 'package:agendamento_vtr/app/models/tanque.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
+import 'package:agendamento_vtr/app/domain/extensions.dart';
 
 class GeraPdfWidget extends StatelessWidget {
   final List<Tanque> tanques;
@@ -44,15 +43,15 @@ class GeraPdfWidget extends StatelessWidget {
                       crossAxisAlignment: pw.CrossAxisAlignment.center,
                       children: [
                         pw.Padding(padding: pw.EdgeInsets.all(8), child: pw.PdfLogo()),
-                        pw.Text('Fatura', style: pw.TextStyle(fontSize: 22, color: PdfColors.white))
+                        pw.Text('Relatório para emissão de GRU',
+                            style: pw.TextStyle(fontSize: 22, color: PdfColors.white))
                       ]),
                   pw.Column(
                     mainAxisAlignment: pw.MainAxisAlignment.center,
                     crossAxisAlignment: pw.CrossAxisAlignment.end,
                     children: [
-                      pw.Text('Restaurante do Vale', style: pw.TextStyle(fontSize: 22, color: PdfColors.white)),
-                      pw.Text('Rua dos Expedicionários', style: pw.TextStyle(color: PdfColors.white)),
-                      pw.Text('Curitiba', style: pw.TextStyle(color: PdfColors.white)),
+                      pw.Text('VTR', style: pw.TextStyle(fontSize: 22, color: PdfColors.white)),
+                      pw.Text('Itajaí', style: pw.TextStyle(color: PdfColors.white)),
                     ],
                   )
                 ])));
@@ -75,7 +74,7 @@ class GeraPdfWidget extends StatelessWidget {
         crossAxisAlignment: pw.CrossAxisAlignment.start,
         children: [
           _titleText('Data'),
-          pw.Text(DateTime.now().toIso8601String()),
+          pw.Text(DateTime.now().diaHoraToString()),
         ],
       ),
     ]);
