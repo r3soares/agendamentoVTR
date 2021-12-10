@@ -38,4 +38,46 @@ class CustoCompartimento {
     custoSetas = this.custoSetas(setas);
     return (custoCompartimento + custoSetas).toPrecision(2);
   }
+
+  getCodServico(int cap) {
+    if (cap <= 4000)
+      return 361.toString();
+    else if (cap <= 6000)
+      return 362.toString();
+    else if (cap <= 8000)
+      return 363.toString();
+    else if (cap <= 10000)
+      return 364.toString();
+    else if (cap <= 20000)
+      return 365.toString();
+    else if (cap <= 40000)
+      return 366.toString();
+    else //acima de 40.000L
+      return 367.toString();
+  }
+
+  double getCustoByCodServico(String cod) {
+    switch (cod) {
+      case '361':
+        return 187.86;
+      case '362':
+        return 222.65;
+      case '363':
+        return 296.41;
+      case '364':
+        return 371.55;
+      case '365':
+        return 743.11;
+      case '366':
+        return 1148.07;
+      case '367':
+        return 2268.31;
+      case '368':
+        return 180.90;
+      default:
+        return 0;
+    }
+  }
+
+  get codDispReferencial => 368.toString();
 }
