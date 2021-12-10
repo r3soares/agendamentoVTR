@@ -103,9 +103,9 @@ class GeraPdfWidget extends StatelessWidget {
       cellAlignments: {
         0: pw.Alignment.centerLeft,
         1: pw.Alignment.centerLeft,
-        2: pw.Alignment.centerRight,
-        3: pw.Alignment.center,
-        4: pw.Alignment.centerRight,
+        2: pw.Alignment.centerLeft,
+        3: pw.Alignment.centerLeft,
+        4: pw.Alignment.centerLeft,
       },
       // Define um estilo para o cabeçalho da tabela
       headerStyle: pw.TextStyle(
