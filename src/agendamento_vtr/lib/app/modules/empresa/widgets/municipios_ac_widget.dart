@@ -50,15 +50,17 @@ class _MunicipiosACWidgetState extends ModularState<MunicipiosACWidget, Municipi
   @override
   Widget build(BuildContext context) {
     return ScopedBuilder(
-      store: store.storeMun,
-      onState: (context, state) => buildAutoComplete(state as Municipio),
-      onLoading: (context) => const CircularProgressIndicator(),
-    );
+        store: store.storeMun,
+        onState: (context, state) => buildAutoComplete(state as Municipio),
+        onLoading: (context) => const CircularProgressIndicator(),
+        onError: (context, erro) {
+          return buildAutoComplete(null);
+        });
   }
 
-  Widget buildAutoComplete(Municipio m) {
+  Widget buildAutoComplete(Municipio? m) {
     return Autocomplete<Municipio>(
-      initialValue: TextEditingValue(text: m.cdMunicipio == 0 ? '' : m.toString()),
+      initialValue: TextEditingValue(text: m == null ? '' : m.toString()),
       optionsBuilder: (TextEditingValue textEditingValue) {
         if (textEditingValue.text == '' || textEditingValue.text.length < 3) {
           return const Iterable<Municipio>.empty();
@@ -93,6 +95,10 @@ class _MunicipiosACWidgetState extends ModularState<MunicipiosACWidget, Municipi
   String? validaLetras(String? num) {
     if (num == null || num.isEmpty) return 'Insira um nome válido';
     return null;
+  }
+
+  showErro(BuildContext context, String msg) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('$msg'), backgroundColor: Colors.red[900]));
   }
 
   fixAcentos(TextEditingController controller, String value) {
