@@ -10,10 +10,9 @@ void main() {
 
     var repoTanque = RepositoryTanque(Api('vtr/tanque'));
     var tanques = await repoTanque.getTanques();
-
+    var ts = TanqueServico(tanques, custoCompartimento, {});
     for (var i = 0; i < 50; i++) {
-      var ts = TanqueServico(tanques[i], custoCompartimento);
-      print(ts.geraCodigosServicos);
+      print(ts.geraCodigosServicos(i));
     }
   });
 }
