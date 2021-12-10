@@ -1,5 +1,6 @@
 import 'package:agendamento_vtr/app/models/tanque.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/stores/store_data.dart';
+import 'package:agendamento_vtr/app/modules/gru/dialogs/tanque_detalhes/visualiza_tanque_dialog.dart';
 import 'package:flutter/material.dart';
 
 class ListaVeiculosWidget extends StatefulWidget {
@@ -13,7 +14,7 @@ class ListaVeiculosWidget extends StatefulWidget {
 
 class _ListaVeiculosWidgetState extends State<ListaVeiculosWidget> {
   final ScrollController scrollController = ScrollController();
-  
+
   @override
   void initState() {
     super.initState();
@@ -53,7 +54,14 @@ class _ListaVeiculosWidgetState extends State<ListaVeiculosWidget> {
                       Icons.remove_red_eye,
                       color: Theme.of(context).primaryColor,
                     ),
-                    onPressed: () => {},
+                    onPressed: () => {
+                      showDialog(
+                          barrierDismissible: true,
+                          barrierColor: Color.fromRGBO(0, 0, 0, .5),
+                          useSafeArea: true,
+                          context: context,
+                          builder: (_) => VisualizaTanqueDialog(t)),
+                    },
                   ),
                   title: Row(mainAxisSize: MainAxisSize.min, children: [
                     Text(
