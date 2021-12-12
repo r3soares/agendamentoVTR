@@ -21,6 +21,7 @@ class AgendaDoDiaWidget extends StatelessWidget {
   final repoTa = Modular.get<RepositoryTanqueAgendado>();
   final controller = Modular.get<AgendaController>();
   final ScrollController scrollController = ScrollController();
+  final ScrollController scrollControllerLateral = ScrollController();
   AgendaDoDiaWidget(this.agenda);
 
   Widget build(BuildContext context) {
@@ -79,16 +80,28 @@ class AgendaDoDiaWidget extends StatelessWidget {
     List<Widget> lista = List.empty(growable: true);
     for (int i = 0; i < agenda.tanquesAgendados.length; i++) {
       if (pular.contains(i)) continue;
-      var widget = agenda.tanquesAgendados[i].bitremAgenda == null
-          ? Card(elevation: 12, child: cardWidget(context, i))
-          : Card(
-              elevation: 12,
-              child: Column(
-                children: [
-                  cardWidget(context, i),
-                  getBitrem(context, agenda.tanquesAgendados[i].bitremAgenda!, pular),
-                ],
-              ));
+      var widget = Center(
+        child: Padding(
+          padding: const EdgeInsets.all(8),
+          child: SingleChildScrollView(
+            controller: scrollControllerLateral,
+            scrollDirection: Axis.horizontal,
+            child: SizedBox(
+              width: 600,
+              child: agenda.tanquesAgendados[i].bitremAgenda == null
+                  ? Card(elevation: 12, child: cardWidget(context, i))
+                  : Card(
+                      elevation: 12,
+                      child: Column(
+                        children: [
+                          cardWidget(context, i),
+                          getBitrem(context, agenda.tanquesAgendados[i].bitremAgenda!, pular),
+                        ],
+                      )),
+            ),
+          ),
+        ),
+      );
       lista.add(widget);
     }
     return ListView(

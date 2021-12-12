@@ -16,6 +16,7 @@ class TanquesPendentesWidget extends StatelessWidget {
   final List<TanqueAgendado> pendentes;
   final formatoData = 'dd/MM/yy HH:mm';
   final ScrollController scrollController = ScrollController();
+  final ScrollController scrollControllerLateral = ScrollController();
   final repoAgenda = Modular.get<RepositoryAgenda>();
   final repoTa = Modular.get<RepositoryTanqueAgendado>();
   final controller = Modular.get<AgendaController>();
@@ -56,62 +57,71 @@ class TanquesPendentesWidget extends StatelessWidget {
                     itemBuilder: (BuildContext context, int index) {
                       Tanque t = pendentes.elementAt(index).tanque;
                       final data = DateFormat(formatoData).format(t.dataRegistro);
-                      return Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Card(
-                          elevation: 12,
-                          child: ListTile(
-                              leading: IconButton(
-                                splashRadius: 5,
-                                icon: Icon(
-                                  Icons.remove_red_eye,
-                                  color: Theme.of(context).primaryColor,
-                                ),
-                                onPressed: () => {
-                                  showDialog(
-                                      barrierDismissible: true,
-                                      barrierColor: Color.fromRGBO(0, 0, 0, .5),
-                                      useSafeArea: true,
-                                      context: context,
-                                      builder: (_) => VisualizaTanqueAgendadoDialog(pendentes.elementAt(index))),
-                                },
-                              ),
-                              title: Row(mainAxisSize: MainAxisSize.min, children: [
-                                Text(
-                                  t.placa.replaceRange(3, 3, '-'),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 10),
-                                  child: Text(
-                                    '${t.capacidadeTotal.toString()}L (${t.compartimentos.length}C ${t.totalSetas}S)',
-                                    style: TextStyle(fontSize: 12),
-                                  ),
-                                ),
-                              ]),
-                              subtitle: Text('$data'),
-                              trailing: ConstrainedBox(
-                                constraints: BoxConstraints.loose(Size(230, double.infinity)),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    TextButton(
-                                      child: const Text('Agendar'),
-                                      onPressed: () async =>
-                                          {await agendaTanque(context, pendentes.elementAt(index), index)},
-                                    ),
-                                    IconButton(
+                      return Center(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: SingleChildScrollView(
+                            controller: scrollControllerLateral,
+                            scrollDirection: Axis.horizontal,
+                            child: SizedBox(
+                              width: 400,
+                              child: Card(
+                                elevation: 12,
+                                child: ListTile(
+                                    leading: IconButton(
                                       splashRadius: 5,
                                       icon: Icon(
-                                        Icons.close,
-                                        color: Colors.red[800],
+                                        Icons.remove_red_eye,
+                                        color: Theme.of(context).primaryColor,
                                       ),
-                                      onPressed: () async =>
-                                          {await removeTanque(context, pendentes.elementAt(index), index)},
+                                      onPressed: () => {
+                                        showDialog(
+                                            barrierDismissible: true,
+                                            barrierColor: Color.fromRGBO(0, 0, 0, .5),
+                                            useSafeArea: true,
+                                            context: context,
+                                            builder: (_) => VisualizaTanqueAgendadoDialog(pendentes.elementAt(index))),
+                                      },
                                     ),
-                                  ],
-                                ),
-                              )),
+                                    title: Row(mainAxisSize: MainAxisSize.min, children: [
+                                      Text(
+                                        t.placa.replaceRange(3, 3, '-'),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(left: 10),
+                                        child: Text(
+                                          '${t.capacidadeTotal.toString()}L (${t.compartimentos.length}C ${t.totalSetas}S)',
+                                          style: TextStyle(fontSize: 12),
+                                        ),
+                                      ),
+                                    ]),
+                                    subtitle: Text('$data'),
+                                    trailing: ConstrainedBox(
+                                      constraints: BoxConstraints.loose(Size(230, double.infinity)),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        mainAxisAlignment: MainAxisAlignment.end,
+                                        children: [
+                                          TextButton(
+                                            child: const Text('Agendar'),
+                                            onPressed: () async =>
+                                                {await agendaTanque(context, pendentes.elementAt(index), index)},
+                                          ),
+                                          IconButton(
+                                            splashRadius: 5,
+                                            icon: Icon(
+                                              Icons.close,
+                                              color: Colors.red[800],
+                                            ),
+                                            onPressed: () async =>
+                                                {await removeTanque(context, pendentes.elementAt(index), index)},
+                                          ),
+                                        ],
+                                      ),
+                                    )),
+                              ),
+                            ),
+                          ),
                         ),
                       );
                     },
