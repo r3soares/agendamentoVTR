@@ -241,7 +241,6 @@ class _TanquePageState extends ModularState<TanquePage, TanqueStore> {
   void _setCompartimentos(List<Compartimento> compartimentos) {
     _tanque.compartimentos.clear();
     _tanque.compartimentos.addAll(compartimentos);
-    _tanque.custo = store.getCusto(compartimentos);
   }
 
   // #endregion

@@ -11,7 +11,6 @@ class Tanque implements JsonSerializable {
   //empresa que possui o proprietario
   Empresa? proprietario;
 
-  double custo = 0;
   DateTime dataRegistro = DateTime.now();
   DateTime dataUltimaAlteracao = DateTime.now();
 
@@ -48,7 +47,6 @@ class Tanque implements JsonSerializable {
         dataUltimaAlteracao = DateTime.parse(json['dataUltimaAlteracao']),
         status = StatusTanque.values[json['status']],
         compartimentos = json['compartimentos'],
-        custo = json['custo'],
         obs = json['obs'] == null ? null : json['obs'];
 
   @override
@@ -60,7 +58,6 @@ class Tanque implements JsonSerializable {
         'dataUltimaAlteracao': dataUltimaAlteracao.toIso8601String(),
         'status': status.index,
         'compartimentos': compartimentos,
-        'custo': custo,
         'obs': obs
       };
 

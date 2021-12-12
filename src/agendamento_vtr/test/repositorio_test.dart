@@ -147,7 +147,7 @@ void main() {
         }
       }
       ModelBase mb = await repoTa.getAll();
-      List<Agenda> todas = mb.model;
+      List<TanqueAgendado> todas = mb.model;
       expect(lista.length, equals(todas.length));
 
       mb = await repoAgenda.findByPeriodo(
@@ -179,6 +179,6 @@ void main() {
       var m = listaFiltrada.firstWhere((e) => e.noMunicipio == 'ITAJAÍ');
       expect(m, isNotNull);
       expect(m.noMunicipio, equals('ITAJAÍ'));
-    });
+    }, timeout: Timeout(Duration(minutes: 2)));
   });
 }

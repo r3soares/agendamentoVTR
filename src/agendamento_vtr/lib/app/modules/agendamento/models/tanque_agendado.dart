@@ -14,11 +14,14 @@ class TanqueAgendado implements JsonSerializable {
   StatusConfirmacao statusConfirmacao = StatusConfirmacao.PreAgendado;
   StatusPagamento statusPagamento = StatusPagamento.Pendente;
 
-  double custoVerificacao = 0;
+  double _custoVerificacao = 0;
+  double get custoVerificacao => _custoVerificacao;
   int tempoVerificacao = 0;
   String? obs;
 
-  TanqueAgendado({required this.id, required this.tanque, this.agenda});
+  TanqueAgendado({required this.id, required this.tanque, this.agenda}) {
+    _custoVerificacao = tanque.custoTotal;
+  }
 
   @override
   fromJson(Map<String, dynamic> json) => TanqueAgendado.fromJson(json);
@@ -34,7 +37,7 @@ class TanqueAgendado implements JsonSerializable {
         agenda = json['agenda'],
         statusConfirmacao = StatusConfirmacao.values[json['statusConfirmacao']],
         statusPagamento = StatusPagamento.values[json['statusPagamento']],
-        custoVerificacao = json['custoVerificacao'],
+        _custoVerificacao = json['custoVerificacao'], //CustoVerificação é somente get
         tempoVerificacao = json['tempoVerificacao'],
         obs = json['obs'] == null ? null : json['obs'];
 

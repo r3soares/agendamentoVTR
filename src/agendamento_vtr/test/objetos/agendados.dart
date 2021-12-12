@@ -34,7 +34,6 @@ class Agendados {
           : null;
       a.dataRegistro = a.tanque.dataRegistro;
       a.isNovo = r.nextInt(10) > 9;
-      a.custoVerificacao = a.tanque.custo;
       a.obs = r.nextInt(10) > 7 ? 'Observação' : null;
       a.responsavel = Empresas.empresas[r.nextInt(Empresas.empresas.length)];
       a.statusPagamento = StatusPagamento.values[r.nextInt(StatusPagamento.values.length)];

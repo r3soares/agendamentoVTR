@@ -50,7 +50,6 @@ class Tanques {
       }
       t.dataUltimaAlteracao = DateTime.now().subtract(Duration(minutes: Random().nextInt(200000)));
       t.dataRegistro = DateTime.now().subtract(Duration(minutes: Random().nextInt(200000)));
-      t.custo = (Random().nextDouble() * 5000);
       t.status = StatusTanque.values[Random().nextInt(2)];
       tanques.add(t);
     }

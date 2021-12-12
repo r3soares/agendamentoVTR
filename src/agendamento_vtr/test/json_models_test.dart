@@ -54,7 +54,6 @@ void main() {
           expect(t1.compartimentos[0].setas, equals(t2.compartimentos[0].setas), reason: 'pos 1 não validou');
         }
 
-        expect(t1.custo, equals(t2.custo), reason: 'Custo diferente');
         expect(t1.dataRegistro, equals(t2.dataRegistro), reason: 'DataRegistro não validou');
         expect(t1.dataUltimaAlteracao, equals(t2.dataUltimaAlteracao), reason: 'DataAlteracao não validou');
         expect(t1.placa, equals(t2.placa), reason: 'Placa diferentes');
