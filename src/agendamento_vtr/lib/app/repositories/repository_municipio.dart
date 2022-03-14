@@ -25,7 +25,7 @@ class RepositoryMunicipio {
       var result = await db.find('nome', '|$nome|');
       return result == false ? List.empty(growable: true) : (result as List).map((n) => Municipio.fromJson(n)).toList();
     } on Falha catch (e) {
-      print('Erro ao procurar tanques pelo proprietário $nome: $e');
+      print('Erro ao procurar tanques pelo proprietário $nome: ${e.msg}');
       throw e;
     }
   }
@@ -36,7 +36,7 @@ class RepositoryMunicipio {
       var municipio = result == false ? throw NaoEncontrado(cod) : Municipio.fromJson(result);
       return municipio;
     } on Falha catch (e) {
-      Log.message(this, 'Erro ao procurar municipio $cod: $e');
+      Log.message(this, 'Erro ao procurar municipio $cod: ${e.msg}');
       throw e;
     }
   }
@@ -46,7 +46,7 @@ class RepositoryMunicipio {
       var result = await db.getAll();
       return result == false ? List.empty(growable: true) : (result as List).map((n) => Municipio.fromJson(n)).toList();
     } on Falha catch (e) {
-      print('Erro ao buscar tanques: $e');
+      print('Erro ao buscar tanques: ${e.msg}');
       throw e;
     }
   }

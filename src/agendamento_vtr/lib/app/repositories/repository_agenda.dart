@@ -19,7 +19,7 @@ class RepositoryAgenda {
           result == false ? List.empty(growable: true) : (result as List).map((n) => Agenda.fromJson(n)).toList();
       return ModelBase(agendas);
     } on Falha catch (e) {
-      Log.message(this, 'GetAgendas => Erro ao buscar todas as agendas: $e');
+      Log.message(this, 'GetAgendas => Erro ao buscar todas as agendas: ${e.msg}');
       throw e;
     }
   }
@@ -30,7 +30,7 @@ class RepositoryAgenda {
       var agenda = result == false ? throw NaoEncontrado(id) : Agenda.fromJson(result);
       return ModelBase(agenda);
     } on Falha catch (e) {
-      Log.message(this, 'Erro ao procurar agenda $id: $e');
+      Log.message(this, 'Erro ao procurar agenda $id: ${e.msg}');
       throw e;
     }
   }
@@ -42,7 +42,7 @@ class RepositoryAgenda {
           result == false ? List.empty(growable: true) : (result as List).map((n) => Agenda.fromJson(n)).toList();
       return ModelBase(agendas);
     } on Falha catch (e) {
-      Log.message(this, 'Erro ao procurar agendas pela data entre: $dInicio e $dFim: $e');
+      Log.message(this, 'Erro ao procurar agendas pela data entre: $dInicio e $dFim: ${e.msg}');
       throw e;
     }
   }
@@ -53,7 +53,7 @@ class RepositoryAgenda {
       Agenda agenda = result == false ? Agenda(data) : Agenda.fromJson(result);
       return ModelBase(agenda);
     } on Falha catch (e) {
-      Log.message(this, 'Erro ao procurar agenda pela data $data: $e');
+      Log.message(this, 'Erro ao procurar agenda pela data $data: ${e.msg}');
     }
     Log.message(this, 'Agenda criada');
     return ModelBase(Agenda(data));
@@ -65,7 +65,7 @@ class RepositoryAgenda {
       if (!salvou) Log.message(this, 'Erro em salvaAgenda em Repository Agenda');
       return ModelBase(salvou);
     } on Falha catch (e) {
-      Log.message(this, 'Erro ao salvar agenda do dia ${value.data}: $e');
+      Log.message(this, 'Erro ao salvar agenda do dia ${value.data}: ${e.msg}');
       throw e;
     }
   }

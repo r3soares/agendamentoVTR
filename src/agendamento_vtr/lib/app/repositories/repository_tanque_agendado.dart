@@ -31,7 +31,7 @@ class RepositoryTanqueAgendado {
           : (result as List).map((n) => TanqueAgendado.fromJson(n)).toList();
       return ModelBase(lista);
     } on Falha catch (e) {
-      print('Erro ao procurar Tanques agendados $ids: $e');
+      print('Erro ao procurar Tanques agendados $ids: ${e.msg}');
       throw e;
     }
   }
@@ -44,7 +44,7 @@ class RepositoryTanqueAgendado {
           : (result as List).map((n) => TanqueAgendado.fromJson(n)).toList();
       return pendentes as List<TanqueAgendado>;
     } on Falha catch (e) {
-      Log.message(this, 'Erro ao procurar tanques pendentes');
+      Log.message(this, 'Erro ao procurar tanques pendentes: ${e.msg}');
       throw e;
     }
   }
@@ -57,7 +57,7 @@ class RepositoryTanqueAgendado {
           : (result as List).map((n) => TanqueAgendado.fromJson(n)).toList();
       return ModelBase(lista);
     } on Falha catch (e) {
-      Log.message(this, 'Erro ao buscar agendasTanque: $e');
+      Log.message(this, 'Erro ao buscar agendasTanque: ${e.msg}');
       throw e;
     }
   }
@@ -71,7 +71,7 @@ class RepositoryTanqueAgendado {
           : (result as List).map((n) => TanqueAgendado.fromJson(n)).toList();
       return ModelBase(lista);
     } on Falha catch (e) {
-      Log.message(this, 'Erro ao procurar agendasTanque pela lista de agendas: $e');
+      Log.message(this, 'Erro ao procurar agendasTanque pela lista de agendas: ${e.msg}');
       throw e;
     }
   }
@@ -82,7 +82,7 @@ class RepositoryTanqueAgendado {
       if (!salvou) Log.message(this, 'Erro em salvaAgenda em Repository Agenda');
       return salvou;
     } on Falha catch (e) {
-      Log.message(this, 'Erro ao salvar agendaTanque ${value.id}: $e');
+      Log.message(this, 'Erro ao salvar agendaTanque ${value.id}: ${e.msg}');
       throw e;
     }
   }
@@ -96,7 +96,7 @@ class RepositoryTanqueAgendado {
       if (!salvou) Log.message(this, 'Erro em saveMany em Repository de Tanques Agendados');
       return ModelBase(salvou);
     } on Falha catch (e) {
-      Log.message(this, 'Erro ao salvar lista de tanques agendados: $e');
+      Log.message(this, 'Erro ao salvar lista de tanques agendados: ${e.msg}');
       throw e;
     }
   }
@@ -107,7 +107,7 @@ class RepositoryTanqueAgendado {
       if (!removeu) Log.message(this, 'Erro ao remover tanque agendado');
       return removeu;
     } on Falha catch (e) {
-      Log.message(this, 'Erro ao remover tanque agendado $id: $e');
+      Log.message(this, 'Erro ao remover tanque agendado $id: ${e.msg}');
       throw e;
     }
   }

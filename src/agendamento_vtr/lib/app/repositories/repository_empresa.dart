@@ -15,7 +15,7 @@ class RepositoryEmpresa {
       if (!salvou) print('Erro em salvaEmpresa em Repository Empresa');
       return salvou;
     } on Falha catch (e) {
-      print('Erro ao salvar empresa ${value.cnpjCpf}: $e');
+      print('Erro ao salvar empresa ${value.cnpjCpf}: ${e.msg}');
       throw e;
     }
   }
@@ -24,7 +24,7 @@ class RepositoryEmpresa {
     try {
       return await db.delete(cnpj);
     } on Falha catch (e) {
-      print('Erro ao remover empresa $cnpj: $e');
+      print('Erro ao remover empresa $cnpj: ${e.msg}');
       throw e;
     }
   }
@@ -47,7 +47,7 @@ class RepositoryEmpresa {
           result == false ? List.empty(growable: true) : (result as List).map((n) => Empresa.fromJson(n)).toList();
       return lista;
     } on Falha catch (e) {
-      print('Erro ao buscar empresas: $e');
+      print('Erro ao buscar empresas: ${e.msg}');
       throw e;
     }
   }
@@ -57,7 +57,7 @@ class RepositoryEmpresa {
       var result = await db.find('nome', '|$nome|');
       return result == false ? List.empty(growable: true) : (result as List).map((n) => Empresa.fromJson(n)).toList();
     } on Falha catch (e) {
-      print('Erro ao procurar empresas pelo nome $nome: $e');
+      print('Erro ao procurar empresas pelo nome $nome: ${e.msg}');
       throw e;
     }
   }
@@ -67,7 +67,7 @@ class RepositoryEmpresa {
       var result = await db.find('cnpjParcial', cnpj);
       return result == false ? List.empty(growable: true) : (result as List).map((n) => Empresa.fromJson(n)).toList();
     } on Falha catch (e) {
-      print('Erro ao procurar empresas pelo cnpj parcial $cnpj: $e');
+      print('Erro ao procurar empresas pelo cnpj parcial $cnpj: ${e.msg}');
       throw e;
     }
   }
