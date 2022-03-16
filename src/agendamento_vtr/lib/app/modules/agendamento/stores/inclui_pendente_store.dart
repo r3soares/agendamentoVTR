@@ -14,11 +14,14 @@ class IncluiPendenteStore extends StreamStore<Falha, TanqueAgendado> {
   final RepositoryTanqueAgendado repoAt;
   final AgendaController _controller = Modular.get<AgendaController>();
   final StoreData<Tanque> blocPesquisa = StoreData(Tanque());
-  final StoreData<TanqueAgendado> blocAgenda = StoreData(TanqueAgendado(id: Uuid().v1(), tanque: Tanque()));
+  final StoreData<TanqueAgendado> blocAgenda =
+      StoreData(TanqueAgendado(id: Uuid().v1(), tanque: Tanque()));
 
-  StoreData<List<TanqueAgendado>> get blocPendentes => _controller.storePendentes;
+  StoreData<List<TanqueAgendado>> get blocPendentes =>
+      _controller.storePendentes;
 
-  IncluiPendenteStore(this.repoTanque, this.repoAt) : super(TanqueAgendado(id: '', tanque: Tanque()));
+  IncluiPendenteStore(this.repoTanque, this.repoAt)
+      : super(TanqueAgendado(id: '', tanque: Tanque()));
 
   @override
   Future destroy() {
@@ -31,8 +34,11 @@ class IncluiPendenteStore extends StreamStore<Falha, TanqueAgendado> {
     setLoading(true);
     try {
       List<TanqueAgendado> tAgendados = await repoAt.findPendentes();
+      if (tAgendados.isEmpty) return;
       if (termo.isNotEmpty)
-        tAgendados.retainWhere((e) => e.tanque.placa.startsWith(termo) || e.tanque.codInmetro.startsWith(termo));
+        tAgendados.retainWhere((e) =>
+            e.tanque.placa.startsWith(termo) ||
+            e.tanque.codInmetro.startsWith(termo));
       _controller.notificaPendentes(tAgendados);
     } on Falha catch (e) {
       blocPendentes.setError(e);

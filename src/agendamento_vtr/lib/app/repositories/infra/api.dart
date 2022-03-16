@@ -10,7 +10,7 @@ import 'package:agendamento_vtr/app/repositories/infra/IDatabase.dart';
 import 'package:http/http.dart';
 
 class Api implements IDatabase {
-  final String endereco = 'https://localhost:44337/api/';
+  final String endereco = 'http://api:80/api/';
   final String controller;
   final headers = {
     'Content-Type': 'application/json',
@@ -141,11 +141,15 @@ class Api implements IDatabase {
             switch (key) {
               case "compartimentos":
                 {
-                  return (value as List).map((e) => Compartimento.fromJson(e)).toList();
+                  return (value as List)
+                      .map((e) => Compartimento.fromJson(e))
+                      .toList();
                 }
               case "tanquesAgendados":
                 {
-                  return (value as List).map((e) => TanqueAgendado.fromJson(e)).toList();
+                  return (value as List)
+                      .map((e) => TanqueAgendado.fromJson(e))
+                      .toList();
                 }
             }
             return value;
@@ -169,7 +173,8 @@ class Api implements IDatabase {
         }
       case 500: //Internal Server Error
         {
-          throw ErroServidor('Internal Server Error (500)'); //Exception('Erro interno do servidor');
+          throw ErroServidor(
+              'Internal Server Error (500)'); //Exception('Erro interno do servidor');
         }
     }
     throw Falha('Código de retorno não esperados: ${req.statusCode}');

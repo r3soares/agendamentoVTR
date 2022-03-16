@@ -41,7 +41,8 @@ class _MainPageState extends ModularState<MainPage, MainStore> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 IconButton(
-                  onPressed: () => {Modular.to.pushNamed('/tanque/cadastroTanque')},
+                  onPressed: () =>
+                      {Modular.to.pushNamed('/tanque/cadastroTanque')},
                   icon: Icon(Icons.add_road),
                   splashRadius: 5,
                 ),
@@ -54,7 +55,8 @@ class _MainPageState extends ModularState<MainPage, MainStore> {
                   onPressed: () => {Modular.to.pushNamed('/gru')},
                   child: Text(
                     'GRU',
-                    style: TextStyle(color: Theme.of(context).secondaryHeaderColor),
+                    style: TextStyle(
+                        color: Theme.of(context).secondaryHeaderColor),
                   ),
                 ),
               ],
@@ -71,9 +73,14 @@ class _MainPageState extends ModularState<MainPage, MainStore> {
               child: SingleChildScrollView(
                 child: ScopedBuilder(
                   store: store.storeAgendas,
-                  onState: (context, state) =>
-                      Card(elevation: 12, child: CalendarioWidget(state as Map<String, Agenda>)),
-                  onLoading: (context) => Center(child: CircularProgressIndicator()),
+                  onState: (context, state) => Card(
+                      elevation: 12,
+                      child: CalendarioWidget(state as Map<String, Agenda>)),
+                  onLoading: (context) =>
+                      Center(child: CircularProgressIndicator()),
+                  onError: (context, state) => Card(
+                      elevation: 12,
+                      child: CalendarioWidget(Map<String, Agenda>())),
                 ),
               ),
             ),
@@ -87,16 +94,32 @@ class _MainPageState extends ModularState<MainPage, MainStore> {
                     store: store.storePendentes,
                     onState: (context, state) => Expanded(
                         flex: 2,
-                        child: Card(elevation: 12, child: TanquesPendentesWidget(state as List<TanqueAgendado>))),
-                    onLoading: (context) => Expanded(child: Center(child: CircularProgressIndicator())),
+                        child: Card(
+                            elevation: 12,
+                            child: TanquesPendentesWidget(
+                                state as List<TanqueAgendado>))),
+                    onLoading: (context) => Expanded(
+                        child: Center(child: CircularProgressIndicator())),
+                    onError: (context, state) => Expanded(
+                        flex: 2,
+                        child: Card(
+                            elevation: 12,
+                            child: TanquesPendentesWidget(
+                                List<TanqueAgendado>.empty()))),
                   ),
                   ScopedBuilder(
                     store: store.storeDiaAtualizado,
-                    onState: (context, state) =>
-                        Expanded(flex: 3, child: Card(elevation: 12, child: AgendaDoDiaWidget(state as Agenda))),
-                    onLoading: (context) => Expanded(child: Center(child: CircularProgressIndicator())),
+                    onState: (context, state) => Expanded(
+                        flex: 3,
+                        child: Card(
+                            elevation: 12,
+                            child: AgendaDoDiaWidget(state as Agenda))),
+                    onLoading: (context) => Expanded(
+                        child: Center(child: CircularProgressIndicator())),
                   ),
-                  Expanded(flex: 2, child: Card(elevation: 12, child: AvisosWidget())),
+                  Expanded(
+                      flex: 2,
+                      child: Card(elevation: 12, child: AvisosWidget())),
                 ],
               ),
             )
