@@ -10,7 +10,7 @@ import 'package:agendamento_vtr/app/repositories/infra/IDatabase.dart';
 import 'package:http/http.dart';
 
 class Api implements IDatabase {
-  final String endereco = 'http://api:80/api/';
+  final String endereco = 'http://10.50.46.135:29080/api/';
   final String controller;
   final headers = {
     'Content-Type': 'application/json',
