@@ -4,6 +4,7 @@ class TabelaServicos {
   final String nome;
   final List<ServicoVtr> servicos;
   bool atual = false;
+  final DateTime data;
 
-  TabelaServicos(this.nome, this.servicos);
+  TabelaServicos(this.nome, this.servicos, this.data);
 }
