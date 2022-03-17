@@ -42,7 +42,7 @@ class _TanquePageState extends ModularState<TanquePage, TanqueStore> {
       callback: _setPlaca,
     );
     inmetroWidget = InputNumeroWidget(
-      titulo: 'Cod. Inmetro',
+      titulo: 'Número Inmetro',
       campoPrevio: _tanque.codInmetro,
       input: TipoInput.NumLetras,
       callback: _setInmetro,
@@ -261,7 +261,8 @@ class _TanquePageState extends ModularState<TanquePage, TanqueStore> {
 
   bool validaDadosPreenchidos() {
     if (_tanque.placa.isEmpty || _tanque.codInmetro.isEmpty) {
-      _msgTemporaria('Placa e número do inmetro não podem estar vazios', Colors.yellow.shade900);
+      _msgTemporaria('Placa e número do inmetro não podem estar vazios',
+          Colors.yellow.shade900);
       return false;
     }
     if (_formKey.currentState == null) {
