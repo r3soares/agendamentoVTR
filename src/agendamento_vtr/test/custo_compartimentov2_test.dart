@@ -1,4 +1,3 @@
-import 'package:agendamento_vtr/app/domain/custo_compartimento.dart';
 import 'package:agendamento_vtr/app/domain/custo_compartimentov2.dart';
 import 'package:agendamento_vtr/app/domain/servico_vtr.dart';
 import 'package:flutter_test/flutter_test.dart';
