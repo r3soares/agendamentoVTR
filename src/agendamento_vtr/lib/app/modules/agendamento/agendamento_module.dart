@@ -18,15 +18,16 @@ import 'package:agendamento_vtr/app/repositories/repository_tanque_agendado.dart
 import 'package:agendamento_vtr/app/repositories/repository_empresa.dart';
 import 'package:agendamento_vtr/app/repositories/repository_tanque.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:agendamento_vtr/app/repositories/infra/constantes.dart';
 
 class AgendamentoModule extends Module {
   @override
   final List<Bind> binds = [
-    Bind.singleton((i) => RepositoryAgenda(Api('vtr/agenda'))),
-    Bind.singleton((i) => RepositoryTanqueAgendado(Api('vtr/tanqueAgendado'))),
-    Bind.singleton((i) => RepositoryTanque(Api('vtr/tanque'))),
-    Bind.singleton((i) => RepositoryEmpresa(Api('vtr/empresa'))),
-    Bind.singleton((i) => RepositoryMunicipio(Api('sgi/municipio'))),
+    Bind.singleton((i) => RepositoryAgenda(Api(Constantes.api, 'vtr/agenda'))),
+    Bind.singleton((i) => RepositoryTanqueAgendado(Api(Constantes.api, 'vtr/tanqueAgendado'))),
+    Bind.singleton((i) => RepositoryTanque(Api(Constantes.api, 'vtr/tanque'))),
+    Bind.singleton((i) => RepositoryEmpresa(Api(Constantes.api, 'vtr/empresa'))),
+    Bind.singleton((i) => RepositoryMunicipio(Api(Constantes.api, 'sgi/municipio'))),
     Bind.singleton((i) => AgendaController()),
     Bind.lazySingleton((i) => MainStore()),
     Bind.lazySingleton(

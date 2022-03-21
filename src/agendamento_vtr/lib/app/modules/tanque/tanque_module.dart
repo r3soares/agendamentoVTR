@@ -6,12 +6,13 @@ import 'package:agendamento_vtr/app/repositories/infra/api.dart';
 import 'package:agendamento_vtr/app/repositories/repository_tanque.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
+import '../../repositories/infra/constantes.dart';
 import 'pages/cadastro_page.dart';
 
 class TanqueModule extends Module {
   @override
   final List<Bind> binds = [
-    Bind.singleton((i) => RepositoryTanque(Api('vtr/tanque'))),
+    Bind.singleton((i) => RepositoryTanque(Api(Constantes.api, 'vtr/tanque'))),
     Bind.factory((i) => TanqueStore()),
     Bind.factory((i) => EmpresaStore())
   ];

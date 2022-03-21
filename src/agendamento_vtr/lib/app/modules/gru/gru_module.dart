@@ -4,13 +4,14 @@ import 'package:agendamento_vtr/app/repositories/repository_municipio.dart';
 import 'package:agendamento_vtr/app/repositories/repository_tanque.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
+import '../../repositories/infra/constantes.dart';
 import 'main_page.dart';
 
 class GruModule extends Module {
   @override
   final List<Bind> binds = [
-    Bind.singleton((i) => RepositoryTanque(Api('vtr/tanque'))),
-    Bind.singleton((i) => RepositoryMunicipio(Api('sgi/municipio'))),
+    Bind.singleton((i) => RepositoryTanque(Api(Constantes.api, 'vtr/tanque'))),
+    Bind.singleton((i) => RepositoryMunicipio(Api(Constantes.api, 'sgi/municipio'))),
     Bind((i) => TanqueStore()),
   ];
 

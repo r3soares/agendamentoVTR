@@ -10,7 +10,7 @@ import 'package:agendamento_vtr/app/repositories/infra/IDatabase.dart';
 import 'package:http/http.dart';
 
 class Api implements IDatabase {
-  final String endereco = 'http://10.50.46.135:29080/api/';
+  final String endereco;
   final String controller;
   final headers = {
     'Content-Type': 'application/json',
@@ -18,7 +18,7 @@ class Api implements IDatabase {
     'Access-Control-Allow-Methods': 'GET, POST, DELETE, PUT',
     'Access-Control-Allow-Headers': 'X-Requested-With'
   };
-  Api(this.controller);
+  Api(this.endereco, this.controller);
   @override
   delete(id) async {
     try {

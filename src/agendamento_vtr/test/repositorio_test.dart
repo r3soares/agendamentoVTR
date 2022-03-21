@@ -8,6 +8,7 @@ import 'package:agendamento_vtr/app/models/tanque.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/models/agenda.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/models/tanque_agendado.dart';
 import 'package:agendamento_vtr/app/repositories/infra/api.dart';
+import 'package:agendamento_vtr/app/repositories/infra/constantes.dart';
 import 'package:agendamento_vtr/app/repositories/repository_agenda.dart';
 import 'package:agendamento_vtr/app/repositories/repository_municipio.dart';
 import 'package:agendamento_vtr/app/repositories/repository_tanque_agendado.dart';
@@ -22,11 +23,11 @@ import 'objetos/tanques.dart';
 
 void main() {
   group('Teste de repositorios', () {
-    var repoEmpresa = RepositoryEmpresa(Api('vtr/empresa'));
-    var repoTanque = RepositoryTanque(Api('vtr/tanque'));
-    var repoTa = RepositoryTanqueAgendado(Api('vtr/tanqueAgendado'));
-    var repoAgenda = RepositoryAgenda(Api('vtr/agenda'));
-    var repoMuncipio = RepositoryMunicipio(Api('sgi/municipio'));
+    var repoEmpresa = RepositoryEmpresa(Api(Constantes.api, 'vtr/empresa'));
+    var repoTanque = RepositoryTanque(Api(Constantes.api, 'vtr/tanque'));
+    var repoTa = RepositoryTanqueAgendado(Api(Constantes.api, 'vtr/tanqueAgendado'));
+    var repoAgenda = RepositoryAgenda(Api(Constantes.api, 'vtr/agenda'));
+    var repoMuncipio = RepositoryMunicipio(Api(Constantes.api, 'sgi/municipio'));
     test('Popula Base', () async {
       Empresas();
       for (int i = 0; i < Empresas.empresas.length; i++) {

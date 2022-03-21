@@ -172,47 +172,47 @@ class GeraPdfWidget extends StatelessWidget {
   }
 
   /// Retorna o QrCode da fatura
-  pw.Widget _buildQrCode(pw.Context context) {
-    return pw.Container(
-        height: 65,
-        width: 65,
-        child: pw.BarcodeWidget(
-            barcode: pw.Barcode.fromType(pw.BarcodeType.QrCode), data: 'nada a declarar kct', color: PdfColors.white));
-  }
+  // pw.Widget _buildQrCode(pw.Context context) {
+  //   return pw.Container(
+  //       height: 65,
+  //       width: 65,
+  //       child: pw.BarcodeWidget(
+  //           barcode: pw.Barcode.fromType(pw.BarcodeType.QrCode), data: 'nada a declarar kct', color: PdfColors.white));
+  // }
 
   /// Retorna o rodapé da página
-  pw.Widget _buildPrice(pw.Context context) {
-    return pw.Container(
-      color: PdfColors.blue,
-      height: 130,
-      child: pw.Row(
-          crossAxisAlignment: pw.CrossAxisAlignment.center,
-          mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-          children: [
-            pw.Padding(
-                padding: pw.EdgeInsets.only(left: 16),
-                child: pw.Column(
-                    mainAxisAlignment: pw.MainAxisAlignment.center,
-                    crossAxisAlignment: pw.CrossAxisAlignment.center,
-                    children: [
-                      _buildQrCode(context),
-                      pw.Padding(
-                          padding: pw.EdgeInsets.only(top: 12),
-                          child:
-                              pw.Text('Use esse QR para pagar', style: pw.TextStyle(color: PdfColor(0.85, 0.85, 0.85))))
-                    ])),
-            pw.Padding(
-                padding: pw.EdgeInsets.all(16),
-                child: pw.Column(
-                    mainAxisAlignment: pw.MainAxisAlignment.center,
-                    crossAxisAlignment: pw.CrossAxisAlignment.end,
-                    children: [
-                      pw.Padding(
-                          padding: pw.EdgeInsets.only(bottom: 0),
-                          child: pw.Text('TOTAL', style: pw.TextStyle(color: PdfColors.white))),
-                      pw.Text('R\$: 0}', style: pw.TextStyle(color: PdfColors.white, fontSize: 22))
-                    ]))
-          ]),
-    );
-  }
+  // pw.Widget _buildPrice(pw.Context context) {
+  //   return pw.Container(
+  //     color: PdfColors.blue,
+  //     height: 130,
+  //     child: pw.Row(
+  //         crossAxisAlignment: pw.CrossAxisAlignment.center,
+  //         mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+  //         children: [
+  //           pw.Padding(
+  //               padding: pw.EdgeInsets.only(left: 16),
+  //               child: pw.Column(
+  //                   mainAxisAlignment: pw.MainAxisAlignment.center,
+  //                   crossAxisAlignment: pw.CrossAxisAlignment.center,
+  //                   children: [
+  //                     _buildQrCode(context),
+  //                     pw.Padding(
+  //                         padding: pw.EdgeInsets.only(top: 12),
+  //                         child:
+  //                             pw.Text('Use esse QR para pagar', style: pw.TextStyle(color: PdfColor(0.85, 0.85, 0.85))))
+  //                   ])),
+  //           pw.Padding(
+  //               padding: pw.EdgeInsets.all(16),
+  //               child: pw.Column(
+  //                   mainAxisAlignment: pw.MainAxisAlignment.center,
+  //                   crossAxisAlignment: pw.CrossAxisAlignment.end,
+  //                   children: [
+  //                     pw.Padding(
+  //                         padding: pw.EdgeInsets.only(bottom: 0),
+  //                         child: pw.Text('TOTAL', style: pw.TextStyle(color: PdfColors.white))),
+  //                     pw.Text('R\$: 0}', style: pw.TextStyle(color: PdfColors.white, fontSize: 22))
+  //                   ]))
+  //         ]),
+  //   );
+  // }
 }

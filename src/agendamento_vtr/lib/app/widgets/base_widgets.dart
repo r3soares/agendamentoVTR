@@ -18,7 +18,8 @@ abstract class BaseWidgets extends StatefulWidget {
     }
   }
 
-  Widget btnsalvar({String nome = 'Salvar', required void Function() onPressed}) {
+  Widget btnsalvar(
+      {String nome = 'Salvar', required void Function() onPressed}) {
     return Container(
       padding: const EdgeInsets.all(8),
       child: ElevatedButton(
@@ -34,6 +35,20 @@ abstract class BaseWidgets extends StatefulWidget {
       child: TextButton(
         child: Text(nome),
         onPressed: () => Modular.to.pop(),
+      ),
+    );
+  }
+
+  Widget btnAtualizar(
+      {String nome = 'Atualizar', required void Function() onPressed}) {
+    return Container(
+      padding: const EdgeInsets.all(8),
+      child: ElevatedButton(
+        style: ButtonStyle(
+            backgroundColor:
+                MaterialStateProperty.all<Color>(Colors.yellow.shade900)),
+        child: Text(nome),
+        onPressed: onPressed,
       ),
     );
   }

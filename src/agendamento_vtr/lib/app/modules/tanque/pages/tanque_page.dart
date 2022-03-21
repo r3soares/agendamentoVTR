@@ -318,6 +318,8 @@ class _TanquePageState extends ModularState<TanquePage, TanqueStore> {
     await _showDialogTanqueExistente(tExistente);
   }
 
+  _showDialogAtualizaTanque() {}
+
   Future<void> _showDialogTanqueExistente(Tanque tExistente) async {
     return showDialog<void>(
       context: context,
