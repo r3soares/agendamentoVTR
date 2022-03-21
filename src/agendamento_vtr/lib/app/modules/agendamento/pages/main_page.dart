@@ -40,16 +40,22 @@ class _MainPageState extends ModularState<MainPage, MainStore> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                IconButton(
+                TextButton(
                   onPressed: () =>
                       {Modular.to.pushNamed('/tanque/cadastroTanque')},
-                  icon: Icon(Icons.add_road),
-                  splashRadius: 5,
+                  child: Text(
+                    'Tanque',
+                    style: TextStyle(
+                        color: Theme.of(context).secondaryHeaderColor),
+                  ),
                 ),
-                IconButton(
+                TextButton(
                   onPressed: () => {Modular.to.pushNamed('/empresa/cadastro')},
-                  icon: Icon(Icons.add_business),
-                  splashRadius: 5,
+                  child: Text(
+                    'Empresa',
+                    style: TextStyle(
+                        color: Theme.of(context).secondaryHeaderColor),
+                  ),
                 ),
                 TextButton(
                   onPressed: () => {Modular.to.pushNamed('/gru')},
@@ -61,7 +67,7 @@ class _MainPageState extends ModularState<MainPage, MainStore> {
                 ),
               ],
             ),
-          )
+          ),
         ],
       ),
       body: Center(
@@ -84,6 +90,25 @@ class _MainPageState extends ModularState<MainPage, MainStore> {
                 ),
               ),
             ),
+            Flexible(
+              flex: 1,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Expanded(
+                    flex: 2,
+                    child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: ElevatedButton(
+                          child: Text('Veículos cadastrados'),
+                          onPressed: () => {},
+                        )),
+                  ),
+                  Expanded(flex: 5, child: SizedBox.shrink())
+                ],
+              ),
+            ),
+
             //PesquisaWidget(),
             Flexible(
               flex: 5,
