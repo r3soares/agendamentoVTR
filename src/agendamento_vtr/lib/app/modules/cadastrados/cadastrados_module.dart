@@ -1,7 +1,11 @@
+import 'package:agendamento_vtr/app/models/dado_psie.dart';
 import 'package:agendamento_vtr/app/modules/cadastrados/pages/main_page.dart';
-import 'package:agendamento_vtr/app/modules/cadastrados/stores/main_store.dart';
+import 'package:agendamento_vtr/app/modules/cadastrados/stores/download_store.dart';
+import 'package:agendamento_vtr/app/modules/cadastrados/stores/empresa_store.dart';
+import 'package:agendamento_vtr/app/modules/cadastrados/stores/tanque_store.dart';
 import 'package:agendamento_vtr/app/repositories/infra/api.dart';
 import 'package:agendamento_vtr/app/repositories/repository_empresa.dart';
+import 'package:agendamento_vtr/app/repositories/repository_psie.dart';
 import 'package:agendamento_vtr/app/repositories/repository_tanque.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:agendamento_vtr/app/repositories/infra/constantes.dart';
@@ -12,7 +16,11 @@ class CadastradosModule extends Module {
     Bind.singleton((i) => RepositoryTanque(Api(Constantes.api, 'vtr/tanque'))),
     Bind.singleton(
         (i) => RepositoryEmpresa(Api(Constantes.api, 'vtr/empresa'))),
-    Bind.lazySingleton((i) => MainStore()),
+    Bind.singleton((i) => RepositoryPsie(Api(Constantes.scrap, '/placa'))),
+    Bind.lazySingleton((i) => TanqueStore([])),
+    Bind.lazySingleton((i) => EmpresaStore([])),
+    Bind.lazySingleton(
+        (i) => DownloadStore(DadoPsie('', '', '', '', '', '', '', '', '', ''))),
   ];
 
   @override
