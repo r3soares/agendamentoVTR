@@ -48,8 +48,10 @@ class RepositoryTanque {
 
   Future<Tanque> findTanqueByPlaca(String placa) async {
     try {
-      var result = await db.find('placa', placa);
-      var tanque = result == false ? throw NaoEncontrado(placa) : Tanque.fromJson(result);
+      var result = await db.find('placa', placa.toUpperCase());
+      var tanque = result == false
+          ? throw NaoEncontrado(placa)
+          : Tanque.fromJson(result);
       return tanque;
     } on Falha catch (e) {
       Log.message(this, 'Erro ao procurar tanque pela placa $placa: ${e.msg}');
@@ -60,7 +62,9 @@ class RepositoryTanque {
   Future<List<Tanque>> findTanquesByPlacaParcial(String placa) async {
     try {
       var result = await db.find('placaParcial', placa);
-      return result == false ? List.empty(growable: true) : (result as List).map((n) => Tanque.fromJson(n)).toList();
+      return result == false
+          ? List.empty(growable: true)
+          : (result as List).map((n) => Tanque.fromJson(n)).toList();
     } on Falha catch (e) {
       print('Erro ao procurar tanques pela placa parcial $placa: ${e.msg}');
       throw e;
@@ -70,9 +74,12 @@ class RepositoryTanque {
   Future<List<Tanque>> findTanquesByInmetroParcial(String inmetro) async {
     try {
       var result = await db.find('inmetroParcial', inmetro);
-      return result == false ? List.empty(growable: true) : (result as List).map((n) => Tanque.fromJson(n)).toList();
+      return result == false
+          ? List.empty(growable: true)
+          : (result as List).map((n) => Tanque.fromJson(n)).toList();
     } on Falha catch (e) {
-      print('Erro ao procurar tanques pelo cod inmetro parcial $inmetro: ${e.msg}');
+      print(
+          'Erro ao procurar tanques pelo cod inmetro parcial $inmetro: ${e.msg}');
       throw e;
     }
   }
@@ -80,9 +87,12 @@ class RepositoryTanque {
   Future<List<Tanque>> findTanquesByProprietario(String proprietario) async {
     try {
       var result = await db.find('proprietario', proprietario);
-      return result == false ? List.empty(growable: true) : (result as List).map((n) => Tanque.fromJson(n)).toList();
+      return result == false
+          ? List.empty(growable: true)
+          : (result as List).map((n) => Tanque.fromJson(n)).toList();
     } on Falha catch (e) {
-      Log.message(this, 'Erro ao procurar tanques pelo proprietário $proprietario: ${e.msg}');
+      Log.message(this,
+          'Erro ao procurar tanques pelo proprietário $proprietario: ${e.msg}');
       throw e;
     }
   }
@@ -103,7 +113,9 @@ class RepositoryTanque {
   Future<Tanque> getTanque(String inmetro) async {
     try {
       var result = await db.getById(inmetro);
-      var tanque = result == false ? throw NaoEncontrado(inmetro) : Tanque.fromJson(result);
+      var tanque = result == false
+          ? throw NaoEncontrado(inmetro)
+          : Tanque.fromJson(result);
       return tanque;
     } on Falha catch (e) {
       Log.message(this, 'Erro ao procurar tanque $inmetro: ${e.msg}');
@@ -114,7 +126,9 @@ class RepositoryTanque {
   Future<List<Tanque>> getTanques() async {
     try {
       var result = await db.getAll();
-      return result == false ? List.empty(growable: true) : (result as List).map((n) => Tanque.fromJson(n)).toList();
+      return result == false
+          ? List.empty(growable: true)
+          : (result as List).map((n) => Tanque.fromJson(n)).toList();
     } on Falha catch (e) {
       Log.message(this, 'Erro ao buscar tanques: ${e.msg}');
       throw e;
