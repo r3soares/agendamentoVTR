@@ -1,5 +1,6 @@
 import 'package:agendamento_vtr/app/domain/erros.dart';
 import 'package:agendamento_vtr/app/models/dado_psie.dart';
+import 'package:agendamento_vtr/app/models/tanque.dart';
 import 'package:agendamento_vtr/app/repositories/repository_empresa.dart';
 import 'package:agendamento_vtr/app/repositories/repository_municipio.dart';
 import 'package:agendamento_vtr/app/repositories/repository_psie.dart';
@@ -16,6 +17,7 @@ class DownloadStore extends StreamStore<Falha, DadoPsie> {
   final RepositoryMunicipio _repoMun = Modular.get<RepositoryMunicipio>();
 
   download(String placa) async {
+    if (placa.length != 7) return;
     execute(() => _repoPsie.getPlaca(placa));
   }
 
@@ -43,6 +45,14 @@ class DownloadStore extends StreamStore<Falha, DadoPsie> {
       return municipio;
     } catch (e) {
       return null;
+    }
+  }
+
+  salvaTanque(Tanque t) async {
+    try {
+      return await _repoTanque.salvaTanque(t);
+    } catch (e) {
+      return false;
     }
   }
 }

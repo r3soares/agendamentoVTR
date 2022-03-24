@@ -55,6 +55,10 @@ class _DownloadDialogState extends ModularState<DownloadDialog, DownloadStore> {
         padding: const EdgeInsets.all(8.0),
         child: TextFormField(
           controller: _cPlaca,
+          maxLength: 7,
+          onChanged: (_) => setState(() {}),
+          onFieldSubmitted: (placa) => store.download(placa),
+          validator: _validaPlaca,
           textCapitalization: TextCapitalization.characters,
           decoration: InputDecoration(
             border: OutlineInputBorder(),
@@ -71,163 +75,55 @@ class _DownloadDialogState extends ModularState<DownloadDialog, DownloadStore> {
             ? SizedBox.shrink()
             : Column(
                 children: [
+                  _exibeDado('Inmetro', dado.inmetro),
+                  _exibeDado('Placa', dado.placa),
+                  _exibeDado('Número de Série', dado.numSerie),
+                  _exibeDado('Proprietário', dado.proprietario),
+                  _exibeDado('CNPJ', dado.cnpj),
+                  _exibeDado('Município', dado.municipio),
+                  _exibeDado('UF', dado.uf),
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      Expanded(
-                        child: ListTile(
-                          leading: Checkbox(
-                            value: escolhidos[0],
-                            onChanged: (valor) => _mudaValor(valor!, 0),
-                          ),
-                          title: Text('Inmetro'),
-                          trailing: Text(dado.inmetro),
-                        ),
+                      ElevatedButton(
+                        onPressed: dado.inmetro.isEmpty
+                            ? null
+                            : () => _salvaDados(dado),
+                        child: tanque == null
+                            ? Text('Salvar')
+                            : Text('Substituir base local'),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          tanque == null ? 'Novo' : tanque!.codInmetro,
-                          style: TextStyle(color: Colors.grey, fontSize: 12),
-                        ),
-                      )
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: ListTile(
-                          leading: Checkbox(
-                            value: escolhidos[1],
-                            onChanged: (valor) => _mudaValor(valor!, 1),
-                          ),
-                          title: Text('Placa'),
-                          trailing: Text(dado.placa),
-                        ),
+                      ElevatedButton(
+                        onPressed:
+                            tanque == null ? null : () => _comparaDados(dado),
+                        child: Text('Comparar com base local'),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          tanque == null ? 'Novo' : tanque!.placa,
-                          style: TextStyle(color: Colors.grey, fontSize: 12),
-                        ),
-                      )
                     ],
-                  ),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: ListTile(
-                          leading: Checkbox(
-                            value: escolhidos[3],
-                            onChanged: (valor) => _mudaValor(valor!, 3),
-                          ),
-                          title: Text('Proprietário'),
-                          trailing: Text(dado.proprietario),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          empresa == null ? 'Novo' : empresa!.razaoSocial,
-                          style: TextStyle(color: Colors.grey, fontSize: 12),
-                        ),
-                      )
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: ListTile(
-                          leading: Checkbox(
-                            value: escolhidos[4],
-                            onChanged: (valor) => _mudaValor(valor!, 4),
-                          ),
-                          title: Text('CNPJ'),
-                          trailing: Text(dado.cnpj),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          empresa == null ? 'Novo' : empresa!.cnpjFormatado,
-                          style: TextStyle(color: Colors.grey, fontSize: 12),
-                        ),
-                      )
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: ListTile(
-                          leading: SizedBox.shrink(),
-                          title: Text('Número de Série'),
-                          trailing: Text(dado.numSerie),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          'Ausente',
-                          style: TextStyle(color: Colors.grey, fontSize: 12),
-                        ),
-                      )
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: ListTile(
-                          leading: SizedBox.shrink(),
-                          title: Text('Município'),
-                          trailing: Text(dado.municipio),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          empresa == null
-                              ? 'Novo'
-                              : empresa!.proprietario == null
-                                  ? 'Novo'
-                                  : empresa!.proprietario!.codMun.toString(),
-                          style: TextStyle(color: Colors.grey, fontSize: 12),
-                        ),
-                      )
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: ListTile(
-                          leading: SizedBox.shrink(),
-                          title: Text('UF'),
-                          trailing: Text(dado.uf),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          'Ausente',
-                          style: TextStyle(color: Colors.grey, fontSize: 12),
-                        ),
-                      )
-                    ],
-                  ),
-                  Center(
-                      child: ElevatedButton(
-                    onPressed: () => _salvaDados(dado),
-                    child: Text('Salvar'),
-                  ))
+                  )
                 ],
               ),
       );
-
+  Widget _exibeDado(String titulo, String dado) => ListTile(
+        title: Text(titulo),
+        trailing: Text(dado),
+      );
   _getPlacaLocal(String placa) async {
     tanque = null;
     if (placa.isEmpty) return;
     placa = placa.replaceAll('-', '').toUpperCase();
     print(placa);
     tanque = await store.getPlacaLocal(placa);
+    setState(() {});
+    if (tanque != null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Encontrado veículo na base local')));
+    }
+  }
+
+  String? _validaPlaca(String? placa) {
+    if (placa == null) return 'Informe uma placa';
+    if (placa.length != 7) return 'Placa deve ter 7 dígitos';
+    return null;
   }
 
   _getEmpresaLocal(String cnpj) async {
@@ -239,29 +135,40 @@ class _DownloadDialogState extends ModularState<DownloadDialog, DownloadStore> {
   }
 
   _salvaDados(DadoPsie dado) async {
-    if (dado.inmetro.isEmpty) {}
+    if (dado.inmetro.isEmpty || _cPlaca.text.isEmpty) {
+      setState(() {});
+      return;
+    }
     tanque = await _criaTanque(dado);
     print(tanque!.toJson());
-    empresa = null;
-    tanque = null;
+    bool salvou = await store.salvaTanque(tanque!);
+    if (salvou) {
+      store.update(DadoPsie('', '', '', '', '', '', '', '', '', ''));
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Veículo salvo com sucesso')));
+      empresa = null;
+      tanque = null;
+      _cPlaca.clear();
+      return;
+    }
+    ScaffoldMessenger.of(context)
+        .showSnackBar(const SnackBar(content: Text('Erro ao salvar veículo')));
   }
+
+  _comparaDados(DadoPsie dado) {}
 
   _criaTanque(DadoPsie dado) async {
     tanque = tanque == null ? Tanque() : tanque;
-    tanque!.codInmetro = escolhidos[0] ? dado.inmetro : tanque!.codInmetro;
-    tanque!.placa = escolhidos[1] ? dado.placa : tanque!.placa;
+    tanque!.codInmetro = dado.inmetro;
+    tanque!.placa = dado.placa;
     tanque!.proprietario = await _criaEmpresa(dado);
     return tanque!;
   }
 
   _criaEmpresa(DadoPsie dado) async {
     empresa = empresa == null ? Empresa() : empresa;
-    empresa!.cnpjCpf = escolhidos[4]
-        ? dado.cnpj.replaceAll(RegExp('[^\\d ]'), "")
-        : empresa!.cnpjCpf;
-    empresa!.razaoSocial =
-        escolhidos[3] ? dado.proprietario : empresa!.razaoSocial;
-    empresa!.proprietario = null;
+    empresa!.cnpjCpf = dado.cnpj.replaceAll(RegExp('[^\\d ]'), "");
+    empresa!.razaoSocial = dado.proprietario;
     //await _criaProprietario(dado);
     return empresa;
   }
