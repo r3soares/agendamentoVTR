@@ -1,3 +1,4 @@
+import 'package:agendamento_vtr/app/behaviors/custom_scroll_behavior.dart';
 import 'package:agendamento_vtr/app/models/tanque.dart';
 import 'package:agendamento_vtr/app/modules/cadastrados/stores/tanque_store.dart';
 import 'package:flutter/material.dart';
@@ -25,7 +26,11 @@ class _TanquesTabState extends ModularState<TanquesTab, TanqueStore> {
       onState: (context, List<Tanque> tanques) => Center(
         child: tanques.isEmpty
             ? const Text('Sem tanques cadastrados')
-            : DataTable(columns: _colunas(), rows: _linhas(tanques)),
+            : ScrollConfiguration(
+                behavior: CustomScrollBehavior(),
+                child: SingleChildScrollView(
+                    child: DataTable(
+                        columns: _colunas(), rows: _linhas(tanques)))),
       ),
       onLoading: (context) => const CircularProgressIndicator(),
       onError: (context, error) => _erro(),

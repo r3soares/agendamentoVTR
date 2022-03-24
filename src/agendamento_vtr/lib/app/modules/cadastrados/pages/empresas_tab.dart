@@ -1,3 +1,4 @@
+import 'package:agendamento_vtr/app/behaviors/custom_scroll_behavior.dart';
 import 'package:agendamento_vtr/app/models/empresa.dart';
 import 'package:agendamento_vtr/app/modules/cadastrados/stores/empresa_store.dart';
 import 'package:flutter/material.dart';
@@ -23,10 +24,14 @@ class _EmpresasTabState extends ModularState<EmpresasTab, EmpresaStore> {
     return ScopedBuilder(
       store: store,
       onState: (context, List<Empresa> empresas) => Center(
-        child: empresas.isEmpty
-            ? const Text('Sem empresas cadastradas')
-            : DataTable(columns: _colunas(), rows: _linhas(empresas)),
-      ),
+          child: empresas.isEmpty
+              ? const Text('Sem empresas cadastradas')
+              : ScrollConfiguration(
+                  behavior: CustomScrollBehavior(),
+                  child: SingleChildScrollView(
+                    child:
+                        DataTable(columns: _colunas(), rows: _linhas(empresas)),
+                  ))),
       onLoading: (context) => const CircularProgressIndicator(),
       onError: (context, error) => _erro(),
     );
