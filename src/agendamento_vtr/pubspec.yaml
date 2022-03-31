@@ -23,12 +23,14 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_localizations: 
+    sdk: flutter 
+  intl: any
   file_picker: ^4.0.2
   cupertino_icons: ^1.0.3
   flutter_modular: any
   flutter_triple: any
-  table_calendar: ^3.0.2
-  intl: ^0.17.0
+  table_calendar: ^3.0.2  
   http:
   rxdart: ^0.27.2
   mask_text_input_formatter: ^2.0.0
