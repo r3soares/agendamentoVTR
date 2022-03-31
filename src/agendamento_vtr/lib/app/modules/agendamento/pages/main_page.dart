@@ -82,6 +82,14 @@ class _MainPageState extends ModularState<MainPage, MainStore> {
                         color: Theme.of(context).secondaryHeaderColor),
                   ),
                 ),
+                TextButton(
+                  onPressed: () => {Modular.to.pushNamed('/wizard')},
+                  child: Text(
+                    'Cadastro de Solicitação',
+                    style: TextStyle(
+                        color: Theme.of(context).secondaryHeaderColor),
+                  ),
+                ),
               ],
             ),
           ),

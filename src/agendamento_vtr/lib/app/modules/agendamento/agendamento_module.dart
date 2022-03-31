@@ -12,6 +12,7 @@ import 'package:agendamento_vtr/app/modules/empresa/empresa_module.dart';
 import 'package:agendamento_vtr/app/modules/gru/gru_module.dart';
 import 'package:agendamento_vtr/app/modules/tanque/stores/tanque_store.dart';
 import 'package:agendamento_vtr/app/modules/tanque/tanque_module.dart';
+import 'package:agendamento_vtr/app/modules/wizard/wizard_module.dart';
 import 'package:agendamento_vtr/app/repositories/infra/api.dart';
 import 'package:agendamento_vtr/app/repositories/repository_agenda.dart';
 import 'package:agendamento_vtr/app/repositories/repository_municipio.dart';
@@ -60,5 +61,6 @@ class AgendamentoModule extends Module {
     ModuleRoute('/empresa', module: EmpresaModule()),
     ModuleRoute('/gru', module: GruModule()),
     ModuleRoute('/cadastrados', module: CadastradosModule()),
+    ModuleRoute('/wizard', module: WizardModule()),
   ];
 }

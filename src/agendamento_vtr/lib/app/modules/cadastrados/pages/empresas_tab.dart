@@ -32,7 +32,9 @@ class _EmpresasTabState extends ModularState<EmpresasTab, EmpresaStore> {
                     child:
                         DataTable(columns: _colunas(), rows: _linhas(empresas)),
                   ))),
-      onLoading: (context) => const CircularProgressIndicator(),
+      onLoading: (context) => const Center(
+        child: const CircularProgressIndicator(),
+      ),
       onError: (context, error) => _erro(),
     );
   }
