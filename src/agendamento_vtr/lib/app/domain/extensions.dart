@@ -17,12 +17,20 @@ extension DatetimeEx on DateTime {
     return Constants.formatoDataHora.format(this);
   }
 
+  String HoraToString() {
+    return Constants.formatoHora.format(this);
+  }
+
   String anoMesDiaToString() {
     return '${this.year}-${this.month}-${this.day}';
   }
 }
 
 extension StringCasingExtension on String {
-  String toCapitalized() => length > 0 ? '${this[0].toUpperCase()}${substring(1)}' : '';
-  String toTitleCase() => replaceAll(RegExp(' +'), ' ').split(' ').map((str) => str.toCapitalized()).join(' ');
+  String toCapitalized() =>
+      length > 0 ? '${this[0].toUpperCase()}${substring(1)}' : '';
+  String toTitleCase() => replaceAll(RegExp(' +'), ' ')
+      .split(' ')
+      .map((str) => str.toCapitalized())
+      .join(' ');
 }
