@@ -1,5 +1,6 @@
 import 'package:agendamento_vtr/app/modules/wizard/pages/main_page.dart';
 import 'package:agendamento_vtr/app/modules/wizard/stores/main_store.dart';
+import 'package:agendamento_vtr/app/modules/wizard/stores/tanque_store.dart';
 import 'package:agendamento_vtr/app/modules/wizard/wizard_controller.dart';
 import 'package:agendamento_vtr/app/repositories/infra/api.dart';
 import 'package:agendamento_vtr/app/repositories/repository_agenda.dart';
@@ -19,6 +20,7 @@ class WizardModule extends Module {
     Bind.singleton(
         (i) => RepositoryEmpresa(Api(Constantes.api, 'vtr/empresa'))),
     Bind.lazySingleton((i) => MainStore()),
+    Bind.lazySingleton((i) => TanqueStore([])),
     Bind.lazySingleton((i) => WizardController(Map())),
   ];
 

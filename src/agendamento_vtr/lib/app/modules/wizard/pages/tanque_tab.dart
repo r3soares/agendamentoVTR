@@ -1,8 +1,10 @@
 import 'package:agendamento_vtr/app/models/tanque.dart';
+import 'package:agendamento_vtr/app/modules/wizard/stores/tanque_store.dart';
 import 'package:agendamento_vtr/app/modules/wizard/widgets/tanque_form_widget.dart';
 import 'package:agendamento_vtr/app/modules/wizard/wizard_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:flutter_triple/flutter_triple.dart';
 
 class TanqueTab extends StatefulWidget {
   final TabController tabController;
@@ -12,15 +14,13 @@ class TanqueTab extends StatefulWidget {
   State<TanqueTab> createState() => _TanqueTabState();
 }
 
-class _TanqueTabState extends State<TanqueTab>
+class _TanqueTabState extends ModularState<TanqueTab, TanqueStore>
     with AutomaticKeepAliveClientMixin<TanqueTab> {
   @override
   // TODO: implement wantKeepAlive
-  bool get wantKeepAlive => true;
+  bool get wantKeepAlive => false;
 
   final _controller = Modular.get<WizardController>();
-  final Tanque tanque1 = Tanque();
-  final Tanque tanque2 = Tanque();
   bool isBitrem = false;
 
   @override
@@ -28,7 +28,6 @@ class _TanqueTabState extends State<TanqueTab>
     // TODO: implement initState
     super.initState();
     widget.tabController.addListener(_onUpdateTab);
-    _onUpdateTab();
   }
 
   @override
@@ -50,15 +49,24 @@ class _TanqueTabState extends State<TanqueTab>
           children: [
             Expanded(
               flex: 6,
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Expanded(child: TanqueFormWidget(tanque1)),
-                  isBitrem
-                      ? Expanded(child: TanqueFormWidget(tanque2))
-                      : SizedBox.shrink(),
-                ],
+              child: ScopedBuilder(
+                store: store,
+                onState: (context, List tanques) {
+                  return tanques.isEmpty
+                      ? Center(
+                          child: Text('Placa não informada na solicitação'),
+                        )
+                      : Row(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Expanded(child: TanqueFormWidget(tanques[0])),
+                            isBitrem
+                                ? Expanded(child: TanqueFormWidget(tanques[1]))
+                                : SizedBox.shrink(),
+                          ],
+                        );
+                },
               ),
             ),
             Expanded(
@@ -94,11 +102,12 @@ class _TanqueTabState extends State<TanqueTab>
   }
 
   _onUpdateTab() {
+    if (widget.tabController.index != 3) return;
+    String? placa1 = _controller.dados['placa1'];
+    String? placa2 = _controller.dados['placa2'];
     setState(() {
-      isBitrem = _controller.dados.keys.contains('placa2') &&
-          _controller.dados['placa2'].length == 7;
-      tanque1.placa = _controller.dados['placa1'];
-      tanque2.placa = _controller.dados['placa2'];
+      isBitrem = placa2 != null && placa2.length == 7;
     });
+    if (placa1 != null) store.getTanques(placa1, placa2);
   }
 }

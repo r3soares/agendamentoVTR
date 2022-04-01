@@ -152,17 +152,30 @@ class _PreRegistroTabState extends State<PreRegistroTab>
 
   _salvaAlteracoes() {
     var controller = Modular.get<WizardController>();
-    controller.dados
-        .update('data', (dado) => _cData.text, ifAbsent: () => _cData.text);
-    controller.dados
-        .update('hora', (dado) => _cHora.text, ifAbsent: () => _cHora.text);
-    controller.dados.update('placa1', (dado) => _cPlaca1.text,
-        ifAbsent: () => _cPlaca1.text);
-    controller.dados.update('placa2', (dado) => _cPlaca2.text,
-        ifAbsent: () => _cPlaca2.text);
+    controller.dados.update(
+      'data',
+      (dado) => _cData.text,
+      ifAbsent: () => _cData.text,
+    );
+    controller.dados.update(
+      'hora',
+      (dado) => _cHora.text,
+      ifAbsent: () => _cHora.text,
+    );
+    controller.dados.update(
+      'placa1',
+      (dado) => _cPlaca1.text,
+      ifAbsent: () => _cPlaca1.text,
+    );
+    controller.dados.update(
+      'placa2',
+      (dado) => _cPlaca2.text,
+      ifAbsent: () => _cPlaca2.text,
+    );
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Text('Alterações salvas'),
       backgroundColor: Colors.green.shade700,
     ));
+    widget.tabController.notifyListeners();
   }
 }
