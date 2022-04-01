@@ -1,4 +1,8 @@
+import 'package:agendamento_vtr/app/models/tanque.dart';
+import 'package:agendamento_vtr/app/modules/wizard/widgets/tanque_form_widget.dart';
+import 'package:agendamento_vtr/app/modules/wizard/wizard_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 
 class TanqueTab extends StatefulWidget {
   final TabController tabController;
@@ -14,70 +18,52 @@ class _TanqueTabState extends State<TanqueTab>
   // TODO: implement wantKeepAlive
   bool get wantKeepAlive => true;
 
+  final _controller = Modular.get<WizardController>();
+  final Tanque tanque1 = Tanque();
+  final Tanque tanque2 = Tanque();
+  bool isBitrem = false;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    widget.tabController.addListener(_onUpdateTab);
+    _onUpdateTab();
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    widget.tabController.removeListener(_onUpdateTab);
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: SizedBox(
-        width: 400,
-        height: 500,
-        child: Card(
-          shadowColor: Colors.black,
-          elevation: 12,
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                width: 300,
-                margin: EdgeInsets.all(12),
-                child: TextFormField(
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'CNPJ',
-                  ),
-                ),
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Card(
+        shadowColor: Colors.black,
+        elevation: 12,
+        child: Column(
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            Expanded(
+              flex: 6,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Expanded(child: TanqueFormWidget(tanque1)),
+                  isBitrem
+                      ? Expanded(child: TanqueFormWidget(tanque2))
+                      : SizedBox.shrink(),
+                ],
               ),
-              Container(
-                margin: EdgeInsets.all(12),
-                width: 300,
-                child: TextFormField(
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'Nome',
-                  ),
-                ),
-              ),
-              Container(
-                width: 300,
-                margin: EdgeInsets.all(12),
-                child: TextFormField(
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'Município',
-                  ),
-                ),
-              ),
-              Container(
-                width: 300,
-                margin: EdgeInsets.all(12),
-                child: TextFormField(
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'Número do proprietário',
-                  ),
-                ),
-              ),
-              Container(
-                width: 300,
-                margin: EdgeInsets.all(12),
-                child: TextFormField(
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'Observação',
-                  ),
-                ),
-              ),
-              Row(
+            ),
+            Expanded(
+              flex: 1,
+              child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   IconButton(
@@ -100,10 +86,19 @@ class _TanqueTabState extends State<TanqueTab>
                   ),
                 ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
+  }
+
+  _onUpdateTab() {
+    setState(() {
+      isBitrem = _controller.dados.keys.contains('placa2') &&
+          _controller.dados['placa2'].length == 7;
+      tanque1.placa = _controller.dados['placa1'];
+      tanque2.placa = _controller.dados['placa2'];
+    });
   }
 }

@@ -1,5 +1,7 @@
 import 'package:agendamento_vtr/app/domain/extensions.dart';
+import 'package:agendamento_vtr/app/modules/wizard/wizard_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 
 class PreRegistroTab extends StatefulWidget {
   final TabController tabController;
@@ -13,7 +15,8 @@ class _PreRegistroTabState extends State<PreRegistroTab>
     with AutomaticKeepAliveClientMixin<PreRegistroTab> {
   final TextEditingController _cData = TextEditingController();
   final TextEditingController _cHora = TextEditingController();
-  final TextEditingController _cPlaca = TextEditingController();
+  final TextEditingController _cPlaca1 = TextEditingController();
+  final TextEditingController _cPlaca2 = TextEditingController();
 
   @override
   // TODO: implement wantKeepAlive
@@ -72,7 +75,7 @@ class _PreRegistroTabState extends State<PreRegistroTab>
                 width: 300,
                 margin: EdgeInsets.all(12),
                 child: TextFormField(
-                  controller: _cPlaca,
+                  controller: _cPlaca1,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
                     labelText: 'Informe a placa 1',
@@ -83,23 +86,34 @@ class _PreRegistroTabState extends State<PreRegistroTab>
                 width: 300,
                 margin: EdgeInsets.all(12),
                 child: TextFormField(
-                  controller: _cPlaca,
+                  controller: _cPlaca2,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
                     labelText: 'Informe a placa 2 (se bitrem)',
                   ),
                 ),
               ),
-              Center(
-                child: IconButton(
-                  iconSize: 42,
-                  icon: Icon(
-                    Icons.arrow_circle_right_outlined,
-                    color: Theme.of(context).primaryColor,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  IconButton(
+                    iconSize: 42,
+                    icon: Icon(
+                      Icons.save_as_outlined,
+                      color: Theme.of(context).primaryColor,
+                    ),
+                    onPressed: _salvaAlteracoes,
                   ),
-                  onPressed: () => widget.tabController
-                      .animateTo(widget.tabController.index + 1),
-                ),
+                  IconButton(
+                    iconSize: 42,
+                    icon: Icon(
+                      Icons.arrow_circle_right_outlined,
+                      color: Theme.of(context).primaryColor,
+                    ),
+                    onPressed: () => widget.tabController
+                        .animateTo(widget.tabController.index + 1),
+                  ),
+                ],
               ),
             ],
           ),
@@ -134,5 +148,21 @@ class _PreRegistroTabState extends State<PreRegistroTab>
   _atualizaHora(TimeOfDay? data) {
     if (data == null) return;
     setState(() => {_cHora.text = (data as TimeOfDay).format(context)});
+  }
+
+  _salvaAlteracoes() {
+    var controller = Modular.get<WizardController>();
+    controller.dados
+        .update('data', (dado) => _cData.text, ifAbsent: () => _cData.text);
+    controller.dados
+        .update('hora', (dado) => _cHora.text, ifAbsent: () => _cHora.text);
+    controller.dados.update('placa1', (dado) => _cPlaca1.text,
+        ifAbsent: () => _cPlaca1.text);
+    controller.dados.update('placa2', (dado) => _cPlaca2.text,
+        ifAbsent: () => _cPlaca2.text);
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text('Alterações salvas'),
+      backgroundColor: Colors.green.shade700,
+    ));
   }
 }
