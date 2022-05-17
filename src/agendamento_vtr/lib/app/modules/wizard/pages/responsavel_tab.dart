@@ -14,7 +14,6 @@ class ResponsavelTab extends StatefulWidget {
 class _ResponsavelTabState extends State<ResponsavelTab>
     with AutomaticKeepAliveClientMixin<ResponsavelTab> {
   @override
-  // TODO: implement wantKeepAlive
   bool get wantKeepAlive => true;
 
   final TextEditingController _cEmpresa = TextEditingController();
@@ -25,6 +24,7 @@ class _ResponsavelTabState extends State<ResponsavelTab>
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Center(
       child: SizedBox(
         width: 400,

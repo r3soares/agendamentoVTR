@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:agendamento_vtr/app/domain/erros.dart';
 import 'package:agendamento_vtr/app/domain/log.dart';
 import 'package:agendamento_vtr/app/models/dado_psie.dart';

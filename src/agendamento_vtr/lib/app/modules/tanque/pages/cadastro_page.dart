@@ -42,9 +42,14 @@ class _CadastroPageState extends ModularState<CadastroPage, TanqueStore> {
 
   void _configStream() {
     store.cPlaca.observer(
-        onState: (t) => {_incluiTanque(t), limpaTermo(), _msgTemporaria('${t.placa} adicionado.')},
+        onState: (t) => {
+              _incluiTanque(t),
+              limpaTermo(),
+              _msgTemporaria('${t.placa} adicionado.')
+            },
         onLoading: loading,
-        onError: (_) => ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Não localizado.'))));
+        onError: (_) => ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text('Não localizado.'))));
 
     store.cProprietario.observer(
         onState: (lista) => {
@@ -52,17 +57,20 @@ class _CadastroPageState extends ModularState<CadastroPage, TanqueStore> {
                 {
                   _incluiTanque(t),
                 },
-              _msgTemporaria('Encontrado veículo(s) associados a este proprietário.'),
+              _msgTemporaria(
+                  'Encontrado veículo(s) associados a este proprietário.'),
             },
         onLoading: loading);
 
-    store.cEmpresa.observer(onState: (t) => proprietario = t, onLoading: loading);
+    store.cEmpresa
+        .observer(onState: (t) => proprietario = t, onLoading: loading);
 
     store.sTanques.observer(
       onState: (t) => _showDialogTanquesSalvos(),
       onLoading: loading,
-      onError: (erro) => ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Não foi possível salvar os dados. ${erro.msg}'), backgroundColor: Colors.red[900])),
+      onError: (erro) => ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text('Não foi possível salvar os dados. ${erro.msg}'),
+          backgroundColor: Colors.red[900])),
     );
   }
 
@@ -120,7 +128,8 @@ class _CadastroPageState extends ModularState<CadastroPage, TanqueStore> {
 
   Widget _buildCNPJWidget() {
     return Container(
-      padding: EdgeInsets.only(bottom: 15, left: 12, right: MediaQuery.of(context).size.width * .3),
+      padding: EdgeInsets.only(
+          bottom: 15, left: 12, right: MediaQuery.of(context).size.width * .3),
       child: Form(
         child: proprietarioWidget,
         autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -199,7 +208,8 @@ class _CadastroPageState extends ModularState<CadastroPage, TanqueStore> {
         controller: _cPesquisaPlaca,
         textCapitalization: TextCapitalization.characters,
         onChanged: (value) {
-          _cPesquisaPlaca.value = TextEditingValue(text: value.toUpperCase(), selection: _cPesquisaPlaca.selection);
+          _cPesquisaPlaca.value = TextEditingValue(
+              text: value.toUpperCase(), selection: _cPesquisaPlaca.selection);
         },
         maxLength: 7,
         validator: _validaPlaca,
@@ -225,7 +235,7 @@ class _CadastroPageState extends ModularState<CadastroPage, TanqueStore> {
             ? SizedBox.shrink()
             : Scrollbar(
                 interactive: true,
-                isAlwaysShown: true,
+                thumbVisibility: true,
                 controller: _scrollController,
                 child: ListView.builder(
                   controller: _scrollController,
@@ -261,12 +271,15 @@ class _CadastroPageState extends ModularState<CadastroPage, TanqueStore> {
                   )),
               Container(
                 padding: const EdgeInsets.all(4),
-                child: t.capacidadeTotal > 0 ? Text('${t.capacidadeTotal}L') : Text('Capacidade'),
+                child: t.capacidadeTotal > 0
+                    ? Text('${t.capacidadeTotal}L')
+                    : Text('Capacidade'),
               ),
               Container(
                 padding: const EdgeInsets.all(4),
                 child: t.capacidadeTotal > 0
-                    ? Text('${t.compartimentos.length}C ${formataExibicaoSetas(t)}')
+                    ? Text(
+                        '${t.compartimentos.length}C ${formataExibicaoSetas(t)}')
                     : Text('não informada'),
               ),
               Container(
@@ -294,7 +307,8 @@ class _CadastroPageState extends ModularState<CadastroPage, TanqueStore> {
   }
 
   int _somaSetas(Tanque t) {
-    return t.compartimentos.fold(0, (previousValue, element) => previousValue + element.setas);
+    return t.compartimentos
+        .fold(0, (previousValue, element) => previousValue + element.setas);
   }
 
   String formataExibicaoSetas(Tanque t) {
@@ -322,7 +336,8 @@ class _CadastroPageState extends ModularState<CadastroPage, TanqueStore> {
   }
 
   void _incluiTanque(Tanque t) {
-    Tanque? tExiste = tanques.firstWhereOrNull((element) => element.codInmetro == t.codInmetro);
+    Tanque? tExiste = tanques
+        .firstWhereOrNull((element) => element.codInmetro == t.codInmetro);
     if (tExiste == null) {
       setState(() {
         tanques.add(t);

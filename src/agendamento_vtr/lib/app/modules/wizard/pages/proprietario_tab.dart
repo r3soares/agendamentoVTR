@@ -14,7 +14,6 @@ class ProprietarioTab extends StatefulWidget {
 class _ProprietarioTabState extends State<ProprietarioTab>
     with AutomaticKeepAliveClientMixin<ProprietarioTab> {
   @override
-  // TODO: implement wantKeepAlive
   bool get wantKeepAlive => true;
   final TextEditingController _cCnpj = TextEditingController();
   final TextEditingController _cNome = TextEditingController();
@@ -24,6 +23,7 @@ class _ProprietarioTabState extends State<ProprietarioTab>
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Center(
       child: SizedBox(
         width: 400,

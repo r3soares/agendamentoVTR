@@ -11,11 +11,11 @@ class RevisaoTab extends StatefulWidget {
 class _RevisaoTabState extends State<RevisaoTab>
     with AutomaticKeepAliveClientMixin<RevisaoTab> {
   @override
-  // TODO: implement wantKeepAlive
   bool get wantKeepAlive => true;
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Center(
       child: Column(
         children: [

@@ -19,11 +19,11 @@ class _PreRegistroTabState extends State<PreRegistroTab>
   final TextEditingController _cPlaca2 = TextEditingController();
 
   @override
-  // TODO: implement wantKeepAlive
   bool get wantKeepAlive => true;
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Center(
       child: SizedBox(
         width: 400,
@@ -142,12 +142,12 @@ class _PreRegistroTabState extends State<PreRegistroTab>
 
   _atualizaData(DateTime? data) {
     if (data == null) return;
-    setState(() => {_cData.text = (data as DateTime).diaMesAnoToString()});
+    setState(() => {_cData.text = data.diaMesAnoToString()});
   }
 
   _atualizaHora(TimeOfDay? data) {
     if (data == null) return;
-    setState(() => {_cHora.text = (data as TimeOfDay).format(context)});
+    setState(() => {_cHora.text = data.format(context)});
   }
 
   _salvaAlteracoes() {

@@ -1,8 +1,6 @@
 import 'package:agendamento_vtr/app/models/dado_psie.dart';
 import 'package:agendamento_vtr/app/models/empresa.dart';
-import 'package:agendamento_vtr/app/models/proprietario.dart';
 import 'package:agendamento_vtr/app/models/tanque.dart';
-import 'package:agendamento_vtr/app/modules/agendamento/models/municipio.dart';
 import 'package:agendamento_vtr/app/modules/cadastrados/stores/download_store.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
@@ -173,19 +171,19 @@ class _DownloadDialogState extends ModularState<DownloadDialog, DownloadStore> {
     return empresa;
   }
 
-  _criaProprietario(DadoPsie dado) async {
-    var p =
-        empresa!.proprietario == null ? Proprietario() : empresa!.proprietario!;
-    Municipio? mun = await store.getMunicipio(dado.municipio.split(' - ')[0]);
-    if (mun == null) return p;
-    p.codMun = escolhidos[5] ? mun.cdMunicipio : p.codMun;
-    return p;
-  }
+  // _criaProprietario(DadoPsie dado) async {
+  //   var p =
+  //       empresa!.proprietario == null ? Proprietario() : empresa!.proprietario!;
+  //   Municipio? mun = await store.getMunicipio(dado.municipio.split(' - ')[0]);
+  //   if (mun == null) return p;
+  //   p.codMun = escolhidos[5] ? mun.cdMunicipio : p.codMun;
+  //   return p;
+  // }
 
-  _mudaValor(bool valor, int campo) {
-    //print('Valor: ' + valor.toString() + ' Campo: ' + campo.toString());
-    setState(() {
-      escolhidos[campo] = valor;
-    });
-  }
+  // _mudaValor(bool valor, int campo) {
+  //   //print('Valor: ' + valor.toString() + ' Campo: ' + campo.toString());
+  //   setState(() {
+  //     escolhidos[campo] = valor;
+  //   });
+  // }
 }

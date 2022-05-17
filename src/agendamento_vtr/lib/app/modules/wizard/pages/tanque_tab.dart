@@ -1,4 +1,3 @@
-import 'package:agendamento_vtr/app/models/tanque.dart';
 import 'package:agendamento_vtr/app/modules/wizard/stores/tanque_store.dart';
 import 'package:agendamento_vtr/app/modules/wizard/widgets/tanque_form_widget.dart';
 import 'package:agendamento_vtr/app/modules/wizard/wizard_controller.dart';
@@ -17,7 +16,6 @@ class TanqueTab extends StatefulWidget {
 class _TanqueTabState extends ModularState<TanqueTab, TanqueStore>
     with AutomaticKeepAliveClientMixin<TanqueTab> {
   @override
-  // TODO: implement wantKeepAlive
   bool get wantKeepAlive => false;
 
   final _controller = Modular.get<WizardController>();
@@ -25,20 +23,19 @@ class _TanqueTabState extends ModularState<TanqueTab, TanqueStore>
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     widget.tabController.addListener(_onUpdateTab);
   }
 
   @override
   void dispose() {
-    // TODO: implement dispose
     widget.tabController.removeListener(_onUpdateTab);
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Card(

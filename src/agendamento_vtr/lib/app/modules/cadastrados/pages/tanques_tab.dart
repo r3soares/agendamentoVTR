@@ -107,13 +107,13 @@ class _TanquesTabState extends ModularState<TanquesTab, TanqueStore> {
                     a.compartimentos.length.compareTo(b.compartimentos.length))
           });
 
-  _ordenaSetas(List<Tanque> tanques, index, isAscendente) => setState(() => {
-        _indexColuna = index,
-        _isAscendente = isAscendente,
-        isAscendente
-            ? tanques.sort((a, b) => a.totalSetas.compareTo(b.totalSetas))
-            : tanques.sort((b, a) => a.totalSetas.compareTo(b.totalSetas))
-      });
+  // _ordenaSetas(List<Tanque> tanques, index, isAscendente) => setState(() => {
+  //       _indexColuna = index,
+  //       _isAscendente = isAscendente,
+  //       isAscendente
+  //           ? tanques.sort((a, b) => a.totalSetas.compareTo(b.totalSetas))
+  //           : tanques.sort((b, a) => a.totalSetas.compareTo(b.totalSetas))
+  //     });
 
   List<DataRow> _linhas(List<Tanque> tanques) {
     List<DataRow> linhas = List.empty(growable: true);

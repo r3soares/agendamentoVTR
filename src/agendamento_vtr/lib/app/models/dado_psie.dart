@@ -25,7 +25,6 @@ class DadoPsie {
         proprietario = json['proprietario'],
         uf = json['uf'];
 
-  @override
   Map<String, dynamic> toJson() => {
         'ano': ano,
         'chassi': chassi,
