@@ -13,9 +13,10 @@ import 'package:agendamento_vtr/app/repositories/infra/constantes.dart';
 class CadastradosModule extends Module {
   @override
   final List<Bind> binds = [
-    Bind.singleton((i) => RepositoryTanque(Api(Constantes.api, 'vtr/tanque'))),
     Bind.singleton(
-        (i) => RepositoryEmpresa(Api(Constantes.api, 'vtr/empresa'))),
+        (i) => RepositoryTanque(Api(Constantes.api, Constantes.apiTanque))),
+    Bind.singleton(
+        (i) => RepositoryEmpresa(Api(Constantes.api, Constantes.apiEmpresa))),
     Bind.singleton((i) => RepositoryPsie(Api(Constantes.scrap, '/placa'))),
     Bind.lazySingleton((i) => TanqueStore([])),
     Bind.lazySingleton((i) => EmpresaStore([])),

@@ -10,8 +10,10 @@ import 'main_page.dart';
 class GruModule extends Module {
   @override
   final List<Bind> binds = [
-    Bind.singleton((i) => RepositoryTanque(Api(Constantes.api, 'vtr/tanque'))),
-    Bind.singleton((i) => RepositoryMunicipio(Api(Constantes.api, 'sgi/municipio'))),
+    Bind.singleton(
+        (i) => RepositoryTanque(Api(Constantes.api, Constantes.apiTanque))),
+    Bind.singleton((i) =>
+        RepositoryMunicipio(Api(Constantes.api, Constantes.apiMunicipios))),
     Bind((i) => TanqueStore()),
   ];
 

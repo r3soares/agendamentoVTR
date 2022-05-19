@@ -12,7 +12,8 @@ import 'pages/cadastro_page.dart';
 class TanqueModule extends Module {
   @override
   final List<Bind> binds = [
-    Bind.singleton((i) => RepositoryTanque(Api(Constantes.api, 'vtr/tanque'))),
+    Bind.singleton(
+        (i) => RepositoryTanque(Api(Constantes.api, Constantes.apiTanque))),
     Bind.factory((i) => TanqueStore()),
     Bind.factory((i) => EmpresaStore())
   ];

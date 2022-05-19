@@ -25,14 +25,16 @@ import 'package:agendamento_vtr/app/repositories/infra/constantes.dart';
 class AgendamentoModule extends Module {
   @override
   final List<Bind> binds = [
-    Bind.singleton((i) => RepositoryAgenda(Api(Constantes.api, 'vtr/agenda'))),
+    Bind.singleton(
+        (i) => RepositoryAgenda(Api(Constantes.api, Constantes.apiAgenda))),
+    Bind.singleton((i) => RepositoryTanqueAgendado(
+        Api(Constantes.api, Constantes.apiTanqueAgendado))),
+    Bind.singleton(
+        (i) => RepositoryTanque(Api(Constantes.api, Constantes.apiTanque))),
+    Bind.singleton(
+        (i) => RepositoryEmpresa(Api(Constantes.api, Constantes.apiEmpresa))),
     Bind.singleton((i) =>
-        RepositoryTanqueAgendado(Api(Constantes.api, 'vtr/tanqueAgendado'))),
-    Bind.singleton((i) => RepositoryTanque(Api(Constantes.api, 'vtr/tanque'))),
-    Bind.singleton(
-        (i) => RepositoryEmpresa(Api(Constantes.api, 'vtr/empresa'))),
-    Bind.singleton(
-        (i) => RepositoryMunicipio(Api(Constantes.api, 'sgi/municipio'))),
+        RepositoryMunicipio(Api(Constantes.api, Constantes.apiMunicipios))),
     Bind.singleton((i) => AgendaController()),
     Bind.lazySingleton((i) => MainStore()),
     Bind.lazySingleton((i) => IncluiPendenteStore(

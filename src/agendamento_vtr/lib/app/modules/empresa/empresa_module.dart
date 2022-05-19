@@ -11,7 +11,7 @@ class EmpresaModule extends Module {
   @override
   final List<Bind> binds = [
     Bind.singleton(
-        (i) => RepositoryEmpresa(Api(Constantes.api, 'vtr/empresa'))),
+        (i) => RepositoryEmpresa(Api(Constantes.api, Constantes.apiEmpresa))),
     Bind.factory((i) => EmpresaStore()),
     Bind.lazySingleton((i) => MunicipiosACStore()),
   ];
