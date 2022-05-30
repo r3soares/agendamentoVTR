@@ -1,4 +1,3 @@
-import 'package:agendamento_vtr/app/models/empresa.dart';
 import 'package:agendamento_vtr/app/models/json_serializable.dart';
 
 class Responsavel implements JsonSerializable {
@@ -6,10 +5,12 @@ class Responsavel implements JsonSerializable {
   final String nome;
   final String telefone;
   final String email;
-  final Empresa? empresa;
+  final String? empresa;
+  final String? obs;
   //List<String> tanques = List.empty(growable: true);
 
-  Responsavel(this.id, this.nome, this.telefone, this.email, this.empresa);
+  Responsavel(
+      this.id, this.nome, this.telefone, this.email, this.empresa, this.obs);
   @override
   fromJson(Map<String, dynamic> json) => Responsavel.fromJson(json);
 
@@ -18,8 +19,8 @@ class Responsavel implements JsonSerializable {
         nome = json['nome'],
         telefone = json['telefone'],
         email = json['email'],
-        empresa =
-            json['empresa'] == null ? null : Empresa.fromJson(json['empresa']);
+        empresa = json['empresa'],
+        obs = json['obs'];
 
   @override
   Map<String, dynamic> toJson() => {
@@ -27,6 +28,7 @@ class Responsavel implements JsonSerializable {
         'nome': nome,
         'telefone': telefone,
         'email': email,
-        'empresa': empresa == null ? null : empresa!.toJson()
-      }; //'tanques': tanques};
+        'empresa': empresa,
+        'obs': obs,
+      };
 }

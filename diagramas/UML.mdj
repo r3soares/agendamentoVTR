@@ -24200,7 +24200,7 @@
 															"top": 538,
 															"width": 117.41259765625,
 															"height": 13,
-															"text": "+empresa: Empresa",
+															"text": "+empresa",
 															"horizontalAlignment": 0
 														}
 													],
@@ -24688,6 +24688,7 @@
 											"_parent": {
 												"$ref": "AAAAAAGA0tWSuwNxK44="
 											},
+											"documentation": "Remover vinculo\nResponsavel náo est[a associada a empresa",
 											"end1": {
 												"_type": "UMLAssociationEnd",
 												"_id": "AAAAAAGA0tn12Br5HSs=",
@@ -24754,10 +24755,7 @@
 											"_parent": {
 												"$ref": "AAAAAAGA0tWSuwNxK44="
 											},
-											"name": "empresa",
-											"type": {
-												"$ref": "AAAAAAF7gu/wVkS6M4A="
-											}
+											"name": "empresa"
 										}
 									]
 								}
