@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:agendamento_vtr/app/domain/constantes.dart';
 import 'package:agendamento_vtr/app/models/empresa.dart';
 import 'package:agendamento_vtr/app/models/model_base.dart';
+import 'package:agendamento_vtr/app/models/responsavel.dart';
 import 'package:agendamento_vtr/app/models/tanque.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/models/agenda.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/models/tanque_agendado.dart';
@@ -11,6 +12,7 @@ import 'package:agendamento_vtr/app/repositories/infra/api.dart';
 import 'package:agendamento_vtr/app/repositories/infra/constantes.dart';
 import 'package:agendamento_vtr/app/repositories/repository_agenda.dart';
 import 'package:agendamento_vtr/app/repositories/repository_municipio.dart';
+import 'package:agendamento_vtr/app/repositories/repository_responsavel.dart';
 import 'package:agendamento_vtr/app/repositories/repository_tanque_agendado.dart';
 import 'package:agendamento_vtr/app/repositories/repository_empresa.dart';
 import 'package:agendamento_vtr/app/repositories/repository_tanque.dart';
@@ -19,15 +21,20 @@ import 'package:flutter_test/flutter_test.dart';
 import 'objetos/agendas.dart';
 import 'objetos/agendados.dart';
 import 'objetos/empresas.dart';
+import 'objetos/responsaveis.dart';
 import 'objetos/tanques.dart';
 
 void main() {
   group('Teste de repositorios', () {
     var repoEmpresa = RepositoryEmpresa(Api(Constantes.api, 'vtr/empresa'));
     var repoTanque = RepositoryTanque(Api(Constantes.api, 'vtr/tanque'));
-    var repoTa = RepositoryTanqueAgendado(Api(Constantes.api, 'vtr/tanqueAgendado'));
+    var repoTa =
+        RepositoryTanqueAgendado(Api(Constantes.api, 'vtr/tanqueAgendado'));
     var repoAgenda = RepositoryAgenda(Api(Constantes.api, 'vtr/agenda'));
-    var repoMuncipio = RepositoryMunicipio(Api(Constantes.api, 'sgi/municipio'));
+    var repoResponsavel =
+        RepositoryResponsavel(Api(Constantes.api, 'vtr/responsavel'));
+    var repoMuncipio =
+        RepositoryMunicipio(Api(Constantes.api, 'sgi/municipio'));
     test('Popula Base', () async {
       Empresas();
       for (int i = 0; i < Empresas.empresas.length; i++) {
@@ -53,6 +60,12 @@ void main() {
       for (Agenda a in Agendas.agendas) {
         ModelBase mb = await repoAgenda.save(a);
         expect(mb.model, isTrue);
+      }
+
+      Responsaveis();
+      for (Responsavel r in Responsaveis.responsaveis) {
+        bool salvou = await repoResponsavel.salvaResponsavel(r);
+        expect(salvou, isTrue);
       }
     }, timeout: Timeout(Duration(minutes: 5)));
     test('Empresas', () async {
@@ -83,7 +96,8 @@ void main() {
         expect(t2.codInmetro, t1.codInmetro);
         expect(t2.placa, t1.placa);
         if (t1.compartimentos.isNotEmpty) {
-          expect(t2.compartimentos[0].capacidade, t1.compartimentos[0].capacidade);
+          expect(
+              t2.compartimentos[0].capacidade, t1.compartimentos[0].capacidade);
         }
         expect(t2.dataRegistro.second, t1.dataRegistro.second);
         expect(t2.dataRegistro.minute, t1.dataRegistro.minute);
@@ -143,7 +157,8 @@ void main() {
         expect(a.status, equals(lista[i].status));
         if (lista[i].tanquesAgendados.isNotEmpty) {
           for (int j = 0; j < lista[i].tanquesAgendados.length; j++) {
-            expect(a.tanquesAgendados[j].id, equals(lista[i].tanquesAgendados[j].id));
+            expect(a.tanquesAgendados[j].id,
+                equals(lista[i].tanquesAgendados[j].id));
           }
         }
       }
@@ -152,7 +167,8 @@ void main() {
       expect(lista.length, equals(todas.length));
 
       mb = await repoAgenda.findByPeriodo(
-          Constants.formatoData.format(menorData), Constants.formatoData.format(maiorData));
+          Constants.formatoData.format(menorData),
+          Constants.formatoData.format(maiorData));
     }, timeout: Timeout(Duration(minutes: 2)));
     test('Agendas Filtros', () async {
       List<Agenda> lista = (await repoAgenda.getAll()).model;
@@ -164,7 +180,8 @@ void main() {
         maiorData = a.d.compareTo(menorData) > 0 ? a.d : maiorData;
       }
       var mb = await repoAgenda.findByPeriodo(
-          Constants.formatoData.format(menorData), Constants.formatoData.format(maiorData));
+          Constants.formatoData.format(menorData),
+          Constants.formatoData.format(maiorData));
       List<Agenda> periodo = mb.model;
       expect(periodo, isNotNull, reason: 'FindByPeriodo não validou');
 
@@ -180,6 +197,21 @@ void main() {
       var m = listaFiltrada.firstWhere((e) => e.noMunicipio == 'ITAJAÍ');
       expect(m, isNotNull);
       expect(m.noMunicipio, equals('ITAJAÍ'));
+    }, timeout: Timeout(Duration(minutes: 2)));
+
+    test('Responsaveis', () async {
+      var responsaveis = await repoResponsavel.getResponsaveis();
+      expect(responsaveis.length > 1, isTrue);
+      var listaFiltrada =
+          await repoResponsavel.findResponsaveisByNomeParcial('M');
+      var m = listaFiltrada.firstWhere((e) => e.nome == 'Michael Jackson');
+      expect(m, isNotNull);
+      expect(m.nome, equals('Michael Jackson'));
+
+      for (int i = 0; i < 100; i++) {
+        String novoID = await repoResponsavel.getNovoID();
+        expect(novoID, isNotNull);
+      }
     }, timeout: Timeout(Duration(minutes: 2)));
   });
 }

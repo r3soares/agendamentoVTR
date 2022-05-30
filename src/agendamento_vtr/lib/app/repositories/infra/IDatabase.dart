@@ -1,4 +1,5 @@
 abstract class IDatabase {
+  get(instrucao);
   getById(id);
   getAll();
   find(instrucao, termo);

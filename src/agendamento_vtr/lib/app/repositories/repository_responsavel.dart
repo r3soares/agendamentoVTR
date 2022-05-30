@@ -42,6 +42,16 @@ class RepositoryResponsavel {
     }
   }
 
+  Future<String> getNovoID() async {
+    try {
+      var result = await db.get('novo');
+      return result;
+    } on Falha catch (e) {
+      print('Erro ao gerar novo ID: ${e.msg}');
+      throw e;
+    }
+  }
+
   Future<List<Responsavel>> getResponsaveis() async {
     try {
       var result = await db.getAll();

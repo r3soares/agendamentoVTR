@@ -44,6 +44,19 @@ class Api implements IDatabase {
   }
 
   @override
+  get(instrucao) async {
+    try {
+      final uri = Uri.parse('$endereco$controller/$instrucao');
+      //print('Api $uri');
+      final req = await _request(tipo: TipoRequest.Get, uri: uri);
+      return _resposta(req);
+    } catch (e) {
+      print(e);
+      throw e;
+    }
+  }
+
+  @override
   getById(id) async {
     try {
       final uri = Uri.parse('$endereco$controller/$id');
@@ -154,6 +167,10 @@ class Api implements IDatabase {
             }
             return value;
           });
+        }
+      case 201: //Created
+        {
+          return req.body;
         }
       case 202: //Accepted
         {
