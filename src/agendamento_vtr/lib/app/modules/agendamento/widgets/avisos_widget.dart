@@ -16,7 +16,7 @@ class _AvisosWidgetState extends State<AvisosWidget> {
         Padding(
           padding: const EdgeInsets.all(12.0),
           child: Text(
-            'Quadro de Avisos',
+            'Resumo Mês',
             style: TextStyle(fontSize: 18),
           ),
         ),

@@ -3,7 +3,7 @@ import 'package:agendamento_vtr/app/modules/agendamento/models/tanque_agendado.d
 import 'package:agendamento_vtr/app/modules/agendamento/stores/main_store.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/widgets/agenda_do_dia_widget.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/widgets/avisos_widget.dart';
-import 'package:agendamento_vtr/app/modules/agendamento/widgets/calendario_widget.dart';
+import 'package:agendamento_vtr/app/modules/agendamento/widgets/calendario2_widget.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/widgets/tanques_pendentes_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
@@ -97,7 +97,7 @@ class _MainPageState extends ModularState<MainPage, MainStore> {
       ),
       body: Center(
         child: Column(
-          mainAxisSize: MainAxisSize.min,
+          mainAxisSize: MainAxisSize.max,
           children: [
             Flexible(
               flex: 5,
@@ -106,12 +106,14 @@ class _MainPageState extends ModularState<MainPage, MainStore> {
                   store: store.storeAgendas,
                   onState: (context, state) => Card(
                       elevation: 12,
-                      child: CalendarioWidget(state as Map<String, Agenda>)),
+                      child:
+                          Calendario2Widget()), //CalendarioWidget(state as Map<String, Agenda>)),
                   onLoading: (context) =>
                       Center(child: CircularProgressIndicator()),
                   onError: (context, state) => Card(
                       elevation: 12,
-                      child: CalendarioWidget(Map<String, Agenda>())),
+                      child:
+                          Calendario2Widget()), //CalendarioWidget(Map<String, Agenda>())),
                 ),
               ),
             ),
