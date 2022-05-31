@@ -21,6 +21,7 @@ class _MainPageState extends ModularState<MainPage, MainStore> {
   void initState() {
     store.getAgendasOcupadas();
     store.getPendentes();
+    store.getAgendados();
     super.initState();
   }
 
@@ -103,17 +104,19 @@ class _MainPageState extends ModularState<MainPage, MainStore> {
               flex: 5,
               child: SingleChildScrollView(
                 child: ScopedBuilder(
-                  store: store.storeAgendas,
+                  store: store.storeAgendados,
                   onState: (context, state) => Card(
                       elevation: 12,
-                      child:
-                          Calendario2Widget()), //CalendarioWidget(state as Map<String, Agenda>)),
+                      child: Calendario2Widget(
+                          agendados: state as List<
+                              TanqueAgendado>)), //CalendarioWidget(state as Map<String, Agenda>)),
                   onLoading: (context) =>
                       Center(child: CircularProgressIndicator()),
                   onError: (context, state) => Card(
                       elevation: 12,
-                      child:
-                          Calendario2Widget()), //CalendarioWidget(Map<String, Agenda>())),
+                      child: Calendario2Widget(
+                          agendados: state as List<
+                              TanqueAgendado>)), //CalendarioWidget(Map<String, Agenda>())),
                 ),
               ),
             ),

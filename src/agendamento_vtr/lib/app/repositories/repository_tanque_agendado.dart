@@ -14,7 +14,9 @@ class RepositoryTanqueAgendado {
   Future<ModelBase> get(String id) async {
     try {
       var result = await db.getById(id);
-      var agendaTanque = result == false ? throw NaoEncontrado(id) : TanqueAgendado.fromJson(result);
+      var agendaTanque = result == false
+          ? throw NaoEncontrado(id)
+          : TanqueAgendado.fromJson(result);
       return ModelBase(agendaTanque);
     } on Falha catch (e) {
       Log.message(this, 'Erro ao procurar agendaTanque $id: $e');
@@ -49,6 +51,19 @@ class RepositoryTanqueAgendado {
     }
   }
 
+  Future<List<TanqueAgendado>> findAgendados() async {
+    try {
+      var result = await db.find('agendados', '');
+      var agendados = result == false
+          ? List.empty(growable: true)
+          : (result as List).map((n) => TanqueAgendado.fromJson(n)).toList();
+      return agendados as List<TanqueAgendado>;
+    } on Falha catch (e) {
+      Log.message(this, 'Erro ao procurar tanques pendentes: ${e.msg}');
+      throw e;
+    }
+  }
+
   Future<ModelBase> getAll() async {
     try {
       var result = await db.getAll();
@@ -71,7 +86,8 @@ class RepositoryTanqueAgendado {
           : (result as List).map((n) => TanqueAgendado.fromJson(n)).toList();
       return ModelBase(lista);
     } on Falha catch (e) {
-      Log.message(this, 'Erro ao procurar agendasTanque pela lista de agendas: ${e.msg}');
+      Log.message(this,
+          'Erro ao procurar agendasTanque pela lista de agendas: ${e.msg}');
       throw e;
     }
   }
@@ -79,7 +95,8 @@ class RepositoryTanqueAgendado {
   Future<bool> save(TanqueAgendado value) async {
     try {
       bool salvou = await db.save(jsonEncode(value.toJson()));
-      if (!salvou) Log.message(this, 'Erro em salvaAgenda em Repository Agenda');
+      if (!salvou)
+        Log.message(this, 'Erro em salvaAgenda em Repository Agenda');
       return salvou;
     } on Falha catch (e) {
       Log.message(this, 'Erro ao salvar agendaTanque ${value.id}: ${e.msg}');
@@ -93,7 +110,9 @@ class RepositoryTanqueAgendado {
       for (var item in lista) {
         salvou = await db.save(jsonEncode(item.toJson())) && salvou;
       }
-      if (!salvou) Log.message(this, 'Erro em saveMany em Repository de Tanques Agendados');
+      if (!salvou)
+        Log.message(
+            this, 'Erro em saveMany em Repository de Tanques Agendados');
       return ModelBase(salvou);
     } on Falha catch (e) {
       Log.message(this, 'Erro ao salvar lista de tanques agendados: ${e.msg}');

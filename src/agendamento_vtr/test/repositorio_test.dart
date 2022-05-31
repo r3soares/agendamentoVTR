@@ -62,11 +62,11 @@ void main() {
         expect(mb.model, isTrue);
       }
 
-      Responsaveis();
-      for (Responsavel r in Responsaveis.responsaveis) {
-        bool salvou = await repoResponsavel.salvaResponsavel(r);
-        expect(salvou, isTrue);
-      }
+      // Responsaveis();
+      // for (Responsavel r in Responsaveis.responsaveis) {
+      //   bool salvou = await repoResponsavel.salvaResponsavel(r);
+      //   expect(salvou, isTrue);
+      // }
     }, timeout: Timeout(Duration(minutes: 5)));
     test('Empresas', () async {
       sleep(Duration(seconds: 1));

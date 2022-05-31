@@ -22,13 +22,18 @@ class Tanque implements JsonSerializable {
 
   final List<Arquivo> docs = List.empty(growable: true);
 
-  int get capacidadeTotal => compartimentos.fold(0, (previousValue, element) => previousValue + element.capacidade);
+  int get capacidadeTotal => compartimentos.fold(
+      0, (previousValue, element) => previousValue + element.capacidade);
 
   Tanque();
 
   get placaFormatada => placa.replaceRange(3, 3, '-');
-  get totalSetas => compartimentos.fold(0, (int previousValue, element) => previousValue + element.setas);
+  get totalSetas => compartimentos.fold(
+      0, (int previousValue, element) => previousValue + element.setas);
+  get resumoTanque => '$placa $resumoCompartimento';
 
+  get resumoCompartimento =>
+      '${compartimentos.length}C' + (totalSetas > 0 ? ' ${totalSetas}SS' : '');
   get custoTotal {
     final CustoCompartimento custo = CustoCompartimento();
     var capacidades = compartimentos.map((e) => e.capacidade).toList();
@@ -42,7 +47,9 @@ class Tanque implements JsonSerializable {
   Tanque.fromJson(Map<String, dynamic> json)
       : placa = json['placa'],
         codInmetro = json['codInmetro'],
-        proprietario = json['proprietario'] == null ? null : Empresa.fromJson(json['proprietario']),
+        proprietario = json['proprietario'] == null
+            ? null
+            : Empresa.fromJson(json['proprietario']),
         dataRegistro = DateTime.parse(json['dataRegistro']),
         dataUltimaAlteracao = DateTime.parse(json['dataUltimaAlteracao']),
         status = StatusTanque.values[json['status']],
