@@ -11,17 +11,17 @@ class AgendaDataSource extends CalendarDataSource<TanqueAgendado> {
 
   @override
   DateTime getStartTime(int index) {
-    return DateFormat('dd-MM-yyyy').parse(appointments![index].agenda);
+    return appointments![index].dataInicio;
   }
 
   @override
   DateTime getEndTime(int index) {
-    return DateFormat('dd-MM-yyyy').parse(appointments![index].agenda);
+    return appointments![index].dataFim;
   }
 
   @override
   String getSubject(int index) {
-    return appointments![index].tanque.resumoTanque;
+    return '${appointments![index].tanque.resumoTanque} ${appointments![index].tanque.capacidadeTotal}L';
   }
 
   @override
@@ -31,15 +31,19 @@ class AgendaDataSource extends CalendarDataSource<TanqueAgendado> {
 
   @override
   bool isAllDay(int index) {
-    return true;
+    return false;
   }
 
   @override
   TanqueAgendado? convertAppointmentToObject(
       TanqueAgendado? customData, Appointment appointment) {
-    return TanqueAgendado(
-        id: appointment.id.toString(),
-        tanque: customData!.tanque,
-        agenda: appointment.startTime.diaMesAnoToString());
+    var tAgendado = TanqueAgendado(
+      id: appointment.id.toString(),
+      tanque: customData!.tanque,
+      agenda: appointment.startTime.diaMesAnoToString(),
+    );
+    tAgendado.dataInicio = appointment.startTime;
+    tAgendado.dataFim = appointment.endTime;
+    return tAgendado;
   }
 }

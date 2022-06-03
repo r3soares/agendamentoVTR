@@ -58,6 +58,7 @@ void main() {
       }
 
       for (Agenda a in Agendas.agendas) {
+        //sleep(Duration(milliseconds: 10));
         ModelBase mb = await repoAgenda.save(a);
         expect(mb.model, isTrue);
       }

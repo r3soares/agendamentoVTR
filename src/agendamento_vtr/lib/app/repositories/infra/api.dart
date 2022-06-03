@@ -182,7 +182,7 @@ class Api implements IDatabase {
         }
       case 400: //Bad Request
         {
-          throw ErroRequisicao('Bad Request (400)');
+          throw ErroRequisicao('Bad Request (400): ${req.body}');
         }
       case 404: //Not Found
         {

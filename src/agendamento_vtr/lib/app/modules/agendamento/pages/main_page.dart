@@ -100,24 +100,18 @@ class _MainPageState extends ModularState<MainPage, MainStore> {
         child: Column(
           mainAxisSize: MainAxisSize.max,
           children: [
-            Flexible(
-              flex: 5,
-              child: SingleChildScrollView(
-                child: ScopedBuilder(
-                  store: store.storeAgendados,
-                  onState: (context, state) => Card(
-                      elevation: 12,
-                      child: Calendario2Widget(
-                          agendados: state as List<
-                              TanqueAgendado>)), //CalendarioWidget(state as Map<String, Agenda>)),
-                  onLoading: (context) =>
-                      Center(child: CircularProgressIndicator()),
-                  onError: (context, state) => Card(
-                      elevation: 12,
-                      child: Calendario2Widget(
-                          agendados: state as List<
-                              TanqueAgendado>)), //CalendarioWidget(Map<String, Agenda>())),
-                ),
+            Expanded(
+              flex: 7,
+              child: ScopedBuilder(
+                store: store.storeAgendados,
+                onState: (context, state) => Calendario2Widget(
+                    agendados: state as List<
+                        TanqueAgendado>), //CalendarioWidget(state as Map<String, Agenda>)),
+                onLoading: (context) =>
+                    Center(child: CircularProgressIndicator()),
+                onError: (context, state) => Calendario2Widget(
+                    agendados: state as List<
+                        TanqueAgendado>), //CalendarioWidget(Map<String, Agenda>())),
               ),
             ),
             //PesquisaWidget(),

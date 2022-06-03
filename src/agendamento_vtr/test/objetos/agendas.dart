@@ -13,7 +13,7 @@ class Agendas {
     if (agendas.isNotEmpty) return;
 
     Agendados();
-    Datas.geraDatas();
+    //Datas.geraDatas();
     for (int i = 0; i < Datas.QUANTIDADE; i++) {
       Agenda a = Agenda(Datas.datas[i]);
       a.status = StatusAgenda.values[r.nextInt(StatusAgenda.values.length)];

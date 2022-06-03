@@ -30,7 +30,7 @@ class Tanque implements JsonSerializable {
   get placaFormatada => placa.replaceRange(3, 3, '-');
   get totalSetas => compartimentos.fold(
       0, (int previousValue, element) => previousValue + element.setas);
-  get resumoTanque => '$placa $resumoCompartimento';
+  get resumoTanque => '$placa ($resumoCompartimento)';
 
   get resumoCompartimento =>
       '${compartimentos.length}C' + (totalSetas > 0 ? ' ${totalSetas}SS' : '');

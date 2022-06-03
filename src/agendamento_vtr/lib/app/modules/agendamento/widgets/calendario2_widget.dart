@@ -33,8 +33,15 @@ class Calendario2Widget extends StatelessWidget {
       allowDragAndDrop: true,
       firstDayOfWeek: 1, // Monday
       showNavigationArrow: true,
+      allowAppointmentResize: true,
       timeSlotViewSettings: const TimeSlotViewSettings(
-          numberOfDaysInView: 5, startHour: 0, endHour: 0),
+          timeIntervalHeight: -1,
+          timeFormat: 'HH:mm',
+          timeInterval: const Duration(hours: 1),
+          minimumAppointmentDuration: const Duration(hours: 1),
+          numberOfDaysInView: 5,
+          startHour: 8,
+          endHour: 19),
       showCurrentTimeIndicator: false,
       monthViewSettings: MonthViewSettings(
         showAgenda: false,
@@ -73,7 +80,7 @@ class Calendario2Widget extends StatelessWidget {
         return Container(
           decoration: _box,
           child: Text(
-            appointment.tanque.resumoTanque,
+            '${appointment.tanque.resumoTanque} ${appointment.tanque.capacidadeTotal}L',
             textAlign: TextAlign.center,
             style: TextStyle(
               wordSpacing: 2,
