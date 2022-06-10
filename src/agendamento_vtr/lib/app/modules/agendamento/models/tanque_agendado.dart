@@ -9,18 +9,31 @@ class TanqueAgendado implements JsonSerializable {
   DateTime dataRegistro = DateTime.now();
   DateTime? dataInicio;
   DateTime? dataFim;
-  String? _agenda;
+  String? agenda;
   Empresa? responsavel;
   String? bitremAgenda;
   bool isNovo = false;
+  List<int> _statusGenerico = [
+    0, //StatusConfirmaco
+    0, //StatusPagamento
+    0, //Cor
+  ];
+  String? obs;
+  int tempoVerificacao = 0;
 
-  StatusConfirmacao statusConfirmacao = StatusConfirmacao.PreAgendado;
-  StatusPagamento statusPagamento = StatusPagamento.Pendente;
+  StatusConfirmacao get statusConfirmacao =>
+      StatusConfirmacao.values[_statusGenerico[0]];
+  set statusConfirmacao(StatusConfirmacao value) =>
+      _statusGenerico[0] = value.index;
+  StatusPagamento get statusPagamento =>
+      StatusPagamento.values[_statusGenerico[1]];
+  set statusPagamento(StatusPagamento value) =>
+      _statusGenerico[1] = value.index;
+  int get statusCor => _statusGenerico[2];
+  set statusCor(int cor) => _statusGenerico[2] = cor;
 
   double _custoVerificacao = 0;
   double get custoVerificacao => _custoVerificacao;
-  int tempoVerificacao = 0;
-  String? obs;
 
   TanqueAgendado({
     required this.id,
@@ -29,18 +42,6 @@ class TanqueAgendado implements JsonSerializable {
   }) {
     _custoVerificacao = tanque.custoTotal;
   }
-
-  String? get agenda => _agenda;
-
-  set agenda(String? data) => {
-        _agenda = data,
-        dataInicio = data == null
-            ? null
-            : DateFormat('dd-MM-yyyy').parse(data).add(Duration(hours: 8)),
-        dataFim = data == null
-            ? null
-            : DateFormat('dd-MM-yyyy').parse(data).add(Duration(hours: 11)),
-      };
 
   @override
   fromJson(Map<String, dynamic> json) => TanqueAgendado.fromJson(json);
@@ -57,9 +58,10 @@ class TanqueAgendado implements JsonSerializable {
         bitremAgenda = json['bitremAgenda'],
         isNovo = json['isNovo'],
         //agendaAnterior = json['agendaAnterior'],
-        _agenda = json['agenda'],
-        statusConfirmacao = StatusConfirmacao.values[json['statusConfirmacao']],
-        statusPagamento = StatusPagamento.values[json['statusPagamento']],
+        agenda = json['agenda'],
+        // statusConfirmacao = StatusConfirmacao.values[json['statusConfirmacao']],
+        // statusPagamento = StatusPagamento.values[json['statusPagamento']],
+        _statusGenerico = List.from(json['statusGenerico']),
         _custoVerificacao =
             json['custoVerificacao'], //CustoVerificação é somente get
         tempoVerificacao = json['tempoVerificacao'],
@@ -76,9 +78,10 @@ class TanqueAgendado implements JsonSerializable {
         'bitremAgenda': bitremAgenda,
         'isNovo': isNovo,
         //'agendaAnterior': agendaAnterior,
-        'agenda': _agenda,
-        'statusConfirmacao': statusConfirmacao.index,
-        'statusPagamento': statusPagamento.index,
+        'agenda': agenda,
+        // 'statusConfirmacao': statusConfirmacao.index,
+        // 'statusPagamento': statusPagamento.index,
+        'statusGenerico': _statusGenerico,
         'custoVerificacao': custoVerificacao,
         'tempoVerificacao': tempoVerificacao,
         'obs': obs,

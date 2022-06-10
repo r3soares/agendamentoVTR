@@ -37,13 +37,8 @@ class AgendaDataSource extends CalendarDataSource<TanqueAgendado> {
   @override
   TanqueAgendado? convertAppointmentToObject(
       TanqueAgendado? customData, Appointment appointment) {
-    var tAgendado = TanqueAgendado(
-      id: appointment.id.toString(),
-      tanque: customData!.tanque,
-      agenda: appointment.startTime.diaMesAnoToString(),
-    );
-    tAgendado.dataInicio = appointment.startTime;
-    tAgendado.dataFim = appointment.endTime;
-    return tAgendado;
+    customData!.dataInicio = appointment.startTime;
+    customData.dataFim = appointment.endTime;
+    return customData;
   }
 }

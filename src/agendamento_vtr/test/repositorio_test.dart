@@ -68,7 +68,7 @@ void main() {
       //   bool salvou = await repoResponsavel.salvaResponsavel(r);
       //   expect(salvou, isTrue);
       // }
-    }, timeout: Timeout(Duration(minutes: 5)));
+    }, timeout: Timeout(Duration(minutes: 10)));
     test('Empresas', () async {
       sleep(Duration(seconds: 1));
       for (int i = 0; i < Empresas.empresas.length; i++) {
