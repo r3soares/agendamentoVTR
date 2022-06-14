@@ -1,6 +1,8 @@
+import 'package:agendamento_vtr/app/domain/constants_agenda.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/controllers/agendaController.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/models/agenda_data_source.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/models/tanque_agendado.dart';
+import 'package:agendamento_vtr/app/modules/agendamento/widgets/color_popup_widget.dart';
 import 'package:agendamento_vtr/app/repositories/repository_tanque_agendado.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
@@ -20,7 +22,8 @@ class Calendario2Widget extends StatelessWidget {
     return SfCalendar(
       controller: controller,
       dataSource: AgendaDataSource(agendados as List<TanqueAgendado>),
-      maxDate: DateTime.now().add(Duration(days: 730)),
+      maxDate:
+          DateTime.now().add(Duration(days: ConstantsAgenda.diascalendario)),
       view: CalendarView.workWeek,
       showDatePickerButton: true,
       allowedViews: <CalendarView>[
@@ -33,16 +36,17 @@ class Calendario2Widget extends StatelessWidget {
       allowDragAndDrop: true,
       firstDayOfWeek: 1, // Monday
       showNavigationArrow: true,
-      allowAppointmentResize: true,
-      timeSlotViewSettings: const TimeSlotViewSettings(
+      allowAppointmentResize: false,
+      timeSlotViewSettings: TimeSlotViewSettings(
           timeIntervalHeight: -1,
-          timeFormat: 'HH:mm',
-          timeInterval: const Duration(hours: 1),
-          minimumAppointmentDuration: const Duration(hours: 1),
+          timeFormat: 'HH',
+          timeInterval: Duration(hours: ConstantsAgenda.tempoMinimoVeiculo),
+          minimumAppointmentDuration:
+              Duration(hours: ConstantsAgenda.tempoMinimoVeiculo),
           numberOfDaysInView: 5,
-          startHour: 8,
-          endHour: 19),
-      showCurrentTimeIndicator: false,
+          startHour: ConstantsAgenda.horaInicio,
+          endHour: ConstantsAgenda.horaFim),
+      showCurrentTimeIndicator: true,
       monthViewSettings: MonthViewSettings(
         showAgenda: false,
         appointmentDisplayMode: MonthAppointmentDisplayMode.indicator,
@@ -78,23 +82,60 @@ class Calendario2Widget extends StatelessWidget {
         final TanqueAgendado appointment =
             calendarAppointmentDetails.appointments.first;
         return Container(
-          decoration: _box,
-          child: Text(
-            '${appointment.tanque.resumoTanque} ${appointment.tanque.capacidadeTotal}L',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              wordSpacing: 2,
-              letterSpacing: 1,
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-            ),
+          decoration: _box(Color(appointment.statusCor)),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: Text(
+                  '${appointment.tanque.resumoTanque} ${appointment.tanque.capacidadeTotal}L',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    wordSpacing: 2,
+                    letterSpacing: 1,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              Flexible(
+                  child: Row(
+                children: [
+                  IconButton(
+                      onPressed: () async =>
+                          await _alteraCor(context, appointment),
+                      icon: Icon(
+                        Icons.color_lens_outlined,
+                        color: Colors.white,
+                        size: 18,
+                      )),
+                ],
+              ))
+            ],
           ),
         );
       };
 
-  get _box => BoxDecoration(
-        color: Colors.green,
+  _box(Color cor) => BoxDecoration(
+        color: cor,
         shape: BoxShape.rectangle,
         borderRadius: BorderRadius.all(Radius.circular(4.0)),
       );
+
+  Future _showPopupColor(BuildContext context) async {
+    return await showDialog<Color>(
+        context: context,
+        builder: (BuildContext context) {
+          return ColorPopupWidget();
+        });
+  }
+
+  _alteraCor(BuildContext context, TanqueAgendado ta) async {
+    Color cor = await _showPopupColor(context);
+    //print(cor);
+    ta.statusCor = cor.value;
+    await repoTa.save(ta);
+    _controllerAgenda.notificaTanqueAgendadoAtualizado(ta);
+    //controller.notifyPropertyChangedListeners(property)
+  }
 }

@@ -9,13 +9,13 @@ class StoreData<T extends Object> extends StreamStore<Falha, T> {
 
   @override
   update(T data, {bool force = false}) {
-    Log.message(this, 'Update $data');
+    //Log.message(this, 'Update $data');
     super.update(data, force: force);
   }
 
   @override
   setLoading(bool loading, {bool force = false}) {
-    Log.message(this, 'Loading $loading');
+    //Log.message(this, 'Loading $loading');
     super.setLoading(loading, force: force);
   }
 

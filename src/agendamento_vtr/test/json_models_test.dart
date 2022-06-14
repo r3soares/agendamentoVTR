@@ -108,6 +108,7 @@ void main() {
             reason: 'tanque não validou');
         expect(a1.tempoVerificacao, equals(a2.tempoVerificacao),
             reason: 'tempoVerificacao não validou');
+        expect(a1.statusCor, equals(a2.statusCor), reason: 'Cor não validou');
       }
     });
 

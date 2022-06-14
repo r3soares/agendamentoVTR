@@ -1,3 +1,4 @@
+import 'package:agendamento_vtr/app/domain/constants_agenda.dart';
 import 'package:agendamento_vtr/app/domain/extensions.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/models/tanque_agendado.dart';
 import 'package:flutter/material.dart';
@@ -26,7 +27,7 @@ class AgendaDataSource extends CalendarDataSource<TanqueAgendado> {
 
   @override
   Color getColor(int index) {
-    return Colors.green;
+    return Color(appointments![index].statusCor);
   }
 
   @override
@@ -39,6 +40,13 @@ class AgendaDataSource extends CalendarDataSource<TanqueAgendado> {
       TanqueAgendado? customData, Appointment appointment) {
     customData!.dataInicio = appointment.startTime;
     customData.dataFim = appointment.endTime;
+    var dif = appointment.endTime.difference(appointment.startTime).inHours;
+    if (dif < ConstantsAgenda.tempoMinimoVeiculo) {
+      customData.dataFim = appointment.startTime
+          .add(Duration(hours: ConstantsAgenda.tempoMinimoVeiculo));
+    }
+    customData.statusCor = appointment.color.value;
+    customData.agenda = appointment.startTime.diaMesAnoToString();
     return customData;
   }
 }

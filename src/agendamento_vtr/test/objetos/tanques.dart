@@ -5,7 +5,7 @@ import 'package:agendamento_vtr/app/models/tanque.dart';
 import 'empresas.dart';
 
 class Tanques {
-  static const QUANTIDADE = 2000;
+  static const QUANTIDADE = 1000;
   static List<Tanque> tanques = List.empty(growable: true);
   static List<String> alfabeto = [
     'A',
@@ -40,16 +40,20 @@ class Tanques {
     for (int i = 0; i < QUANTIDADE; i++) {
       Tanque t = Tanque();
       t.codInmetro = "$i";
-      t.proprietario =
-          Random().nextInt(10) > 7 ? Empresas.empresas.elementAt(Random().nextInt(Empresas.empresas.length - 1)) : null;
+      t.proprietario = Random().nextInt(10) > 7
+          ? Empresas.empresas
+              .elementAt(Random().nextInt(Empresas.empresas.length - 1))
+          : null;
       t.placa = geraPlaca();
       for (int j = 0; j < Random().nextInt(10); j++) {
         t.compartimentos.add(Compartimento(j + 1));
         t.compartimentos[j].capacidade = Random().nextInt(50) * 100;
         t.compartimentos[j].setas = Random().nextInt(5);
       }
-      t.dataUltimaAlteracao = DateTime.now().subtract(Duration(minutes: Random().nextInt(200000)));
-      t.dataRegistro = DateTime.now().subtract(Duration(minutes: Random().nextInt(200000)));
+      t.dataUltimaAlteracao =
+          DateTime.now().subtract(Duration(minutes: Random().nextInt(200000)));
+      t.dataRegistro =
+          DateTime.now().subtract(Duration(minutes: Random().nextInt(200000)));
       t.status = StatusTanque.values[Random().nextInt(2)];
       tanques.add(t);
     }

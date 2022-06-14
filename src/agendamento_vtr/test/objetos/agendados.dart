@@ -1,6 +1,8 @@
 import 'dart:math';
 
 import 'package:agendamento_vtr/app/modules/agendamento/models/tanque_agendado.dart';
+import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
 
 import 'datas.dart';
@@ -15,14 +17,24 @@ class Agendados {
     if (agendados.isNotEmpty) return;
     Tanques();
     Empresas();
-    Datas.geraDatas();
+    Datas.geraDatas(agendaDia);
     for (int i = 0; i < Tanques.tanques.length * 2; i++) {
       int index = r.nextInt(Tanques.tanques.length);
       TanqueAgendado a =
           TanqueAgendado(id: Uuid().v1(), tanque: Tanques.tanques[index]);
       a.statusConfirmacao =
           StatusConfirmacao.values[r.nextInt(StatusConfirmacao.values.length)];
-      a.agenda = _recebeAgenda(a);
+      a.agenda = _recebeAgenda(a.statusConfirmacao.index);
+      a.dataInicio = a.agenda == null
+          ? null
+          : DateFormat('dd-MM-yyyy')
+              .parse(a.agenda!)
+              .add(Duration(hours: r.nextInt(6) + 8));
+      if (a.dataInicio != null) {
+        a.dataFim = a.dataInicio!.add(const Duration(hours: 2));
+      }
+
+      a.statusCor = corRandom().value;
       // a.agendaAnterior = a.agenda == null || a.statusConfirmacao != StatusConfirmacao.Reagendado
       //     ? null
       //     : r.nextInt(10) > 9
@@ -46,19 +58,42 @@ class Agendados {
     }
   }
 
-  _recebeAgenda(TanqueAgendado ta) {
-    int i = 0;
-    if (ta.statusConfirmacao == 0) return null;
-    do {
-      String data = Datas.datas[r.nextInt(Datas.datas.length)];
-      agendaDia.putIfAbsent(data, () => 0);
-      if (agendaDia[data]! < 3) {
-        agendaDia[data] = agendaDia[data]! + 1;
-        return data;
-      }
-      i++;
-    } while (i < 20);
-    ta.statusConfirmacao = StatusConfirmacao.PreAgendado;
+  _recebeAgenda(int confirmacao) {
+    var agendaIt = agendaDia.entries;
+    if (confirmacao == 0) return null;
+    for (int i = 0; i < agendaIt.length; i++) {
+      if (agendaIt.elementAt(i).value > 3) continue;
+      var data = agendaIt.elementAt(i).key;
+      agendaDia[data] = agendaDia[data]! + 1;
+      return data;
+    }
     return null;
+  }
+
+  Color corRandom() {
+    int i = r.nextInt(10);
+    switch (i) {
+      case 0:
+        return Colors.amber;
+      case 1:
+        return Colors.blue;
+      case 2:
+        return Colors.brown;
+      case 3:
+        return Colors.cyan;
+      case 4:
+        return Colors.deepOrange;
+      case 5:
+        return Colors.deepPurple;
+      case 6:
+        return Colors.green;
+      case 7:
+        return Colors.grey;
+      case 8:
+        return Colors.indigo;
+      case 9:
+        return Colors.lime;
+    }
+    return Colors.white;
   }
 }
