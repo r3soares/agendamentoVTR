@@ -20,8 +20,11 @@ class AppWidget extends StatelessWidget {
       scrollBehavior: CustomScrollBehavior(),
       debugShowCheckedModeBanner: false,
       title: 'Agendamento VTR',
-      theme:
-          ThemeData(primarySwatch: Colors.blue, brightness: Brightness.light),
+      theme: ThemeData(
+        //brightness: Brightness.light,
+        useMaterial3: false,
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
+      ),
     ).modular();
   }
 }
