@@ -15,6 +15,8 @@ class MainStore {
       _controller.storePendentes;
   StoreData<List<TanqueAgendado>> get storeAgendados =>
       _controller.storeAgendados;
+  StoreData<TanqueAgendado> get storeAgendado =>
+      _controller.storeTanqueAgendadoAtualizado;
   StoreData<Agenda> get storeDiaAtualizado => _controller.storeDiaAtualizado;
   StoreData<Map<String, Agenda>> get storeAgendas => _controller.storeAgendas;
   //StoreData<Agenda> get diaSelecionado => _controller.diaSelecionado;

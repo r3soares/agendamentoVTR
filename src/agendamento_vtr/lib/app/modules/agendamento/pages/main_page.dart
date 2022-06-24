@@ -4,6 +4,7 @@ import 'package:agendamento_vtr/app/modules/agendamento/stores/main_store.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/widgets/agenda_do_dia_widget.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/widgets/avisos_widget.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/widgets/calendario2_widget.dart';
+import 'package:agendamento_vtr/app/modules/agendamento/widgets/tanque_agendado_selecionado_widget.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/widgets/tanques_pendentes_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
@@ -138,12 +139,13 @@ class _MainPageState extends ModularState<MainPage, MainStore> {
                                 List<TanqueAgendado>.empty()))),
                   ),
                   ScopedBuilder(
-                    store: store.storeDiaAtualizado,
+                    store: store.storeAgendado,
                     onState: (context, state) => Expanded(
                         flex: 3,
                         child: Card(
                             elevation: 12,
-                            child: AgendaDoDiaWidget(state as Agenda))),
+                            child: TanqueAgendadoSelecionadoWidget(
+                                state as TanqueAgendado))),
                     onLoading: (context) => Expanded(
                         child: Center(child: CircularProgressIndicator())),
                   ),
