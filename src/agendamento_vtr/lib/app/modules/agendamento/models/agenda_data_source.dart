@@ -12,12 +12,12 @@ class AgendaDataSource extends CalendarDataSource<TanqueAgendado> {
 
   @override
   DateTime getStartTime(int index) {
-    return appointments![index].dataInicio;
+    return appointments![index].dataInicio ?? DateTime.now();
   }
 
   @override
   DateTime getEndTime(int index) {
-    return appointments![index].dataFim;
+    return appointments![index].dataFim ?? DateTime.now();
   }
 
   @override
