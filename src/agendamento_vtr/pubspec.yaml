@@ -39,6 +39,11 @@ dependencies:
   pdf: ^3.6.5
   printing: ^5.6.6
   syncfusion_flutter_calendar: ^20.1.57
+  font_awesome_flutter: any
+  
+dependency_overrides:
+  font_awesome_flutter:
+    path: D:\\Projetos\\FlutterIconsAwesome\\font_awesome_flutter
 
 dev_dependencies:
   flutter_modular_test: ^1.0.4
