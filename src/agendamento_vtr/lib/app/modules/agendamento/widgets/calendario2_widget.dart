@@ -6,6 +6,7 @@ import 'package:agendamento_vtr/app/modules/agendamento/widgets/color_popup_widg
 import 'package:agendamento_vtr/app/repositories/repository_tanque_agendado.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
@@ -82,35 +83,88 @@ class Calendario2Widget extends StatelessWidget {
         final TanqueAgendado appointment =
             calendarAppointmentDetails.appointments.first;
         return Container(
+          padding: EdgeInsets.zero,
           decoration: _box(Color(appointment.statusCor)),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          child: Row(
             children: [
               Expanded(
-                child: Text(
-                  '${appointment.tanque.resumoTanque} ${appointment.tanque.capacidadeTotal}L',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    wordSpacing: 2,
-                    letterSpacing: 1,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
+                flex: 5,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        '${appointment.tanque.resumoTanque} ${appointment.tanque.capacidadeTotal}L',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          wordSpacing: 2,
+                          letterSpacing: 1,
+                          color: Colors.black87,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    // Flexible(
+                    //     child: IconButton(
+                    //         onPressed: () async =>
+                    //             await _alteraCor(context, appointment),
+                    //         icon: Icon(
+                    //           Icons.color_lens_outlined,
+                    //           color: Colors.black54,
+                    //           size: 20,
+                    //         )))
+                  ],
                 ),
               ),
-              Flexible(
-                  child: Row(
-                children: [
-                  IconButton(
-                      onPressed: () async =>
-                          await _alteraCor(context, appointment),
-                      icon: Icon(
-                        Icons.color_lens_outlined,
-                        color: Colors.white,
-                        size: 18,
-                      )),
-                ],
-              ))
+              Expanded(
+                  flex: 3,
+                  child: Container(
+                    margin: EdgeInsets.only(right: 5),
+                    decoration: BoxDecoration(color: Colors.white30),
+                    padding: EdgeInsets.zero,
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        IconButton(
+                            color: Colors.black45,
+                            constraints: const BoxConstraints.tightFor(
+                                width: 20, height: 36),
+                            iconSize: 18,
+                            splashRadius: 8,
+                            onPressed: () async =>
+                                await _alteraCor(context, appointment),
+                            icon: FaIcon(FontAwesomeIcons.p)),
+                        IconButton(
+                            color: Colors.black45,
+                            constraints: const BoxConstraints.tightFor(
+                                width: 20, height: 36),
+                            iconSize: 18,
+                            splashRadius: 8,
+                            onPressed: () async =>
+                                await _alteraCor(context, appointment),
+                            icon: FaIcon(FontAwesomeIcons.d)),
+                        IconButton(
+                            color: Colors.black45,
+                            constraints: const BoxConstraints.tightFor(
+                                width: 20, height: 36),
+                            iconSize: 18,
+                            splashRadius: 8,
+                            onPressed: () async =>
+                                await _alteraCor(context, appointment),
+                            icon: FaIcon(FontAwesomeIcons.v)),
+                        IconButton(
+                            color: Colors.black45,
+                            constraints: const BoxConstraints.tightFor(
+                                width: 20, height: 36),
+                            iconSize: 18,
+                            splashRadius: 8,
+                            onPressed: () async =>
+                                await _alteraCor(context, appointment),
+                            icon: FaIcon(FontAwesomeIcons.i)),
+                      ],
+                    ),
+                  )),
             ],
           ),
         );
@@ -118,6 +172,7 @@ class Calendario2Widget extends StatelessWidget {
 
   _box(Color cor) => BoxDecoration(
         color: cor,
+        border: Border.all(color: cor),
         shape: BoxShape.rectangle,
         borderRadius: BorderRadius.all(Radius.circular(4.0)),
       );
