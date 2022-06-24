@@ -2,6 +2,7 @@ import 'package:agendamento_vtr/app/domain/erros.dart';
 import 'package:agendamento_vtr/app/domain/log.dart';
 import 'package:agendamento_vtr/app/models/bloc.dart';
 import 'package:agendamento_vtr/app/models/model_base.dart';
+import 'package:agendamento_vtr/app/models/responsavel.dart';
 import 'package:agendamento_vtr/app/models/tanque.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/controllers/agendaController.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/models/agenda.dart';
@@ -11,6 +12,7 @@ import 'package:agendamento_vtr/app/repositories/repository_tanque_agendado.dart
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_triple/flutter_triple.dart';
 import 'package:collection/collection.dart';
+import 'package:uuid/uuid.dart';
 
 class IncluiAgendadoStore extends StreamStore<Falha, TanqueAgendado> {
   final RepositoryAgenda repoAgenda;
@@ -19,7 +21,11 @@ class IncluiAgendadoStore extends StreamStore<Falha, TanqueAgendado> {
   final Bloc blocPesquisa = Bloc('');
   final Bloc blocAgenda = Bloc('');
 
-  IncluiAgendadoStore(this.repoAgenda, this.repoAt) : super(TanqueAgendado(id: '', tanque: Tanque()));
+  IncluiAgendadoStore(this.repoAgenda, this.repoAt)
+      : super(TanqueAgendado(
+            id: '',
+            tanque: Tanque(),
+            responsavel: Responsavel(Uuid().v1(), "")));
 
   @override
   Future destroy() {
@@ -31,9 +37,10 @@ class IncluiAgendadoStore extends StreamStore<Falha, TanqueAgendado> {
   void getVeiculo(String termo) async {
     setLoading(true);
     try {
-      List<TanqueAgendado> tAgendados = _controller.storePendentes.lastState.state;
-      TanqueAgendado? tEcontrado =
-          tAgendados.firstWhereOrNull((e) => e.tanque.codInmetro == termo || e.tanque.placa == termo);
+      List<TanqueAgendado> tAgendados =
+          _controller.storePendentes.lastState.state;
+      TanqueAgendado? tEcontrado = tAgendados.firstWhereOrNull(
+          (e) => e.tanque.codInmetro == termo || e.tanque.placa == termo);
       if (tEcontrado == null) {
         blocPesquisa.setError(NaoEncontrado('Veículo não localizado'));
         return;

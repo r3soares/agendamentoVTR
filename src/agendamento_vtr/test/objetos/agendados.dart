@@ -7,6 +7,7 @@ import 'package:uuid/uuid.dart';
 
 import 'datas.dart';
 import 'empresas.dart';
+import 'responsaveis.dart';
 import 'tanques.dart';
 
 class Agendados {
@@ -17,11 +18,15 @@ class Agendados {
     if (agendados.isNotEmpty) return;
     Tanques();
     Empresas();
+    Responsaveis();
     Datas.geraDatas(agendaDia);
     for (int i = 0; i < Tanques.tanques.length * 2; i++) {
       int index = r.nextInt(Tanques.tanques.length);
-      TanqueAgendado a =
-          TanqueAgendado(id: Uuid().v1(), tanque: Tanques.tanques[index]);
+      TanqueAgendado a = TanqueAgendado(
+          id: Uuid().v1(),
+          tanque: Tanques.tanques[index],
+          responsavel: Responsaveis
+              .responsaveis[r.nextInt(Responsaveis.responsaveis.length)]);
       a.statusConfirmacao =
           StatusConfirmacao.values[r.nextInt(StatusConfirmacao.values.length)];
       a.agenda = _recebeAgenda(a.statusConfirmacao.index);
@@ -50,7 +55,8 @@ class Agendados {
       a.dataRegistro = a.tanque.dataRegistro;
       a.isNovo = r.nextInt(10) > 9;
       a.obs = r.nextInt(10) > 7 ? 'Observação' : null;
-      a.responsavel = Empresas.empresas[r.nextInt(Empresas.empresas.length)];
+      a.responsavel = Responsaveis
+          .responsaveis[r.nextInt(Responsaveis.responsaveis.length)];
       a.statusPagamento =
           StatusPagamento.values[r.nextInt(StatusPagamento.values.length)];
       a.tempoVerificacao = r.nextInt(5 * 60) + 30;

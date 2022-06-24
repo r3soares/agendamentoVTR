@@ -1,4 +1,5 @@
 import 'package:agendamento_vtr/app/domain/erros.dart';
+import 'package:agendamento_vtr/app/models/responsavel.dart';
 import 'package:agendamento_vtr/app/models/tanque.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/controllers/agendaController.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/models/tanque_agendado.dart';
@@ -14,14 +15,19 @@ class IncluiPendenteStore extends StreamStore<Falha, TanqueAgendado> {
   final RepositoryTanqueAgendado repoAt;
   final AgendaController _controller = Modular.get<AgendaController>();
   final StoreData<Tanque> blocPesquisa = StoreData(Tanque());
-  final StoreData<TanqueAgendado> blocAgenda =
-      StoreData(TanqueAgendado(id: Uuid().v1(), tanque: Tanque()));
+  final StoreData<TanqueAgendado> blocAgenda = StoreData(TanqueAgendado(
+      id: Uuid().v1(),
+      tanque: Tanque(),
+      responsavel: Responsavel(Uuid().v1(), "")));
 
   StoreData<List<TanqueAgendado>> get blocPendentes =>
       _controller.storePendentes;
 
   IncluiPendenteStore(this.repoTanque, this.repoAt)
-      : super(TanqueAgendado(id: '', tanque: Tanque()));
+      : super(TanqueAgendado(
+            id: Uuid().v1(),
+            tanque: Tanque(),
+            responsavel: Responsavel(Uuid().v1(), "")));
 
   @override
   Future destroy() {
@@ -55,10 +61,11 @@ class IncluiPendenteStore extends StreamStore<Falha, TanqueAgendado> {
     blocPesquisa.execute(() => repoTanque.findTanqueByPlaca(termo));
   }
 
-  agendaVeiculo(Tanque tanque) async {
+  agendaVeiculo(Tanque tanque, Responsavel resp) async {
     setLoading(true);
     try {
-      TanqueAgendado ta = TanqueAgendado(id: Uuid().v1(), tanque: tanque);
+      TanqueAgendado ta =
+          TanqueAgendado(id: Uuid().v1(), tanque: tanque, responsavel: resp);
       if (await repoAt.save(ta)) {
         blocAgenda.update(ta);
       } else {

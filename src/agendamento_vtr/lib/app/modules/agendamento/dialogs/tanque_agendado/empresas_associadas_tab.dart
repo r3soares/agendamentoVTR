@@ -1,4 +1,5 @@
 import 'package:agendamento_vtr/app/models/empresa.dart';
+import 'package:agendamento_vtr/app/models/responsavel.dart';
 import 'package:agendamento_vtr/app/models/tanque.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/dialogs/pesquisa_empresa_dialog.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/dialogs/tanque_agendado/visualiza_tanque_agendado_dialog.dart';
@@ -6,10 +7,12 @@ import 'package:agendamento_vtr/app/modules/agendamento/models/tanque_agendado.d
 import 'package:agendamento_vtr/app/repositories/repository_tanque_agendado.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:uuid/uuid.dart';
 
 class EmpresasAssociadasTab extends StatelessWidget {
   final TanqueAgendado tAgendado;
-  final RepositoryTanqueAgendado repoTa = Modular.get<RepositoryTanqueAgendado>();
+  final RepositoryTanqueAgendado repoTa =
+      Modular.get<RepositoryTanqueAgendado>();
 
   EmpresasAssociadasTab(this.tAgendado);
 
@@ -33,31 +36,39 @@ class EmpresasAssociadasTab extends StatelessWidget {
                     style: TextStyle(fontSize: 20),
                   ),
                 ),
-                Expanded(flex: 3, child: buildProprietarioWidget(context, tanque.proprietario, 'Proprietário')),
+                Expanded(
+                    flex: 3,
+                    child: buildProprietarioWidget(
+                        context, tanque.proprietario, 'Proprietário')),
                 tanque.proprietario == null
                     ? SizedBox.shrink()
-                    : Flexible(flex: 1, child: buildBotoes(context, 'Proprietário')),
+                    : Flexible(
+                        flex: 1, child: buildBotoes(context, 'Proprietário')),
               ],
             ),
           ),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Flexible(
-                  flex: 1,
-                  child: const Text(
-                    'Responsável pelo Agendamento',
-                    style: TextStyle(fontSize: 20),
-                  ),
-                ),
-                Expanded(flex: 3, child: buildProprietarioWidget(context, tAgendado.responsavel, 'Responsável')),
-                tAgendado.responsavel == null
-                    ? SizedBox.shrink()
-                    : Flexible(flex: 1, child: buildBotoes(context, 'Responsável')),
-              ],
-            ),
-          )
+          // Expanded(
+          //   child: Column(
+          //     crossAxisAlignment: CrossAxisAlignment.center,
+          //     children: [
+          //       Flexible(
+          //         flex: 1,
+          //         child: const Text(
+          //           'Responsável pelo Agendamento',
+          //           style: TextStyle(fontSize: 20),
+          //         ),
+          //       ),
+          //       Expanded(
+          //           flex: 3,
+          //           child: buildProprietarioWidget(
+          //               context, tAgendado.responsavel, 'Responsável')),
+          //       tAgendado.responsavel == null
+          //           ? SizedBox.shrink()
+          //           : Flexible(
+          //               flex: 1, child: buildBotoes(context, 'Responsável')),
+          //     ],
+          //   ),
+          // )
         ],
       ),
     );
@@ -70,11 +81,15 @@ class EmpresasAssociadasTab extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           ElevatedButton(
-              onPressed: () => Modular.to.pushNamed('/empresa/cadastro', arguments: getPropOuResp(propOuResp)),
+              onPressed: () => Modular.to.pushNamed('/empresa/cadastro',
+                  arguments: getPropOuResp(propOuResp)),
               child: Text('Alterar')),
           TextButton(
-              onPressed: () async =>
-                  {removePropOuResp(propOuResp), await _salvaAlteracoes(context), atualizaDialog(context)},
+              onPressed: () async => {
+                    removePropOuResp(propOuResp),
+                    await _salvaAlteracoes(context),
+                    atualizaDialog(context)
+                  },
               child: Text(
                 'Remover',
                 style: TextStyle(color: Colors.red[800]),
@@ -84,7 +99,8 @@ class EmpresasAssociadasTab extends StatelessWidget {
     );
   }
 
-  Widget buildProprietarioWidget(BuildContext context, Empresa? p, String proOuResp) {
+  Widget buildProprietarioWidget(
+      BuildContext context, Empresa? p, String proOuResp) {
     return p == null
         ? TextButton(
             onPressed: () => showDialogPesquisaEmpresa(context, proOuResp),
@@ -168,7 +184,7 @@ class EmpresasAssociadasTab extends StatelessWidget {
         }
       case 'R':
         {
-          tAgendado.responsavel = null;
+          tAgendado.responsavel = Responsavel(Uuid().v1(), "");
           return;
         }
     }
@@ -204,8 +220,8 @@ class EmpresasAssociadasTab extends StatelessWidget {
     try {
       await repoTa.save(tAgendado);
     } catch (e) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text('Não foi possível salvar as alterações')));
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text('Não foi possível salvar as alterações')));
     }
   }
 

@@ -95,7 +95,7 @@ void main() {
             reason: 'custoVerificacao não validou');
         expect(a1.id, equals(a2.id), reason: 'id diferente');
         expect(a1.obs, equals(a2.obs), reason: 'obs não validou');
-        expect(a1.responsavel?.cnpjCpf, equals(a2.responsavel?.cnpjCpf),
+        expect(a1.responsavel.cnpj_cpf, equals(a2.responsavel.cnpj_cpf),
             reason: 'responsavel não validou');
         expect(a1.statusConfirmacao, equals(a2.statusConfirmacao),
             reason: 'statusConfirmacao diferentes');
@@ -148,10 +148,10 @@ void main() {
         Map<String, dynamic> json = r.toJson();
         Responsavel r2 = Responsavel.fromJson(json);
         expect(r.id, equals(r2.id));
-        expect(r.email, equals(r.email));
-        expect(r.nome, equals(r.nome));
-        expect(r.telefone, equals(r.telefone));
-        expect(r.empresa, equals(r.empresa));
+        expect(r.emails.length, equals(r.emails.length));
+        expect(r.apelido, equals(r.apelido));
+        expect(r.telefones.length, equals(r.telefones.length));
+        expect(r.cnpj_cpf, equals(r.cnpj_cpf));
       }
     });
   });

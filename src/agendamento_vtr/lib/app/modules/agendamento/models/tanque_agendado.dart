@@ -1,6 +1,7 @@
 import 'package:agendamento_vtr/app/domain/constants_agenda.dart';
 import 'package:agendamento_vtr/app/models/empresa.dart';
 import 'package:agendamento_vtr/app/models/json_serializable.dart';
+import 'package:agendamento_vtr/app/models/responsavel.dart';
 import 'package:agendamento_vtr/app/models/tanque.dart';
 import 'package:intl/intl.dart';
 
@@ -11,7 +12,7 @@ class TanqueAgendado implements JsonSerializable {
   DateTime? _dataInicio;
   DateTime? _dataFim;
   String? agenda;
-  Empresa? responsavel;
+  Responsavel responsavel;
   String? bitremAgenda;
   bool isNovo = false;
   List<int> _statusGenerico = List.from([
@@ -63,6 +64,7 @@ class TanqueAgendado implements JsonSerializable {
   TanqueAgendado({
     required this.id,
     required this.tanque,
+    required this.responsavel,
     agenda,
   }) {
     _custoVerificacao = tanque.custoTotal;
@@ -77,9 +79,7 @@ class TanqueAgendado implements JsonSerializable {
         dataRegistro = DateTime.parse(json['dataRegistro']),
         _dataInicio = DateTime.tryParse(json['dataInicio'] ?? ''),
         _dataFim = DateTime.tryParse(json['dataFim'] ?? ''),
-        responsavel = json['responsavel'] == null
-            ? null
-            : Empresa.fromJson(json['responsavel']),
+        responsavel = Responsavel.fromJson(json['responsavel']),
         bitremAgenda = json['bitremAgenda'],
         isNovo = json['isNovo'],
         //agendaAnterior = json['agendaAnterior'],
@@ -99,7 +99,7 @@ class TanqueAgendado implements JsonSerializable {
         'dataRegistro': dataRegistro.toIso8601String(),
         'dataInicio': _dataInicio?.toIso8601String(),
         'dataFim': _dataFim?.toIso8601String(),
-        'responsavel': responsavel?.toJson(),
+        'responsavel': responsavel.toJson(),
         'bitremAgenda': bitremAgenda,
         'isNovo': isNovo,
         //'agendaAnterior': agendaAnterior,

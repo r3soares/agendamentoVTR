@@ -1,10 +1,12 @@
 import 'package:agendamento_vtr/app/domain/constantes.dart';
 import 'package:agendamento_vtr/app/domain/extensions.dart';
 import 'package:agendamento_vtr/app/domain/log.dart';
+import 'package:agendamento_vtr/app/models/responsavel.dart';
 import 'package:agendamento_vtr/app/models/tanque.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/models/agenda.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/models/tanque_agendado.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/stores/store_data.dart';
+import 'package:uuid/uuid.dart';
 
 class AgendaController {
   final StoreData<List<TanqueAgendado>> storePendentes =
@@ -15,9 +17,11 @@ class AgendaController {
       StoreData<Map<String, Agenda>>(Map());
   final StoreData<Agenda> storeDiaAtualizado =
       StoreData<Agenda>(Agenda(Constants.formatoData.format(DateTime.now())));
-  final StoreData<TanqueAgendado> storeTanqueAgendadoAtualizado = StoreData<
-          TanqueAgendado>(
-      TanqueAgendado(id: DateTime.now().diaMesAnoToString(), tanque: Tanque()));
+  final StoreData<TanqueAgendado> storeTanqueAgendadoAtualizado =
+      StoreData<TanqueAgendado>(TanqueAgendado(
+          id: DateTime.now().diaMesAnoToString(),
+          tanque: Tanque(),
+          responsavel: Responsavel(Uuid().v1(), "")));
 
   Future destroy() async {
     //print('AgendaController: Destruindo');

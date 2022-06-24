@@ -14,7 +14,8 @@ class PesquisaEmpresaDialog extends StatefulWidget {
   State<PesquisaEmpresaDialog> createState() => _PesquisaEmpresaDialogState();
 }
 
-class _PesquisaEmpresaDialogState extends ModularState<PesquisaEmpresaDialog, PesquisaEmpresaStore> {
+class _PesquisaEmpresaDialogState
+    extends ModularState<PesquisaEmpresaDialog, PesquisaEmpresaStore> {
   final List<Empresa> empresas = List.empty(growable: true);
 
   @override
@@ -45,7 +46,8 @@ class _PesquisaEmpresaDialogState extends ModularState<PesquisaEmpresaDialog, Pe
           children: [
             Autocomplete<Empresa>(
               optionsBuilder: (TextEditingValue textEditingValue) {
-                if (textEditingValue.text == '' || textEditingValue.text.length < 3) {
+                if (textEditingValue.text == '' ||
+                    textEditingValue.text.length < 3) {
                   return const Iterable<Empresa>.empty();
                 }
                 textEditingValue.text.startsWith(RegExp(r'^[0-9]'))
@@ -56,11 +58,11 @@ class _PesquisaEmpresaDialogState extends ModularState<PesquisaEmpresaDialog, Pe
               onSelected: (Empresa selection) {
                 if (widget.titulo.startsWith('P')) {
                   widget.tAgendado.tanque.proprietario = selection;
-                } else {
-                  widget.tAgendado.responsavel = selection;
                 }
               },
-              fieldViewBuilder: (BuildContext context, TextEditingController textEditingController, FocusNode focusNode,
+              fieldViewBuilder: (BuildContext context,
+                  TextEditingController textEditingController,
+                  FocusNode focusNode,
                   VoidCallback onFieldSubmitted) {
                 return TextFormField(
                   controller: textEditingController,
@@ -78,7 +80,8 @@ class _PesquisaEmpresaDialogState extends ModularState<PesquisaEmpresaDialog, Pe
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: ElevatedButton(onPressed: () => Modular.to.pop(), child: Text('Ok')),
+              child: ElevatedButton(
+                  onPressed: () => Modular.to.pop(), child: Text('Ok')),
             )
           ],
         ),
@@ -142,7 +145,8 @@ class _PesquisaEmpresaDialogState extends ModularState<PesquisaEmpresaDialog, Pe
       if (controller.text != newValue) {
         controller.text = newValue;
         int pos = newValue.length;
-        controller.selection = TextSelection.fromPosition(TextPosition(offset: pos));
+        controller.selection =
+            TextSelection.fromPosition(TextPosition(offset: pos));
       }
     }
   }

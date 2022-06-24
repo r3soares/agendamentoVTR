@@ -124,7 +124,7 @@ void main() {
         expect(at.custoVerificacao, equals(lista[i].custoVerificacao));
         expect(at.id, equals(lista[i].id));
         expect(at.obs, equals(lista[i].obs));
-        expect(at.responsavel?.cnpjCpf, equals(lista[i].responsavel?.cnpjCpf));
+        expect(at.responsavel.cnpj_cpf, equals(lista[i].responsavel.cnpj_cpf));
         expect(at.statusConfirmacao, equals(lista[i].statusConfirmacao));
         expect(at.statusPagamento, equals(lista[i].statusPagamento));
         expect(at.tanque.codInmetro, equals(lista[i].tanque.codInmetro));
@@ -212,9 +212,9 @@ void main() {
       expect(responsaveis.length > 1, isTrue);
       var listaFiltrada =
           await repoResponsavel.findResponsaveisByNomeParcial('M');
-      var m = listaFiltrada.firstWhere((e) => e.nome == 'Michael Jackson');
+      var m = listaFiltrada.firstWhere((e) => e.apelido == 'Michael Jackson');
       expect(m, isNotNull);
-      expect(m.nome, equals('Michael Jackson'));
+      expect(m.apelido, equals('Michael Jackson'));
 
       for (int i = 0; i < 100; i++) {
         String novoID = await repoResponsavel.getNovoID();

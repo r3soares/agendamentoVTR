@@ -1,5 +1,6 @@
 import 'package:agendamento_vtr/app/domain/constantes.dart';
 import 'package:agendamento_vtr/app/models/model_base.dart';
+import 'package:agendamento_vtr/app/models/responsavel.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/models/agenda.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/models/tanque_agendado.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/stores/reagenda_store.dart';
@@ -20,8 +21,8 @@ class ReagendaDialog extends BaseWidgets {
 class _ReagendaDialogState extends ModularState<ReagendaDialog, ReagendaStore> {
   final focusNode = FocusNode();
   final TextEditingController _cCampo = TextEditingController();
-  final MaskTextInputFormatter _mascara =
-      new MaskTextInputFormatter(mask: '##-##-####', filter: {"#": RegExp(r'[0-9]')});
+  final MaskTextInputFormatter _mascara = new MaskTextInputFormatter(
+      mask: '##-##-####', filter: {"#": RegExp(r'[0-9]')});
   String _ultimaDataValida = '';
   Agenda? aNova;
   Agenda? aVelha;
@@ -42,8 +43,8 @@ class _ReagendaDialogState extends ModularState<ReagendaDialog, ReagendaStore> {
     store.blocReagenda.observer(
         onState: (e) => {
               Modular.to.pop(),
-              ScaffoldMessenger.of(context)
-                  .showSnackBar(const SnackBar(content: Text('Veículo reagendado com sucesso.')))
+              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                  content: Text('Veículo reagendado com sucesso.')))
             });
   }
 
@@ -88,7 +89,9 @@ class _ReagendaDialogState extends ModularState<ReagendaDialog, ReagendaStore> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     ElevatedButton(
-                      onPressed: aNova == null || aVelha == null || aNova!.status != StatusAgenda.Disponivel
+                      onPressed: aNova == null ||
+                              aVelha == null ||
+                              aNova!.status != StatusAgenda.Disponivel
                           ? null
                           : reagendaTanque,
                       child: Text('Reagendar'),
@@ -125,7 +128,11 @@ class _ReagendaDialogState extends ModularState<ReagendaDialog, ReagendaStore> {
 
   void reagendaTanque() {
     TanqueAgendado taVelho = widget.tAgendado;
-    TanqueAgendado taNovo = TanqueAgendado(id: Uuid().v1(), tanque: taVelho.tanque, agenda: aNova!.data);
+    TanqueAgendado taNovo = TanqueAgendado(
+        id: Uuid().v1(),
+        tanque: taVelho.tanque,
+        agenda: aNova!.data,
+        responsavel: Responsavel(Uuid().v1(), "")); //REFAZER
     store.reagenda(taVelho, taNovo, aVelha!, aNova!);
   }
 }

@@ -471,9 +471,6 @@ class TanqueAgendadoSelecionadoWidget extends StatelessWidget {
     var prop = tanque.proprietario == null
         ? 'Sem proprietário associado'
         : tanque.proprietario!.razaoSocial;
-    var resp = tAgendado.responsavel == null
-        ? 'Sem responsável atribuído'
-        : tAgendado.responsavel!.razaoSocial;
-    return '$prop ($resp)';
+    return '$prop (${tAgendado.responsavel.apelido})';
   }
 }

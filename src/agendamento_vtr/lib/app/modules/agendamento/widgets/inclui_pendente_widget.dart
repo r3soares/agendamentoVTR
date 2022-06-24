@@ -1,12 +1,14 @@
 // ignore_for_file: unnecessary_statements
 
 import 'package:agendamento_vtr/app/domain/erros.dart';
+import 'package:agendamento_vtr/app/models/responsavel.dart';
 import 'package:agendamento_vtr/app/models/tanque.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/models/tanque_agendado.dart';
 import 'package:agendamento_vtr/app/modules/agendamento/stores/inclui_pendente_store.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_triple/flutter_triple.dart';
+import 'package:uuid/uuid.dart';
 
 class IncluiPendenteWidget extends StatefulWidget {
   const IncluiPendenteWidget({Key? key}) : super(key: key);
@@ -39,7 +41,7 @@ class _IncluiPendenteWidgetState
   }
 
   void setResultado(Tanque t) {
-    store.agendaVeiculo(t);
+    store.agendaVeiculo(t, Responsavel(Uuid().v1(), ""));
     setState(() {});
   }
 

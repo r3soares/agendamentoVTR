@@ -15,7 +15,7 @@ class RepositoryResponsavel {
       if (!salvou) print('Erro em salvaResponsavel em Repository Responsavel');
       return salvou;
     } on Falha catch (e) {
-      print('Erro ao salvar responsavel ${value.nome}: ${e.msg}');
+      print('Erro ao salvar responsavel ${value.apelido}: ${e.msg}');
       throw e;
     }
   }
