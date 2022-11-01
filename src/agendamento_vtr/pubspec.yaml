@@ -30,7 +30,7 @@ dependencies:
   cupertino_icons: ^1.0.3
   flutter_modular: any
   flutter_triple: any
-  table_calendar: ^3.0.2  
+  table_calendar: ^3.0.8  
   http:
   rxdart: ^0.27.2
   mask_text_input_formatter: ^2.0.0
