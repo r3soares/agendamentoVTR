@@ -6,18 +6,36 @@ import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
 class AgendaDataSource extends CalendarDataSource<TanqueAgendado> {
+  late List<int> horarios;
   AgendaDataSource(List<TanqueAgendado> source) {
     appointments = source;
+    horarios = [];
+    for (int i = ConstantsAgenda.horaInicio.toInt();
+        i < ConstantsAgenda.horaFim.toInt();
+        i += ConstantsAgenda.tempoMinimoVeiculo) {
+      horarios.add(i);
+    }
+  }
+
+  DateTime _getEncaixe(DateTime? horarioOriginal) {
+    if (horarioOriginal == null) return DateTime.now();
+    for (int i = 0; i < horarios.length; i++) {
+      if (horarioOriginal.hour > horarios[i]) continue;
+      var novoHorario = DateTime(horarioOriginal.year, horarioOriginal.month,
+          horarioOriginal.day, horarios[i]);
+      return novoHorario;
+    }
+    return DateTime.now();
   }
 
   @override
   DateTime getStartTime(int index) {
-    return appointments![index].dataInicio ?? DateTime.now();
+    return _getEncaixe(appointments![index].dataInicio);
   }
 
   @override
   DateTime getEndTime(int index) {
-    return appointments![index].dataFim ?? DateTime.now();
+    return _getEncaixe(appointments![index].dataFim);
   }
 
   @override

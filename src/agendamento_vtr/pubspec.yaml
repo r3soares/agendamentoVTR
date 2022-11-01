@@ -38,7 +38,7 @@ dependencies:
   equatable: ^2.0.0
   pdf: ^3.6.5
   printing: ^5.6.6
-  syncfusion_flutter_calendar: ^20.1.57
+  syncfusion_flutter_calendar: ^20.2.43
   font_awesome_flutter: any
   
 dependency_overrides:
